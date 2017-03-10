@@ -1,0 +1,137 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.general_step2_head}</f:facet>
+			<h:form id="formA">
+				<s:div rendered="#{generalMedicalDAO.managed}">
+					<h:outputText
+						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
+						styleClass="consecutive" />
+						
+				</s:div>
+				<rich:spacer height="10" />
+				<p:accordionPanel styleClass="kubeAccordion" event="click">
+					<p:tab title="#{app.general_step2_tab1}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.consultationReason}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.observation}" cols="75"
+									rows="5" disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step2_tab2}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_height}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.height}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_weight}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.weight}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_temperature}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.temperature}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_heart_rate}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.heartRate}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_respiratory_rate}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.respiratoryRate}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_blood1}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.bloodPressureSystole}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_blood2}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.bloodPressureDiastole}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step2_tab3}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_head}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regHead}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_neck}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regNeck}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_thorax}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regThorax}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_abdomen}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.regAbdomen}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_tips}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regTips}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_genitals}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.regGenitals}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+				</p:accordionPanel>
+				<rich:spacer height="10" />
+				<s:decorate template="/layout/kActions.xhtml">
+					<h:commandButton action="back" value="#{app.diagnostic_back}"
+						styleClass="leftBtn">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+					<h:commandButton action="#{wizardGeneralMedical.step2()}"
+						value="#{app.diagnostic_next}" styleClass="rightBtn">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+	<ui:define name="past">
+		<ui:include src="/medical/clinicalHistory/_past.xhtml" />
+	</ui:define>
+</ui:composition>

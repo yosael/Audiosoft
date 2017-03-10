@@ -1,0 +1,60 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+		<rich:panel style="padding:1px;">
+			<f:facet name="header">#{app.general_step1_head}</f:facet>
+				<s:div rendered="#{generalMedicalDAO.managed}">
+					<h:outputText
+						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
+						styleClass="consecutive" />					
+				</s:div>
+				<h:panelGroup id="details">
+				
+					<rich:tabPanel switchType="client" >
+						<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
+							</s:div>	
+						</rich:tab>
+						<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
+							</s:div>
+						</rich:tab>
+						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
+							</s:div>
+						</rich:tab>
+					</rich:tabPanel>
+					
+					<s:button propagation="join" view="#{urlBack.back}"
+							styleClass="backBtn" value="#{msn.button_back}"
+					rendered="#{not empty urlBack.back}" />
+					
+					<s:button propagation="end" value="Historial Medico"
+					styleClass="historyBtn" 
+					view="/medical/patient/master.xhtml">
+						<f:param name="tabId" value="tab3" />
+					</s:button>
+					
+					<s:button propagation="end" value="#{app.diagnostic_cancel}"
+						styleClass="cancelBtn" rendered="#{not generalMedicalDAO.managed}"
+						view="/medical/medicalAppointment/scheduler.xhtml">
+					</s:button>
+					<h:commandButton action="#{wizardGeneralMedical.allSteps()}"
+						value="#{app.diagnostic_save}" styleClass="saveBtn"
+						rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+				</h:panelGroup>
+									
+		</rich:panel>
+</ui:composition>

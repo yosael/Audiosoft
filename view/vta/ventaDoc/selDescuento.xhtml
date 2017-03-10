@@ -1,0 +1,81 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmSelDesc">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q16" />
+				
+				<rich:dataTable var="res" value="#{certificadoDescHome.resultList}" id="_table"
+					rendered="#{not empty certificadoDescHome.resultList}" rows="10"
+					align="center" rowClasses="tblEven,tblOdd" 
+					onRowMouseOver="this.style.backgroundColor='#D1F4B3'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<rich:column filterBy="#{res.codCert}" filterEvent="onkeyup">
+						<f:facet name="header">C�digo</f:facet>
+						<h:outputText value="#{res.codCert}" />
+					</rich:column>
+					<rich:column filterBy="#{certificadoDescHome.filtrarFecha(res.fechaIngreso)}" filterEvent="onkeyup">
+						<f:facet name="header">Fecha inicial</f:facet>
+						<h:outputText value="#{res.fechaIngreso}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.descMonto}" filterEvent="onkeyup" styleClass="col100">
+						<f:facet name="header">Monto exacto de descuento</f:facet>
+						<h:outputText value="#{res.descMonto}" rendered="#{res.tipoMnt=='MNT'}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>
+						<h:outputText value="-" rendered="#{res.tipoMnt!='MNT'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descGlobal}" filterEvent="onkeyup" styleClass="col100">
+						<f:facet name="header">Descuento global</f:facet>
+						<h:outputText value="#{res.descGlobal}" rendered="#{res.tipoPrc=='GBL' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="%" rendered="#{res.tipoPrc=='GBL' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="-" rendered="#{res.tipoPrc!='GBL' or res.tipoMnt!='PRC'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descEfectivo}" filterEvent="onkeyup" styleClass="col100">
+						<f:facet name="header">Descuento en efectivo</f:facet>
+						<h:outputText value="#{res.descEfectivo}" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="%" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="-" rendered="#{res.tipoPrc!='SGM' or res.tipoMnt!='PRC'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descTarjeta}" filterEvent="onkeyup" styleClass="col100">
+						<f:facet name="header">Descuento en tarjeta</f:facet>
+						<h:outputText value="#{res.descTarjeta}" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="%" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="-" rendered="#{res.tipoPrc!='SGM' or res.tipoMnt!='PRC'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descCheque}" filterEvent="onkeyup" styleClass="col100" rendered="false">
+						<f:facet name="header">Descuento en cheque</f:facet>
+						<h:outputText value="#{res.descCheque}" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="%" rendered="#{res.tipoPrc=='SGM' and res.tipoMnt=='PRC'}" />
+						<h:outputText value="-" rendered="#{res.tipoPrc!='SGM' or res.tipoMnt!='PRC'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formvtitm,dscvts"
+							action="#{ventaItemHome.seleccionarDescuentoVta(res)}" ajaxSingle="true" 
+							eventsQueue="q16" ignoreDupResponses="true"
+							onclick="#{rich:component('selDesc')}.hide();">
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+			</h:form>
+	
+</ui:composition>

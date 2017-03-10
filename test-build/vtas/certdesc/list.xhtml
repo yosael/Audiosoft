@@ -1,0 +1,100 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.certdesc_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/vtas/certdesc/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="id" value="" />
+				</s:button>
+			</s:decorate>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<rich:dataTable var="res" value="#{certificadoDescHome.resultList}"
+					rendered="#{not empty certificadoDescHome.resultList}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.certdesc_list}</f:facet>
+					<rich:column filterBy="#{res.codCert}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.certdesc_codcert}</f:facet>
+						<h:outputText value="#{res.codCert}" />
+					</rich:column>
+					<rich:column filterBy="#{res.fechaIngreso}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.certdesc_fching}</f:facet>
+						<h:outputText value="#{res.fechaIngreso}" />
+					</rich:column>
+					<rich:column filterBy="#{res.tiempoValidez}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.certdesc_tmpval}</f:facet>
+						<h:outputText value="#{res.tiempoValidez}" />
+					</rich:column>
+					<rich:column filterBy="#{res.valDescuento}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.certdesc_valdesc}</f:facet>
+						<h:outputText value="#{res.valDescuento}" />
+					</rich:column>
+					<rich:column filterBy="#{res.valDescuento}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.certdesc_valido}</f:facet>
+						<h:outputText value="#{msn.button_yes}" rendered="#{res.estado=='ACT'}" />
+						<h:outputText value="#{msn.button_no}" rendered="#{res.estado!='ACT'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.certdesc_edit}" rendered="true"
+							view="/vtas/certdesc/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						<rich:spacer width="10" rendered="#{res.estado=='ACT'}" />
+						<a:commandLink title="#{msn.button_reject}" reRender="m1" rendered="#{res.estado=='ACT'}"
+							action="#{certificadoDescHome.select(res)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('confirmation')}.show();">
+							<h:graphicImage value="/kubeImg/table_cancel.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.certdesc_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.certdesc_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{certificadoDescHome.delete()}" reRender="formA"
+						rendered="#{certificadoDescHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

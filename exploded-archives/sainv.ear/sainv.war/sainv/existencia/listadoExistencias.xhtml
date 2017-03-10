@@ -1,0 +1,102 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Existencias" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Existencias globales por productos</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="10">
+		<p:table columns="8" widthPercentage="100" headerRows="1"  widths="0.8 2 0.7 1.4 0.2 2 0.5 0.4" >
+			<p:font color="black" style="bold" size="11">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.productomast_ref}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.productolist_col2}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="right">#{app.productolist_col5}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.productomast_modelo}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Tipo</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.productolist_col4}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Cod Cat</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Cant.</p:paragraph>
+			</p:cell>
+			</p:font>
+			
+		<ui:repeat var="prd" value="#{productoHome.prdsExistencias}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.referencia}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.marca.nombre}</p:paragraph>
+			</p:cell>		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.modelo}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.tipo}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.categoria.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{prd.categoria.codigo}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="3" minimumHeight="16">
+				<p:paragraph>#{prd.totalPrds}</p:paragraph>
+			</p:cell>
+		</ui:repeat>
+			<p:font color="black" style="bold" size="12">
+			<p:cell horizontalAlignment="right" colspan="7" verticalAlignment="middle" paddingBottom="4"  paddingRight="4" backgroundColor="#E4E4E4">
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" backgroundColor="#E4E4E4">
+				<p:paragraph><p:text value="#{productoHome.totalInventario}">
+					<f:convertNumber  locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+				</p:text></p:paragraph>
+			</p:cell>
+			</p:font>
+	</p:table>
+	
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                <p:text value="Pag. " /><p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

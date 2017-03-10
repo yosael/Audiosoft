@@ -1,0 +1,118 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Reporte de cheques emitidos</f:facet>
+			<center>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+					<h:panelGrid columns="4">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Fecha de inicio:</ui:define>
+							<rich:calendar value="#{repPlantilla.fechaInicio}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="formA"/>
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Fecha de finalizacion:</ui:define>
+							<rich:calendar value="#{repPlantilla.fechaFin}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="formA"/>
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvPrv">
+							<ui:define name="label">Proveedor:</ui:define>
+							<h:inputText value="#{repPlantilla.valCmb1}"
+								readonly="false" required="false" style="width:200px;" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="formA"/>
+							</h:inputText>
+
+							<a:commandButton onclick="#{rich:component('selProv')}.show();"
+								ajaxSingle="true"
+								action="#{proveedorDocHome.cargarListaProveedores()}"
+								reRender="prov" styleClass="modifyBtn" value=" "
+								style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Estado:</ui:define>
+							<h:selectOneMenu value="#{repPlantilla.valCmb3}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItem itemValue="APL" itemLabel="Aplicados" />
+								<f:selectItem itemValue="ANU" itemLabel="Anulados" />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formA"  />
+							</h:selectOneMenu>									
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvEmp">
+							<ui:define name="label">Empresa:</ui:define>
+							<h:inputText value="#{repPlantilla.valCmb2}"
+								readonly="false" required="false" style="width:200px;" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="formA"/>
+							</h:inputText>
+
+							<a:commandButton onclick="#{rich:component('selEmpr')}.show();"
+								ajaxSingle="true"
+								action="#{empresaDocHome.cargarListaEmpresas()}" reRender="empr"
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>						
+						
+					</h:panelGrid>
+					
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton oncomplete="showReport('repChequesPDF', '#{conversation.id}');"
+							styleClass="pdfBtn" action="#{repPlantilla.detChequesEmitidos()}" value="#{msn.button_pdf}" rendered="true">
+						</a:commandButton>
+					</s:decorate>
+				
+			</h:form>
+			</center>
+		</rich:panel>
+	
+		<rich:modalPanel id="selProv" width="800" moveable="true"
+			autosized="true" top="50px" left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selProv');">
+			<f:facet name="header">Proveedores registrados</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selProv')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="prov">
+				<ui:include src="selProv.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selEmpr" width="800" moveable="true"
+			autosized="true" top="50px" left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selEmpr');">
+			<f:facet name="header">Empresas registradas</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selEmpr')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="empr">
+				<ui:include src="selEmpr.xhtml" />
+			</s:div>
+		</rich:modalPanel>		
+			
+	</ui:define>
+</ui:composition>

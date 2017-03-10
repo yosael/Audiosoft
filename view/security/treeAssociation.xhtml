@@ -1,0 +1,103 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<!-- Arbol -->
+		<rich:panel>
+			<f:facet name="header">#{msn.tree_head1}</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formZ">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<a:queue name="q1" />
+				<s:decorate template="/layout/kEdit.xhtml" id="perfil">
+					<ui:define name="label">#{msn.tree_role}:</ui:define>
+					<h:selectOneListbox value="#{roleDAO.instance}" required="true"
+						size="5">
+						<a:support event="onchange" limitToList="true"
+							eventsQueue="onchange"
+							reRender="formA,formB,formularios,arbol,r1"
+							action="#{treeSecurity.loadMarkPermissions}" />
+						<s:selectItems var="_rol" value="#{roleAllQuery.resultList}"
+							label="#{_rol.name}" noSelectionLabel="#{msn.opc0}" />
+						<s:convertEntity />
+					</h:selectOneListbox>
+				</s:decorate>
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="#{conversation.viewId}" propagation="begin"
+						value="#{msn.button_new}" styleClass="newBtn" />
+					<a:commandButton action="#{treeSecurity.asociatePermissions}"
+						value="#{msn.button_save}" reRender="formZ,formB"
+						styleClass="saveBtn" />
+				</s:decorate>
+				<rich:spacer height="20px" width="100%" />
+			</h:form>
+			<!-- arbol de permi1sos -->
+			<s:div id="arbol" styleClass="panelMid divOverTree">
+				<span class="title">#{msn.tree_title1}</span>
+				<rich:spacer height="10" />
+				<h:form id="formA">
+					<a:queue name="q2" />
+					<rich:tree value="#{treeSecurity.root}" var="arb" switchType="ajax"
+						id="tree" nodeFace="#{arb.type}" stateAdvisor="#{treeOtherOpen}">
+						<rich:treeNode type="-1" icon="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="165" icon="/kubeImg/package.png"
+							iconLeaf="/kubeImg/package.png">
+							<h:selectBooleanCheckbox value="#{arb.selected}"
+								rendered="#{userDAO.managed or roleDAO.managed}">
+								<a:support action="#{treeSecurity.markOneNode(arb)}"
+									event="onclick" limitToList="true" ajaxSingle="true"
+									eventsQueue="onclick" reRender="tree,formA" />
+							</h:selectBooleanCheckbox>
+							<rich:spacer width="10" />
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="856" iconLeaf="/kubeImg/permission.png">
+							<h:selectBooleanCheckbox value="#{arb.selected}"
+								rendered="#{userDAO.managed or roleDAO.managed}">
+								<a:support action="#{treeSecurity.markOneNode(arb)}"
+									event="onclick" limitToList="true" ajaxSingle="true"
+									eventsQueue="onclick" reRender="tree,formA" />
+							</h:selectBooleanCheckbox>
+							<rich:spacer width="10" />
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+					</rich:tree>
+				</h:form>
+			</s:div>
+			<rich:spacer width="5" />
+			<!-- arbol de permisos asignados -->
+			<s:div id="r1" styleClass="panelMid divOverTree">
+				<span class="title">#{msn.tree_title2}</span>
+				<rich:spacer height="10" />
+				<h:form id="formB">
+					<a:queue name="q3" />
+					<rich:tree value="#{treeSecurity.rootPermission}" var="arb"
+						switchType="ajax" id="tree" nodeFace="#{arb.type}"
+						stateAdvisor="#{treeOpen}">
+						<rich:treeNode type="-1" icon="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="165" icon="/kubeImg/package.png"
+							iconLeaf="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="856" iconLeaf="/kubeImg/permission.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+					</rich:tree>
+				</h:form>
+			</s:div>
+			<div style="clear: both" />
+		</rich:panel>
+	</ui:define>
+</ui:composition>

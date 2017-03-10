@@ -1,0 +1,149 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	>
+	
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{requisicionEtaHome.managed?sainv_view_messages.get('reqeta_head_edit'):sainv_view_messages.get('reqeta_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formrequisicionMod">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<fieldset>
+					<legend>#{app.reqeta_legend}</legend> 
+					
+					<h:panelGrid columns="3">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.reqeta_fechaIng}:</ui:define>
+							<h:inputText value="#{requisicionEtaHome.instance.fechaIngreso}" required="true" readonly="true">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"/>
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.reqeta_fechaApr}:</ui:define>
+							<h:inputText value="#{requisicionEtaHome.instance.fechaAprobacion}" required="false" readonly="true">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"/>
+							</h:inputText>
+						</s:decorate>
+	
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" >
+							<ui:define name="label">#{app.etarepcli_comentarios}:</ui:define>
+							<h:inputTextarea value="#{requisicionEtaHome.instance.descripcion}" required="false">
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+							</h:inputTextarea>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+							<ui:define name="label">#{app.movimientomast_branch}:</ui:define>
+							<h:selectOneMenu value="#{requisicionEtaHome.instance.sucursalSol}" required="true" 
+								enabled="#{requisicionEtaHome.instance.estado == 'PEN' or requisicionEtaHome.instance.estado == null}" >
+								
+								<f:selectItem selected="true" itemValue="#{requisicionEtaHome.instance.sucursalSol}" itemLabel="#{requisicionEtaHome.instance.sucursalSol.nombre}"  />
+								<s:selectItems value="#{requisicionEtaHome.sucursalesSoli}" var="_emp" 
+									label="#{_emp.nombre}" />
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_btnItems,_table,decTablita" action="#{requisicionEtaHome.limpiarProductos()}" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.reqeta_estado}:</ui:define>
+							<h:inputText value="#{msn.status_pending}" rendered="#{requisicionEtaHome.instance.estado=='PEN'}" readonly="true" />
+				            <h:inputText value="#{msn.status_approved}" rendered="#{requisicionEtaHome.instance.estado=='APR'}" readonly="true" />
+				            <h:inputText value="#{msn.status_rejected}" rendered="#{requisicionEtaHome.instance.estado=='REC'}" readonly="true" />
+						</s:decorate>						
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<a:commandButton onclick="#{rich:component('confirmationReq')}.show();" ajaxSingle="true" 
+						disabled="#{requisicionEtaHome.instance.sucursalSol==null}" id="_btnItems" 
+						action="#{productoHome.cargarListaProdsTaller(requisicionEtaHome.instance.sucursalSol)}" reRender="mprd" 
+						styleClass="addBtn" value="#{msn.button_add_product}" 
+						rendered="#{requisicionEtaHome.instance.estado == 'COT'}" >  
+					</a:commandButton>
+				</s:decorate>
+				
+				<rich:spacer height="6"/>
+				<s:decorate id="decTablitaReq">
+				<rich:dataTable var="res" value="#{requisicionEtaHome.itemsAgregados}" id="_table"
+					rendered="#{not empty requisicionEtaHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.reqeta_sel_items}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.producto.nombre}" />
+					</rich:column>
+					<rich:column filterEvent="onkeyup">
+						<f:facet name="header">#{app.requeta_numitems}</f:facet>
+						<h:inputText value="#{res.cantidad}" size="8" 
+							disabled="#{requisicionEtaHome.instance.estado == 'APR' or requisicionEtaHome.instance.estado == 'REC'}" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+						</h:inputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.producto.prcNormal}" size="8" >
+						</h:outputText>
+					</rich:column>
+					<rich:column rendered="#{not requisicionEtaHome.managed}">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink reRender="formrequisicionMod"  eventsQueue="q1"
+							action="#{requisicionEtaHome.removerItem(res)}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+
+				</rich:dataTable>
+				</s:decorate>
+				<rich:spacer height="6"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton action="#{requisicionEtaHome.save()}" onclick="#{rich:component('detReq')}.hide();" reRender="formrequisicionMod, pnlRequisiciones, tblRequisiciones"
+						rendered="#{not requisicionEtaHome.managed}" styleClass="saveBtn"
+						value="#{msn.button_save}"/>
+				</s:decorate>
+				</fieldset>
+				</center>
+			</h:form>
+			
+			<rich:modalPanel id="confirmationReq"  width="700" moveable="true" autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmationReq');">
+				
+				<f:facet name="header">
+					#{app.movimientolist_add_products_modal}
+				</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmationReq')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mprd">
+					<ui:include  src="addPrdReq.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+		</rich:panel>
+
+</ui:composition>

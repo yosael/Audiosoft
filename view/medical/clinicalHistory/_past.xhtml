@@ -1,0 +1,46 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<s:div styleClass="pastHistories"
+		rendered="#{not empty pastHistory.clinicalHistories}">
+		<ui:repeat value="#{pastHistory.clinicalHistories}" var="res">
+			<div class="item">
+			<table>
+				<tr>
+					<td class="label">#{app.past_consecutive}:</td>
+					<td><h:outputText value="#{res.consecutive}" /></td>
+				</tr>
+				<tr>
+					<td class="label">#{app.past_date}:</td>
+					<td><h:outputText value="#{res.creationDate}">
+						<s:convertDateTime pattern="yyyy/MM/dd HH:mm:ss a" />
+					</h:outputText></td>
+				</tr>
+				<tr>
+					<td class="label">#{app.past_type}:</td>
+					<td><h:outputText value="#{res.clinicalHistoryType.name}" />
+					</td>
+				</tr>
+				<tr>
+					<td class="label">#{app.past_doctor}:</td>
+					<td><h:outputText value="#{res.doctor.fullName()}" /></td>
+				</tr>
+				<tr>
+					<td colspan="2" style="padding-left: 125px;"><a
+						target="_blank"
+						href="/sainv/medical/clinicalHistory/#{res.clinicalHistoryType.uriCode}/step1.kube?id=#{res.medicalAppointment.id}&amp;historyId=#{res.consecutive}&amp;conversationPropagation=begin">
+					#{app.past_link}</a></td>
+				</tr>
+			</table>
+			</div>
+			<rich:spacer height="10" />
+		</ui:repeat>
+	</s:div>
+</ui:composition>

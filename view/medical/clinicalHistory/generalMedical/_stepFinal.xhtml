@@ -1,0 +1,43 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKu.xhtml">
+	<ui:define name="body">
+		<p:growl globalOnly="true" sticky="false" life="3000" />
+		<rich:panel>
+			<f:facet name="header">#{app.general_head_end}</f:facet>
+			<h:form id="formStepFinal">
+				<s:div id="notification-ch" rendered="true">
+					<p>#{app.general_end_msg}</p>
+				</s:div>
+				
+				<rich:spacer height="10" />
+				<s:decorate template="/layout/kActions.xhtml">
+					<h:commandButton action="back" value="#{app.diagnostic_back}"
+						styleClass="leftBtn">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+					<s:button propagation="none" value="#{app.diagnostic_exit}"
+						styleClass="modalBtn" rendered="#{generalMedicalDAO.managed}"
+						view="/medical/medicalAppointment/scheduler.xhtml">
+					</s:button>
+					<h:commandButton action="#{wizardGeneralMedical.stepFinal()}"
+						value="#{app.diagnostic_save}" styleClass="saveBtn"
+						rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+	<ui:define name="past">
+		<ui:include src="/medical/clinicalHistory/_past.xhtml" />
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,157 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="15 15 30 30" orientation="landscape">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center" rendered="#{reporte.tipoMovimiento==null}">#{app.report_pdf_movements_title}</p:paragraph>
+		<p:paragraph alignment="center" rendered="#{reporte.tipoMovimiento=='E'}">#{app.report_pdf_movements_entries_title}</p:paragraph>
+		<p:paragraph alignment="center" rendered="#{reporte.tipoMovimiento=='S'}">#{app.report_pdf_movements_outputs_title}</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{reporte.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{reporte.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Tipo de movimiento: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{app.movimiento_movement_type_e}" rendered="#{reporte.tipoMovimiento=='E'}" />
+				<p:text value="#{app.movimiento_movement_type_s}" rendered="#{reporte.tipoMovimiento=='S'}" />				
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Sucursal: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{reporte.sucursalSeleccionada.nombre}" /></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Categoría</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text rendered="#{reporte.categoriaSeleccionada.nombre}" />
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Producto: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text rendered="#{reporte.productoSeleccionado.nombre}" />			
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	<p:font size="9">
+		<p:table columns="8" widthPercentage="100"  headerRows="1" widths="0.7 2.3 1.4 0.6 0.8 0.7 0.7 1.2">
+			<p:font color="black" style="bold" size="10">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>FECHA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>PRODUCTO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>CATEGORÍA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>CANT.</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>COSTO UNITARIO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18" >
+						<p:paragraph>TIPO MOV.</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>TIPO TXN.</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+						<p:paragraph>SUCURSAL</p:paragraph>
+				</p:cell>
+			</p:font>
+			<ui:repeat var="res" value="#{reporte.items}">
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.movimiento.fecha}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.inventario.producto.nombre}"/></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.inventario.producto.categoria.nombre}"/></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.cantidad}">
+						<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+					</p:text></p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.costoUnitario}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" 
+					rendered="#{reporte.tipoMovimiento==null}">
+					<p:paragraph><p:text value="#{reporte.obtenerTipoMovimiento(res)}"/></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{reporte.obtenerTipoTransaccion(res)}"/></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" >
+					<p:paragraph><p:text value="#{res.movimiento.sucursal.nombre}"/></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

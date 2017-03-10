@@ -1,0 +1,102 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<h:form id="formFac">
+		<p:growl globalOnly="true" sticky="false" life="3000" />
+		<p:focus />
+		<a:queue name="q1" />
+		
+		<fieldset>
+			<legend>Datos de la factura</legend>
+			
+			<h:panelGrid columns="3" style="padding-left:100px;">
+			
+				<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label" class="required">Ingresar numero de factura:</ui:define>
+						<h:inputText value="#{ventaDocHome.numFactura}" id="txtId" >
+							<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+						</h:inputText>
+				</s:decorate>
+				
+				<s:decorate  template="/layout/kEditSpace.xhtml"> 
+					<ui:define name="label">Seleccionar empresa:</ui:define>
+						<h:selectOneMenu  id="dcListaEmpresa" value="#{empresaDocHome.empresaSelected}" required="true">
+							<s:selectItems value="#{empresaDocHome.resultlist}" var="_empresa"
+								label="#{_empresa.nombre}" noSelectionLabel="Seleccione Empresa" />
+							<s:convertEntity />
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+								reRender="slcComprobante" action="#{comprobanteImpresionHome.cargarListaComprobantes(empresaDocHome.empresaSelected,'FAC')}"/>
+						</h:selectOneMenu>
+				</s:decorate>
+			
+				<s:decorate template="/layout/kEditSpace.xhtml" id="dcComprobante">
+					<ui:define name="label"  >Seleccionar comprobante:</ui:define>
+						<h:selectOneMenu  id="slcComprobante" value="#{ventaDocHome.comprobanteSelected}" required="true">
+							<s:selectItems value="#{comprobanteImpresionHome.resultlist}" var="_comprobante" noSelectionLabel="Seleccionar"
+								label="#{_comprobante.nombre}"  />
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+								reRender="slcComprobante" />
+							<s:convertEntity />
+						</h:selectOneMenu>
+				</s:decorate>
+				
+				
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+					<h:inputText value="#{clienteDocHome.instance.nombre}"
+						required="true">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate template="/layout/kEditSpace.xhtml">	
+					<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+					<h:inputText value="#{clienteDocHome.instance.apellido}"
+						required="true">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+		
+
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+					<h:inputText value="#{clienteDocHome.instance.telefono1}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
+					<h:inputText value="#{clienteDocHome.instance.telefono2}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+					
+					<!-- <a:commandButton ajaxSingle="true" id="btnGenerar" onclick="#{rich:component('modFactura')}.hide();" action="#{clienteDocHome.imprimirHola()}" reRender="nFac,formvta"
+					styleClass="saveBtn" value="Factura" rendered="#{ventaProdServHome.instance.estado!='PEN'}" /> -->
+
+			</h:panelGrid>
+			
+			
+				<s:decorate template="/layout/kActions.xhtml" >
+					<h:panelGrid columns="1" style="margin:0 auto">
+						<a:commandButton styleClass="saveBtn" ajaxSingle="true" action="#{ventaDocHome.imprimirFactura(clienteDocHome.instance)}" reRender="formFac"   value="Imprimir Factura" >
+						</a:commandButton>
+					</h:panelGrid>
+				</s:decorate>
+			
+		
+		</fieldset>
+		
+	</h:form>
+	
+</ui:composition>

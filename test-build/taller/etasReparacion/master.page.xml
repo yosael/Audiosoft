@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<action execute="#{sucursalHome.cargarSucursales()}" on-postback="false" />
+	<param name="id" value="#{etapaRepCliHome.etaRepId}" required="false" />
+	<action execute="#{etapaRepCliHome.load()}" on-postback="false" />
+	
+	<navigation from-action="#{etapaRepCliHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{etapaRepCliHome.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	
+	<navigation from-action="#{etapaRepCliHome.aprobarEtapa()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{etapaRepCliHome.noAprobarEtapa()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{etapaRepCliHome.rechazarEtapa()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{reparacionClienteHome.aprobacionCliente()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{reparacionClienteHome.rechazoCliente()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	
+</page>

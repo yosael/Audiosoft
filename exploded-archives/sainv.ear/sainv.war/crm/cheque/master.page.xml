@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	
+	<param name="id" value="#{chequeDocHome.cheqDocId}" required="false" />
+	
+	<action execute="#{chequeDocHome.load()}" on-postback="false" />
+	
+	<navigation from-action="#{chequeDocHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/crm/cheque/master.xhtml" >
+			    <param name="shwC" value="true" />
+			</redirect>
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{chequeDocHome.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/crm/cheque/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{chequeDocHome.anularCheque()}">
+		<rule if-outcome="true">
+			<redirect view-id="/crm/cheque/list.xhtml" />
+		</rule>
+		<rule if-outcome="false">
+			<redirect view-id="/crm/cheque/list.xhtml" />
+		</rule>		
+	</navigation>	
+	
+	<navigation from-action="#{ventaDocHome.load()}">
+		<rule if-outcome="false">
+			<redirect view-id="/crm/cheque/master.xhtml" >
+			</redirect>					
+		</rule>
+	</navigation>	
+</page>

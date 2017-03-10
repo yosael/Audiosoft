@@ -1,0 +1,144 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="20 20 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Consolidado de ventas por producto/servicio</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Sucursal: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.sucursal.nombre}">
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Tipo de venta: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{app.vtaprs_cmbapa}" rendered="#{repVenta.valCmb2=='CMB'}" />
+				<p:text value="#{app.status_servmed}" rendered="#{repVenta.valCmb2=='CST'}" />
+				<p:text value="#{app.status_taller}" rendered="#{repVenta.valCmb2=='TLL'}" />
+				<p:text value="#{app.status_items}" rendered="#{repVenta.valCmb2=='ITM'}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Filtro de código: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.valCmb1}%">
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	
+	<p:font size="14">
+	<p:table columns="2" widthPercentage="70" headerRows="0" widths="1 1" >
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="26">
+			<p:paragraph><p:font style="bold">
+				<p:text value="#{repVenta.dtRp['totaldetalles']}" />
+			</p:font>
+				<p:text value=" productos/servicios vendidos" />
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="26">
+			<p:paragraph><p:font style="bold">
+				<p:text value="#{repVenta.dtRp['vtadetalles']}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+						groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:font>
+				<p:text value=" en ventas" />
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="9">
+		
+		<p:table columns="4" widthPercentage="98" headerRows="1"  widths="1.5 3 1 1" >
+			<p:font color="black" style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">CÓDIGO</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">DETALLE</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">CANTIDAD</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">MONTO</p:paragraph>
+			</p:cell>
+			</p:font>
+
+		<ui:repeat var="det" value="#{repVenta.dtRp['detventas']}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det[0]}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det[1]}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det[2]}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="3" minimumHeight="16">
+				<p:paragraph><p:text value="#{det[3]}">
+				<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+			</p:text></p:paragraph>
+			</p:cell>
+		</ui:repeat>
+	</p:table>
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

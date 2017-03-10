@@ -1,0 +1,436 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body"> 
+		 
+		<script type="text/javascript" src="#{request.contextPath}/script/shortcut.js"></script>
+		<script type="text/javascript" language="javascript">
+	
+			function releaseCheckFormPayment(idElem) {
+				var algo = '#'+idElem;
+				document.getElementById(idElem).checked = false;
+			}
+		
+			function init() { 
+				shortcut.add("F9", function() {
+					#{rich:element('btnEfectuarVta')}.click();
+				});
+
+				shortcut.add("F4", function() {
+					#{rich:element('btnSearchPrd')}.click();
+				});
+			}
+			
+			/*function nuevaVenta() {
+				#{rich:element('btnNuevaVta')}.click();
+			}*/
+			
+			window.onload=init();
+		
+		</script>	
+		<style>
+			<!--
+			 .tabletotal{font: 13px/14px Arial; color:#000000; background:#FFFFFF;}
+			 .tabletotal td{ border:1px solid #CCCCCC; padding:9px;}
+			 .tabletotal p{ margin:0px; padding:0px;}
+			-->
+		</style>
+	
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detalle de la venta" />
+			</f:facet>
+			<h:form id="formvtitm" prependId="false" >
+
+				<rich:spacer height="10" />
+				
+				<p:hotkey bind="F1" handler="${rich:component('ayudaScr')}.show();" />
+				
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<a:queue name="q1" />
+				
+				<h:graphicImage value="/kubeImg/helpScreen.png" 
+					style="float:left; width:30px; height:30px;cursor:pointer; position:absolute;" 
+					onclick="#{rich:component('ayudaScr')}.show();"
+					title="COMO UTILIZAR ESTA PANTALLA?" alt="COMO UTILIZAR ESTA PANTALLA?" />
+				
+				<center>
+					<table style="width:85%;">
+					<tr>
+						<td>
+							<h:panelGrid columns="4" >
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">Fecha de la venta:</ui:define>
+									<h:inputText value="#{ventaDocHome.instance.fecha}"
+									readonly="true" style="width:100px; text-align:center;" >
+										<s:convertDateTime pattern="dd/MM/yyyy" />
+									</h:inputText>
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+									<ui:define name="label">Tipo de Comprobante:</ui:define>
+									<h:inputText value="#{ventaDocHome.instance.comprobante.nombre}" id="_tipoComprobante" 
+										readonly="true" required="true" style="width:200px;" />
+										
+									<a:commandButton onclick="#{rich:component('selComprbt')}.show();" ajaxSingle="true"  
+										action="#{comprobanteImpresionHome.cargarListaComprobantesUsuario()}" reRender="comprbt" 
+										styleClass="modifyBtn" value=" " style="width:30px;">
+									</a:commandButton>
+								</s:decorate>
+																												
+								 
+								 <s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define readonly="#{not ventaDocHome.managed}" name="label">Num. documento:</ui:define>
+									<h:inputText value="#{ventaDocHome.instance.correlativo}" 
+										onkeypress="return restrictNumDigits(event, this, 12);" maxLength="12"
+										required="true" style="width:84px; text-align:right;" >
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+									</h:inputText>
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">Num. Serie:</ui:define>
+									<h:inputText readonly="#{not ventaDocHome.managed}" value="#{ventaDocHome.instance.serie}" 
+										maxLength="12" required="true" style="width:84px; text-align:right;" >
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+									</h:inputText> 
+								</s:decorate> 
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+									<ui:define name="label">Cliente:</ui:define>
+									<h:inputText value="#{ventaDocHome.instance.cliente.nombre} #{ventaDocHome.instance.cliente.apellido}" 
+										readonly="true" required="true" style="width:200px;" />
+										
+									<a:commandButton onclick="#{rich:component('selClient')}.show();" ajaxSingle="true"  
+										action="#{clienteDocHome.cargarListaClientes()}" reRender="cli" 
+										styleClass="modifyBtn" value=" " style="width:30px;">
+									</a:commandButton>
+								</s:decorate>				
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+									<ui:define name="label">Nuevo cliente:</ui:define>
+									<h:inputText value="#{ventaDocHome.nwNombre}" required="#{ventaDocHome.instance.cliente==null}" style="width:105px;" maxlength="50" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+									</h:inputText>
+									<h:inputText value="#{ventaDocHome.nwApellido}" required="#{ventaDocHome.instance.cliente==null}" style="width:105px;" maxlength="50" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+									</h:inputText>
+								</s:decorate>				
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">Descuento:</ui:define>
+									<h:inputText value="#{ventaDocHome.instance.descuento}" 
+										onkeypress="return restrictNumDigits(event, this, 12);" maxLength="12"
+										required="true" style="width:84px; text-align:right;" >
+											<a:support eventsQueue="q1" ajaxSingle="true" event="onkeyup" requestDelay="1000" 
+											 	reRender="formvtitm" action="#{ventaDocHome.actualizarSubtotal()}" />
+									</h:inputText>
+								</s:decorate>								
+
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">Forma de Pago:</ui:define>
+									<h:selectOneMenu value="#{ventaDocHome.instance.formaPago}">
+										<f:selectItem itemValue="EFE" itemLabel="Efectivo"/>
+										<f:selectItem itemValue="CRD" itemLabel="Crédito"/>
+										<f:selectItem itemValue="TRJ" itemLabel="Tarjeta"/> 
+										<f:selectItem itemValue="CHQ" itemLabel="Cheque"/>
+										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formvtitm"  />
+									</h:selectOneMenu>									
+								</s:decorate>
+								 
+							</h:panelGrid>						
+						
+						</td>
+					</tr>
+					<tr>  
+						<td align="center">  
+							<rich:spacer width="4" />
+							 
+							<a:commandButton ajaxSingle="true"  tabindex="40" 
+								action="#{ventaDocHome.agregarDetVenta()}" reRender="formvtitm"
+								id="btnSearchPrd" styleClass="thoughtbot" value="AGREGAR DETALLE" rendered="#{not ventaDocHome.managed}">
+							</a:commandButton>
+							
+							<a:commandButton value="GENERAR COMPROBANTE" action="#{ventaDocHome.genCompr()}"  ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true"
+								 rendered="#{ventaDocHome.managed}"
+								oncomplete="showReport('#{ventaDocHome.instance.comprobante.pagina}', '#{conversation.id}');" styleClass="pdfBtn"   />
+								
+							<a:commandButton oncomplete="showReport('ventaDocPDF', '#{conversation.id}');"
+								styleClass="pdfBtn" action="#{ventaDocHome.actualizarSubtotal()}"
+								value="Generar Reporte" rendered="#{ventaDocHome.managed}" />
+							
+						</td>
+					</tr>
+					</table>
+					
+					<s:div id="_divDetalleVenta">
+						<rich:dataTable  var="res" value="#{ventaDocHome.detVentasDoc}" id="_tableDetalleVenta"
+							align="center" rowClasses="tblEven,tblOdd" 
+							onRowMouseOver="this.style.backgroundColor='#D1F4B3'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">Detalle de la Venta</f:facet>
+							
+							<rich:column>
+								<f:facet name="header">Cantidad</f:facet>
+								<h:inputText value="#{res.cantidad}" size="7" style="text-align:right;width:50px;" tabindex="21"
+									onkeypress="return restrictNumDigitsDecimals(event, this, 8, 4);">
+									<a:support eventsQueue="q1" ajaxSingle="true" event="onkeyup" requestDelay="1000" 
+										reRender="formvtitm" action="#{ventaDocHome.actualizarSubtotal()}" />
+								</h:inputText>
+							</rich:column> 
+							<rich:column>
+								<f:facet name="header">Detalle</f:facet>
+								<h:inputText value="#{res.detalle}" style="width:300px; text-align:left;" maxLength="100">
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="formvtitm"/>
+								</h:inputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Precio Unitario</f:facet>
+								<h:inputText value="#{res.precioUnitario}" size="7" style="text-align:right;width:50px;" tabindex="21"
+									onkeypress="return restrictNumDigitsDecimals(event, this, 8, 4);">
+									<a:support eventsQueue="q1" ajaxSingle="true" event="onkeyup" requestDelay="1000" 
+										reRender="formvtitm" action="#{ventaDocHome.actualizarSubtotal()}" />
+								</h:inputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Tipo</f:facet>
+								<h:selectOneMenu value="#{res.tipo}">
+									<f:selectItem itemValue="G" itemLabel="Gravado"/>
+									<f:selectItem itemValue="E" itemLabel="Exento"/>	
+									<f:selectItem itemValue="J" itemLabel="No sujeto"/>
+									<a:support event="onchange" action="#{ventaDocHome.actualizarSubtotal()}" 
+										ajaxSingle="true" eventsQueue="q1" reRender="formvtitm" />
+								</h:selectOneMenu>									
+							</rich:column>		
+							<rich:column>
+								<f:facet name="header">Vtas. No Sujetas</f:facet>
+								<h:outputText value="#{res.total}" rendered="#{res.tipo == 'J'}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Vtas. Excentas</f:facet>
+								<h:outputText value="#{res.total}" rendered="#{res.tipo == 'E'}" />
+							</rich:column>					
+							<rich:column>
+								<f:facet name="header">Vtas. Grabadas</f:facet>
+								<h:outputText value="#{res.total}" rendered="#{res.tipo == 'G'}" /> 
+							</rich:column>
+							<rich:column style="vertical-align:middle" headerClass="col60" >
+								<f:facet name="header">Acción</f:facet>
+								 <a:commandLink reRender="_divDetalleVenta" eventsQueue="q1"
+		                                 action="#{ventaDocHome.removerDetVenta(res)}" ajaxSingle="true">
+		                                 <h:graphicImage value="/kubeImg/close.png" />
+		                         </a:commandLink>
+							</rich:column>				
+
+						</rich:dataTable>
+						
+						<br/>
+						
+						<table class="tabletotal" width="100%" cellpadding="0" border="1" cellspacing="0">
+							<tr>
+								<td><p><strong>(+) IVA PERCIBIDO</strong></p></td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.instance.percibido}" style="text-align:right;"  >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>								
+								</td>
+								<td><p>&nbsp;</p></td>
+								<td><p><strong>SUB-TOTALES</strong></p></td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.subTotalNs}" style="text-align:right;" >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>								
+								</td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.subTotalE}" style="text-align:right;">
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>								
+								</td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.subTotalG}" style="text-align:right;">
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>								
+								</td>																
+							</tr>
+							<tr>
+								<td><p><strong>(-) IVA RETENIDO</strong></p></td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.instance.retenido}" style="text-align:right;"  >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>	
+						        	</p>							
+								</td> 
+								<td><p>&nbsp;</p></td>
+								<td><p><strong>DESCUENTO</strong></p></td>
+								<td colspan="3">
+									<p>
+									<h:outputText value="#{ventaDocHome.instance.descuento}" style="text-align:right;"  >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>
+								</td>
+							</tr>
+							<tr>
+								<td><p><strong>IVA</strong></p></td>
+								<td>
+									<p>
+									<h:outputText value="#{ventaDocHome.instance.iva}" style="text-align:right;"  >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>	
+						        	</p>							
+								</td> 
+								<td><p>&nbsp;</p></td>
+								<td><p><strong>TOTAL</strong></p></td>
+								<td colspan="3">
+									<p style="font-weight:bold; font-size:15px;">
+									<h:outputText value="#{ventaDocHome.instance.total}" style="text-align:right;"  >
+							        	<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						        	</h:outputText>
+						        	</p>
+								</td>
+							</tr>
+						</table>
+						
+					</s:div>				
+				</center>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/vta/ventaDoc/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/vta/ventaDoc/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}"> 
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{ventaDocHome.save()}" reRender="formvtitm" id="btnEfectuarVta"
+						rendered="#{not ventaDocHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="Generar Venta"/>
+						
+					<a:commandButton action="#{ventaDocHome.modify()}" reRender="formvtitm"
+						rendered="#{ventaDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+						
+					<a:commandButton onclick="#{rich:component('confAnu')}.show();" ajaxSingle="true"  
+						rendered="#{ventaDocHome.managed}" styleClass="modifyBtn" 
+						value="Anular Venta">
+					</a:commandButton>
+
+				</s:decorate>
+				
+				<s:div rendered="#{ventaDocHome.showComp == true}">
+					<script type="text/javascript" language="javascript">
+						showReport('#{ventaDocHome.instance.comprobante.pagina}' , '#{conversation.id}');
+					</script>
+				</s:div>
+					
+			</h:form>
+			
+			<rich:modalPanel id="selItem" width="770" moveable="true" left="10"
+				autosized="true" top="50px" onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+				<f:facet name="header">Productos</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selItem')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1"><ui:include src="addProducts.xhtml" /></s:div>
+			</rich:modalPanel>			
+		</rich:panel>
+		 
+		<h:form id="confAnuForm">
+			<rich:modalPanel id="confAnu" width="300" moveable="true" autosized="true" top="50px"  left="10"
+				onbeforeshow="activeModal.setActiveModalPanel('confAnu');">
+				<f:facet name="header">Confirmacion de Anulacion de Ventas</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confAnu')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="_confAnu" >
+					<center>  
+						<p>Realmente desea anular esta Venta?</p>
+						
+						<a:commandButton action="#{ventaDocHome.anularVenta()}" reRender="formvtitm"
+							rendered="#{ventaDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="Anular Venta" />
+						<a:commandButton onclick="#{rich:component('confAnu')}.hide();"
+							rendered="#{ventaDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="Cancelar" />
+					</center>
+				</s:div>
+			</rich:modalPanel>
+		</h:form>		
+		
+		<rich:modalPanel id="ayudaScr" width="800" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('ayudaScr');">
+			<f:facet name="header">Pantalla de ayuda</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('ayudaScr')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="ayd" ><ui:include  src="ayudavta.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selClient" width="850" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selClient');">
+			<f:facet name="header">Clientes registrados</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selClient')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="cli" ><ui:include src="selClient.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selComprbt" width="800" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selComprbt');">
+			<f:facet name="header">Comprobantes de impresión</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selComprbt')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="comprbt" ><ui:include src="selComprbt.xhtml" /></s:div>
+		</rich:modalPanel>	
+		
+		<s:div style="text-align:center; position: fixed; bottom:0px; left:0px; width: 100%; height:26px; background-color:#FFFFFF; color:black; font-size:14px; font-weight:bold; padding-top:5px;">
+			 F1 : AYUDA <rich:spacer width="20" /> || <rich:spacer width="20" /> 
+			 F9 : GENERAR VENTA || <rich:spacer width="20" /> 
+			 F4 : AGREGAR DETALLE
+		</s:div>			
+			
+	</ui:define> 
+	
+</ui:composition>

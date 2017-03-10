@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_excel_movements_worksheet}"
+		value="#{reporte.items}" var="bean">
+		<e:header> 
+			<f:facet name="left">
+				#{app.report_excel_movements_title}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col1}" style="xls-font: red bold 10 Verdana; xls-format-mask: dd/MM/yyyy" />
+			</f:facet>
+			<e:cell value="#{bean.movimiento.fecha}" forceType="text" >
+				
+			</e:cell>
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col2}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.inventario.producto.nombre}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col3}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.inventario.producto.categoria.nombre}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col4}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.cantidad}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col5}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.costoUnitario}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true" rendered="#{reporte.tipoMovimiento==null}">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col9}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{reporte.obtenerTipoMovimiento(bean)}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col6}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{reporte.obtenerTipoTransaccion(bean)}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true" rendered="#{loginUser.user.sucursal==null}">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col7}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.movimiento.sucursal.empresa.nombre}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.report_movements_items_list_col8}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.movimiento.sucursal.nombre}" />
+		</e:column>
+	</e:worksheet>
+
+</e:workbook>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{categoriaHome.managed?sainv_view_messages.get('categoriamast_head_edit'):sainv_view_messages.get('categoriamast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formcategoria">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.categoriamast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.categorialist_codigo}:</ui:define>
+							<h:inputText value="#{categoriaHome.instance.codigo}" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.categoriamast_name}:</ui:define>
+							<h:inputText value="#{categoriaHome.instance.nombre}" required="true" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.categoriamast_description}:</ui:define>
+							<h:inputTextarea value="#{categoriaHome.instance.descripcion}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_estaller}</ui:define>
+							<h:selectBooleanCheckbox value="#{categoriaHome.instance.deTaller}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_catPapa">
+							<ui:define name="label">#{app.categoriamast_categoria_father}:</ui:define>
+							<h:inputText value="#{categoriaHome.instance.categoriaPadre.nombre}" id="campo"
+								readonly="true" required="true" disabled="true" style="width:160px;" />
+							<a:commandButton onclick="#{rich:component('catsList')}.show();" ajaxSingle="true" rendered="#{categoriaHome.managed}" 
+								action="#{categoriaHome.loadCatPadreList(categoriaHome.instance)}" reRender="mCat" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+							<a:commandButton onclick="#{rich:component('catsList')}.show();" ajaxSingle="true" rendered="#{not categoriaHome.managed}" 
+								action="#{categoriaHome.loadCatPadreList(null)}" reRender="mCat" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+							<a:commandButton ajaxSingle="true" action="#{categoriaHome.instance.setCategoriaPadre(null)}" reRender="campo" 
+								styleClass="clearBtn" value=" " alt="Limpiar" eventsQueue="q1" style="width:30px;" >
+							</a:commandButton>
+						</s:decorate>
+						
+						<h:panelGroup>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">#{app.categoriamast_tncodlot}:</ui:define>
+								<h:selectBooleanCheckbox value="#{categoriaHome.instance.tieneNumLote}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">#{app.categoriamast_tncodser}:</ui:define>
+								<h:selectBooleanCheckbox value="#{categoriaHome.instance.tieneNumSerie}" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">Requiere molde:</ui:define>
+								<h:selectBooleanCheckbox value="#{categoriaHome.instance.reqMolde}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">Requiere Ensamblaje:</ui:define>
+								<h:selectBooleanCheckbox value="#{categoriaHome.instance.reqEnsamble}" />
+							</s:decorate>
+							
+						</h:panelGroup>
+					
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.categoriamast_company}:</ui:define>
+							<h:outputText value="#{categoriaHome.instance.empresa.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.categoriamast_company}:</ui:define>
+							<h:selectOneMenu value="#{categoriaHome.instance.empresa}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />								
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_activo}:</ui:define>
+							<h:selectOneMenu value="#{categoriaHome.instance.activo}"
+								required="true">
+								<f:selectItem itemLabel="#{app.productomast_activoa}"
+									itemValue="true" />
+								<f:selectItem itemLabel="#{app.productomast_activoi}"
+									itemValue="false" />
+							</h:selectOneMenu>
+						</s:decorate>
+												
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/categoria/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/sainv/categoria/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{categoriaHome.save()}" reRender="formcategoria"
+						rendered="#{not categoriaHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{categoriaHome.modify()}" reRender="formcategoria"
+						rendered="#{categoriaHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="catsList" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('catsList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('catsList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCat"><ui:include  src="selCatPapa.xhtml" /></s:div>
+			</rich:modalPanel>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

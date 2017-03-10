@@ -1,0 +1,94 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">#{app.report_rvtas_mens}</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="9">
+		<p:table columns="8" widthPercentage="100" headerRows="1"  widths="1 2 1 1 1 1 1 1" >
+			<p:font color="white" style="bold" size="10">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.vtaprs_fecha}</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:paragraph alignment="center">#{app.vtaprs_cliente}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:paragraph alignment="right">#{app.vtaprs_tipovta}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:paragraph alignment="center">#{app.usuariomast_branch}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:paragraph alignment="center">#{app.clicorp_legend_sngl}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:paragraph alignment="center">#{app.vtaprs_usrefe}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:paragraph alignment="center">#{app.combapa_estado}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:paragraph alignment="center">#{app.parvta_tp_monto}</p:paragraph>
+			</p:cell>
+			</p:font>
+
+			
+		<ui:repeat var="vta" value="#{repVenta.ventas}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+				<p:paragraph><p:text value="#{vta.fechaVenta}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle">
+				<p:paragraph>#{vta.cliente.nombres} #{vta.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph rendered="#{vta.tipoVenta=='CMB'}">#{app.vtaprs_cmbapa}</p:paragraph>
+				<p:paragraph rendered="#{vta.tipoVenta=='CST'}">#{app.status_servmed}</p:paragraph>
+				<p:paragraph rendered="#{vta.tipoVenta=='TLL'}">#{app.status_taller}</p:paragraph>
+				<p:paragraph rendered="#{vta.tipoVenta=='ITM'}">#{app.status_items}</p:paragraph>
+			</p:cell>		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>#{vta.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph rendered="#{vta.cliCorp!=null}">#{vta.cliCorp.nombre}</p:paragraph>
+				<p:paragraph rendered="#{vta.cliCorp==null}">-</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>#{vta.usrEfectua.nombreUsuario}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+				<p:paragraph rendered="#{vta.estado=='PEN'}">#{msn.status_pending}</p:paragraph>
+				<p:paragraph rendered="#{vta.estado=='APR'}">#{msn.status_approved}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" >
+				<p:paragraph><p:text value="#{vta.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+		</ui:repeat>
+			<p:font color="black" style="bold" size="10">
+			<p:cell horizontalAlignment="right" colspan="7" verticalAlignment="middle" paddingBottom="4"  paddingRight="4" >
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" >
+				<p:paragraph><p:text value="#{repVenta.totDec1}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+	</p:table>
+	
+	</p:font>
+</p:document>

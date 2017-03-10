@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_product_list_worksheet}"
+		value="#{reporte.inventarios}" var="bean">
+		<e:header> 
+			<f:facet name="left">
+				#{app.report_products_list_title}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col2}" style="xls-font: red bold 10 Verdana; xls-border: thick black"/>
+			</f:facet>
+			<e:cell value="#{bean.producto.nombre}" forceType="text" style="xls-border: thick black"/>
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col6}" style="xls-font: red bold 10 Verdana; xls-border: thick black"/>
+			</f:facet>
+			<e:cell value="#{bean.producto.prcNormal}" forceType="text" style="xls-border: thick black"/>
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col7}" style="xls-font: red bold 10 Verdana; xls-border: thick black"/>
+			</f:facet>
+			<e:cell value="#{bean.cantidadActual}" forceType="text" style="xls-border: thick black"/>
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col5}" style="xls-font: red bold 10 Verdana; xls-border: thick black"/>
+			</f:facet>
+			<e:cell value="#{bean.producto.marca.nombre}" forceType="text" style="xls-border: thick black"/>
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col4}" style="xls-font: red bold 10 Verdana; xls-border: thick black"/>
+			</f:facet>
+			<e:cell value="#{bean.producto.categoria.nombre}" forceType="text" style="xls-border: thick black"/>
+		</e:column>
+	</e:worksheet>
+
+</e:workbook>
+</html>

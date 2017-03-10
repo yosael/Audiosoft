@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">				
+				#{app.patimast_head_show}			
+			</f:facet>
+			<s:decorate template="/medical/patient/_detail.xhtml">
+				<ui:define name="patientInfo">
+					<h:form id="formA">
+						<p:growl globalOnly="true" sticky="false" life="3000" />
+						<p:focus />
+						<a:queue name="q1" />
+						<fieldset>
+								<legend>#{app.patimast_legend}</legend> 
+								<h:panelGrid columns="2" style="padding-left:100px;">
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_num_id}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.docId}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_type_id}:</ui:define>
+									<h:outputText
+										value="#{clienteHome.instance.tipoDoc}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.nombres}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.apellidos}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+										<ui:define name="label">Ocupacion:</ui:define>									
+										<h:outputText value="#{clienteHome.instance.ocupacion}" >
+											<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+										</h:outputText>									
+									</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">E-mail:</ui:define>
+									<h:outputText value="#{clienteHome.instance.email}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_bg}:</ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
+										disabled="true">
+										<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
+										<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
+										<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
+										<f:selectItem itemLabel="#{app.patimast_bg_4}" itemValue="3" />
+										<f:selectItem itemLabel="#{app.patimast_bg_5}" itemValue="4" />
+										<f:selectItem itemLabel="#{app.patimast_bg_6}" itemValue="5" />
+										<f:selectItem itemLabel="#{app.patimast_bg_7}" itemValue="6" />
+										<f:selectItem itemLabel="#{app.patimast_bg_8}" itemValue="7" />
+									</h:selectOneMenu>
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_dob}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.fechaNacimiento}">
+										<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+									</h:outputText>
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_gender}:</ui:define>
+									<h:selectOneRadio value="#{clienteHome.instance.genero}" styleClass="radioB" disabled="true">
+										<f:selectItem itemLabel="#{app.patimast_sex_1}" itemValue="1" />
+										<f:selectItem itemLabel="#{app.patimast_sex_2}" itemValue="0" />
+									</h:selectOneRadio>
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.telefono1}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_address}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.direccion}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.patimast_pais}:</ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.pais}" disabled="true">
+									<s:selectItems value="#{paisHome.resultList}" var="_pais"
+											label="#{_pais.nombreEsp}" noSelectionLabel="Seleccione un pais" />
+										<s:convertEntity />
+										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+											reRender="formA" />
+									</h:selectOneMenu>
+								</s:decorate>
+								<s:decorate rendered="#{clienteHome.instance.pais.id eq 68}" template="/layout/kEditSpace.xhtml"> 
+									<ui:define name="label">#{app.patimast_dept}:</ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.depto}" disabled="true" rendered="#{clienteHome.instance.depto != null}">
+										<s:selectItems value="#{deptoHome.resultList}" var="_depto"
+											label="#{_depto.nombre}" noSelectionLabel="Seleccione departamento" />
+										<s:convertEntity />
+										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+											reRender="formA" action="#{clienteHome.updateMunicipios()}"/>
+									</h:selectOneMenu>
+									<rich:spacer width="2" />
+									<h:selectOneMenu  value="#{clienteHome.instance.municipio}" disabled="true" rendered="#{clienteHome.instance.municipio != null}">
+										<s:selectItems value="#{clienteHome.municipios}" var="_munpio"
+											label="#{_munpio.nombre}" noSelectionLabel="Seleccione municipio" />
+										<s:convertEntity />
+										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+											reRender="formA"/>
+									</h:selectOneMenu>
+								</s:decorate>						
+							</h:panelGrid>
+							
+							<s:decorate template="/layout/kActions.xhtml" id="action">
+								<!-- <s:button view="/medical/schedoc/scheduler.xhtml" propagation="join"
+									styleClass="backBtn" value="agenda" />
+									
+								<s:button view="/medical/patient/search.xhtml" propagation="join"
+									styleClass="backBtn" value="regresar a principal" /> -->
+									<!-- este boton solo es visible cuando el usuario que ingresa tiene acciones especiales -->
+								<s:button view="/medical/patient/master.xhtml" propagation="join"
+									rendered="#{loginUser.user.accionEspecial}"
+									styleClass="editBtn" value="#{msn.button_edit}">
+									<f:param name="numId"
+										value="#{clienteHome.id}" />
+								</s:button>
+							</s:decorate> 
+						</fieldset>
+					</h:form>
+				</ui:define>
+			</s:decorate>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,94 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{doctorExternoHome.managed?sainv_view_messages.get('docext_head_edit'):sainv_view_messages.get('docext_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formdiagnos">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.docext_legend}</legend> 
+					<center>
+					<h:panelGrid columns="3" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_name}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.nombres}" required="true" maxlength="40" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_apellidos}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.apellidos}" required="true" maxlength="40" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_titulo}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.titulo}" required="true" maxlength="30" style="width:50px;" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_email}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.email}" required="true" maxlength="60"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_telefono1}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.telefono1}" required="true" maxlength="20"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_extension1}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.extension1}" required="true" maxlength="6" style="width:50px;"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_institucion}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.institucion}" required="true" maxlength="80"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_cargo}:</ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.cargo}" required="false" maxlength="80"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.docext_comentario}:</ui:define>
+							<h:inputTextarea value="#{doctorExternoHome.instance.comentario}" required="false" style="width:560px;"  />
+						</s:decorate>
+						
+				</h:panelGrid> 
+				</center>
+				<s:decorate template="/layout/kActions.xhtml">
+
+					<s:button view="/medical/docext/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{doctorExternoHome.save()}" onclick="#{rich:component('addDocsModal')}.hide();"  reRender="formdiagnos"
+						rendered="#{not doctorExternoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{doctorExternoHome.modify()}" onclick="#{rich:component('addDocsModal')}.hide();" reRender="formdiagnos"
+						rendered="#{doctorExternoHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	
+</ui:composition>

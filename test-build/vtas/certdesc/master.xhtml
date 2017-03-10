@@ -1,0 +1,69 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{certificadoDescHome.managed?sainv_view_messages.get('certdesc_head_edit'):sainv_view_messages.get('certdesc_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formcertdesc">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.certdesc_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.certdesc_codcert}:</ui:define>
+							<h:inputText value="#{certificadoDescHome.instance.codCert}" required="true" maxlength="12" disabled="#{certificadoDescHome.managed}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.certdesc_valdesc}:</ui:define>
+							<h:inputText value="#{certificadoDescHome.instance.valDescuento}" required="false"  onkeypress="return restrictNumDigits(event, this, 2);" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.certdesc_tmpval}:</ui:define>
+							<h:inputText value="#{certificadoDescHome.instance.tiempoValidez}" required="true"  onkeypress="return restrictNumDigits(event, this, 2);" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.certdesc_description}:</ui:define>
+							<h:inputTextarea value="#{certificadoDescHome.instance.descripcion}" />
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/vtas/certdesc/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/vtas/certdesc/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{certificadoDescHome.save()}" reRender="formcertdesc"
+						rendered="#{not certificadoDescHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{certificadoDescHome.modify()}" reRender="formcertdesc"
+						rendered="#{certificadoDescHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

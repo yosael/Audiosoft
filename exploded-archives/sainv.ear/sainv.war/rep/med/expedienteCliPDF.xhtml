@@ -1,0 +1,1036 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="portrait" margins="30 30 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Expediente del cliente</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	
+	<p:font size="14">
+	<p:table columns="2" widthPercentage="70" headerRows="0" widths="1 1" >
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="26">
+			<p:paragraph><p:font style="bold">
+				<p:text value="#{repMedico.dtRp['cli'].ventas.size()}" />
+			</p:font>
+				<p:text value=" venta(s)" />
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="26">
+			<p:paragraph><p:font style="bold">
+					<p:text value="#{repMedico.dtRp['cli'].aparatosAuditivos.size()}" ></p:text>
+				</p:font>
+				<p:text value=" aparatos auditivos" />
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font color="black" size="9">
+		<p:table columns="4" widthPercentage="100" headerRows="0"  widths="1 1.4 1 1.4" >
+			<p:font style="bold" size="9">
+				<p:font size="12" style="bold">
+					<p:cell horizontalAlignment="center" verticalAlignment="middle" borderWidth="0" paddingBottom="4" colspan="4">
+						<p:paragraph alignment="center">INFORMACIÓN PERSONAL</p:paragraph>
+					</p:cell>
+				</p:font>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">NOMBRES</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].nombres}" />
+				</p:paragraph>
+			</p:cell>
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">APELLIDOS</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].apellidos}" />
+				</p:paragraph>
+			</p:cell>
+			
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">TIPO DOC.</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].tipoDoc}" />
+				</p:paragraph>
+			</p:cell>
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">NUM. DOC.</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].docId}" />
+				</p:paragraph>
+			</p:cell>
+			
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">TELÉFONO 1</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].telefono1}" />
+				</p:paragraph>
+			</p:cell>
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">TELÉFONO 2</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].telefono2}" />
+				</p:paragraph>
+			</p:cell>
+			
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">FECHA NAC.</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].fechaNacimiento}" >
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text>
+				</p:paragraph>
+			</p:cell>
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">GÉNERO</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text rendered="#{repMedico.dtRp['cli'].genero==1}" value="Masculino" />
+					<p:text rendered="#{repMedico.dtRp['cli'].genero==0}" value="Femenino" />
+				</p:paragraph>
+			</p:cell>
+			
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">EMAIL</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repMedico.dtRp['cli'].email}" />
+				</p:paragraph>
+			</p:cell>
+			<p:font style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">DIRECCIÓN</p:paragraph>
+			</p:cell>
+			</p:font>
+			<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text rendered="#{repMedico.dtRp['cli'].direccion}" />
+				</p:paragraph>
+			</p:cell>
+			
+		</p:table>
+	<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="0"  widths="1 1.4 1 1.4" >
+		<p:font style="bold" size="9">
+			<p:font size="12" style="bold">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" borderWidth="0" paddingBottom="4" colspan="4">
+					<p:paragraph alignment="center">INFORMACIÓN MÉDICA</p:paragraph>
+				</p:cell>
+			</p:font>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">REFERIDO POR</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].referidoPor.nombreCompleto}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">ENCARGADO</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].nombreCompletoEnc}" rendered="#{repMedico.dtRp['cli'].nombreCompletoEnc!=''}" />
+				<p:text value="-" rendered="#{repMedico.dtRp['cli'].nombreCompletoEnc==''}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">DOCTOR EXT.</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].doctorRef.nombreCompleto}" rendered="#{repMedico.dtRp['cli'].doctorRef!=null}" />
+				<p:text value="-" rendered="#{repMedico.dtRp['cli'].doctorRef==null}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">TIPO SANGRE</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{app.patimast_bg_1}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==0}" />
+				<p:text value="#{app.patimast_bg_2}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==1}" />
+				<p:text value="#{app.patimast_bg_3}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==2}" />
+				<p:text value="#{app.patimast_bg_4}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==3}" />
+				<p:text value="#{app.patimast_bg_5}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==4}" />
+				<p:text value="#{app.patimast_bg_6}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==5}" />
+				<p:text value="#{app.patimast_bg_7}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==6}" />
+				<p:text value="#{app.patimast_bg_8}" rendered="#{repMedico.dtRp['cli'].grupoSanguineo==7}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">SORDERA</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="Diagnosticada el " rendered="#{repMedico.dtRp['cli'].diagnosSordera!=null}" />
+				<p:text value="#{repMedico.dtRp['cli'].diagnosSordera}" rendered="#{repMedico.dtRp['cli'].diagnosSordera!=null}" >
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text>
+				<p:text value="No" rendered="#{repMedico.dtRp['cli'].diagnosSordera==null}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center"></p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+			</p:paragraph>
+		</p:cell>		
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">HEREDÓ FAMILIARES</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.familyHeritage}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">PATOLOGÍAS</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.personalPathologies}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">ALCOHOLISMO</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.nopatAlcoholism}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">TABAQUISMO</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.nopatSmoking}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">ADICCIONES</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.nopatAddiction}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">ALERGIAS</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.nopatAllergies}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">MENARCA</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.femMenarche}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">DESARROLLO SEXUAL</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.femSexualDevelopment}" />
+			</p:paragraph>
+		</p:cell>	
+		
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">RITMO SEXUAL</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.femMenstrualRhythm}" />
+			</p:paragraph>
+		</p:cell>
+		<p:font style="bold" size="9">
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">ÚLTIMA MENSTRUACIÓN</p:paragraph>
+		</p:cell>
+		</p:font>
+		<p:cell horizontalAlignment="left" verticalAlignment="middle"  paddingBottom="4">
+			<p:paragraph alignment="center">
+				<p:text value="#{repMedico.dtRp['cli'].generalInformation.femLastMenstruation}" />
+			</p:paragraph>
+		</p:cell>		
+	
+	</p:table>
+	</p:font>
+	<p:font size="9">
+	<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="98" headerRows="1"  widths="1 1 1 1" >
+		<p:font size="12" style="bold">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4" colspan="4" borderWidth="0">
+				<p:paragraph alignment="center">VENTAS DE PRODUCTOS Y SERVICIOS</p:paragraph>
+			</p:cell>
+		</p:font>
+		<ui:repeat var="det" value="#{repMedico.dtRp['cli'].ventas}">
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="left" minimumHeight="16" colspan="4" borderWidth="0">
+				<p:table columns="6" widthPercentage="100" headerRows="1"  widths="1 3 1 1 0.8 0.8" >
+				<p:font size="12" style="bold">
+					<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="24" colspan="6">
+						<p:paragraph>VENTA # #{det.id}</p:paragraph>
+					</p:cell>
+				</p:font>
+				<p:font color="black" style="bold" size="9">
+					
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">FECHA</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" colspan="2">
+						<p:paragraph alignment="center">TIPO DE VENTA</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4" colspan="3">
+						<p:paragraph alignment="center">SUCURSAL</p:paragraph>
+					</p:cell>
+				</p:font>
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+						<p:paragraph><p:text value="#{det.fechaVenta}">
+							<s:convertDateTime pattern="dd/MM/yyyy" />
+						</p:text></p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" colspan="2">
+						<p:paragraph>
+							<p:text rendered="#{det.tipoVenta=='CMB'}" value="#{app.vtaprs_cmbapa}" />
+							<p:text rendered="#{det.tipoVenta=='CST'}" value="#{app.status_servmed}" />
+							<p:text rendered="#{det.tipoVenta=='TLL'}" value="#{app.status_taller}" />
+							<p:text rendered="#{det.tipoVenta=='ITM'}" value="#{app.status_items}" />
+						</p:paragraph>
+					</p:cell>		
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16" colspan="3">
+						<p:paragraph>#{det.sucursal.nombre}</p:paragraph>
+					</p:cell>
+					<p:font size="11" style="bold">
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="18" colspan="6">
+							<p:paragraph>DETALLE DE LA VENTA</p:paragraph>
+						</p:cell>
+					</p:font>
+				<p:font color="black" style="bold" size="9">
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Tipo item</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Descripción</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Num. Serie</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Num. Lote</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Cantidad</p:paragraph>
+					</p:cell>
+					<p:cell horizontalAlignment="center" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Monto</p:paragraph>
+					</p:cell>
+				</p:font>
+				<ui:repeat var="dtv" value="#{det.detVenta}">
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+						<p:paragraph>
+							<p:text rendered="#{dtv.codClasifVta=='CMB'}" value="Combo" />
+							<p:text rendered="#{dtv.codClasifVta=='CMBBIN'}" value="Cmb. binaural" />
+							<p:text rendered="#{dtv.codClasifVta=='SRV'}" value="Servicio" />
+							<p:text rendered="#{dtv.codClasifVta=='PRD'}" value="Producto" />
+							<p:text rendered="#{dtv.codClasifVta=='PRQ'}" value="Producto Req." />
+						</p:paragraph>
+					</p:cell>
+					
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+						<p:paragraph>#{dtv.detalle}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+						<p:paragraph>#{dtv.numSerie}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+						<p:paragraph>#{dtv.numLote}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" >
+						<p:paragraph>#{dtv.cantidad}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" >
+						<p:paragraph><p:text value="#{dtv.monto}">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text></p:paragraph>
+					</p:cell>
+				
+				</ui:repeat>
+					<p:font size="11" style="bold">
+					<p:cell horizontalAlignment="right" verticalAlignment="middle"
+						backgroundColor="#E4E4E4" paddingRight="6" colspan="5">
+						<p:paragraph alignment="center">TOTAL</p:paragraph>
+					</p:cell>
+					
+					<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="3" minimumHeight="16">
+						<p:paragraph><p:text value="#{det.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+					</p:cell>
+					</p:font>
+				</p:table>
+			</p:cell>
+		</ui:repeat>
+	</p:table>
+	
+	<p:html><br /></p:html>
+		<p:table columns="7" widthPercentage="98" headerRows="2"  widths="1.6 1 1.2 1 0.8 0.8 0.6" >
+			<p:font color="black" style="bold" size="9">
+				<p:font size="12" style="bold">
+					<p:cell horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4" colspan="7" borderWidth="0">
+						<p:paragraph alignment="center">APARATOS AUDITIVOS</p:paragraph>
+					</p:cell>
+				</p:font>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">NOMBRE</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">MARCA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">MODELO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">NUM. SERIE</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">FECHA ADQ.</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">GARANTÍA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">RETRO AURIC.</p:paragraph>
+				</p:cell>
+			</p:font>
+
+		<ui:repeat var="det" value="#{repMedico.dtRp['cli'].aparatosAuditivos}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det.marca}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det.modelo}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{det.numSerie}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph><p:text value="#{det.fechaAdquisicion}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text value="#{app.combapa_gar_30d}" rendered="#{det.periodoGarantia==30}" />
+					<p:text value="#{app.combapa_gar_60d}" rendered="#{det.periodoGarantia==60}" />
+					<p:text value="#{app.combapa_gar_183d}" rendered="#{det.periodoGarantia==183}" />
+					<p:text value="#{app.combapa_gar_366d}" rendered="#{det.periodoGarantia==366}" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text rendered="#{det.retroAuricular==true}" value="Si" />
+					<p:text rendered="#{det.retroAuricular==false}" value="No" />
+				</p:paragraph>
+			</p:cell>
+			
+		</ui:repeat>
+		</p:table>
+	
+		<p:html><br /></p:html>
+		<p:table columns="1" widthPercentage="98" headerRows="1"  widths="1" >
+			<p:font size="12" style="bold">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4" borderWidth="0">
+					<p:paragraph alignment="center">TRABAJOS DE TALLER REALIZADOS</p:paragraph>
+				</p:cell>
+			</p:font>
+			<ui:repeat var="det" value="#{repMedico.dtRp['cli'].reparacionesTaller}">
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" minimumHeight="16" >
+					<p:table columns="4" widthPercentage="100" headerRows="1"  widths="1 1 1 1" >
+					<p:font size="12" style="bold">
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="30" colspan="6">
+							<p:paragraph>TRABAJO DE TALLER # #{det.id}</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:font color="black" style="bold" size="9">
+						
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">FECHA INGRESO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">FECHA ENTREGA</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">ESTADO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">TIPO</p:paragraph>
+						</p:cell>
+					</p:font>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph><p:text value="#{det.fechaIngreso}">
+								<s:convertDateTime pattern="dd/MM/yyyy" />
+							</p:text></p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph><p:text value="#{det.fechaEntrega}">
+								<s:convertDateTime pattern="dd/MM/yyyy" />
+							</p:text></p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="Esperando aprobacion de inicio" rendered="#{det.aprobada==false and det.estado!='REC'}" />
+								<p:text value="Cancelado por el cliente" rendered="#{det.estado=='REC'}" />
+								<p:text value="Trabajo de taller finalizado" rendered="#{det.estado=='FIN'}" />
+								<p:text value="En proceso" rendered="#{det.aprobada==true and det.estado=='PEN'}" />
+								<p:text value="Aparato entregado al cliente" rendered="#{det.estado=='DLV'}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{det.proceso.nombre}" />
+							</p:paragraph>
+						</p:cell>
+					</p:table>
+					<p:html><br /></p:html>
+					<p:table columns="3" widthPercentage="100" headerRows="1"  widths="1 1 1" borderWidth="0" >
+					<p:font size="11" style="bold">
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="18" colspan="3">
+							<p:paragraph>CONDICIONES DEL APARATO</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:font color="black" style="bold" size="9">
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Condiciones del aparato</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Componentes defectuosos</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Defectos de cápsula</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="18" paddingRight="18" minimumHeight="16">
+						<p:paragraph>
+						<ui:repeat var="cnd" value="#{det.condsAparatorep}">
+							<p:text value="#{cnd.condAparato.nombre}, " /> 
+						</ui:repeat>
+						</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="18" paddingRight="18" minimumHeight="16">
+						<p:paragraph>
+						<ui:repeat var="cmp" value="#{det.compsDefAparato}">
+							<p:text value="#{cmp.cmpAparato.nombre}, " /> 
+						</ui:repeat>
+						</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="18" paddingRight="18" minimumHeight="16">
+						<p:paragraph>
+						<ui:repeat var="dfc" value="#{det.defCapsAparato}">
+							<p:text value="#{dfc.defCapsula.nombre}, " /> 
+						</ui:repeat>
+						</p:paragraph>
+					</p:cell>
+					</p:table>	
+					<p:html><br /></p:html>
+					<p:table columns="4" widthPercentage="100" headerRows="1"  widths="1 2 1 1" >
+					<p:font size="11" style="bold">
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="18" colspan="4">
+							<p:paragraph>SERVICIOS REALIZADOS</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:font color="black" style="bold" size="9">
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Código</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Nombre</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Tipo</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Costo</p:paragraph>
+						</p:cell>
+					</p:font>
+					<ui:repeat var="srv" value="#{det.serviciosRep}">
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{srv.servicio.codigo}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{srv.servicio.name}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{app.servmast_tipos_tll}" rendered="#{srv.servicio.tipoServicio=='TLL'}" />
+								<p:text value="#{app.servmast_tipos_med}" rendered="#{srv.servicio.tipoServicio=='MED'}" />
+								<p:text value="#{app.servmast_tipos_cmb}" rendered="#{srv.servicio.tipoServicio=='CMB'}" />
+								<p:text value="#{app.servmast_tipos_exa}" rendered="#{srv.servicio.tipoServicio=='EXA'}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="3" minimumHeight="16">
+							<p:paragraph><p:text value="#{srv.servicio.costo}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</p:text></p:paragraph>
+						</p:cell>
+					</ui:repeat>
+					</p:table>
+					<p:html><br /></p:html>				
+					<p:table columns="6" widthPercentage="100" headerRows="1"  widths="1 1 1 1 1 2.5" >	
+						<p:font size="11" style="bold">
+							<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="18" colspan="6">
+								<p:paragraph>ETAPAS DE LA REPARACIÓN</p:paragraph>
+							</p:cell>
+						</p:font>
+					<p:font color="black" style="bold" size="9">
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Etapa</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Fecha estimada fin</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Fecha real fin</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Usuario</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Estado</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">Descripción</p:paragraph>
+						</p:cell>
+					</p:font>
+					<ui:repeat var="eta" value="#{det.etapasReparacion}">
+						
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>#{eta.etapaRep.nombre}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{eta.fechaEstFin}"  >
+									<s:convertDateTime pattern="dd/MM/yyyy" />
+								</p:text>
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{eta.fechaRealFin}" rendered="#{eta.fechaRealFin!=null}" >
+									<s:convertDateTime pattern="dd/MM/yyyy" />
+								</p:text>
+								<p:text value="-" rendered="#{eta.fechaRealFin==null}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>#{eta.usuario.nombreCompleto}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+							<p:paragraph>
+								<p:text value="Pendiente" rendered="#{eta.estado=='PEN' or eta.estado==null}" />
+								<p:text value="Aprobada" rendered="#{eta.estado=='APR'}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="4" >
+							<p:paragraph>#{eta.descripcion}</p:paragraph>
+						</p:cell>
+					</ui:repeat>						
+					</p:table>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="1" widthPercentage="98" headerRows="1"  widths="1" >
+			<p:font size="12" style="bold">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4" borderWidth="0">
+					<p:paragraph alignment="center">CONSULTAS MÉDICAS Y EXÁMENES</p:paragraph>
+				</p:cell>
+			</p:font>
+			<ui:repeat var="det" value="#{repMedico.dtRp['cli'].citasMedicas}">
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" minimumHeight="16" >
+					<p:table columns="4" widthPercentage="100" headerRows="1"  widths="1 1 1 2.5" >
+					<p:font size="12" style="bold">
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="10" minimumHeight="30" colspan="6">
+							<p:paragraph>
+								<p:text value="CONSULTA MÉDICA - " />
+								<p:text value="#{det.dateTime}" >
+									<s:convertDateTime pattern="dd/MM/yyyy" />
+								</p:text>
+							</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:font color="black" style="bold" size="9">
+						
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">ESTADO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">DOCTOR</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">SUCURSAL</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" paddingBottom="4">
+							<p:paragraph alignment="center">COMENTARIOS</p:paragraph>
+						</p:cell>
+					</p:font>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="Agendada" rendered="#{det.status==0}" />
+								<p:text value="Atendida" rendered="#{det.status==1}" />
+								<p:text value="Cancelada" rendered="#{det.status==2}" />
+								<p:text value="Inasistencia" rendered="#{det.status==3}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{det.doctor.nombres} #{det.doctor.apellidos}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{det.sucursal.nombre}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+							<p:paragraph>
+								<p:text value="#{det.comment}" />
+							</p:paragraph>
+						</p:cell>
+						
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="3" minimumHeight="16" colspan="4">
+							<p:paragraph>
+								<p:text value="Razón de la consulta: #{det.clinicalHistory.consultationReason}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="3" minimumHeight="16" colspan="4">
+							<p:paragraph>
+								<p:text value="Observaciones: #{det.clinicalHistory.observation}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="3" minimumHeight="16" colspan="4">
+							<p:paragraph>
+								<p:text value="Descripción del tratamiento: #{det.clinicalHistory.treatmentDescriptive}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="3" minimumHeight="16" colspan="4">
+							<p:paragraph>
+								<p:text value="Descripción de los exámenes: #{det.clinicalHistory.examsDescriptive}" />
+							</p:paragraph>
+						</p:cell>
+						
+					</p:table>
+					<p:html><br /></p:html>
+					<p:table columns="3" widthPercentage="100" headerRows="0"  widths="1 0.2 1" borderWidth="0" >
+					<p:cell borderWidth="0" >
+						<p:table columns="2" widthPercentage="100" headerRows="1"  widths="1 3"  >
+							<p:font size="11" style="bold">
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="10" minimumHeight="18" colspan="3">
+									<p:paragraph>DIAGNÓSTICOS</p:paragraph>
+								</p:cell>
+							</p:font>
+							<p:font color="black" style="bold" size="9">
+								<p:cell horizontalAlignment="center" verticalAlignment="middle"
+									backgroundColor="#E4E4E4" paddingBottom="4">
+									<p:paragraph alignment="center">Código</p:paragraph>
+								</p:cell>
+								<p:cell horizontalAlignment="center" verticalAlignment="middle"
+									backgroundColor="#E4E4E4" paddingBottom="4">
+									<p:paragraph alignment="center">Diagnóstico</p:paragraph>
+								</p:cell>
+							</p:font>
+							<ui:repeat var="dia" value="#{det.clinicalHistory.diagnosticos}">
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+									<p:paragraph>#{dia.diagnostico.codigo}</p:paragraph>
+								</p:cell>
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+									<p:paragraph>#{dia.diagnostico.nombre}</p:paragraph>
+								</p:cell>
+							</ui:repeat>
+						</p:table>
+					</p:cell>
+					<p:cell borderWidth="0" >
+						
+					</p:cell>
+					<p:cell borderWidth="0" >
+						<p:table columns="2" widthPercentage="100" headerRows="1"  widths="1 3"  >
+							<p:font size="11" style="bold">
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="10" minimumHeight="18" colspan="3">
+									<p:paragraph>RECOMENDACIONES</p:paragraph>
+								</p:cell>
+							</p:font>
+							<p:font color="black" style="bold" size="9">
+								<p:cell horizontalAlignment="center" verticalAlignment="middle"
+									backgroundColor="#E4E4E4" paddingBottom="4">
+									<p:paragraph alignment="center">Código</p:paragraph>
+								</p:cell>
+								<p:cell horizontalAlignment="center" verticalAlignment="middle"
+									backgroundColor="#E4E4E4" paddingBottom="4">
+									<p:paragraph alignment="center">Recomendación</p:paragraph>
+								</p:cell>
+							</p:font>
+							<ui:repeat var="dia" value="#{det.clinicalHistory.recomendaciones}">
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+									<p:paragraph>#{dia.recomendacion.codigo}</p:paragraph>
+								</p:cell>
+								<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+									<p:paragraph>#{dia.recomendacion.nombre}</p:paragraph>
+								</p:cell>
+							</ui:repeat>
+						</p:table>
+					</p:cell>
+					</p:table>
+					<p:html><br /></p:html>
+					
+					<p:table columns="5" widthPercentage="100" headerRows="1"  widths="2 1 1 1 1"  >
+						<p:font size="11" style="bold">
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="10" minimumHeight="18" colspan="5">
+								<p:paragraph>MEDICAMENTOS RECETADOS</p:paragraph>
+							</p:cell>
+						</p:font>
+						<p:font color="black" style="bold" size="9">
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Nombre</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Laboratorio</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Cantidad</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Presentación</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Dosificación</p:paragraph>
+							</p:cell>
+						</p:font>
+						<ui:repeat var="mdc" value="#{det.clinicalHistory.medicamentos}">
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{mdc.medicamento.nombre}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{mdc.medicamento.laboratorio.nombre}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="5" minimumHeight="16">
+								<p:paragraph>#{mdc.cantidad}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{mdc.dosificacion.nombre}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{mdc.presentacion.nombre}</p:paragraph>
+							</p:cell>
+						</ui:repeat>
+					</p:table>
+					
+					<p:html><br /></p:html>
+					<p:table columns="3" widthPercentage="100" headerRows="1"  widths="1 2 2"  >
+						<p:font size="11" style="bold">
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="10" minimumHeight="18" colspan="5">
+								<p:paragraph>EXÁMENES MÉDICOS</p:paragraph>
+							</p:cell>
+						</p:font>
+						<p:font color="black" style="bold" size="9">
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Código</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Nombre</p:paragraph>
+							</p:cell>
+							<p:cell horizontalAlignment="center" verticalAlignment="middle"
+								backgroundColor="#E4E4E4" paddingBottom="4">
+								<p:paragraph alignment="center">Comentario</p:paragraph>
+							</p:cell>
+						</p:font>
+						<ui:repeat var="exa" value="#{det.clinicalHistory.examenes}">
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{exa.examen.codigo}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{exa.nomExamen}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="5" minimumHeight="16">
+								<p:paragraph>#{exa.comentario}</p:paragraph>
+							</p:cell>
+						</ui:repeat>
+					</p:table>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

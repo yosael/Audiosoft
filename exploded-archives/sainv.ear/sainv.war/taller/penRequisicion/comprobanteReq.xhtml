@@ -1,0 +1,89 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_product_detail_pdf}" creator="Soluciones aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="16" style="bold">
+		<p:paragraph alignment="center">#{app.reqeta_rep_compreq}</p:paragraph>
+	</p:font>
+	<p:font size="9">
+	<p:table columns="4" headerRows="0" widthPercentage="100"  >
+		<p:cell colspan="4" borderWidth="0" paddingBottom="14">
+			<p:font size="16" style="bold">RECEPCION (VENTA)</p:font>
+		</p:cell>
+		
+		<p:cell borderWidth="0"><p:font size="10" style="bold">#{app.reqeta_nomSolicita}:</p:font></p:cell>
+		<p:cell borderWidth="0">#{requisicionEtaHome.instance.etapaRepCli.usuario.nombreCompleto}</p:cell>
+		<p:cell borderWidth="0"><p:font size="10" style="bold">#{app.reqeta_nomEntrega}:</p:font></p:cell>
+		<p:cell borderWidth="0">#{requisicionEtaHome.instance.usrAprueba.nombreCompleto}</p:cell>
+		
+		<p:cell borderWidth="0"><p:font size="10" style="bold">#{app.reqeta_fechaAproba}:</p:font></p:cell>
+		<p:cell borderWidth="0"><p:text value="#{requisicionEtaHome.instance.fechaAprobacion}" >
+			<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+		</p:text></p:cell>
+		<p:cell borderWidth="0"><p:font size="10" style="bold">#{app.reqeta_sucursalSol}:</p:font></p:cell>
+		<p:cell borderWidth="0">#{requisicionEtaHome.instance.sucursalSol.nombre}</p:cell>
+		
+		<p:cell colspan="4" borderWidth="0" paddingTop="30">
+		
+			<p:table columns="7" widthPercentage="100" widths="1 1 2 1 1 1 1" headerRows="1">
+			<p:font color="white" size="9" style="bold">
+				<p:cell minimumHeight="20" backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.productomast_ref}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.movimiento_itemlist_col3}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.reqeta_descProducto}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.productomast_codubi}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.productomast_brand}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.producto_codser}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#557C80" horizontalAlignment="center" verticalAlignment="middle">
+					<p:paragraph>#{app.producto_codlot}</p:paragraph>
+				</p:cell>
+			</p:font>
+				<ui:repeat var="res" value="#{requisicionEtaHome.itemsAgregados}">
+					<p:cell verticalAlignment="middle">
+						<p:paragraph>#{res.producto.referencia}</p:paragraph>
+					</p:cell>		
+					<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+						<p:paragraph>#{res.cantidad}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle">
+						<p:paragraph>#{res.producto.nombre}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle">
+						<p:paragraph>#{res.ubicacionActual}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle">
+						<p:paragraph>#{res.producto.marca.nombre}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle">
+						<p:paragraph rendered="#{res.numLote!=null}">#{res.numLote}</p:paragraph>
+					</p:cell>
+					<p:cell verticalAlignment="middle">
+						<p:paragraph rendered="#{res.numSerie!=null}">#{res.numSerie}</p:paragraph>
+					</p:cell>
+				</ui:repeat>
+			</p:table>
+			
+		</p:cell>
+	</p:table>
+	</p:font>
+	
+		
+		
+	
+</p:document>

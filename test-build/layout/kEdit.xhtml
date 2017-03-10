@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich">
+	<div class="kEdit">
+	<div class="tabla">
+	<div class="fila">
+	<div class="col col1"><ui:insert name="label" /> <s:span
+		styleClass="required" rendered="#{required}">*</s:span></div>
+	<div class="col col2"><span> <rich:spacer width="10px;" />
+	<s:validateAll>
+		<ui:insert />
+	</s:validateAll> </span></div>
+	</div>
+	<div class="fila">
+	<div class="col col3" />
+	<s:div styleClass="col col4 error">
+		<s:message styleClass="errors" />
+	</s:div></div>
+	</div>
+	<div class="clear" />
+	<rich:spacer height="20" /></div>
+</ui:composition>

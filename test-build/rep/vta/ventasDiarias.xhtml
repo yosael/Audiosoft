@@ -1,0 +1,185 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+<ui:define name="body">
+	<rich:panel>
+		<f:facet name="header">Reporte de ventas del dÃ­a</f:facet>
+		<h:form id="formA">
+			<p:growl globalOnly="true" sticky="false" life="3000" />
+			<p:focus />
+			<a:queue name="q1" />
+				<center>
+				<h:panelGrid columns="4">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+						<rich:calendar value="#{repVenta.fechaInicio}"  datePattern="dd/MM/yyyy">
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDiarias()}" reRender="_table,_totalesVtas" />
+						</rich:calendar>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+						<rich:calendar value="#{repVenta.fechaFin}" datePattern="dd/MM/yyyy">
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDiarias()}" reRender="_table,_totalesVtas" />
+						</rich:calendar>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+						<ui:define name="label">#{app.compramast_branch}:</ui:define>
+						<h:selectOneMenu value="#{repVenta.sucursal}" required="false">
+							<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+								label="#{_suc.nombre}" noSelectionLabel=" "/>
+							<s:convertEntity />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDiarias()}" reRender="_table,_totalesVtas" />
+						</h:selectOneMenu>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Filtrar detalle por:</ui:define>		                        
+	                        <h:selectOneMenu value="#{repVenta.valCmb4}">
+	                        	<f:selectItem itemLabel=" " itemValue="" />
+	                            <f:selectItem itemLabel="ExÃ¡menes mÃ©dicos" itemValue="EXA" />
+								<f:selectItem itemLabel="Consultas mÃ©dicas" itemValue="MED" />
+								<f:selectItem itemLabel="Reparaciones" itemValue="RPR" />
+								<f:selectItem itemLabel="Limpiezas" itemValue="LMP" />
+								<f:selectItem itemLabel="FabricaciÃ³n de moldes" itemValue="MLD" />
+								<f:selectItem itemLabel="Ensamblaje de aparato" itemValue="ENS" />
+								<f:selectItem itemLabel="Productos individuales" itemValue="ITM" />
+								<f:selectItem itemLabel="Aparatos auditivos" itemValue="CMB" />																
+	                            <a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDiarias()}" reRender="_table,_totalesVtas" />
+	                        </h:selectOneMenu>
+					</s:decorate>
+				</h:panelGrid>
+				<s:div id="_totalesVtas">
+					<table style="font-size:14px;">
+						<tr>
+						<td style="text-align:right; padding-right:10px;">EXÃ�MENES MÃ‰DICOS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['EXA']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right; padding-right:10px; padding-left:15px;">CONSULTAS MÃ‰DICAS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['MED']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right; padding-right:10px; padding-left:15px;">VENTA DE PRODUCTOS INDIVIDUALES</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['ITM']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right; padding-right:10px; padding-left:15px;">VENTA DE APARATOS AUDITIVOS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['CMB']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						</tr>
+						<tr>
+						<td style="text-align:right; padding-right:10px;">REPARACIONES DE APARATOS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['RPR']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right; padding-right:10px; padding-left:15px;">FABRICACIÃ“N DE MOLDES</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['MLD']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right; padding-right:10px; padding-left:15px;">ENSAMBLAJE DE APARATOS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold;">
+							<h:outputText value="#{repVenta.dtRp['totales']['ENS']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						</tr>
+						<tr>
+						<td></td><td></td><td></td>
+						<td style="text-align:right; padding-right:10px;  font-size:17px;">TOTAL DE VENTAS</td>
+						<td style="text-align:left; padding-left:10px; font-weight:bold; font-size:17px;">
+							<h:outputText value="#{repVenta.dtRp['totales']['TOT']}" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td></td><td></td><td></td>
+						</tr>
+					</table>
+				</s:div>
+				<s:decorate template="/layout/kActions.xhtml">
+					<a:commandButton oncomplete="showReport('ventasDiariasPDF', '#{conversation.id}');"
+						styleClass="pdfBtn" action="#{repVenta.repVentasDiarias()}"
+						value="#{msn.button_pdf}" rendered="true">
+					</a:commandButton>
+				</s:decorate>
+						
+			
+			<rich:dataTable var="res" value="#{repVenta.dtRp['lst']}" id="_table"
+				rows="20" align="center"  rowClasses="tblEven,tblOdd" 
+				onRowMouseOver="this.style.backgroundColor='#A3CAF1'" 
+				onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+				headerClass="tablaHeader" footerClass="tableScroll">
+				<f:facet name="header">Detalle de ventas</f:facet>
+				<rich:column headerClass="col110">
+					<f:facet name="header">Tipo venta</f:facet>						
+					<h:outputText value="ExÃ¡men mÃ©dico" rendered="#{res[5]=='EXA'}" />
+					<h:outputText value="Consulta mÃ©dica" rendered="#{res[5]=='MED'}" />
+					<h:outputText value="ReparaciÃ³n" rendered="#{res[5]=='REP'}" />
+					<h:outputText value="Limpieza" rendered="#{res[5]=='LMP'}" />
+					<h:outputText value="FabricaciÃ³n de molde" rendered="#{res[5]=='MLD'}" />
+					<h:outputText value="Ensamblaje de aparato" rendered="#{res[5]=='ENS'}" />
+					<h:outputText value="Item" rendered="#{res[5]=='ITM'}" />
+					<h:outputText value="Aparato auditivo" rendered="#{res[5]=='CMB'}" />
+				</rich:column>
+				<rich:column filterBy="#{res[0]}" filterEvent="onkeyup" headerClass="col100">
+					<f:facet name="header">Detalle</f:facet>
+					<h:outputText value="#{res[0]}" />
+				</rich:column>
+				<rich:column filterBy="#{res[3].nombreCompleto}" filterEvent="onkeyup" headerClass="col100">
+					<f:facet name="header">VendiÃ³</f:facet>
+					<h:outputText value="#{res[3].nombreCompleto}" />
+				</rich:column>
+				<rich:column filterBy="#{res[4].nombre}" filterEvent="onkeyup" headerClass="col160">
+					<f:facet name="header">Sucursal</f:facet>
+					<h:outputText value="#{res[4].nombre}" />
+				</rich:column>					
+				<rich:column filterBy="#{res[1]}" filterEvent="onkeyup" headerClass="col70" style="">
+					<f:facet name="header">Cant.</f:facet>
+					<h:outputText value="#{res[1]}" />
+				</rich:column>
+				<rich:column filterBy="#{res[2]}" filterEvent="onkeyup" headerClass="col90">
+					<f:facet name="header">Costo uni.</f:facet>
+					<h:outputText value="#{res[2]}" >
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>
+				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller id="ds1" renderIfSinglePage="true" />
+				</f:facet>
+			</rich:dataTable>
+			</center>
+		</h:form>
+	</rich:panel>
+
+</ui:define>
+</ui:composition>

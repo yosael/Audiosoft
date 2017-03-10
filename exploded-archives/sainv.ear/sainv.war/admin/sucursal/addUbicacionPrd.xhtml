@@ -1,0 +1,69 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.ubiprd_rol_list_head}</f:facet>
+			<rich:spacer height="20" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				
+				<a:commandButton action="#{sucursalHome.guardarUbicacion()}" 
+						rendered="true" styleClass="saveBtn"  value="#{app.btn_save_ubiprd}"/>
+						
+				<rich:dataTable var="res" value="#{sucursalHome.instance.ubicacionesPrd}"
+					rendered="#{not empty sucursalHome.instance.ubicacionesPrd}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.ubiprd_list}</f:facet>
+					<rich:column filterBy="#{res.id}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.rollist_col1}</f:facet>
+						<h:outputText value="#{res.id}" />
+					</rich:column>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.rollist_col2}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sistema.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.rollist_col3}</f:facet>
+						<h:outputText value="#{res.sistema.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+						#{app.rollist_col_link}
+						<h:selectBooleanCheckbox value="#{sucursalHome.check}" >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+								action="#{sucursalHome.changeAll()}" reRender="formA"/>
+						</h:selectBooleanCheckbox>
+						</f:facet>
+						<h:selectBooleanCheckbox value="#{res.asociado}" >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+									action="#{sucursalHome.checkRoles(res)}" reRender="formA"/>
+						</h:selectBooleanCheckbox>
+					</rich:column>
+				</rich:dataTable>
+			
+			<rich:spacer height="10"/>
+			
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/admin/usuario/master.xhtml" propagation="join"
+					styleClass="backBtn" value="#{msn.button_back}" rendered="true">
+				</s:button>
+				
+			</s:decorate>
+			
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

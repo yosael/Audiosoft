@@ -1,0 +1,127 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml"> 
+	<ui:define name="body"> 
+		<rich:panel>
+			<f:facet name="header">
+				#{app.transfermast_approve}
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formtrans">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.transferenciamast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_send_date}:</ui:define>
+							<rich:calendar value="#{transferenciaHome.instance.fecha}" readonly="true" datePattern="dd/MM/yyyy"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_receipt_date}:</ui:define>
+							<rich:calendar value="#{transferenciaHome.instance.fechaRecibo}" readonly="true" datePattern="dd/MM/yyyy"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_branch_origin}:</ui:define>
+							<h:inputText value="#{transferenciaHome.instance.sucursal.nombre}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_branch_destiny}:</ui:define>
+							<h:inputText value="#{transferenciaHome.instance.sucursalDestino.nombre}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_state}:</ui:define>
+							<h:inputText value="Generado" rendered="#{transferenciaHome.instance.estado=='G'}" readonly="true"/>
+							<h:inputText value="Pendiente" rendered="#{transferenciaHome.instance.estado=='P'}" readonly="true"/>
+							<h:inputText value="Aceptado" rendered="#{transferenciaHome.instance.estado=='A'}" readonly="true"/>
+							<h:inputText value="Descartado" rendered="#{transferenciaHome.instance.estado=='D'}" readonly="true"/>
+							<h:inputText value="Reachazado" rendered="#{transferenciaHome.instance.estado=='R'}" readonly="true"/>
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_observation_destiny}:</ui:define>
+							<h:inputTextarea value="#{transferenciaHome.instance.observacionDestino}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_observation_origin}:</ui:define>
+							<h:inputTextarea value="#{transferenciaHome.instance.observacion}" readonly="true"/>
+						</s:decorate>
+						
+				</h:panelGrid>
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{transferenciaHome.itemsAgregados}" id="_table"
+					rendered="#{not empty transferenciaHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.transferencia_itemlist_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+						<h:outputText value="#{res.cantidad}" size="8" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" size="8">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Acciones</f:facet>
+						<a:commandLink reRender="m45" eventsQueue="q1" rendered="#{res.codsSerie!=null}"
+							action="#{transferenciaHome.setSelectedItem(res)}" ajaxSingle="true" title="Ver numeros de serie"
+							onclick="#{rich:component('codTransferenciaConf')}.show();">
+							<h:graphicImage value="/kubeImg/table_detail2.png" />
+						</a:commandLink>
+					</rich:column>
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/> 
+				
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/transferRequest/listAll.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+				</s:decorate>
+				</fieldset>
+			</h:form>						
+		</rich:panel>
+		<rich:modalPanel id="codTransferenciaConf" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('codTransferenciaConf');">
+			<f:facet name="header">NUMEROS DE SERIE DE PRODUCTOS TRANSFERIDOS</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('codTransferenciaConf')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="m45"><ui:include src="codsTransferencia.xhtml" /></s:div>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

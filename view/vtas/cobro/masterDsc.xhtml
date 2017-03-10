@@ -1,0 +1,203 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{ventaProdServHome.managed?sainv_view_messages.get('cobrodsc_head_edit'):sainv_view_messages.get('cobrodsc_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formvta">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.cobrodsc_legend}</legend> 
+					
+					<table style="width:980px;">
+					<tr>	
+						<td style="width:25%;"><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.vtaprs_fecha}:</ui:define>
+							<h:outputText value="#{ventaProdServHome.instance.fechaVenta}" readonly="true" >
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</h:outputText>
+						</s:decorate></td>
+						
+						<td style="width:25%;"><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.vtaprs_tipovta}:</ui:define>
+							<h:outputText value="#{app.vtaprs_cmbapa}" rendered="#{ventaProdServHome.instance.tipoVenta=='CMB'}" />
+							<h:outputText value="#{app.status_servmed}" rendered="#{ventaProdServHome.instance.tipoVenta=='CST'}" />
+							<h:outputText value="#{app.status_taller}" rendered="#{ventaProdServHome.instance.tipoVenta=='TLL'}" />
+							<h:outputText value="#{app.status_items}" rendered="#{ventaProdServHome.instance.tipoVenta=='ITM'}" />
+							<h:outputText value="#{app.status_examen}" rendered="#{ventaProdServHome.instance.tipoVenta=='EXA'}" />	
+						</s:decorate></td>
+						<td rowspan="3" style="width:50%;">
+							<table>
+							<tr>
+								<td>
+									<a:commandButton action="#{ventaProdServHome.setMontoCompletoCxc()}"  reRender="dtdsc"
+										onclick="#{rich:component('detDescuento')}.show();" ajaxSingle="true" eventsQueue="q1"
+										styleClass="modifyBtn" value="#{app.bt_vtprs_enabledesc}" rendered="#{ventaProdServHome.instance.estado=='PEN'}" />									
+								</td>
+							</tr>
+							<tr>
+							 <td><s:decorate template="/layout/kEditSpace.xhtml" rendered="#{ventaProdServHome.instance.estado!='PDS'}" >
+								<ui:define name="label">#{app.vtaprs_cxc}</ui:define>
+								<h:selectBooleanCheckbox value="#{ventaProdServHome.cuentaCobrar}"  rendered="#{ventaProdServHome.instance.estado=='PEN'}" >
+									<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" reRender="formvta,_cxcAbono,_cxcCorp,_cxcBtnLdMnt" />
+								</h:selectBooleanCheckbox>	
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" id="_cxcAbono" rendered="#{ventaProdServHome.cuentaCobrar==true}">
+								<ui:define name="label">#{app.vtaprs_abonocxc}:</ui:define>
+								<h:inputText value="#{ventaProdServHome.abonoCxc}" onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+							</h:inputText>	
+							</s:decorate></td>
+							</tr>
+							<tr>
+							<td>
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_cxcCorp" rendered="#{ventaProdServHome.cuentaCobrar==true}">
+								<ui:define name="label">#{app.cuentac_clicorp}:</ui:define>
+								<h:inputText value="#{ventaProdServHome.cliCorp.nombre}" 
+									readonly="true" required="true" disabled="true" style="width:200px;" />
+								<a:commandButton onclick="#{rich:component('selCliCorp')}.show();" ajaxSingle="true"  
+									action="#{clienteCorpHome.getClientesCorp()}" reRender="clcrp" 
+									styleClass="modifyBtn" value=" " style="width:30px;">
+								</a:commandButton>
+							</s:decorate>
+							</td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" id="_cxcBtnLdMnt" rendered="#{ventaProdServHome.cuentaCobrar==true}">
+								<a:commandButton action="#{ventaProdServHome.setMontoCompletoCxc()}" reRender="_cxcAbono"
+									styleClass="updateBtn" value="#{app.bt_vtprs_setCxcfull}" rendered="#{ventaProdServHome.instance.estado=='PEN'}" />	
+							</s:decorate></td>
+							</tr>
+							
+							<tr>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.tipoDescuento=='M'}">
+									<ui:define name="label">#{app.cobrodsc_descontado}:</ui:define>
+									<h:outputText value="#{ventaProdServHome.instance.cantidadDescuento}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.tipoDescuento=='P'}">
+									<ui:define name="label">#{app.cobrodsc_descontado}:</ui:define>
+									<h:outputText value="#{ventaProdServHome.instance.cantidadDescuento}" >
+										<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>%
+								</s:decorate>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.estado=='PDS'}">
+									<ui:define name="label">#{app.cobrodsc_totaldsc}:</ui:define>
+									<h:outputText value="#{ventaProdServHome.totalConDesc}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+								</s:decorate>
+							</td>
+							</tr>
+							</table>
+						</td>
+					</tr><tr>
+						<td><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.repcli_cliente}:</ui:define>
+							<h:outputText value="#{ventaProdServHome.instance.cliente.nombres} #{ventaProdServHome.instance.cliente.apellidos}" />
+						</s:decorate></td>
+						
+						<td><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cobrodsc_mntnodsc}:</ui:define>
+							<h:outputText value="#{ventaProdServHome.instance.monto}" readonly="true" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</s:decorate></td>
+					</tr><tr>
+						<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+							<ui:define name="label">#{app.vtaprs_verdet}:</ui:define>
+							<h:inputTextarea value="#{ventaProdServHome.instance.detalle}" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+							</h:inputTextarea>
+						</s:decorate></td>
+						
+						<td><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.vtaprs_estado}:</ui:define>
+							<h:outputText value="#{msn.status_pending}" rendered="#{ventaProdServHome.instance.estado=='PEN'}" />
+							<h:outputText value="#{msn.status_approved}" rendered="#{ventaProdServHome.instance.estado=='APR'}" />
+							<h:outputText value="#{msn.status_rejected}" rendered="#{ventaProdServHome.instance.estado=='ANU'}" />
+							<h:outputText value="#{app.vtaprs_est_pds}" rendered="#{ventaProdServHome.instance.estado=='PDS'}" />
+						</s:decorate></td>
+					</tr>
+					</table>
+					
+					<rich:dataTable var="res" value="#{ventaProdServHome.instance.detVenta}" id="_tblCostos"  rows="10"
+						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.vtaprs_listcostos}</f:facet>
+						<rich:column>
+							<f:facet name="header">#{app.parvta_description}</f:facet>
+							<h:outputText value="#{res.detalle}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{app.vtaprs_cantidad}</f:facet>
+							<h:outputText value="#{res.cantidad}" readonly="false" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{app.vtaprs_monto}</f:facet>
+							<h:outputText value="#{res.monto}" readonly="false" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</rich:column>
+						<f:facet name="footer">
+							
+						</f:facet>
+					</rich:dataTable> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/vtas/cobro/listDesc.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<a:commandButton action="#{ventaProdServHome.aprobarVta()}" reRender="formvta"
+						styleClass="saveBtn" value="#{msn.status_apply}" rendered="#{ventaProdServHome.instance.estado=='PDS'}" />
+					<a:commandButton action="#{ventaProdServHome.anularVta()}" reRender="formvta"
+						styleClass="deleteBtn" value="#{msn.status_deny}" rendered="false"/>
+				</s:decorate>
+				</fieldset>
+				
+				<rich:modalPanel id="selCliCorp" width="800" moveable="true" autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('selCliCorp');">
+					<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('selCliCorp')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="clcrp" ><ui:include  src="selCliCorp.xhtml" /></s:div>
+				</rich:modalPanel>
+				
+				<rich:modalPanel id="detDescuento" width="500" moveable="true" autosized="true" top="100"
+					onbeforeshow="activeModal.setActiveModalPanel('detDescuento');">
+					<f:facet name="header">#{app.usuariolist_modal}</f:facet>	
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('detDescuento')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="dtdsc" ><ui:include  src="detDescuento.xhtml" /></s:div>
+				</rich:modalPanel>
+				
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.ctxcb_headSl}</f:facet>
+			<h:form id="formA">
+			<center>
+				<table>
+					<tr>
+						<td>
+							<s:decorate template="/layout/kActions.xhtml" id="cosita" rendered="#{cuentaCobrarHome.fltCliCorp==null}" >
+								<s:button view="/acct/cxc/master.xhtml" propagation="begin"
+									styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+									<f:param name="id" value="" />
+								</s:button>
+							</s:decorate>
+						</td>
+						<td>
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{cuentaCobrarHome.fltCliCorp!=null}" >
+								<ui:define name="label">Nuevo estado:</ui:define>
+								<h:selectOneMenu value="#{cuentaCobrarHome.estadoCuentaSelec}" required="true" style="width:220px;">
+									<f:selectItem itemLabel="PAGADA" itemValue="PGD"/>
+									<f:selectItem itemLabel="FACTURA" itemValue="FAC"/>
+									<f:selectItem itemLabel="QUEDAN" itemValue="QDN"/>
+								</h:selectOneMenu>
+							</s:decorate>
+						</td>
+						<td>
+							<s:decorate template="/layout/kActions.xhtml" id="_btnPyCxc" rendered="#{cuentaCobrarHome.fltCliCorp!=null}" >
+							<a:commandButton value="#{app.ctxcb_pagar_sel}" onclick="#{rich:component('confPayCxcs')}.show();" reRender="fm1" 
+									styleClass="moneyBtn" />
+							</s:decorate>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<center>
+								<s:span styleClass="busHead">#{app.patimast_searchboxtitle}:</s:span>
+								<rich:spacer width="0" />
+								<s:decorate></s:decorate>
+								<h:inputText styleClass="busProd" value="#{cuentaCobrarHome.busquedaCliente}"
+									id="_nomCoinci">
+									<a:support event="onkeydown" reRender="_tblCxc" eventsQueue="q1"
+										ajaxSingle="true" action="#{cuentaCobrarHome.buscarCxcCliente('PGD')}" />
+			
+								</h:inputText>
+							</center>
+						</td>
+					</tr>
+				</table>
+			</center>
+			
+			
+			<rich:spacer height="0" />
+				<center>
+					<table border="0px">
+												
+							<!-- td><s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">Ingrese Nombre/Apellido:</ui:define>
+									<h:inputText value="#{reparacionClienteHome.nombre}" />
+								</s:decorate></td-->
+						<tr>
+							<td><span style="font-weight: bold;">Fecha inicial:
+									&nbsp;&nbsp;</span> <rich:calendar datePattern="dd/MM/yyyy"
+									tabindex="20" id="_calIniFlt"
+									value="#{cuentaCobrarHome.fechaPFlt1}"
+									inputStyle="width:200px; height:12px;">
+									<a:support eventsQueue="q1" event="onchanged"
+										reRender="formA,_calIniFlt,_calFinFlt"   />
+								</rich:calendar> <rich:spacer width="34" /></td>
+
+							<td><span style="font-weight: bold;">Fecha final:
+									&nbsp;&nbsp;</span> <rich:calendar datePattern="dd/MM/yyyy"
+									tabindex="20" id="_calFinFlt"
+									value="#{cuentaCobrarHome.fechaPFlt2}"
+									inputStyle="width:200px; height:12px;">
+									<a:support eventsQueue="q1" event="onchanged"
+										reRender="formA,_calIniFlt,_calFinFlt" />
+								</rich:calendar></td>
+
+						</tr>
+					</table>
+				</center>
+			
+			<rich:spacer height="10" />
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+			
+				<rich:dataTable var="res" value="#{cuentaCobrarHome.resultListPagadas}" id="_tblCxc"
+					rendered="#{not empty cuentaCobrarHome.resultListPagadas}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.ctxcb_list}</f:facet>
+					<rich:column filterBy="#{res.comprobante}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.ctxcb_comprobante}</f:facet>
+						<h:outputText value="#{res.comprobante}" />
+					</rich:column>
+					
+					<rich:column sortBy="#{res.fechaIngreso}" >
+						<f:facet name="header">Fecha Ingreso</f:facet>
+						<h:outputText value="#{res.fechaIngreso}" />
+					</rich:column>
+					
+					<rich:column sortBy="#{res.fechaFinalizacion}" >
+						<f:facet name="header">Fecha Finalizacion</f:facet>
+						<h:outputText value="#{res.fechaFinalizacion}" />
+					</rich:column>
+					
+					<!-- 
+					<rich:column filterValue="#{cuentaCobrarHome.filtrarFecha(res.fechaIngreso)}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.ctxcb_fechaing}</f:facet>
+						<h:outputText value="#{res.fechaIngreso}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterValue="#{cuentaCobrarHome.filtrarFecha(res.fechaVencimiento)}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.ctxcb_fechaven}</f:facet>
+						<h:outputText value="#{res.fechaVencimiento}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					
+					 -->
+					 
+					<rich:column filterBy="#{res.cliente.nombres}" filterEvent="onkeyup">
+						<f:facet name="header">Persona</f:facet>
+						<h:outputText value="#{res.cliente.nombres} #{res.cliente.apellidos}" />
+					</rich:column>
+					
+					<rich:column filterValue="#{cuentaCobrarHome.fltCliCorp}" 
+						filterExpression="#{cuentaCobrarHome.fltCliCorp==null?(res.cliCorp==res.cliCorp):(res.cliCorp==cuentaCobrarHome.fltCliCorp)}">
+						<f:facet name="header">
+		                    <h:panelGroup>
+		                    	#{app.cuentac_clicorp}<br/>		                        
+		                    <h:inputText value="#{cuentaCobrarHome.fltCliCorp.nombre}" readonly="true" required="true" style="width:140px;" id="_fltCliCorp" />
+							<a:commandButton onclick="#{rich:component('selCliCorp')}.show();" ajaxSingle="true"  
+								action="#{clienteCorpHome.getClientesCorp()}" reRender="clc" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+							<a:commandButton ajaxSingle="true" action="#{cuentaCobrarHome.setFltCliCorp(null)}" reRender="formA,_fltCliCorp,_tblCxc,_btnPyCxc,cosita" 
+								styleClass="clearBtn" value=" " eventsQueue="q1" style="width:30px;" onclick="#{rich:component('confPayCxcs')}.hide();">
+							</a:commandButton>
+		                    </h:panelGroup> 
+		                </f:facet>
+						<h:outputText value="#{res.cliCorp.nombre}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.concepto.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.ctxcb_concepto}</f:facet>
+						<h:outputText value="#{res.concepto.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.monto}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.ctxcb_monto}</f:facet>
+						<h:outputText value="#{cuentaCobrarHome.moneyDecimal(res.monto)}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					
+					<rich:column filterBy="#{res.monto}" filterEvent="onkeyup">
+						<f:facet name="header">Remanente</f:facet>
+						<h:outputText value="#{cuentaCobrarHome.moneyDecimal(res.remanente)}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+										
+					<rich:column style="width:50px;" rendered="#{cuentaCobrarHome.fltCliCorp!=null}" >
+						<f:facet name="header">#{app.pedidomast_select_product}</f:facet>
+						<h:selectBooleanCheckbox value="#{res.cxcSel}"  rendered="#{res.estado!='PGD'}">
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{cuentaCobrarHome.updTotalCxcCorp()}" reRender="_totTot" />
+						</h:selectBooleanCheckbox>
+					</rich:column>
+					
+					<rich:column filterBy="#{res.numFactura}" filterEvent="onkeyup">
+						<f:facet name="header">Factura</f:facet>
+						<h:outputText value="#{res.numFactura}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.numQuedan}" filterEvent="onkeyup">
+						<f:facet name="header">Quedan</f:facet>
+						<h:outputText value="#{res.numQuedan}" />
+					</rich:column>
+					
+					<rich:column >
+						<f:facet name="header">Estado</f:facet>
+						<h:outputText value="Solvente" rendered="#{res.estado=='PGD'}" />
+						<h:graphicImage value="/kubeImg/enabled.png" rendered="#{res.estado=='PGD'}"/>
+						<!-- <h:outputText value="Pendiente" rendered="#{res.estado=='ACT'}" />
+						<h:graphicImage value="/kubeImg/alert.png" rendered="#{res.estado=='ACT'}"/> -->
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.ctxcb_edit}" rendered="true"
+							view="/acct/cxc/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+					</rich:column>
+					<f:facet name="footer">
+						<h:panelGrid columns="2">
+							<s:decorate  style="width:1000px;">
+								<div style="display:inline; float :left; width:200px;">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</div>
+								
+								<div style="display:inline; float:right; width:100px;">
+									<h:outputText value="#{cuentaCobrarHome.totalCxcCorp}" size="8" id="_totTot" rendered="#{cuentaCobrarHome.fltCliCorp!=null}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+													groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+								</div>
+							</s:decorate>
+						</h:panelGrid>
+					</f:facet>
+				</rich:dataTable>
+					
+			</h:form>
+		</rich:panel>
+		
+		<rich:modalPanel id="selCliCorp" width="500" moveable="true" autosized="true" top="50px" 
+			onbeforeshow="activeModal.setActiveModalPanel('selCliCorp');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selCliCorp')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="clc" ><ui:include  src="selCliCorp.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="confPayCxcs"  width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confPayCxcs');">
+			<f:facet name="header">#{app.ctxcb_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confPayCxcs')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.ctxcb_confirm_paysel}</p>
+				<s:decorate template="/layout/kEditSpace.xhtml" style="width:390px;">
+					<ui:define name="label">#{app.ctxcb_descpagoclic}:</ui:define>
+					<h:inputTextarea value="#{cuentaCobrarHome.descPagoClic}"  style="width:370px;">
+						<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+					</h:inputTextarea>
+				</s:decorate>
+				<br />
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confPayCxcs')}.hide();">
+					</a:commandButton>
+					<a:commandButton oncomplete="showReport('detalleCxcCorp', '#{conversation.id}');"
+						rendered="#{cuentaCobrarHome.verifSelCxcCorp()}" styleClass="pdfBtn" ignoreDupResponses="true"
+						value="#{app.ctxcb_detcxc_corp_btn}" />
+						
+					<a:commandButton action="#{cuentaCobrarHome.actualizarOPagarSelCxc()}" reRender="formA" styleClass="moneyBtn" id="otroboton"
+						disabled="#{not cuentaCobrarHome.verifSelCxcCorp()}" 
+						value="#{app.ctxcb_pagar_sel}"	onclick="#{rich:component('confPayCxcs')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

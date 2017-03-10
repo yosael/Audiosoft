@@ -1,0 +1,62 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmAddCst">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+						<center>
+						<s:span styleClass="busHead">#{app.combapa_service_find}:</s:span>
+						<rich:spacer width="0" /> <s:decorate></s:decorate>
+						<h:inputText styleClass="busProd" value="#{serviceDAO.nomCoinci}"
+							 id="_nomCoinci">
+						<a:support  event="onkeydown" reRender="#{rich:clientId('_table')}"
+							ajaxSingle="true" action="#{serviceDAO.buscadorServicios()}" />
+						<a:support event="onkeyup" reRender="#{rich:clientId('_table')}"
+							ajaxSingle="true" action="#{serviceDAO.buscadorServicios()}" />
+					</h:inputText>
+					</center>
+				<rich:dataTable var="res" value="#{serviceDAO.resultList}" id="_table"
+					 rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.combapa_parvtalist}</f:facet>
+					<rich:column >
+						<f:facet name="header">#{app.servmast_code}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column >
+						<f:facet name="header">#{app.servlist_col2}</f:facet>
+						<h:outputText value="#{res.name}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.parvta_valor}</f:facet>
+						<h:outputText value="#{res.costo}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formcombo"
+							action="#{comboAparatoHome.agregarCosto(res)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('costosList')}.hide();">
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+			</h:form>
+	
+</ui:composition>

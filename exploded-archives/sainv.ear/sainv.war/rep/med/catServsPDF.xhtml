@@ -1,0 +1,59 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="portrait" margins="30 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Listado de servicios de la clínica</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="9">
+		<p:table columns="4" widthPercentage="80" headerRows="1"  widths="1 3 1 1" >
+			<p:font color="white" style="bold" size="10">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.servmast_code}</p:paragraph>
+				</p:cell>
+				<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.servlist_col2}</p:paragraph>
+				</p:cell>
+				<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.servmast_costo}</p:paragraph>
+				</p:cell>
+				<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="2">
+					<p:paragraph alignment="center">Estado</p:paragraph>
+				</p:cell>
+			</p:font>
+
+		<ui:repeat var="srv" value="#{serviceQuery.resultList}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>#{srv.codigo}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>#{srv.name}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4">
+				<p:paragraph>
+					<p:text value="#{srv.costo}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text>
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph rendered="#{srv.estado=='ACT'}" >Activo</p:paragraph>
+				<p:paragraph rendered="#{srv.estado=='INA'}" >Inactivo</p:paragraph>
+			</p:cell>
+			
+		</ui:repeat>
+			
+	</p:table>
+	
+	</p:font>
+</p:document>

@@ -1,0 +1,35 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmPermDesc">
+		<p:growl globalOnly="true" sticky="false" life="3000" />
+		<p:focus />
+		<a:queue name="q44" />
+		<center>
+		Ingrese la clave del administrador/gerente para poder seleccionar un descuento:
+		<rich:spacer height="25" />
+		<h:inputSecret value="#{ventaItemHome.pwd}" id="password" required="true" style="width:140px;"
+			requiredMessage="#{app.req_password}" >
+			<a:support eventsQueue="q44" ajaxSingle="true" event="onblur" />	
+		</h:inputSecret>
+		<rich:spacer width="10" />
+		<a:commandButton ajaxSingle="true" ignoreDupResponses="true" eventsQueue="q44"
+			action="#{ventaItemHome.autorizarDescuento()}" reRender="frmPermDesc,dscvts" 
+			styleClass="thoughtbot" value="Autorizar descuento" >
+		</a:commandButton>
+		
+		<h:outputText value="Clave del descuento inv�lida." 
+			style="font-weight:bold; color:red;" rendered="#{ventaItemHome.errorAuthDesc}" />
+		</center>					
+	</h:form>
+	
+</ui:composition>

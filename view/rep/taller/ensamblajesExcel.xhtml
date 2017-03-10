@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_excel_movements_worksheet}"
+		value="#{repTaller.resultList}" var="bean">
+		<e:header> 
+			<f:facet name="left">
+				#{app.repcli_detreparaciones}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_fechaIng}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.fechaIngreso}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_costo}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.costo}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_cliente}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.cliente.nombres} #{bean.reparacionCli.cliente.apellidos}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_aparato}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.aparatoRep.nombre} #{bean.reparacionCli.aparatoRep.modelo}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_proceso}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.proceso.nombre}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_descripcion}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.descripcion}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_tecnico}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.usuario.nombreUsuario}" forceType="text" />
+		</e:column>
+		
+	</e:worksheet>
+
+</e:workbook>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+		<rich:panel style="padding:1px;">
+				<f:facet name="header">#{app.general_step2_head}</f:facet>
+				<s:div rendered="#{generalMedicalDAO.managed}">
+				
+					<h:outputText
+						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
+						styleClass="consecutive" />
+				<!--		
+						<rich:spacer width="30px;"></rich:spacer>
+					
+					  <a:commandButton
+				        value="Expandir"
+				        action="#{generalMedicalDAO.openToggles2(true)}"
+				        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../kubeImg/arrow_down16.png);
+								background-position: 5px 4px;
+								background-repeat: no-repeat;
+								text-indent: 20px;"
+				        ajaxSingle="true"
+				        reRender="toggles21,toggles22,toggles23,toggles24"
+				        />
+				        <rich:spacer width="14px;"></rich:spacer>
+				        <a:commandButton
+				        value="Ocultar"
+				        action="#{generalMedicalDAO.openToggles2(false)}"
+				        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../kubeImg/arrow_up16.png);
+								background-position: 5px 4px;
+								background-repeat: no-repeat;
+								text-indent: 20px;"
+				        ajaxSingle="true"
+				        reRender="toggles21,toggles22,toggles23,toggles24"
+				        />	 -->
+						
+				</s:div>
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab1}" id="toggles21" opened="#{generalMedicalDAO.toggle2}">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.consultationReason}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.observation}" cols="75"
+									rows="5" disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="#{generalMedicalDAO.toggle2}">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_height}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.height}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_weight}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.weight}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_temperature}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.temperature}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_heart_rate}:</ui:define>
+								<h:inputText value="#{generalMedicalDAO.instance.heartRate}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_respiratory_rate}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.respiratoryRate}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_blood1}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.bloodPressureSystole}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_blood2}:</ui:define>
+								<h:inputText
+									value="#{generalMedicalDAO.instance.bloodPressureDiastole}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="#{generalMedicalDAO.toggle2}">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px ">					
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_head}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regHead}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_neck}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regNeck}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_thorax}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regThorax}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_abdomen}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.regAbdomen}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_tips}:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.regTips}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step2_reg_genitals}:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.regGenitals}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+		</rich:panel>
+</ui:composition>

@@ -1,0 +1,311 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="head">
+		
+		<style type="text/css">
+.schedForm1 {
+	width: 200px;
+}
+.selectRow {
+	background-color: #A3CAF1;
+	color:white;
+}
+</style>
+	</ui:define>
+	<ui:define name="body">
+		<p:growl id="growl" globalOnly="true" sticky="false" life="3000" ajaxSingle="true" />
+		<!-- <a:poll id="autoRefreshSched" interval="5000" enabled="true"
+			reRender="table" action="#{appointmentGrid.createGridDay()}"
+			ajaxSingle="true" eventsQueue="q1" update="growl" />  -->
+		<rich:panel>
+			<f:facet name="header">#{app.sched_head}</f:facet>
+			<p:focus />
+			<a:queue name="q1" ignoreDupResponses="false"/> <!-- se agrego esto: ignoreDupResponses="false" el 21/12/2016 -->
+			<h:form id="formA">
+				<!-- <a:poll id="autoRefreshSched" interval="50000" enabled="true" reRender="formA" action="#{appointmentGrid.createGridDay()}"  /> -->
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 200px;">
+							<s:decorate
+								template="/layout/kEditSpace.xhtml" style="width:200px;">
+								<ui:define name="label">#{app.sched_doctor}:</ui:define>
+								<h:inputText
+									value="#{appointmentGrid.doctorSel.nombres} #{appointmentGrid.doctorSel.apellidos}"
+									readonly="true" required="true" style="width:170px;" />
+								<a:commandButton onclick="#{rich:component('selDoc')}.show();"
+									ajaxSingle="true" action="#{doctorDAO.listaDoctores()}"
+									reRender="doc" styleClass="modifyBtn" value=" "
+									eventsQueue="q1"
+									style="width:30px;">
+								</a:commandButton>
+							</s:decorate>
+						</td>
+						<td rowspan="2">
+						
+							
+								
+								<s:div styleClass="schedCalendar">
+										<!--  <h:commandButton value="Actualizar" action="#{appointmentGrid.createGridDay()}" />-->
+										
+										
+										<s:button 
+											styleClass="refreshBtn" value="Actualizar" propagation="begin" 
+											rendered="#{not empty appointmentGrid.listAppointments}"  
+											view="/medical/medicalAppointment/scheduler.xhtml"    >
+											<f:param name="idDoctor" value="#{appointmentGrid.doctorSel.id}"	/>
+										</s:button>
+										
+										
+										<!--
+										<a:commandButton value="Actualizar" rendered="#{not empty appointmentGrid.listAppointments}" styleClass="refreshBtn" action="#{appointmentGrid.loadDoctorSched2(appointmentGrid.doctorSel)}" ajaxSingle="true"  reRender="table" >
+										</a:commandButton>
+										
+										<h:commandButton value="Actualizar"  rendered="#{not empty appointmentGrid.listAppointments}" styleClass="refreshBtn" action="#{appointmentGrid.loadDoctorSched(appointmentGrid.doctorSel)}"  >
+											<a:support actionListener="#{conversation.end()}"  ajaxSingle="true" event="onclick"  reRender="table"  ></a:support>
+										</h:commandButton>-->
+										
+										<rich:extendedDataTable align="center" width="950px"
+											height="20px"
+											rendered="#{not empty appointmentGrid.listAppointments}"
+											rowClasses="tblEven,tblOdd">
+											<f:facet name="header">
+												<h:outputLabel value="#{app.schedlist_header}" styleClass="" />
+											</f:facet>
+										</rich:extendedDataTable>
+											
+											<!-- antes tenia selectionMode='multi' -->
+										<rich:extendedDataTable
+											value="#{appointmentGrid.listAppointments}"
+											rendered="#{not empty appointmentGrid.listAppointments}"
+											var="res" id="table" width="950px" height="507px"
+											sortMode="single" selectionMode="single"
+											selection="#{appointmentGrid.selection}" align="center"
+											onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+											onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+											activeClass="selectRow"
+											selectedClass="selectRow"
+											headerClass="tablaHeader" footerClass="tableScroll"
+											enableContextMenu="false">
+											
+											<f:facet name="header">
+												<h:outputText value="#{appointmentGrid.dateSel}">
+													<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+												</h:outputText>
+											</f:facet>
+											<rich:column>
+												<f:facet name="header">#{app.schedlist_col1}</f:facet>
+												<h:outputText value="#{res.dateTime}"
+													styleClass="timeText #{res.status == 2?'canceled':''}">
+													<s:convertDateTime pattern="HH:mm a" />
+												</h:outputText>
+											</rich:column>
+											<rich:column>
+												<f:facet name="header">#{app.schedlist_col2}</f:facet>
+												<h:outputText title="#{res.cliente.fullName}" value="#{res.cliente.fullName}"
+													styleClass="#{res.status == 2?'canceled':res.status ==5?'resBlock':''}" />
+											</rich:column>
+											<rich:column>
+												<f:facet name="header">#{app.schedlist_col3}</f:facet>
+												<h:outputText value="#{res.cliente.telefono1}"
+													styleClass="#{res.status == 2?'canceled':res.status == 5?'resBlock':''}" />
+											</rich:column>
+											<rich:column width="200px">
+												<f:facet name="header">#{app.schedlist_servs}</f:facet>
+												<a:repeat value="#{res.medicalAppointmentServices}" var="srv">
+													<h:outputText value="#{srv.service.name}, " />
+												</a:repeat>
+											</rich:column>
+											<rich:column>
+												<f:facet name="header">#{app.usuariomast_branch}</f:facet>
+												<h:outputText
+													value="#{res.status ne 5? res.sucursal.nombre : ''}" />
+											</rich:column>
+											<rich:column width="230px">
+												<f:facet name="header">#{app.schedlist_col4}</f:facet>
+												<h:outputText value="#{res.comment}" title="#{res.comment}"
+													styleClass="#{res.status == 2?'canceled':''}" />
+											</rich:column>
+											<rich:column
+												styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
+												<f:facet name="header">#{app.schedlist_col5}</f:facet>
+												<h:outputText value="#{app.sched_reserved}"
+													rendered="#{res.status==5}" styleClass="resBlock" />
+												<h:outputText value="#{app.sched_confirmed}"
+													rendered="#{res.status==4}" />
+												<h:outputText value="#{app.sched_scheduled}"
+													rendered="#{res.status==0}" />
+												<h:outputText value="#{app.sched_served}"
+													rendered="#{res.status==1}" />
+												<h:outputText value="#{app.sched_canceled}"
+													rendered="#{res.status==2}" styleClass="canceled" />
+												<h:outputText value="#{app.sched_absence}"
+													rendered="#{res.status==3}" />
+											</rich:column>
+											<a:support reRender=" grow,action" immediate="true"
+												action="#{appointmentGrid.takeSelection}"
+												ignoreDupResponses="true" event="onselectionchange"
+												update="growl" ajaxSingle="true" /><!-- este evento tambien renderizaba el formA pero se soluciono un problema al quitar eso -->
+										</rich:extendedDataTable>
+		
+		
+										<rich:spacer height="10" />
+										<s:decorate template="/layout/kActions.xhtml" id="action"
+											rendered="#{not empty appointmentGrid.listAppointments}">
+											<!--  ver el modal de detalle de las citas
+											<a:commandButton value="#{app.sched_modal}" reRender="fm1"
+												rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1)}"
+												styleClass="modalBtn" ajaxSingle="true"
+												oncomplete="#{rich:component('modalAppointment')}.show();" /> -->
+											<!--  detalle del historial clinico-->
+											
+											<!-- Se cambio pagina de step1 a stepHistorialApp -->
+											<s:button propagation="begin"
+												view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
+												rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+										(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+												styleClass="detailBtn" value="#{app.sched_detail}">
+												<f:param name="id"
+													value="#{medicalAppointmentDAO.instance.id}" />
+												<f:param name="historyId"
+													value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
+											</s:button>
+											<!--  atender la cita solo debe ser visto por el doctor que va a atender la cita-->
+											<s:button propagation="join" view="attend.xhtml"
+												rendered="false" styleClass="detailBtn"
+												value="#{app.sched_attend}">
+												<f:param name="back" value="#{conversation.viewId}" />
+											</s:button>
+											<!--  cambiar estados-->
+											<a:commandButton value="#{app.sched_state}" reRender="fm2"
+												rendered="#{(appointmentGrid.selection.size() == 1) and (medicalAppointmentDAO.managed)  and 
+										(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)  and (medicalAppointmentDAO.instance.status != 5)}"
+												styleClass="cancelBtn" ajaxSingle="true"
+												oncomplete="#{rich:component('modalState')}.show();" />
+											<!--  transferir cita-->
+											<a:commandButton value="#{app.sched_app_transfer}"
+												reRender="fmTransApp"
+												rendered="#{(appointmentGrid.selection.size() == 1) and (medicalAppointmentDAO.managed)  and 
+										(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)  and (medicalAppointmentDAO.instance.status != 5)}"
+												styleClass="transferBtn" ajaxSingle="true"
+												oncomplete="#{rich:component('modalTransAppointment')}.show();" />
+											<!--  crear nueva cita-->
+											<a:commandButton
+												rendered="#{(not medicalAppointmentDAO.managed) and (medicalAppointmentDAO.instance.status ne 5) and appointmentGrid.selection.size() eq 1 and 
+										(appointmentGrid.validateDate()) and not empty appointmentGrid.listAppointments}"
+												onclick="#{rich:component('newAppointment')}.show();"
+												ajaxSingle="true" reRender="nApp, formApp," styleClass="newBtn" action="#{medicalAppointmentDAO.clearServices()}"
+												value="#{app.sched_new}" style="width:auto;">
+											</a:commandButton>
+											
+											<a:commandButton value="Editar"
+												reRender="nApp, formApp,"
+												rendered="#{(appointmentGrid.selection.size() == 1) and (medicalAppointmentDAO.managed)  and 
+										(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)  and (medicalAppointmentDAO.instance.status != 5)}"
+												styleClass="newBtn" ajaxSingle="true"
+												oncomplete="#{rich:component('newAppointment')}.show();" action="#{medicalAppointmentDAO.loadAppointment()}" />
+		
+											<a:commandButton
+												rendered="#{(not medicalAppointmentDAO.managed)  and appointmentGrid.selection.size() gt 1 and 
+										(appointmentGrid.validateDate()) and not empty appointmentGrid.listAppointments}"
+												ajaxSingle="true" reRender="nBlock" styleClass="newBtn"
+												value="Agendar bloque" style="width:auto;"
+												onclick="#{rich:component('newBlock')}.show();">
+											</a:commandButton>
+		
+											<!-- 
+											<s:button propagation="join"
+										view="/medical/medicalAppointment/new.xhtml"
+										rendered="#{(not medicalAppointmentDAO.managed)  and appointmentGrid.selection.size() eq 1 and 
+										(appointmentGrid.validateDate()) and not empty appointmentGrid.listAppointments}"
+										styleClass="newBtn" value="#{app.sched_new}"
+										action="#{medicalAppointmentDAO.cleanForNew()}" /> 
+										 -->
+										</s:decorate>
+									</s:div>
+						</td>
+					</tr>
+					<tr>
+						<td><s:decorate template="/layout/kEditSpace.xhtml"
+								style="width:200px;">
+								<ui:define name="label">#{app.sched_date}:</ui:define>
+								<rich:calendar value="#{appointmentGrid.dateSel}"
+									required="true" datePattern="dd/MM/yyyy" popup="false">
+									<a:support action="#{appointmentGrid.createGridDay()}"
+										reRender="formA, action" event="onchanged" />
+								</rich:calendar>
+							</s:decorate></td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</h:form> 
+
+			<rich:modalPanel id="newAppointment" width="800" height="440" moveable="true"
+				top="100" left="335" style="overflow-y:scroll"
+				onshow="#{sucursalHome.cargarSucursales()}"
+				onbeforeshow="activeModal.setActiveModalPanel('newAppointment');">
+				<f:facet name="header">Cita medica</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('newAppointment')}.hide();"
+							reRender="table,formA" ajaxSingle="true" update="growl"/>
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="nApp">
+					<ui:include src="_modalNewAppoint.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<!-- <rich:modalPanel id="editAppointment" width="800" moveable="true"
+				autosized="true" top="100" left="335"
+				onshow="#{sucursalHome.cargarSucursales()}"
+				onbeforeshow="activeModal.setActiveModalPanel('editAppointment');">
+				<f:facet name="header">#{app.sched_new}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('editAppointment')}.hide();"
+							reRender="table,formA" ajaxSingle="true" update="growl"/>
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="AppEdit">
+					<ui:include src="_modalEditAppoint.xhtml" />
+				</s:div>
+			</rich:modalPanel> -->
+			
+			<rich:modalPanel id="newBlock" width="800" moveable="true"
+				autosized="true" top="40" left="10"
+				onmaskclick="#{rich:component('newBlock')}.hide();"
+				onshow="#{sucursalHome.cargarSucursales()}"
+				onbeforeshow="activeModal.setActiveModalPanel('newBlock');" onbeforehide="#{appointmentGrid.createGridDay()}"
+				>
+				<f:facet name="header">Nuevo bloque</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('newBlock')}.hide();"
+							reRender="table,formA" ajaxSingle="true" action="#{appointmentGrid.createGridDay()}" immediate="true"/>
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="nBlock">
+					<ui:include src="_modalNewBlock.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+		</rich:panel>
+
+		<ui:include src="/medical/medicalAppointment/_modalDetail.xhtml" />
+		<ui:include src="/medical/medicalAppointment/_modalStatus.xhtml" />
+		<ui:include	src="/medical/medicalAppointment/transferAppointment.xhtml" />
+
+	</ui:define>
+</ui:composition>

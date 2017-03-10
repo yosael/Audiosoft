@@ -1,0 +1,54 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{recomendacionMedHome.managed?sainv_view_messages.get('recomed_head_edit'):sainv_view_messages.get('recomed_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formrecomed">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.recomed_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.recomed_name}:</ui:define>
+							<h:inputText value="#{recomendacionMedHome.instance.nombre}" required="true" />
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/medical/recomed/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/medical/recomed/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{recomendacionMedHome.save()}" reRender="formrecomed"
+						rendered="#{not recomendacionMedHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{recomendacionMedHome.modify()}" reRender="formrecomed"
+						rendered="#{recomendacionMedHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

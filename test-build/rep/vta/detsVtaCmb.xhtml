@@ -1,0 +1,73 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Reporte de aparatos vendidos</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+					<center>
+					<h:panelGrid columns="3">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+							<rich:calendar value="#{repVenta.fechaInicio}"  datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" />
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+							<rich:calendar value="#{repVenta.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_cliData">
+							<ui:define name="label">#{app.repcli_cliente}:</ui:define>
+							<h:inputText value="#{repVenta.fltObj1.nombreCompleto}" 
+								readonly="true" required="true" disabled="true" style="width:160px;" />
+							<a:commandButton onclick="#{rich:component('selClient')}.show();" ajaxSingle="true"  
+								action="#{clienteCRMHome.cargarListaClientes()}" reRender="cli" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+							<a:commandButton ajaxSingle="true"  
+								action="#{repVenta.setFltObj1(null)}" reRender="_cliData" 
+								styleClass="clearBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+					</h:panelGrid>
+					
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton oncomplete="showReport('detsVtaCmbPDF', '#{conversation.id}');"
+							styleClass="pdfBtn" action="#{repVenta.repDetallesCombo()}"
+							value="#{msn.button_pdf}" rendered="true">
+						</a:commandButton>
+					</s:decorate>
+					</center>
+			
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="selClient" width="800" moveable="true" autosized="true" top="40" left="10" 
+			onbeforeshow="activeModal.setActiveModalPanel('selClient');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selClient')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="cli" ><ui:include  src="selClient.xhtml" /></s:div>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

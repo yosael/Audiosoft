@@ -1,0 +1,251 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Reporte de ventas mensuales</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>					
+					<center>
+					<h:panelGrid columns="3">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Fecha Inicial:</ui:define>
+							<rich:calendar value="#{repVenta.fechaInicio}"  datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Fecha Final:</ui:define>
+							<rich:calendar value="#{repVenta.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate> 
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvTpcpr">
+							<ui:define name="label">Tipo de Comprobante:</ui:define>
+							<h:inputText value="#{repVenta.valCmb1}" id="_tipoComprobante" 
+								readonly="false" required="false" style="width:200px;" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table" />
+							</h:inputText>
+										
+							<a:commandButton onclick="#{rich:component('selComprbt')}.show();" ajaxSingle="true"  
+								action="#{comprobanteImpresionHome.cargarListaComprobantes()}" reRender="comprbt" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Estado:</ui:define>
+							<h:selectOneMenu value="#{repVenta.valCmb4}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItem itemValue="APL" itemLabel="Aplicados" />
+								<f:selectItem itemValue="ANU" itemLabel="Anulados" />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table"  />
+							</h:selectOneMenu>									
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvCli">
+							<ui:define name="label">Cliente:</ui:define>
+							<h:inputText value="#{repVenta.valCmb2}" 
+								readonly="false" required="false" style="width:200px;" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table" />
+							</h:inputText>
+									
+							<a:commandButton onclick="#{rich:component('selClient')}.show();" ajaxSingle="true"  
+								action="#{clienteDocHome.cargarListaClientes()}" reRender="cli" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>												
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvEmp">
+							<ui:define name="label">Empresa:</ui:define>
+							<h:inputText value="#{repVenta.valCmb3}" 
+								readonly="false" required="false" style="width:200px;" >
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.repVentasDocMensuales()}" reRender="_table" />
+							</h:inputText>
+									
+							<a:commandButton onclick="#{rich:component('selEmpDoc')}.show();" ajaxSingle="true"  
+								action="#{empresaDocHome.cargarListaEmpresas()}" reRender="empDoc" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>				 		
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="false">
+							<ui:define name="label">Mostrar Detalle:</ui:define>
+							<h:selectBooleanCheckbox value="#{repVenta.flag1}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+									action="#{repVenta.repVentasDocMensuales()}" reRender="formA"/>
+							</h:selectBooleanCheckbox>
+						</s:decorate>						
+						
+					</h:panelGrid>
+					
+					<rich:spacer height="10"/>
+					 
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton oncomplete="showReport('repVtasMensPDF', '#{conversation.id}');"
+						styleClass="pdfBtn" action="#{repVenta.repVentasDocMensuales()}"
+						value="#{msn.button_pdf}" rendered="true">
+					</a:commandButton>
+					 	<a:commandButton 
+							styleClass="pdfBtn" action="#{repVenta.limpiarSelCce()}"
+							value="Limpiar" rendered="true" reRender="formA" >
+						</a:commandButton>
+					</s:decorate>
+						
+					</center>
+				</fieldset> 
+				<rich:dataTable var="res" value="#{repVenta.dtRp['ventasDoc']}" id="_table"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" 
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<rich:column filterBy="#{res.serie}" filterEvent="onkeyup">
+						<f:facet name="header">Serie</f:facet>
+						<h:outputText value="#{res.serie}" />
+					</rich:column>
+					<rich:column filterBy="#{res.correlativo}" filterEvent="onkeyup">
+						<f:facet name="header">Correlativo</f:facet>
+						<h:outputText value="#{res.correlativo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.comprobante.empresaDoc.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">Empresa</f:facet>
+						<h:outputText value="#{res.comprobante.empresaDoc.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
+						<f:facet name="header">Estado</f:facet>
+						<h:outputText rendered="#{res.estado=='APL'}" value="Aplicada" />
+						<h:outputText rendered="#{res.estado=='ANU'}" value="Anulada" />
+					</rich:column>										
+					<rich:column filterBy="#{res.fecha}" filterEvent="onkeyup">
+						<f:facet name="header">Fecha</f:facet>
+						<h:outputText value="#{res.fecha}" />
+					</rich:column>
+					<rich:column filterBy="#{res.iva}" filterEvent="onkeyup">
+						<f:facet name="header">Total IVA</f:facet>
+						<h:outputText value="#{res.iva}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.percibido}" filterEvent="onkeyup">
+						<f:facet name="header">Total Percibido</f:facet>
+						<h:outputText value="#{res.percibido}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.retenido}" filterEvent="onkeyup">
+						<f:facet name="header">Retenido</f:facet>
+						<h:outputText value="#{res.retenido}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.formaPago}" filterEvent="onkeyup">
+						<f:facet name="header">Forma Pago</f:facet>
+						<h:outputText value="Efectivo" rendered="#{res.formaPago=='EFE'}" />
+						<h:outputText value="Tarjeta" rendered="#{res.formaPago=='TRJ'}" />
+						<h:outputText value="Cheque" rendered="#{res.formaPago=='CHQ'}" />
+						<h:outputText value="Crédito" rendered="#{res.formaPago=='CRD'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descuento}" filterEvent="onkeyup">
+						<f:facet name="header">Descuento</f:facet>
+						<h:outputText value="#{res.descuento}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.total}" filterEvent="onkeyup">
+						<f:facet name="header">Total de la Venta</f:facet>
+						<h:outputText value="#{res.total}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column> 
+					<rich:column rendered="#{repVenta.flag1 == true}"> 
+						<f:facet name="header">Detalle de la Venta</f:facet>
+
+						<rich:dataTable var="res" value="#{res.detVentas}" id="_tableDetVentas"
+							rows="20" align="center"  rowClasses="tblEven,tblOdd"
+							onRowMouseOver="this.style.backgroundColor='#A3CAF1'" 
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll" >
+							<rich:column>
+								<f:facet name="header">Cantidad</f:facet>
+								<h:outputText value="#{res.cantidad}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Detalle</f:facet>
+								<h:outputText value="#{res.detalle}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Precio Unitario</f:facet>
+								<h:outputText value="#{res.precioUnitario}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Tipo</f:facet>
+								<h:outputText value="#{res.tipo}" />
+							</rich:column>								
+						</rich:dataTable>	
+										
+					</rich:column>																																																																																													
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			
+			</h:form>
+		</rich:panel>
+		
+		<rich:modalPanel id="selComprbt" width="850" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selComprbt');">
+			<f:facet name="header">Comprobantes de impresión registrados</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selComprbt')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="comprbt" ><ui:include src="selComprbt.xhtml" /></s:div>
+		</rich:modalPanel>	
+		
+		<rich:modalPanel id="selClient" width="900" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selClient');">
+			<f:facet name="header">Clientes registrados</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selClient')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="cli" ><ui:include src="selClient.xhtml" /></s:div>
+		</rich:modalPanel>			
+		
+		<rich:modalPanel id="selEmpDoc" width="800" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selEmpDoc');">
+			<f:facet name="header">Empresas registradas</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selEmpDoc')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="empDoc" ><ui:include src="selEmpDoc.xhtml" /></s:div>
+		</rich:modalPanel>		
+	
+	</ui:define>
+</ui:composition>

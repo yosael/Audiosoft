@@ -1,0 +1,65 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formAdd">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q2" />
+				<s:div rendered="#{not empty notificacionUserHome.dtRp['prdExisLim']}">
+					Existen <b>#{notificacionUserHome.dtRp['prdExisLim'].size}</b> productos en la sucursal 
+					<b>#{loginUser.user.sucursal.nombre}</b> cuyas existencias están abajo del límite, 
+					las cuales se detallan a continuación. Para ver una lista más detallada y con más 
+					posibilidades de filtrado, ingresar a la opción de menú <b>Reportes &gt;&gt; Existencias bajo 
+					el límite</b>.
+				</s:div>
+				<s:div rendered="#{empty notificacionUserHome.dtRp['prdExisLim']}">
+					No existen productos con existencias abajo del límite en su sucursal.
+				</s:div>  
+				<br />
+				<rich:dataTable var="res" value="#{notificacionUserHome.dtRp['prdExisLim']}" id="_tableInvEx"
+					rows="20" align="center" rowClasses="tblEven,tblOdd" 
+					rendered="#{not empty notificacionUserHome.dtRp['prdExisLim']}"
+					onRowMouseOver="this.style.backgroundColor='#D1F4B3'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					
+					<rich:column filterBy="#{res.producto.referencia}" filterEvent="onkeyup" >
+						<f:facet name="header">Código</f:facet>
+						<h:outputText value="#{res.producto.referencia}" />
+					</rich:column>
+					<rich:column filterBy="#{res.producto.nombre}" filterEvent="onkeyup" >
+						<f:facet name="header">Nombre</f:facet>
+						<h:outputText value="#{res.producto.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.producto.modelo}" filterEvent="onkeyup" >
+						<f:facet name="header">Modelo</f:facet>
+						<h:outputText value="#{res.producto.modelo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.producto.marca}" filterEvent="onkeyup" >
+						<f:facet name="header">Marca</f:facet>
+						<h:outputText value="#{res.producto.marca.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Cant. mínima</f:facet>
+						<h:outputText value="#{res.producto.cantidadMinima}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Cant. actual</f:facet>
+						<h:outputText value="#{res.cantidadActual}" />
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds10" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+			</h:form>
+	
+</ui:composition>

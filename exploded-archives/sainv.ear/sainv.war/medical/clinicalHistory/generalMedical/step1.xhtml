@@ -1,0 +1,486 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="head">
+		<script type="text/javascript">
+		function terminar()
+		{
+			window.onbeforeunload = null;
+		}
+		window.onbeforeunload = function exitAlert()
+			{
+			var texto = "Los datos que no se han guardado se perderan.";
+			return texto;
+			}
+		</script>
+	</ui:define>
+	<ui:define name="body">
+
+		<!-- necesita primefaces superior!
+			<p:tabView orientation="left">
+		        <p:tab title="Godfather Part I">
+		            <h:panelGrid columns="2" cellpadding="10">
+		                <h:outputText
+		                    value="The story begins as Don Vito Corleone..." />
+		            </h:panelGrid>
+		        </p:tab>
+		        <p:tab title="Godfather Part II">
+		            <h:panelGrid columns="2" cellpadding="10">
+		                <h:outputText value="Francis Ford Coppola's legendary..." />
+		            </h:panelGrid>
+		        </p:tab>
+		        <p:tab title="Godfather Part III">
+		            <h:panelGrid columns="2" cellpadding="10">
+		                <h:outputText value="After a break of more than 15 years..." />
+		            </h:panelGrid>
+		        </p:tab>
+		    </p:tabView>
+		     -->
+
+		<rich:panel>
+			<f:facet name="header">#{app.general_step1_head}</f:facet>
+			<h:form id="formA">
+				<!-- <s:div rendered="#{generalMedicalDAO.managed}">
+					<h:outputText
+						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
+						styleClass="consecutive" />					
+				</s:div> -->
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1"  />
+				<h:panelGroup id="details">
+				
+					<rich:tabPanel switchType="client" width="1000px" style="margin:0 auto;" >
+						<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
+							<rich:spacer width="250px;"></rich:spacer>
+								<s:div>
+								
+									<!-- <a:commandButton
+							        value="Expandir"
+							        action="#{generalMedicalDAO.openToggle(true)}"
+							        propagation="join"
+							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_down16.png);
+									background-position: 5px 4px;
+									background-repeat: no-repeat;
+									text-indent: 20px;"
+							        ajaxSingle="true"
+							        reRender="toggle1,toggle2,toggle3,toggle4"
+							        />
+							        <rich:spacer width="14px;"></rich:spacer>
+							        <a:commandButton
+							        value="Ocultar"
+							        action="#{generalMedicalDAO.openToggle(false)}"
+							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_up16.png);
+									background-position: 5px 4px;
+									background-repeat: no-repeat;
+									text-indent: 20px;"
+							        ajaxSingle="true"
+							        reRender="toggle1,toggle2,toggle3,toggle4"
+							        /> -->
+							        
+								</s:div>
+								 <rich:spacer height="7px;"></rich:spacer>
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
+							</s:div>	
+						</rich:tab>
+						<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+							<s:div>
+							<!-- 
+								<a:commandButton
+							        value="Expandir"
+							        action="#{generalMedicalDAO.openToggles2(true)}"
+							        ajaxSingle="true"
+							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_down16.png);
+									background-position: 5px 4px;
+									background-repeat: no-repeat;
+									text-indent: 20px;"
+							        reRender="toggles21,toggles22,toggles23,toggles24"
+							        />
+							        <rich:spacer width="14px;"></rich:spacer>
+							        <a:commandButton
+							        value="Ocultar"
+							        action="#{generalMedicalDAO.openToggles2(false)}"
+							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_up16.png);
+									background-position: 5px 4px;
+									background-repeat: no-repeat;
+									text-indent: 20px;"
+							        ajaxSingle="true"
+							        reRender="toggles21,toggles22,toggles23,toggles24"
+							        />
+							        
+								 -->					        	
+							</s:div>
+							
+							<rich:spacer height="7px;"></rich:spacer>
+							
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
+							</s:div>
+						</rich:tab>
+						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+							<s:div>
+								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
+							</s:div>
+						</rich:tab>
+					</rich:tabPanel>
+					
+					<!-- <s:button propagation="join" view="#{urlBack.back}"
+							styleClass="backBtn" value="#{msn.button_back}"
+					rendered="#{not empty urlBack.back}" /> -->
+					
+				
+				<h:panelGrid columns="3" style="margin:0 auto">	
+						
+					<!-- <s:button propagation="begin" value="Historial Medico"
+						styleClass="historyBtn" rendered="#{not generalMedicalDAO.managed}"
+						view="/medical/patient/master.xhtml">
+						<f:param name="tabId" value="tab3" />
+					</s:button> -->
+					
+					
+					<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
+								ajaxSingle="true"
+								reRender="modHst1,frmHistorial"
+								onclick="#{rich:component('verHistorialMod')}.show();">
+					</a:commandButton>
+					
+					<!-- <s:button propagation="end" onclick="return confirm('Desea cancelar la consulta?')" value="#{app.diagnostic_cancel}"
+						styleClass="cancelBtn" rendered="#{not generalMedicalDAO.managed}"
+						view="/medical/medicalAppointment/scheduler.xhtml">
+					</s:button>-->
+					<a:commandButton styleClass="cancelBtn" value="Cancelar"
+								ajaxSingle="true"
+								onclick="#{rich:component('confirmCancel')}.show();">
+					</a:commandButton>
+									
+					
+								
+						<!-- <a:commandButton action="#{wizardGeneralMedical.allSteps()}"
+							value="#{app.diagnostic_save}" styleClass="saveBtn"
+							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+						</a:commandButton> -->
+						<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
+							value="Finalizar Consulta" styleClass="saveBtn"
+							onclick="terminar()"
+							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+						</a:commandButton>
+						
+						<rich:spacer width="100px"></rich:spacer>
+						
+					</h:panelGrid>
+					
+				</h:panelGroup>
+				
+				
+				
+				
+			<!-- Esto estaba antes para proseguir con los pasos 1, 2 diagnostic y final
+				<rich:spacer height="10" />
+				<p:accordionPanel styleClass="kubeAccordion" event="click">
+					<p:tab title="#{app.general_step1_tab1}" >
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_num_id}:</ui:define>
+								<h:outputText value="#{clienteHome.instance.docId}"
+									rendered="#{clienteHome.managed}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_type_id}:</ui:define>
+								<h:outputText
+									value="#{clienteHome.instance.tipoDoc}" rendered="#{clienteHome.managed}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.nombres}"
+									required="true" disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.apellidos}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_email}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.email}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step1_tab2}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_bg}:</ui:define>
+								<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
+									required="true" disabled="#{wizardGeneralMedical.mode == 'r'}">
+									<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
+									<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
+									<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
+									<f:selectItem itemLabel="#{app.patimast_bg_4}" itemValue="3" />
+									<f:selectItem itemLabel="#{app.patimast_bg_5}" itemValue="4" />
+									<f:selectItem itemLabel="#{app.patimast_bg_6}" itemValue="5" />
+									<f:selectItem itemLabel="#{app.patimast_bg_7}" itemValue="6" />
+									<f:selectItem itemLabel="#{app.patimast_bg_8}" itemValue="7" />
+								</h:selectOneMenu>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_dob}:</ui:define>
+								<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
+									required="true" datePattern="dd/MM/yyyy"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_gender}:</ui:define>
+								<h:selectOneRadio value="#{clienteHome.instance.genero}" styleClass="radioB"
+									required="true" disabled="#{wizardGeneralMedical.mode == 'r'}">
+									<f:selectItem itemLabel="#{app.patimast_sex_1}" itemValue="1" />
+									<f:selectItem itemLabel="#{app.patimast_sex_2}" itemValue="0" />
+									<a:support event="onchange" reRender="formA" ajaxSingle="true" />
+								</h:selectOneRadio>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.telefono1}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.telefono2}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_address}:</ui:define>
+								<h:inputText value="#{clienteHome.instance.direccion}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step1_tab3}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_family}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.familyHeritage}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_pathologies}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.personalPathologies}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step1_tab4}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_alcholism}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.nopatAlcoholism}"
+									cols="30" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_smoking}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.nopatSmoking}"
+									cols="30" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_addiction}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.nopatAddiction}"
+									cols="30" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_allergies}:</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.nopatAllergies}"
+									cols="30" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab title="#{app.general_step1_tab5}">
+						<h:panelGrid columns="3" style="padding-left:100px;">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenarche}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_sexual_development}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femSexualDevelopment}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_rhythm}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenstrualRhythm}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_last_menstruation}:</ui:define>
+								<rich:calendar
+									value="#{clienteHome.instance.generalInformation.femLastMenstruation}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_sexual_life}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femSexualLife}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_cesarean}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femCesarean}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_birth}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femBirth}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_abortions}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femAbortions}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_contraceptive_method}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femContraceptiveMethod}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_menopause}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenopause}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</p:tab>
+				</p:accordionPanel>
+				<rich:spacer height="10" />
+				<s:decorate template="/layout/kActions.xhtml">
+					
+					<s:button propagation="end" value="Historial Medico"
+					styleClass="historyBtn" 
+					view="/medical/patient/master.xhtml">
+					<f:param name="tabId" value="tab3" />
+					</s:button>
+					<s:button propagation="end" value="#{app.diagnostic_cancel}"
+						styleClass="cancelBtn" rendered="#{not generalMedicalDAO.managed}"
+						view="/medical/medicalAppointment/scheduler.xhtml">
+					</s:button>
+					<s:button propagation="none" value="#{app.diagnostic_exit}"
+						styleClass="modalBtn" rendered="#{generalMedicalDAO.managed}"
+						view="/medical/medicalAppointment/scheduler.xhtml">
+					</s:button>
+					<h:commandButton action="#{wizardGeneralMedical.step1()}"
+						value="#{app.diagnostic_next}" styleClass="rightBtn">
+						<s:conversationPropagation type="join" />
+					</h:commandButton>
+				</s:decorate>
+			
+			
+			-->			
+			
+			</h:form>
+			
+			<rich:modalPanel id="confirmCancel" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmAprob');">
+				<f:facet name="header">
+					Confirmación de Cancelacion
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmAprob')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fm5">
+					<p>Desea <b>CANCELAR</b> la consulta?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m5">
+						<a:commandButton styleClass="cancelBtn"
+							value="no"
+							onclick="#{rich:component('confirmCancel')}.hide();">
+						</a:commandButton>
+						<!--  <a:commandButton action="#{etapaRepCliHome.aprobarEtapa()}" ignoreDupResponses="true" reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn"
+							value="Si"
+							onclick="#{rich:component('confirmAprob')}.hide();">
+						</a:commandButton> -->
+						<s:button propagation="end"  value="si"
+							styleClass="confirmBtn" rendered="#{not generalMedicalDAO.managed}"
+							view="/medical/scheddoc/scheduler.xhtml">
+						</s:button>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<!-- modal para ver el historial medico -->
+			
+				<rich:modalPanel id="verHistorialMod" width="1400" height="550" moveable="true"
+					onmaskclick="#{rich:component('verHistorialMod')}.hide();"
+					 top="40"
+					 style="overflow-y:scroll;"
+					onbeforeshow="activeModal.setActiveModalPanel('verHistorialMod');">
+					<f:facet name="header">
+						Historial Medico
+					</f:facet>
+					
+					<f:facet name="controls">
+						<h:panelGroup>
+							
+							<!-- <h:commandButton value="Cerrar"  onclick="#{rich:component('verHistorialMod')}.hide();" />  -->
+							<!-- <h:commandButton action="#{wizardGeneralMedical2.mostrarIdC(conversation.id)}" value="Cerrar"  onclick="#{rich:component('verHistorialMod')}.hide();" />-->
+							<!-- <a:commandButton actionListener="#{conversation.end()}"  value="Cerrar" onclick="#{rich:component('verHistorialMod')}.hide();" />
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('verHistorialMod')}.hide();"   >
+								<a:support actionListener="#{conversation.end()}" ajaxSingle="true" event="onclick"   ></a:support>
+							</h:graphicImage>
+							
+							<h:commandButton value="Cerrar"  onclick="#{rich:component('verHistorialMod')}.hide();" />
+							 <h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('verHistorialMod')}.hide();"   /> 
+								<a:support actionListener="#{conversation.end()}" ajaxSingle="true" event="onclick"   ></a:support>
+								<a:commandButton actionListener="#{conversation.end()}"  value="Cerrar" onclick="#{rich:component('verHistorialMod')}.hide();" >
+									
+								</a:commandButton>-->
+						</h:panelGroup>
+					</f:facet>
+
+					<s:div id="modHst" >
+
+						<s:div id="modHst1" >
+							<ui:include src="../verHistorialMedico.xhtml" />
+						</s:div>
+					</s:div>
+				</rich:modalPanel> 
+		</rich:panel>
+		
+	</ui:define>
+	<ui:define name="past">
+		<ui:include src="/medical/clinicalHistory/_past.xhtml" />
+	</ui:define>
+</ui:composition>

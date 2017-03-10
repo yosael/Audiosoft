@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<rich:modalPanel id="modalDiagnostic"  width="400" moveable="true" autosized="true"  top="40"
+		onbeforeshow="activeModal.setActiveModalPanel('modalDiagnostic');">
+		<f:facet name="header">
+				#{app.diagnostic_modal_header}
+			</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+					onclick="#{rich:component('modalDiagnostic')}.hide();" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="fmDiagnostic">
+			<a:queue name="qMDiagnostic" />
+			<h:panelGrid columns="2" style="padding-left:100px;">
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.diagnostic_source}:</ui:define>
+					<h:selectOneMenu value="#{diagnosticController.sourceSel}"
+						style="width:200px;">
+						<s:selectItems var="source"
+							value="#{diagnosticController.sources}"
+							label="#{source.code} - #{source.name}" noSelectionLabel=" " />
+						<s:convertEntity />
+						<a:support event="onchange"
+							action="#{diagnosticController.loadChapters()}" ajaxSingle="true"
+							reRender="fmDiagnostic" />
+					</h:selectOneMenu>
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.diagnostic_chapter}:</ui:define>
+					<h:selectOneMenu value="#{diagnosticController.chapterSel}"
+						style="width:200px;">
+						<s:selectItems var="chapter"
+							value="#{diagnosticController.chapters}"
+							label="#{chapter.code} - #{chapter.name}" noSelectionLabel=" " />
+						<s:convertEntity />
+						<a:support event="onchange"
+							action="#{diagnosticController.loadCategories()}"
+							ajaxSingle="true" reRender="fmDiagnostic" />
+					</h:selectOneMenu>
+				</s:decorate>
+			</h:panelGrid>
+			<h:panelGrid columns="1" style="padding-left:100px;">
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.diagnostic_category}:</ui:define>
+					<h:selectOneListbox value="#{diagnosticController.categorySel}"
+						style="width:500px;" size="8">
+						<s:selectItems var="category"
+							value="#{diagnosticController.categories}"
+							label="#{category.code} - #{category.name}" />
+						<s:convertEntity />
+						<a:support event="onchange"
+							action="#{diagnosticController.loadSubCategories()}"
+							ajaxSingle="true" reRender="fmDiagnostic" />
+					</h:selectOneListbox>
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.diagnostic_subcategory}:</ui:define>
+					<h:selectOneListbox value="#{diagnosticController.subcategorySel}"
+						style="width:500px;" size="8" required="true">
+						<s:selectItems var="subcategory"
+							value="#{diagnosticController.subcategories}"
+							label="#{subcategory.code} - #{subcategory.name}" />
+						<s:convertEntity />
+						<a:support event="onchange" ajaxSingle="true" reRender="actions" />
+					</h:selectOneListbox>
+				</s:decorate>
+			</h:panelGrid>
+			<div style="padding-left: 180px;"><h:inputText
+				value="#{diagnosticController.searchField}" style="width:300px;" id="in_look">
+				<a:support event="onkeyup" ajaxSingle="true" />
+			</h:inputText> <rich:spacer width="20px" /> <a:commandButton
+				value="#{msn.button_search}"
+				action="#{diagnosticController.search()}"
+				title="#{app.diagnostic_search}" reRender="fmDiagnostic"
+				styleClass="searchBtn" ajaxSingle="true" focus="in_look">
+				<s:defaultAction />
+			</a:commandButton></div>
+			<s:decorate template="/layout/kActions.xhtml" id="actions">
+				<h:messages styleClass="message" errorClass="errormsg"
+					infoClass="infomsg" warnClass="warnmsg" globalOnly="true" />
+				<a:commandButton styleClass="cancelBtn" value="#{msn.button_cancel}"
+					onclick="#{rich:component('modalDiagnostic')}.hide();">
+				</a:commandButton>
+				<a:commandButton action="#{diagnosticController.assignCode()}"
+					reRender="formA" styleClass="saveBtn" value="#{msn.button_save}"
+					oncomplete="#{rich:component('modalDiagnostic')}.hide();"
+					disabled="#{empty diagnosticController.subcategorySel}">
+				</a:commandButton>
+			</s:decorate>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

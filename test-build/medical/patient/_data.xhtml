@@ -1,0 +1,161 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_num_id}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.docId}" required="true" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_type_id}:</ui:define>
+		<h:selectOneMenu value="#{clienteHome.instance.tipoDoc}" >
+			<f:selectItem itemValue="DUI" itemLabel="#{app.patimast_doc_1}"/>
+			<f:selectItem itemValue="Pasaporte" itemLabel="#{app.patimast_doc_2}"/>
+			<f:selectItem itemValue="Otro" itemLabel="#{app.patimast_doc_3}"/>
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:selectOneMenu>
+		
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.nombres}" required="true"
+			 >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.apellidos}" required="true"  >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_email}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.email}" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_bg}:</ui:define>
+		<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}" required="true">
+			<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
+			<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
+			<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
+			<f:selectItem itemLabel="#{app.patimast_bg_4}" itemValue="3" />
+			<f:selectItem itemLabel="#{app.patimast_bg_5}" itemValue="4" />
+			<f:selectItem itemLabel="#{app.patimast_bg_6}" itemValue="5" />
+			<f:selectItem itemLabel="#{app.patimast_bg_7}" itemValue="6" />
+			<f:selectItem itemLabel="#{app.patimast_bg_8}" itemValue="7" />
+			<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+		</h:selectOneMenu>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_dob}:</ui:define>
+		<rich:calendar value="#{clienteHome.instance.fechaNacimiento}" required="true" datePattern="dd/MM/yyyy" >
+			<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"/>
+		</rich:calendar>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_gender}:</ui:define>
+		<h:selectOneRadio value="#{clienteHome.instance.genero}" required="true" styleClass="radioB">
+			<f:selectItem itemLabel="#{app.patimast_sex_1}" itemValue="1" />
+			<f:selectItem itemLabel="#{app.patimast_sex_2}" itemValue="0" />
+			<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+		</h:selectOneRadio>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+		<ui:define name="label">#{app.patimast_referido}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.doctorRef.nombres} #{clienteHome.instance.doctorRef.apellidos}" 
+			readonly="true" required="false" style="width:200px;" />
+		<a:commandButton onclick="#{rich:component('selDoc')}.show();" ajaxSingle="true"  
+			action="#{doctorExternoHome.getDoctores()}" reRender="doc" 
+			rendered="#{not clienteHome.managed}"
+			styleClass="modifyBtn" value=" " style="width:30px;">
+		</a:commandButton>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_esinfante}:</ui:define>
+		<h:selectBooleanCheckbox value="#{clienteHome.esInfante}" >
+			<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" reRender="formA" />		
+		</h:selectBooleanCheckbox>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml" id="_nomEnc" rendered="#{clienteHome.esInfante==true}">
+		<ui:define name="label">#{app.patimast_firstnameenc}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.nombresEncargado}" required="false">
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml" id="_apeEnc" rendered="#{clienteHome.esInfante==true}">
+		<ui:define name="label">#{app.patimast_lastnameenc}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.apellidosEncargado}" required="false">
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.telefono1}" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.telefono2}" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	<s:decorate template="/layout/kEditSpace.xhtml">
+		<ui:define name="label">#{app.patimast_address}:</ui:define>
+		<h:inputText value="#{clienteHome.instance.direccion}" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{empty clienteHome.instance.referidoPor and not clienteHome.managed}">
+		<ui:define name="label">#{app.patimast_medioref}:</ui:define>
+		<h:selectOneMenu value="#{clienteHome.instance.medioReferido}" required="false" >
+			<f:selectItem itemLabel="#{app.patimast_rguiatel}" itemValue="GUIA TELEFONICA" />
+			<f:selectItem itemLabel="#{app.patimast_rfb}" itemValue="FACEBOOK" />
+			<f:selectItem itemLabel="#{app.patimast_rws}" itemValue="SITIO WEB" />
+			<f:selectItem itemLabel="#{app.patimast_rprd}" itemValue="PERIODICO" />
+			<f:selectItem itemLabel="#{app.patimast_rdoc}" itemValue="REFERIDO" />
+			<f:selectItem itemLabel="#{app.patimast_rotr}" itemValue="OTRO" />
+			<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" reRender="formA" />
+		</h:selectOneMenu>
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.managed}">
+		<ui:define name="label">#{app.patimast_medioref}:</ui:define>
+		<h:outputText value="#{app.patimast_rguiatel}" rendered="#{clienteHome.instance.medioReferido=='GUIA TELEFONICA'}" />
+		<h:outputText value="#{app.patimast_rfb}" rendered="#{clienteHome.instance.medioReferido=='FACEBOOK'}" />
+		<h:outputText value="#{app.patimast_rws}" rendered="#{clienteHome.instance.medioReferido=='SITIO WEB'}" />
+		<h:outputText value="#{app.patimast_rprd}" rendered="#{clienteHome.instance.medioReferido=='PERIODICO'}" />
+		<h:outputText value="#{app.patimast_rdoc}" rendered="#{clienteHome.instance.medioReferido=='REFERIDO'}" />
+		<h:outputText value="#{clienteHome.instance.medioReferido}" 
+			rendered="#{clienteHome.instance.medioReferido!='GUIA TELEFONICA' and 
+						clienteHome.instance.medioReferido!='FACEBOOK' and
+						clienteHome.instance.medioReferido!='PERIODICO' and
+						clienteHome.instance.medioReferido!='REFERIDO' and
+						clienteHome.instance.medioReferido!='SITIO WEB'}" />
+	</s:decorate>
+	
+	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.medioReferido=='OTRO'}" id="_otroMed">
+		<ui:define name="label">#{app.patimast_otromedio}:</ui:define>
+		<h:inputText value="#{clienteHome.otroMedioRef}" maxlength="20" >
+			<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+		</h:inputText>
+	</s:decorate>
+	
+	
+</ui:composition>

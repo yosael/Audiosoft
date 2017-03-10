@@ -1,0 +1,187 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<!-- Arbol -->
+		<rich:panel>
+			<f:facet name="header">#{msn.tree_head2}</f:facet>
+			<s:div id="arbol" styleClass="panelMid divOverTree">
+				<rich:spacer height="10" />
+				<a:form id="formA">
+					<a:queue name="q1" />
+					<rich:tree value="#{treeSecurity.rootView}" var="arb"
+						switchType="ajax" id="tree" nodeFace="#{arb.type}"
+						stateAdvisor="#{treeOpen}">
+						<rich:treeNode type="-1" icon="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="165" icon="/kubeImg/package.png"
+							iconLeaf="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+						</rich:treeNode>
+						<rich:treeNode type="856" iconLeaf="/kubeImg/permission.png">
+							<h:outputText value="#{arb.name}" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.createNewMenu(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action1}"
+								rendered="#{arb.permission and not treeSecurity.hasMenu(arb)}"
+								reRender="formularios,formB" ajaxSingle="true" focus="mod1" />
+							<a:commandLink action="#{treeSecurity.selectMenu(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action2}"
+								rendered="#{arb.permission and treeSecurity.hasMenu(arb)}"
+								reRender="formularios,formB,divModal" ajaxSingle="true"
+								focus="mod1" />
+						</rich:treeNode>
+					</rich:tree>
+				</a:form>
+			</s:div>
+			<rich:spacer width="5" />
+			<!-- Formulario de ingreso de modulos -->
+			<s:div id="formularios" styleClass="panelMid">
+				<h:form id="formB">
+					<p:growl globalOnly="true" sticky="false" life="3000" />
+					<a:queue name="q2" />
+					<s:div rendered="#{not empty treeSecurity.nodeSel}">
+						<fieldset><legend> <s:span styleClass="title"
+							rendered="#{menuDAO.managed}">
+						#{msn.tree_title3}						
+						</s:span> <s:span styleClass="title" rendered="#{!menuDAO.managed}">
+						#{msn.tree_title4}						
+						</s:span></legend> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_permission}:</ui:define>
+							<h:outputText value="#{treeSecurity.nodeSel.name}"
+								styleClass="upper" />
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_name_shown}:</ui:define>
+							<h:inputText value="#{menuDAO.instance.displayName}"
+								styleClass="normalCase" required="true" id="mod1">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_field_bundle}:</ui:define>
+							<h:selectBooleanCheckbox value="#{menuDAO.instance.el}"
+								required="true" />
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_propagation}:</ui:define>
+							<h:selectOneMenu
+								value="#{menuDAO.instance.conversationPropagation}"
+								required="true">
+								<f:selectItem itemLabel="Begin" itemValue="begin" />
+								<f:selectItem itemLabel="Join" itemValue="join" />
+								<f:selectItem itemLabel="None" itemValue="none" />
+								<f:selectItem itemLabel="End" itemValue="end" />
+							</h:selectOneMenu>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_pageflow}:</ui:define>
+							<h:inputText value="#{menuDAO.instance.pageflow}">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_icon1}:</ui:define>
+							<h:inputText value="#{menuDAO.instance.icon}">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_icon2}:</ui:define>
+							<h:inputText value="#{menuDAO.instance.iconDashBoard}">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kActions.xhtml">
+							<a:commandButton action="#{menuDAO.clean}"
+								value="#{msn.button_new}" reRender="formB" styleClass="newBtn"
+								ajaxSingle="true" rendered="#{not menuDAO.managed}" />
+							<a:commandButton value="#{msn.tree_button1}"
+								styleClass="modalBtn" id="button">
+								<rich:componentControl for="parameters" attachTo="button"
+									operation="show" event="onfocus" />
+								<a:support event="onfocus" focus="bus1" ajaxSingle="true"  eventsQueue="q2" />
+							</a:commandButton>
+							<a:commandButton action="#{menuDAO.save}"
+								value="#{msn.button_save}" reRender="formA,formB,tree"
+								rendered="#{not menuDAO.managed}" styleClass="saveBtn" />
+							<a:commandButton action="#{menuDAO.modify}"
+								value="#{msn.button_modify}" reRender="formA,formB,tree"
+								rendered="#{menuDAO.managed}" styleClass="modifyBtn" />
+							<a:commandButton action="#{menuDAO.delete}"
+								value="#{msn.button_delete}" reRender="formA,formB,tree"
+								rendered="#{menuDAO.managed}" styleClass="deleteBtn" />
+						</s:decorate></fieldset>
+					</s:div>
+				</h:form>
+			</s:div>
+			<div style="clear: both" />
+		</rich:panel>
+		<rich:modalPanel id="parameters" minWidth="500" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('parameters')">
+			<f:facet name="header">
+				#{msn.tree_modal_head}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('parameters')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="formModal">
+				<a:queue name="q3" />
+				<s:div id="divModal">
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.tree_field1}:</ui:define>
+						<h:inputText value="#{parameterDAO.instance.param}" id="bus1"
+							styleClass="inputField normalCase" required="true">
+						</h:inputText>
+					</s:decorate>
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.tree_field2}:</ui:define>
+						<h:inputText value="#{parameterDAO.instance.value}"
+							styleClass="inputField normalCase" required="true">
+						</h:inputText>
+					</s:decorate>
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.tree_field_el}:</ui:define>
+						<h:selectBooleanCheckbox value="#{parameterDAO.instance.el}"
+							styleClass="booleanCheck" required="true" />
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<h:messages styleClass="message" errorClass="errormsg"
+							infoClass="infomsg" warnClass="warnmsg" globalOnly="true" />
+						<a:commandButton action="#{menuDAO.addParameter()}"
+							value="#{msn.tree_button2}" reRender="formModal"
+							rendered="#{not parameterDAO.managed}" styleClass="addBtn" />
+						<a:commandButton action="#{parameterDAO.clean}"
+							value="#{msn.button_new}" reRender="formModal"
+							styleClass="newBtn" ajaxSingle="true" />
+					</s:decorate>
+					<rich:spacer height="20px" />
+					<rich:dataTable var="res" value="#{menuDAO.parameters}"
+						rendered="#{not empty menuDAO.parameters}" rows="10"
+						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll" width="80%">
+						<f:facet name="header">#{msn.tree_list1}</f:facet>
+						<rich:column>
+							<f:facet name="header">#{msn.tree_col1}</f:facet>
+							<h:outputText value="#{res.param}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{msn.tree_col2}</f:facet>
+							<h:outputText value="#{res.value}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink action="#{menuDAO.removeParameter(res)}" eventsQueue="q1"
+								value="#{msn.link_delete}" reRender="formModal"
+								ajaxSingle="true" styleClass="linkAction">
+							</a:commandLink>
+						</rich:column>
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</rich:dataTable>
+				</s:div>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

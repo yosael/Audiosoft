@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="id" value="#{aparatoClienteHome.apaCliId}" required="false" />
+	<action execute="#{aparatoClienteHome.load()}" on-postback="false" />
+	<navigation from-action="#{aparatoClienteHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/apacli/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{aparatoClienteHome.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/apacli/list.xhtml" />
+		</rule>
+		
+		<rule if-outcome="false">
+			<redirect view-id="/taller/apacli/master.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{aparatoClienteHome.saveCotizacion()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/apacli/list.xhtml" />
+		</rule>
+		
+		<rule if-outcome="false">
+			<redirect view-id="/taller/apacli/master.xhtml" />
+		</rule>
+	</navigation>
+	
+</page>

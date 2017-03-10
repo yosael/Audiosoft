@@ -1,0 +1,195 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Informacion de numero de serie</f:facet>
+			<h:form id="formA">
+			
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<center>
+				
+					<h:panelGrid columns="2">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Numero de serie: </ui:define>
+							<h:inputText value="#{repMovimiento.busquedaNumSerie}" />
+						</s:decorate>
+						
+						<h:commandButton action="#{repMovimiento.buscarNumeroSerie()}" value="Buscar Numero" >
+						</h:commandButton>
+						
+					</h:panelGrid>
+					
+					<rich:spacer height="10"/>
+					</center>
+					<rich:spacer height="8"/>
+					
+					<center>
+				 
+				        <rich:panel header="Informacion de venta"  style="width:800px">
+				            
+				            <h:panelGrid columns="2">
+				            
+				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Id venta:</ui:define>
+										<!-- <h:outputLabel value="#{repMovimiento.infoVenta[7]}" /> -->
+										<s:link title="#{app.vtaprs_verdet}" rendered="true"
+											view="/vtas/cobro/master.xhtml" propagation="begin" value="#{repMovimiento.infoVenta[7]}" >
+											<f:param name="id" value="#{repMovimiento.infoVenta[7]}" />
+										</s:link>
+								</s:decorate>
+				            	
+				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Producto:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoVenta[1]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Precio Venta:</ui:define>
+										<h:outputLabel value="#{'$'}#{repMovimiento.infoVenta[3]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Cliente:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoVenta[4].nombres} #{repMovimiento.infoVenta[4].apellidos}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Fecha Venta:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoVenta[5]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Vendedor:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoVenta[8]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoVenta}">
+									<ui:define name="label">Sucursal:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoVenta[6]}" />
+								</s:decorate>
+								
+								<h:outputLabel value="El aparato no se ha vendido" style="color:green;font-size:14px" rendered="#{repMovimiento.infoVenta==null}" />
+								
+				            </h:panelGrid>
+				 					
+				        </rich:panel>
+				        <rich:spacer height="4"/>
+				        <rich:panel header="Informacion de cotizacion"  style="width:800px">
+				            
+				            <h:panelGrid columns="2">
+				            	
+				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label"># Cotizacion:</ui:define>
+										<!-- <h:outputLabel value="#{repMovimiento.infoCoti[1]}" /> -->
+										<s:link title="#{app.vtaprs_verdet}" rendered="true"
+											view="/vtas/vtaaparato/master.xhtml" propagation="begin" value="#{repMovimiento.infoCoti[1]}">
+											<f:param name="isCot" value="#{repMovimiento.infoCoti[1]}" />
+										</s:link>
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Id Venta:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCoti[2]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Cliente:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCoti[3].nombres} #{repMovimiento.infoCoti[3].apellidos}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Fecha Cotizacion:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCoti[4]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Estado Cotizacion:</ui:define>
+										<h:outputLabel value="Vendida" rendered="#{repMovimiento.infoCoti[7]=='APL'}"/>
+										<h:outputLabel value="Cotizada" rendered="#{repMovimiento.infoCoti[7]=='COT'}" />
+										<h:outputLabel value="Pendiente" rendered="#{repMovimiento.infoCoti[7]=='PEN'}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Usuario:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCoti[6]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCoti}">
+									<ui:define name="label">Sucursal:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCoti[8]}" />
+								</s:decorate>
+								
+								<h:outputLabel value="El aparato no se ha cotizado" style="color:green;font-size:14px" rendered="#{repMovimiento.infoCoti==null}" />
+								
+				            </h:panelGrid>
+				 					
+				        </rich:panel>
+				        <rich:spacer height="4"/>
+				        <rich:panel header="Informacion de inventario"  style="width:800px">
+				            
+				            <h:panelGrid columns="2">
+				            	
+				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Tipo de movimiento:</ui:define>
+										<h:outputLabel value="Entrada" rendered="#{repMovimiento.infoCompra[1]=='E'}" />
+										<h:outputLabel value="Salida" rendered="#{repMovimiento.infoCompra[1]=='S'}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Tipo de Transaccion:</ui:define>
+										<h:outputLabel value="Compra" rendered="#{repMovimiento.infoCompra[5]=='C'}" />
+										<h:outputLabel value="Pedido" rendered="#{repMovimiento.infoCompra[5]=='P'}" />
+										<h:outputLabel value="Transferencia" rendered="#{repMovimiento.infoCompra[5]=='T'}" />
+										<h:outputLabel value="Venta" rendered="#{repMovimiento.infoCompra[5]=='V'}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Fecha Movimiento:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[2]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Usuario:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[3]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Ultima sucursal:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[4]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra and repMovimiento.infoCompra[7]!=null}">
+									<ui:define name="label">Remitente:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[7]}" />
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra and repMovimiento.infoCompra[8]!=null}">
+									<ui:define name="label">Destino:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[8]}" />
+								</s:decorate>
+								
+				            </h:panelGrid>
+				 					
+				        </rich:panel>
+					
+					
+					</center>
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

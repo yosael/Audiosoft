@@ -1,0 +1,461 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel id="bodyP">
+			<f:facet name="header">
+				<h:outputText
+					value="#{productoHome.managed?sainv_view_messages.get('productomast_head_edit'):sainv_view_messages.get('productomast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formproducto">
+
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.productomast_legend}</legend>
+					<center>
+						<h:panelGrid columns="2">
+
+							<h:panelGrid columns="3" id="innerP">
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_ref}:</ui:define>
+									<h:inputText value="#{productoHome.instance.referencia}"
+										required="true" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_name}:</ui:define>
+									<h:inputText value="#{productoHome.instance.nombre}"
+										required="true" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml" id="catProducto">
+									<ui:define name="label">#{app.productomast_category}:</ui:define>
+									<h:inputText value="#{productoHome.instance.categoria.nombre}"
+										readonly="true" required="true" disabled="true"
+										style="width:180px;" />
+									<a:commandButton
+										onclick="#{rich:component('catsList')}.show();"
+										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
+										reRender="mCat" styleClass="modifyBtn" value=" "
+										style="width:30px;">
+									</a:commandButton>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_brand}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.marca}">
+										<s:selectItems value="#{marcaList.resultList}" var="mar"
+											label="#{mar.nombre}" noSelectionLabel=" " />
+										<s:convertEntity />
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_modelo}:</ui:define>
+									<h:inputText value="#{productoHome.instance.modelo}"
+										required="false" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_orig}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.origen}">
+										<s:selectItems value="#{paisHome.resultList}" var="pais"
+											label="#{pais.nombreEsp}" noSelectionLabel="#{app.productomast_selecOri}" />
+										<s:convertEntity />
+									</h:selectOneMenu>
+								</s:decorate>
+								
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.compramast_supplier}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.proveedor}"
+										required="true">
+										<s:selectItems value="#{proveedorList.resultList}" var="prov"
+											label="#{prov.razonSocial}" noSelectionLabel=" " />
+										<s:convertEntity />
+										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_tprd}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.tipo}"
+										required="true">
+										<f:selectItem itemLabel="A" itemValue="A" />
+										<f:selectItem itemLabel="B" itemValue="B" />
+										<f:selectItem itemLabel="C" itemValue="C" />
+										<f:selectItem itemLabel="D" itemValue="D" />
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_cprd}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.claseProducto}"
+										required="true" disabled="#{loginUser.user.sucursal!=null}"> <!-- Antes estaba disables= sucursal !=null -->
+										<s:selectItems value="#{claseProductoHome.resultList}"
+											var="clpr" label="#{clpr.nombre}" noSelectionLabel=" " />
+										<s:convertEntity />
+										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"
+											action="#{productoHome.actualizarMontos()}"
+											reRender="_prcCls1,_prcCls2,_prcCls3,_total1,_total2,_total3" />
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml"
+									rendered="#{loginUser.user.sucursal!=null and productoHome.managed}"
+									id="ubiProducto">
+									<ui:define name="label">#{app.productomast_codubi}:</ui:define>
+									<h:inputText value="#{productoHome.codUbicacion.nombre}"
+										id="btnUbiPrd" disabled="true" readonly="true"
+										required="false" style="width:200px;" />
+
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_min_amount}:</ui:define>
+									<h:inputText value="#{productoHome.instance.cantidadMinima}"
+										required="true"
+										onkeypress="return restrictNumDigits(event, this, 6);" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_max_amount}:</ui:define>
+									<h:inputText value="#{productoHome.instance.cantidadMaxima}"
+										required="true"
+										onkeypress="return restrictNumDigits(event, this, 6);" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_tmpenv}:</ui:define>
+									<h:inputText value="#{productoHome.instance.tiempoEnvio}"
+										required="false"
+										onkeypress="return restrictNumDigits(event, this, 3);" />
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml"
+									rendered="#{loginUser.user.sucursal==null}">
+									<ui:define name="label">#{app.productomast_company}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.empresa}"
+										required="true">
+										<s:selectItems value="#{empresaList.resultList}" var="_emp"
+											label="#{_emp.nombre}" noSelectionLabel=" " />
+										<s:convertEntity />
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_activo}:</ui:define>
+									<h:selectOneMenu value="#{productoHome.instance.activo}"
+										required="true">
+										<f:selectItem itemLabel="#{app.productomast_activoa}"
+											itemValue="true" />
+										<f:selectItem itemLabel="#{app.productomast_activoi}"
+											itemValue="false" />
+									</h:selectOneMenu>
+								</s:decorate>
+								<s:decorate></s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.productomast_descripcion}:</ui:define>
+									<h:inputTextarea value="#{productoHome.instance.descripcion}"
+										required="false" style="width:480px; height:50px;" />
+								</s:decorate>
+
+							</h:panelGrid>
+							<h:column>
+								<h:outputLabel value="#{app.productomast_imgRestri}" />
+								<rich:fileUpload fileUploadListener="#{productoHome.loadImage}"
+									listHeight="0" maxFilesQuantity="1" ajaxSingle="true"
+									immediate="true" acceptedTypes="jpg,png,jpeg,bmp"
+									addControlLabel="Cargar imagen" id="Cargar"
+									immediateUpload="true" listWidth="300" autoclear="false"
+									doneLabel="Listo" stopButtonClassDisabled="true"
+									style="height:30px;" clearAllControlLabel="Quitar imagen"
+									cleanButtonClassDisabled="false">
+									<a:support event="onuploadcomplete" ajaxSingle="true"
+										eventsQueue="q1" reRender="formproducto" />
+								</rich:fileUpload>
+								<br />
+								<h:outputLabel styleClass="errors"
+									value="#{sainv.productoHome_error_image}"
+									rendered="#{productoHome.imgSize==false}" />
+								<br />
+								<br />
+								<s:graphicImage id="graphPrd" width="300px" height="300px"
+									value="#{productoHome.instance.image}"
+									rendered="#{not empty productoHome.instance.image}" />
+							</h:column>
+						</h:panelGrid>
+					</center>
+
+					<center>
+						<s:div id="fldPanel">
+							<h:panelGrid columns="2" style="padding-left:100px;">
+								<s:decorate>
+									<fieldset style="width: 400px;">
+										<legend>#{app.producto_detcosto}</legend>
+
+										<h:panelGrid columns="3" style="width:400px;">
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:100px;"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.currency_curr}:</ui:define>
+												<h:selectOneMenu value="#{productoHome.instance.moneda}"
+													required="true" style="width:120px;">
+													<s:selectItems value="#{currencyHome.resultList}" var="mon"
+														label="#{mon.nombre}" noSelectionLabel=" " />
+													<s:convertEntity />
+													<a:support event="onchange" ajaxSingle="true"
+														eventsQueue="q1"
+														reRender="_total1,_total2,_total3,_cst,_perctax,_percimp,_xript"
+														action="#{productoHome.actualizarMontos()}" />
+												</h:selectOneMenu>
+											</s:decorate>
+
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_cst"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.productomast_value}:</ui:define>
+												<h:inputText value="#{productoHome.instance.costo}"
+													required="true" class="qntDec"
+													onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);"
+													style="width:70%;">
+													<a:support event="onblur" ajaxSingle="true"
+														eventsQueue="q1" reRender="_total1,_total2,_total3"
+														action="#{productoHome.actualizarMontos()}" />
+												</h:inputText>
+											</s:decorate>
+
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_ano"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.productomast_anio}:</ui:define>
+												<h:inputText value="#{productoHome.instance.anio}"
+													required="true"
+													onkeypress="return restrictNumDigits(event, this, 4);"
+													style="width:70%;">
+													<a:support event="onblur" ajaxSingle="true"
+														eventsQueue="q1" />
+												</h:inputText>
+											</s:decorate>
+
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_perctax"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.producto_prcimp}:</ui:define>
+												<h:inputText value="#{productoHome.instance.percentImport}"
+													required="true"
+													onkeypress="return restrictNumDigits(event, this, 2);"
+													style="width:70%;">
+													<a:support event="onblur" ajaxSingle="true"
+														eventsQueue="q1" reRender="_total1,_total2,_total3"
+														action="#{productoHome.actualizarMontos()}" />
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_percimp"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.producto_prctax}:</ui:define>
+												<h:inputText value="#{productoHome.instance.percentTaxes}"
+													required="true"
+													onkeypress="return restrictNumDigits(event, this, 2);"
+													style="width:70%;">
+													<a:support event="onblur" ajaxSingle="true"
+														eventsQueue="q1" reRender="_total1,_total2,_total3"
+														action="#{productoHome.actualizarMontos()}" />
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												rendered="#{loginUser.user.sucursal==null}">
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_prcCls1"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.producto_prcgan1}:</ui:define>
+												<h:inputText
+													value="#{productoHome.instance.claseProducto.gananciaNormal}"
+													readonly="true" style="width:70%;">
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_prcCls2"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.producto_prcgan2}:</ui:define>
+												<h:inputText
+													value="#{productoHome.instance.claseProducto.gananciaMinima}"
+													readonly="true" style="width:70%;">
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_prcCls3"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">#{app.producto_prcgan3}:</ui:define>
+												<h:inputText
+													value="#{productoHome.instance.claseProducto.gananciaOferta}"
+													readonly="true" style="width:70%;">
+												</h:inputText>
+											</s:decorate>
+
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total1"
+												style="width:120px;">
+												<ui:define name="label">#{app.producto_prc1}:</ui:define>
+												<h:inputText value="#{productoHome.instance.prcNormal}"
+													 class="qntDec" required="true"  
+													style="width:70%;"><!-- Tenian readonly=true -->
+												</h:inputText> 
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total2" 
+												style="width:120px;">
+												<ui:define name="label">#{app.producto_prc2}:</ui:define>
+												<h:inputText value="#{productoHome.instance.prcMinimo}"
+													 class="qntDec" required="true"
+													style="width:70%;"> <!-- Tenian readonly=true -->
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total3"  
+												style="width:120px;">
+												<ui:define name="label">#{app.producto_prc3}:</ui:define>
+												<h:inputText value="#{productoHome.instance.prcOferta}"
+													 class="qntDec" required="true"  
+													style="width:70%;">  <!-- Tenian readonly=true -->
+												</h:inputText>
+
+											</s:decorate>
+										</h:panelGrid>
+									</fieldset>
+								</s:decorate>
+
+
+							</h:panelGrid>
+						</s:div>
+					</center>
+
+					<script type="text/javascript" language="Javascript">
+					/* <![CDATA[ */
+						arrFormateados = document.getElementsByClassName('qntDec');
+						for(var cnt = 0; cnt < arrFormateados.length; cnt++) {
+							if(arrFormateados[cnt].value == null || arrFormateados[cnt].value == '')
+								arrFormateados[cnt].value = '0.00';								
+							arrFormateados[cnt].value = arrFormateados[cnt].value.toFixed(2);
+							}
+					/* ]]> */
+					</script>
+
+					<s:decorate template="/layout/kActions.xhtml">
+
+						<s:button view="/sainv/producto/list.xhtml" propagation="begin"
+							styleClass="listBtn" value="#{msn.button_list}">
+						</s:button>
+						<s:button view="/sainv/producto/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_new}">
+							<f:param name="id" value="" />
+						</s:button>
+						<a:commandButton action="#{productoHome.save()}"
+							reRender="formproducto" rendered="#{not productoHome.managed}"
+							styleClass="saveBtn" onclick="upperCaseAllInputs();"
+							value="#{msn.button_save}" />
+						<a:commandButton action="#{productoHome.modify()}"
+							reRender="formproducto" rendered="#{productoHome.managed}"
+							styleClass="modifyBtn" onclick="upperCaseAllInputs();"
+							value="#{msn.button_modify}" />
+					</s:decorate>
+				</fieldset>
+			</h:form>
+			<center>
+				<s:decorate>
+					<h:panelGroup id="panel"
+						rendered="#{not empty productoHome.ubiBodega and productoHome.managed}">
+						<fieldset style="width: 200px;">
+							<legend>#{app.productomastUbiBodegas}</legend>
+
+							<rich:dataTable var="res" value="#{productoHome.ubiBodega}"
+								id="_tblUbisP" rows="10"
+								rendered="#{not empty productoHome.ubiBodega and productoHome.managed}"
+								align="center" rowClasses="tblEven,tblOdd"
+								onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">#{app.ubiprdsuc_list}
+												</f:facet>
+								<rich:column>
+									<f:facet name="header">Bodega</f:facet>
+									<h:outputText value="#{res.sucursal.nombre}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">Ubicacion</f:facet>
+									<h:outputText value="#{res.codUbicacion.nombre}" />
+								</rich:column>
+								<f:facet name="footer">
+
+								</f:facet>
+							</rich:dataTable>
+
+
+							<a:commandButton rendered="#{productoHome.managed}"
+								onclick="#{rich:component('selUbicacion')}.show();"
+								ajaxSingle="true"
+								action="#{productoHome.cargarListaUbicaciones()}"
+								reRender="cubi" styleClass="modifyBtn"
+								value="#{app.productomastAdminUbi}" style="width:auto;">
+							</a:commandButton>
+							<s:button reRender="btnUbiPrd, tblUbisP"
+								style="width: 25px; height: 25px;" propagation="begin"
+								styleClass="refreshBtn" value="a">
+							</s:button>
+						</fieldset>
+					</h:panelGroup>
+				</s:decorate>
+			</center>
+			<rich:modalPanel id="selUbicacion" width="400" moveable="true"
+				autosized="true" top="40"
+				onshow="activeModal.setActiveModalPanel('selUbicacion');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selUbicacion')}.hide();"
+							action="#{productoHome.actuUbicacion(res)}" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="cubi">
+					<ui:include src="selUbicacion.xhtml" />
+				</s:div>
+				<a:support event="onmousedown" action="#{productoHome.load()}"
+					reRender="btnUbiPrd, #{rich:clientId('_tblUbisP')}, #{rich:clientId('fldPanel')}" />
+				<a:support event="onmouseup" action="#{productoHome.load()}"
+					reRender="btnUbiPrd, #{rich:clientId('_tblUbisP')}, #{rich:clientId('fldPanel')}" />
+				<a:support event="hide" action="#{productoHome.load()}"
+					reRender="btnUbiPrd, #{rich:clientId('_tblUbisP')}, #{rich:clientId('fldPanel')}" />
+				<a:support event="onbeforehide" action="#{productoHome.load()}"
+					reRender="btnUbiPrd, #{rich:clientId('_tblUbisP')}, #{rich:clientId('fldPanel')}" />
+			</rich:modalPanel>
+			<rich:modalPanel id="catsList" width="800" moveable="true"
+				onmaskclick="#{rich:component('catsList')}.hide();"
+				autosized="true" top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('catsList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('catsList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCat">
+					<ui:include src="selCatPapa.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>

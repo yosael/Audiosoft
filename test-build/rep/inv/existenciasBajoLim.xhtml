@@ -1,0 +1,59 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+	<rich:panel>
+		<f:facet name="header">
+			<h:outputText value="Reporte de existencias abajo del límite" />
+		</f:facet>
+		<h:form id="formA">
+			<p:growl globalOnly="true" sticky="false" life="3000" />
+			<p:focus />
+			<a:queue name="q1" />
+			<center>
+				<h:panelGrid columns="3">
+					<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+						<ui:define name="label">Sucursal:</ui:define>
+						<h:selectOneMenu value="#{repInventario.sucursal}" required="true">
+							<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+								label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<a:support eventsQueue="q1" ajaxSingle="true" event="onchange" />
+							<s:convertEntity />
+						</h:selectOneMenu>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Código categoría:</ui:define>
+						<h:inputText value="#{repInventario.valCmb1}" required="false" >
+							<a:support eventsQueue="q1" ajaxSingle="true" event="onblur" />
+						</h:inputText>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Código producto:</ui:define>
+						<h:inputText value="#{repInventario.valCmb2}" required="false" >
+							<a:support eventsQueue="q1" ajaxSingle="true" event="onblur" />
+						</h:inputText>
+					</s:decorate>
+						
+				</h:panelGrid>
+				
+				<s:decorate template="/layout/kActions.xhtml" id="btnsRep">
+					<a:commandButton oncomplete="showReport('existenciasBajoLimPDF', '#{conversation.id}');" ajaxSingle="true" eventsQueue="q1" 
+						styleClass="pdfBtn" action="#{repInventario.repExistenciasBajoLimite()}" ignoreDupResponses="true" 
+						value="Reporte de existencias abajo del límite">
+					</a:commandButton>
+				</s:decorate>
+			</center>		
+		</h:form>
+	</rich:panel>
+	</ui:define>
+</ui:composition>

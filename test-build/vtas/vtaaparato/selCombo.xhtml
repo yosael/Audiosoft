@@ -1,0 +1,171 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+   
+	<h:form id="frmSelCmb">
+		<p:growl id="growl1" globalOnly="true" sticky="false" life="3000" />
+		<p:focus />
+		<a:queue name="q1" />
+		<center>
+			<a:commandButton
+				reRender="formapacli,formapacli2,_totMag1,_cmbDet"
+			 styleClass="saveBtn"
+				onclick="#{rich:component('selCombo')}.hide();"
+				value="Aceptar" />
+		</center>
+		<center>
+			<s:span styleClass="busHead">#{app.combapa_head_buscar}:</s:span>
+			<rich:spacer width="0" />
+			<s:decorate></s:decorate>
+			<h:inputText styleClass="busProd"
+				value="#{comboAparatoHome.nomCoinci}" id="_nomCoinci" autocomplete="off">
+				<!-- <a:support event="onkeydown"
+					reRender="#{rich:clientId('_tableCom')}" ajaxSingle="true"
+					action="#{comboAparatoHome.buscadorCombosAct()}" /> -->
+				<a:support event="onkeyup" reRender="#{rich:clientId('_tableCom')}"
+					ajaxSingle="true" action="#{comboAparatoHome.buscadorCombosAct()}" />
+			</h:inputText>
+		</center>
+	<!-- rendered="#{not empty comboAparatoHome.resultList}" -->
+		<rich:dataTable var="res" value="#{comboAparatoHome.resultList}"
+			id="_tableCom" 
+			rows="10" align="center" rowClasses="tblEven,tblOdd"
+			onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+			onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+			headerClass="tablaHeader" footerClass="tableScroll">
+			<rich:column filterBy="#{res.codigo}" filterEvent="onkeyup">
+				<f:facet name="header">#{app.combapa_codigo}</f:facet>
+				<h:outputText value="#{res.codigo}" />
+			</rich:column>
+
+			<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+				<f:facet name="header">#{app.combapa_nombre}</f:facet>
+				<h:outputText value="#{res.nombre}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">Seleccionar</f:facet>
+				<a:commandLink id="addCombo" title="#{msn.combapa_legend}" reRender="comboDet,frmSelCmb"
+					eventsQueue="q1" action="#{ventaComboHome.fillComboList(res)}"
+					ajaxSingle="true" update="growl1">
+					<h:graphicImage value="/kubeImg/table_detail2.png" />
+				</a:commandLink>
+			</rich:column>
+			<f:facet name="footer">
+				<rich:datascroller id="ds1" renderIfSinglePage="true" />
+			</f:facet>
+		</rich:dataTable>
+
+		<rich:dataGrid id="comboDet" value="#{ventaComboHome.selCmbsList}" var="combo"
+			columns="1" elements="3" border="0" >
+			<rich:panel>
+				<f:facet name="header">
+					<h:panelGroup>
+					<a:commandLink title="Quitar" reRender="comboDet"
+					eventsQueue="q1" action="#{ventaComboHome.selCmbsList.remove(combo)}"
+					ajaxSingle="true">
+						<h:graphicImage value="/kubeImg/remove-icon.png" />
+						<rich:spacer width="5px"> </rich:spacer>
+					</a:commandLink>
+					<h:outputText value="#{combo.nombre}" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="cmbDet">
+			<table>
+				<tr>
+					<td><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.combapa_nombre}:</ui:define>
+							<h:inputText value="#{combo.nombre}"
+								rendered="#{ventaComboHome.selCmbsList!=null}" readonly="true" />
+						</s:decorate></td>
+					<td><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.combapa_description}:</ui:define>
+							<h:inputTextarea value="#{combo.descripcion}"
+								style="width:400px; height:40px;"
+								rendered="#{ventaComboHome.selCmbsList!=null}" readonly="true" />
+						</s:decorate></td>
+				</tr>
+				<tr>
+					<td><rich:dataTable var="res"
+							value="#{combo.costosCombo}"
+							id="_tblCostosCmbSel" rows="10" align="center"
+							rowClasses="tblEven,tblOdd"
+							onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+							rendered="#{ventaComboHome.selCmbsList!=null and loginUser.getUser().isAccionEspecial()==true}"
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.combapa_listcostos}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.parvta_description}</f:facet>
+								<h:outputText value="#{res.servicio.name}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.parvta_valor}</f:facet>
+								<h:outputText value="#{res.valor}">
+									<f:convertNumber currencySymbol="$" type="currency"
+										locale="en-US" groupingUsed="true" integerOnly="true"
+										maxFractionDigits="2" />
+								</h:outputText>
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="ds1" renderIfSinglePage="true" />
+							</f:facet>
+						</rich:dataTable></td>
+
+					<td><rich:dataTable var="res"
+							value="#{combo.itemsCombo}"
+							id="_tblItemsCmbSel" rows="10" align="center"
+							rowClasses="tblEven,tblOdd"
+							onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+							rendered="#{ventaComboHome.selCmbsList!=null}"
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.combapa_listitems}</f:facet>
+
+							<rich:column>
+								<f:facet name="header">#{app.productomast_category}</f:facet>
+								<h:outputText value="#{res.categoria.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.productomast_name}</f:facet>
+								<h:outputText value="#{res.producto.nombre}"
+									rendered="#{res.producto!=null}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.parvta_description}</f:facet>
+								<h:inputText value="#{res.descripcion}" readonly="false"
+									style="width:80%;">
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+								</h:inputText>
+							</rich:column>
+							<rich:column headerClass="col50">
+								<f:facet name="header">Cant.</f:facet>
+								<h:outputText value="#{res.cantidad}" />
+							</rich:column>
+							<rich:column headerClass="col90">
+								<f:facet name="header">#{app.combapa_apaprpal}</f:facet>
+								<center>
+									<h:selectBooleanCheckbox value="#{res.principal}"
+										disabled="true">
+									</h:selectBooleanCheckbox>
+								</center>
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="ds1" renderIfSinglePage="true" />
+							</f:facet>
+						</rich:dataTable></td>
+				</tr>
+			</table>
+		</s:div>
+				</rich:panel>
+		</rich:dataGrid>
+	</h:form>
+</ui:composition>

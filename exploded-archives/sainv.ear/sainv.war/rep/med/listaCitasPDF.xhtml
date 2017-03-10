@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Reporte de citas programadas</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="1 1 1 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph><p:text value="#{repMedico.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" paddingBottom="4">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph><p:text value="#{repMedico.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+	</p:table>
+	<p:html><br /></p:html>
+	<p:font size="9">
+		<p:table columns="8" widthPercentage="100" headerRows="1"  widths="2 2 1.5 2 2 2 1 2.5" >
+			<p:font color="black" style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Nombres</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Apellidos</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Teléfono</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Fecha de la cita</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Doctor</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Sucursal</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Estado</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Servicios atendidos</p:paragraph>
+			</p:cell>
+			
+			</p:font>
+
+			
+		<ui:repeat var="apt" value="#{repMedico.citas}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>#{apt.cliente.nombres}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>#{apt.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>#{apt.cliente.telefono1}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph><p:text value="#{apt.dateTime}">
+					<s:convertDateTime pattern="dd/MM/yyyy hh:mm a" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>#{apt.doctor.nombreCompleto}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>#{apt.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<p:paragraph>
+					<p:text rendered="#{apt.status==0}" value="Agendada" />
+					<p:text rendered="#{apt.status==1}" value="Atendida" />
+					<p:text rendered="#{apt.status==2}" value="Cancelada" />
+					<p:text rendered="#{apt.status==3}" value="Inasistencia" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" >
+				<ui:repeat var="srv" value="#{apt.medicalAppointmentServices}">
+					<p:paragraph>+ #{srv.service.name}</p:paragraph>
+				</ui:repeat>
+			</p:cell>
+			
+			
+		</ui:repeat>
+			
+	</p:table>
+	
+	</p:font>
+	
+	
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema para Clínicas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

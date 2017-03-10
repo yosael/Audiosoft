@@ -1,0 +1,81 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formJ">
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.instance.aparatosAuditivos}" rows="20"
+					rendered="#{not empty clienteHome.instance.aparatosAuditivos}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.aparcli_list}</f:facet>
+					<rich:column rendered="#{loginUser.getUser().isAccionEspecial() or loginUser.getUser().getAreaUsuario().getId() eq 3}">
+					<f:facet name="header">#{app.empresamast_state}</f:facet>
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/enabled.png"
+						rendered="#{res.activo}" title="#{app.productomast_activoa}" />
+					<h:graphicImage value="/kubeImg/disabled.png"
+						rendered="#{not res.activo}" title="#{app.productomast_activoi}" />
+					<h:selectBooleanCheckbox value="#{res.activo}">
+						<a:support reRender="formJ,formreparacioncli" ajaxSingle="true"
+							event="onchange" action="#{aparatoClienteHome.setActivo(res)}"
+							update="growl" />
+					</h:selectBooleanCheckbox>
+				</h:panelGroup>
+			</rich:column>
+					<rich:column >
+						<f:facet name="header"><h:panelGroup>
+							#{app.aparcli_fechadq}<br />
+                        </h:panelGroup></f:facet>
+						<h:outputText value="#{res.fechaAdquisicion}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_name}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.marca}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_brand}</f:facet>
+						<h:outputText value="#{res.marca}" />
+					</rich:column>
+					<rich:column filterBy="#{res.modelo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_model}</f:facet>
+						<h:outputText value="#{res.modelo}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earphone}</f:facet>
+						<h:outputText value="#{msn.button_yes}" rendered="#{res.retroAuricular==true}" />
+						<h:outputText value="#{msn.button_no}" rendered="#{res.retroAuricular==false}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earside}</f:facet>
+						<h:outputText value="#{msn.side_left}" rendered="#{res.ladoAparato=='IZQ'}" />
+						<h:outputText value="#{msn.side_right}" rendered="#{res.ladoAparato=='DER'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:outputText value="#{res.numSerie}" />
+					</rich:column>
+					<rich:column rendered="false">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>						
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>	
+</ui:composition>

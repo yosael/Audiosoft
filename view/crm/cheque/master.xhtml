@@ -1,0 +1,200 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detalle del cheque" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formclicorp">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+
+					<h:panelGrid columns="3" style="padding-left:100px;">
+
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvPrv">
+							<ui:define name="label">Proveedor:</ui:define>
+							<h:inputText
+								value="#{chequeDocHome.instance.proveedor.razonSocial}"
+								readonly="true" required="true" style="width:200px;" />
+
+							<a:commandButton onclick="#{rich:component('selProv')}.show();"
+								ajaxSingle="true"
+								action="#{proveedorDocHome.cargarListaProveedores()}"
+								reRender="prov" styleClass="modifyBtn" value=" "
+								style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_ordDe">
+							<ui:define name="label">Orden De:</ui:define>
+							<h:inputText value="#{chequeDocHome.instance.ordenDe}"
+								maxlenght="80" required="true" maxlength="40" />
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Monto:</ui:define>
+							<h:inputText value="#{chequeDocHome.instance.monto}" maxlength="10" required="true">
+								<a:support eventsQueue="q1" ajaxSingle="true" event="onkeyup" requestDelay="1000" 
+									reRender="montoLetras" action="#{chequeDocHome.convertNumToLetter()}" />
+							</h:inputText>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_mntLt">
+							<ui:define name="label">Monto en Letras:</ui:define>
+							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.montoLetras}" maxlength="40"
+								required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Lugar:</ui:define>
+							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.lugar}" maxlength="30" required="true" />
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Fecha:</ui:define>
+							<rich:calendar value="#{chequeDocHome.instance.fecha}"
+								datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"
+									reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_slComprbt">
+							<ui:define name="label">Tipo de Comprobante:</ui:define>
+							<h:inputText value="#{chequeDocHome.instance.comprobante.nombre}" id="_tipoComprobante" 
+								readonly="true" required="true" style="width:200px;" />
+								
+							<a:commandButton onclick="#{rich:component('selComprbt')}.show();" ajaxSingle="true"  
+								action="#{comprobanteImpresionHome.cargarListaComprobantesUsuario()}" reRender="comprbt" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Descripcion:</ui:define>
+							<h:inputTextarea required="true" style="width:360px;"
+								maxlength="300" value="#{chequeDocHome.instance.descripcion}">
+								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>
+
+					</h:panelGrid>
+
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/crm/cheque/list.xhtml" propagation="begin"
+							styleClass="listBtn" value="#{msn.button_list}">
+						</s:button>
+						<s:button view="/crm/cheque/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_new}">
+							<f:param name="id" value="" />
+						</s:button>
+						<a:commandButton value="GENERAR COMPROBANTE" action="#{chequeDocHome.genCompr()}" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true"
+								 rendered="#{chequeDocHome.managed}"
+								oncomplete="showReport('#{chequeDocHome.instance.comprobante.pagina}', '#{conversation.id}');" styleClass="pdfBtn"   />
+						
+						<a:commandButton action="#{chequeDocHome.save()}"
+							reRender="formclicorp" rendered="#{not chequeDocHome.managed}"
+							styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="#{msn.button_save}" />
+						
+						<a:commandButton action="#{chequeDocHome.modify()}"
+							reRender="formclicorp" rendered="#{chequeDocHome.managed}"
+							styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="#{msn.button_modify}" />
+							 
+						<a:commandButton onclick="#{rich:component('confAnu')}.show();" ajaxSingle="true"  
+						rendered="#{chequeDocHome.managed}" styleClass="modifyBtn" 
+						value="Anular Cheque">
+						
+					</a:commandButton>
+					</s:decorate>
+				</fieldset>
+
+				<s:div rendered="#{chequeDocHome.showComp == true}">
+					<script type="text/javascript" language="javascript">
+						showReport('#{chequeDocHome.instance.comprobante.pagina}' , '#{conversation.id}');
+					</script>
+				</s:div>
+			</h:form>
+		</rich:panel>
+		
+		<h:form id="confAnuForm">
+			<rich:modalPanel id="confAnu" width="300" moveable="true" autosized="true" top="50px"  left="10"
+				onbeforeshow="activeModal.setActiveModalPanel('confAnu');">
+				<f:facet name="header">Confirmacion de Anulacion de formato de Cheque</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confAnu')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="_confAnu" >
+					<center>  
+						<p>Realmente desea anular este Cheque?</p>
+						
+						<a:commandButton action="#{chequeDocHome.anularCheque()}" reRender="formvtitm"
+							rendered="#{chequeDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="Anular Cheque" />
+						<a:commandButton onclick="#{rich:component('confAnu')}.hide();"
+							rendered="#{chequeDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="Cancelar" />
+					</center>
+				</s:div>
+			</rich:modalPanel>
+		</h:form>		
+
+		<rich:modalPanel id="selEmpr" width="600" moveable="true"
+			autosized="true" top="50px" left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selEmpr');">
+			<f:facet name="header">Empresa</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selEmpr')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="empr">
+				<ui:include src="selEmpr.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="selProv" width="800" moveable="true"
+			autosized="true" top="50px" left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selProv');">
+			<f:facet name="header">Proveedores registrados</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selProv')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="prov">
+				<ui:include src="selProv.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selComprbt" width="700" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selComprbt');">
+			<f:facet name="header">Comprobantes de impresión</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selComprbt')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="comprbt" ><ui:include src="selComprbt.xhtml" /></s:div>
+		</rich:modalPanel>	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns="http://jboss.com/products/seam/components"
+	xmlns:core="http://jboss.com/products/seam/core" xmlns:persistence="http://jboss.com/products/seam/persistence"
+	xmlns:drools="http://jboss.com/products/seam/drools" xmlns:bpm="http://jboss.com/products/seam/bpm"
+	xmlns:security="http://jboss.com/products/seam/security" xmlns:mail="http://jboss.com/products/seam/mail"
+	xmlns:web="http://jboss.com/products/seam/web" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:async="http://jboss.com/products/seam/async" xmlns:international="http://jboss.com/products/seam/international"
+	xsi:schemaLocation="http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.1.xsd
+                 http://jboss.com/products/seam/persistence http://jboss.com/products/seam/persistence-2.1.xsd
+                 http://jboss.com/products/seam/drools http://jboss.com/products/seam/drools-2.1.xsd
+                 http://jboss.com/products/seam/bpm http://jboss.com/products/seam/bpm-2.1.xsd
+                 http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.1.xsd
+                 http://jboss.com/products/seam/mail http://jboss.com/products/seam/mail-2.1.xsd
+                 http://jboss.com/products/seam/web http://jboss.com/products/seam/web-2.1.xsd
+                 http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.1.xsd
+                 http://jboss.com/products/seam/async http://jboss.com/products/seam/async-2.0.xsd
+                 http://jboss.com/products/seam/international http://jboss.com/products/seam/international-2.2.xsd">
+
+	<core:init debug="@debug@" jndi-pattern="@jndiPattern@" />
+<!-- @debug@ in debug= -->
+	<core:manager concurrent-request-timeout="3000"
+		conversation-id-parameter="cid" conversation-timeout="120000"
+		default-flush-mode="MANUAL" parent-conversation-id-parameter="pid" />
+
+	<persistence:managed-persistence-context
+	auto-create="true" name="entityManager" persistence-unit-jndi-name="java:/sainvEntityManagerFactory" />
+
+	<security:identity authenticate-method="#{loginUser.authenticate}"
+		remember-me="true" />
+
+	<security:persistent-permission-resolver
+		permission-store="#{kubeResolver}" />
+
+
+	<mail:mail-session host="smtp.gmail.com" password="prueba"
+		port="587" username="mercadeo@solucionesaplicativas.com" debug="true" tls="true" />
+
+	<async:quartz-dispatcher />
+	<event type="org.jboss.seam.postInitialization">
+		<action execute="#{controller.init}" />
+		<action execute="#{quartzController.scheduleTimer}"/>
+	</event>
+
+	<event type="org.jboss.seam.security.notLoggedIn">
+		<action execute="#{redirect.captureCurrentView}" />
+	</event>
+
+	<event type="org.jboss.seam.security.loginSuccessful">
+		<action execute="#{redirect.returnToCapturedView}" />
+	</event>
+	
+	<international:locale-selector cookie-enabled="true"/>
+
+</components>

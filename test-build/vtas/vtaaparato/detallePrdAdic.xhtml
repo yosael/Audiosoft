@@ -1,0 +1,90 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Comprobante"
+	creator="Soluciones Aplicativas" pageSize="612 396" type="pdf"
+	margins="30	30 10 30"> 
+	<p:font color="black" style="bold"> 
+	<p:paragraph alignment="center"><p:text value="#{app.report_vta_prd_adi_head}" /> </p:paragraph>
+	</p:font>
+	<p:paragraph
+	rendered="#{not empty ventaComboHome.cotizacion.getCliente().getNombreCompleto()}"
+	alignment="center">
+	<p:font style="bold">
+		<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} |<p:font
+		style="bold">
+		<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} | <p:font
+		style="bold">
+		<p:text value=" #{app.report_cotiz_cmb_apa_vali}"></p:text> <p:text value= ": "/> </p:font> <p:text value="#{ventaComboHome.validez} #{app.patimast_age_3}"></p:text>
+	</p:paragraph>
+	
+	<p:html><br /></p:html> 
+	<p:table columns="4" widthPercentage="100" headerRows="0"
+		borderVisible="true" widths="2 9.7 1.7 1.3">
+		
+		<p:font style="bold" size="8">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" >
+			 <p:paragraph ><p:text value="Imagen"></p:text> </p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" >
+			<p:paragraph ><p:text value="#{app.report_movements_items_list_col2}"></p:text> </p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" >
+			<p:paragraph > <p:text value="Cantidad"></p:text></p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" >
+			<p:paragraph ><p:text value="Monto"></p:text></p:paragraph>
+			</p:cell>		
+		</p:font> 
+		
+	</p:table>
+	
+		<p:table columns="4" widthPercentage="100" headerRows="0"
+		borderVisible="true" widths="2 9.7 1.7 1.3">
+	<h:panelGroup rendered="#{ventaItemHome.itemsAgregados.size > 0}">
+			<ui:repeat var="prd" value="#{ventaItemHome.itemsAgregados}">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="60">
+					<p:image value="#{ventaItemHome.getImgPrd(prd)}" />
+				</p:cell>
+				<p:cell horizontalAlignment="left" verticalAlignment="middle" fixedHeight="60">
+					<p:paragraph alignment="left">
+						
+						<p:text value=" #{prd.inventario.producto.nombre}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="60">
+				<p:paragraph>
+				<p:font size="9">
+				<p:text value="#{prd.cantidad}"/>
+				</p:font>
+				</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="60">
+				<p:paragraph>
+						<p:font size="9">
+						<p:text value="#{prd.getCostoUnitario()}">
+							<f:convertNumber currencySymbol="$" type="currency"
+								locale="en-US" groupingUsed="true" integerOnly="true"
+								maxFractionDigits="2" />
+						</p:text>
+						</p:font>
+				</p:paragraph>
+				</p:cell>
+			</ui:repeat>
+		</h:panelGroup>
+		</p:table>	
+
+	
+				<p:font style="bold" size="13">
+				<p:paragraph alignment="right">
+					<p:text value="#{ventaItemHome.subTotal}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text>
+				</p:paragraph>
+			</p:font>
+	</p:document>

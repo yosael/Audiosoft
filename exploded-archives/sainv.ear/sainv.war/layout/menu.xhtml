@@ -1,0 +1,30 @@
+<rich:toolBar xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich" styleClass="menuBar">
+	
+	<rich:toolBarGroup >
+		<h:panelGroup styleClass="firstMenuItem" >
+			<s:link view="/home.xhtml" value="#{menu.home}" styleClass="rich-toolbar-item" 
+				
+				propagation="none" />
+		</h:panelGroup>
+		
+	</rich:toolBarGroup>
+	
+	<rich:toolBarGroup binding="#{kuMenu.kubeToolBar}"
+		rendered="#{identity.loggedIn}" />
+	
+	<rich:toolBarGroup>
+		<h:panelGroup  >
+			<s:link action="#{loginUser.endSession}" value="#{menu.exit}" styleClass="rich-toolbar-item"
+				propagation="none" />
+		</h:panelGroup>
+	</rich:toolBarGroup>
+	
+	
+	
+</rich:toolBar>

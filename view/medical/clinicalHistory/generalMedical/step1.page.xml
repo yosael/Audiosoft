@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	
+	<param name="back" value="#{urlBack.back}" required="false" />
+	<param name="id" value="#{medicalAppointmentDAO.appointmentId}" required="true" />
+	<!-- <param name="historyId" value="#{wizardGeneralMedical.consecutive}" /> -->
+	
+	<!-- <begin-conversation join="true" /> -->
+
+	<action execute="#{wizardGeneralMedical.load()}"  on-postback="false" />
+	
+	<!--<action execute="#{diagnosticoMedHome.getDiagnostListByName()}"  on-postback="false" />   nuevo: no funciono. 
+	<action execute="#{serviceDAO.loadServiciosExa()}"  on-postback="false" />
+	<action execute="#{recomendacionMedHome.getRecomenList()}"  on-postback="false" /> 
+	<action execute="#{serviceDAO.loadServiciosList('MED')}"  on-postback="false" /> 
+	<action execute="#{medicamentoHome.getMedicamentosList()}"  on-postback="false" />
+	<action execute="#{prescriptionHome.load()}"  on-postback="false" />-->
+	 <navigation>
+		<rule if-outcome="exito">
+			<!-- <redirect view-id="/medical/medicalAppointment/scheduler.xhtml" /> -->
+			<redirect view-id="/medical/scheddoc/scheduler.xhtml" />
+		</rule>
+	</navigation>
+</page>
+
+
+<!-- 
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="id" value="#{medicalAppointmentDAO.appointmentId}" required="true" />
+	<param name="historyId" value="#{wizardGeneralMedical.consecutive}" />
+	<action execute="#{wizardGeneralMedical.init()}" on-postback="false"
+		if="#{empty wizardGeneralMedical.consecutive}" />
+	<action execute="#{wizardGeneralMedical.load()}" on-postback="false"
+		if="#{not empty wizardGeneralMedical.consecutive}" />
+	<navigation>
+		<rule if-outcome="next">
+			<redirect view-id="/medical/clinicalHistory/generalMedical/step2.xhtml" />
+		</rule>
+	</navigation>
+</page>
+-->

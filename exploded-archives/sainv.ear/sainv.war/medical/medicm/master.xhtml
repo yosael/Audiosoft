@@ -1,0 +1,205 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{medicamentoHome.managed?sainv_view_messages.get('medicm_head_edit'):sainv_view_messages.get('medicm_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<center>
+			<h:form id="formmedicm">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.medicm_legend}</legend> 
+					
+					<h:panelGrid columns="2">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.medicm_name}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.nombre}" required="true" >
+								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" ></a:support>
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.medicm_laboratorio}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.laboratorio.nombre}" 
+								readonly="true" required="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
+								action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.medicm_indice}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.indiceTer.nombre}" 
+								readonly="true" required="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selIndiceTer')}.show();" ajaxSingle="true"  
+								action="#{medicamentoHome.cargarListaIndices()}" reRender="idt" eventsQueue="q1" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.medicm_sustancia}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.sustanciaAct.nombre}" 
+								readonly="true" required="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selSustanciaAct')}.show();" ajaxSingle="true"  
+								action="#{medicamentoHome.cargarSustanciasAct()}" reRender="sua"  eventsQueue="q1"
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/medical/medicm/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/medical/medicm/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{medicamentoHome.save()}" reRender="formmedicm"
+						rendered="#{not medicamentoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{medicamentoHome.modify()}" reRender="formmedicm"
+						rendered="#{medicamentoHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+				<table style="width:900px;">
+				<tr><td style="width:50%;">
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton onclick="#{rich:component('selDosificacion')}.show();" ajaxSingle="true" 
+							action="#{medicamentoHome.cargarListaDosif()}" reRender="dos" eventsQueue="q1"
+							styleClass="addBtn" value="#{app.medicm_btn_add_dosif}">
+						</a:commandButton>
+					</s:decorate>
+					<rich:spacer height="10" />
+					<rich:dataTable var="res" value="#{medicamentoHome.dosificacionesList}" id="_tblSelDos"
+						rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.dosificaciones_med_list}</f:facet>
+						<rich:column filterBy="#{res.dosificacion.nombre}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.medicm_name}</f:facet>
+							<h:outputText value="#{res.dosificacion.nombre}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink reRender="_tblSelDos" eventsQueue="q1"
+							action="#{medicamentoHome.remDosifMedic(res)}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable></td>
+					<td>
+						<s:decorate template="/layout/kActions.xhtml">
+							<a:commandButton onclick="#{rich:component('selPresentacion')}.show();" ajaxSingle="true" 
+								action="#{medicamentoHome.cargarListaPresen()}" reRender="pre" eventsQueue="q1"
+								styleClass="addBtn" value="#{app.medicm_btn_add_presen}">
+							</a:commandButton>
+						</s:decorate>
+						<rich:spacer height="10" />
+						<rich:dataTable var="res" value="#{medicamentoHome.presentacionesList}" id="_tblSelPre"
+						rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.presentaciones_med_list}</f:facet>
+						<rich:column filterBy="#{res.presentacion.nombre}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.medicm_name}</f:facet>
+							<h:outputText value="#{res.presentacion.nombre}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink reRender="_tblSelPre" eventsQueue="q1" 
+							action="#{medicamentoHome.remPresenMedic(res)}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable></td>
+				</tr>
+				</table>
+			</h:form>
+			</center>
+		</rich:panel>
+		
+		<rich:modalPanel id="selIndiceTer"  width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selIndiceTer');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selIndiceTer')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="idt" ><ui:include  src="selIndiceTer.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selSustanciaAct" width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selSustanciaAct');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selSustanciaAct')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="sua" ><ui:include  src="selSustanciaAct.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selLaboratorio" width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selLaboratorio');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selLaboratorio')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="lab" ><ui:include  src="selLaboratorio.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selDosificacion" width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selDosificacion');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selDosificacion')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="dos" ><ui:include  src="selDosificacion.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selPresentacion" width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selPresentacion');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selPresentacion')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="pre" ><ui:include  src="selPresentacion.xhtml" /></s:div>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

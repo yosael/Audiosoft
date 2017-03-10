@@ -1,0 +1,183 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="40 30 30 30">
+	<p:font size="10" style="italic">
+		<p:paragraph alignment="right"><p:text value="Le atendio: #{loginUser.getUser().getNombreCompleto()}, "></p:text> <p:text value="#{reparacionClienteHome.getFecDeHoy().toGMTString().substring(0, 11)}"></p:text> </p:paragraph>
+	</p:font>
+	<p:font size="16" style="bold">	
+		<p:paragraph alignment="center">#{app.comprrep_title}</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="9">
+	<p:table columns="2" widthPercentage="100" headerRows="0"  widths="2 2">
+			<p:cell verticalAlignment="middle" paddingBottom="2" >
+				<p:paragraph alignment="left">Paciente: #{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" paddingBottom="2">
+				<p:paragraph alignment="left">Codigo: #{reparacionClienteHome.instance.proceso.prcCode}#{reparacionClienteHome.instance.id}
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2">
+				<p:paragraph>
+					<p:text value="Hecho a la medida: "  />
+					<p:text value="Si                      " rendered="#{reparacionClienteHome.instance.aparatoRep.hechoMedida==true}" />
+					<p:text value="No                      " rendered="#{reparacionClienteHome.instance.aparatoRep.hechoMedida==false}" />
+					<p:text value="Retroauricular: "  />
+					<p:text value="Si" rendered="#{reparacionClienteHome.instance.aparatoRep.retroAuricular==true}" />
+					<p:text value="No" rendered="#{reparacionClienteHome.instance.aparatoRep.retroAuricular==false}" />
+				</p:paragraph>
+			</p:cell>
+			 
+			
+			<p:cell verticalAlignment="middle" paddingBottom="2" >
+				<p:paragraph>
+				<p:text value="Lado: "  />
+				<p:text value="DERECHO" rendered="#{reparacionClienteHome.instance.aparatoRep.ladoAparato=='DER'}" />
+				<p:text value="IZQUIERDO" rendered="#{reparacionClienteHome.instance.aparatoRep.ladoAparato=='IZQ'}" />
+				</p:paragraph>
+			</p:cell>
+			
+	
+			<p:cell verticalAlignment="middle" paddingBottom="2">
+				<p:paragraph alignment="right">Marca: #{reparacionClienteHome.instance.aparatoRep.marca}     Modelo: #{reparacionClienteHome.instance.aparatoRep.modelo}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" paddingBottom="2">
+				<p:paragraph alignment="right">N° serie: #{reparacionClienteHome.instance.aparatoRep.numSerie}</p:paragraph>
+			</p:cell>
+
+			
+	</p:table>
+	<p:html><br /></p:html>
+	<p:table columns="3" widthPercentage="100" headerRows="1"  widths="2 2 2">		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+				<p:paragraph>#{app.repcli_lstcnds}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+				<p:paragraph>#{app.repcli_lstcmps}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+				<p:paragraph>#{app.repcli_lstcpds}</p:paragraph>
+			</p:cell>
+			
+			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14">
+				<p:paragraph>
+					<ui:repeat value="#{reparacionClienteHome.instance.condsAparatorep}" var="bean">
+						<p:text value="#{bean.condAparato.nombre}" /><p:html><br /></p:html>
+					</ui:repeat>
+				</p:paragraph>
+			</p:cell>
+			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14">
+				<p:paragraph>
+					<ui:repeat value="#{reparacionClienteHome.instance.compsDefAparato}" var="bean">
+						<p:text value="#{bean.cmpAparato.nombre}" /><p:html><br /></p:html>
+					</ui:repeat>
+				</p:paragraph>
+			</p:cell>
+			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14">
+				<p:paragraph>
+					<ui:repeat value="#{reparacionClienteHome.instance.defCapsAparato}" var="bean">
+						<p:text value="#{bean.defCapsula.nombre}" /><p:html><br /></p:html>
+					</ui:repeat>
+				</p:paragraph>
+			</p:cell>		
+		</p:table>
+		<p:html><br /></p:html>
+		<p:table columns="6" widthPercentage="100" headerRows="0"  widths="2 1 1 1 1 1" rendered="#{reparacionClienteHome.instance.estado=='FIN' or reparacionClienteHome.instance.estado=='DLV'}">
+			<ui:repeat value="#{reparacionClienteHome.instance.etapasReparacion}" var="eta">
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthRight="0">
+					<p:paragraph>#{eta.etapaRep.nombre}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+					<p:paragraph>
+						<p:text value="Fecha: " />
+						<p:text value="#{eta.fechaRealFin}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+					<p:paragraph>
+						<p:text value="Técnico: " />
+						<p:text value="#{eta.usuario.nombreCompleto}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingWidthBottom="4" borderWidthBottom="0" borderWidthLeft="0">
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" paddingLeft="14" colspan="6" borderWidthTop="0"  minimumHeight="25">
+					<p:paragraph>#{eta.descripcion}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" colspan="6" borderWidthTop="0" borderWidthBottom="0" rendered="#{eta.etapaRep.codEta=='REP'}">
+					<p:paragraph>Partes nuevas</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" colspan="6" borderWidthTop="0" rendered="#{eta.etapaRep.codEta=='REP'}">
+					<p:table columns="3" widthPercentage="90" headerRows="1"  widths="2 3 2 ">
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+							<p:paragraph>Referencia</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+							<p:paragraph>Producto</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2" >
+							<p:paragraph>Cantidad</p:paragraph>
+						</p:cell>
+					<ui:repeat value="#{reparacionClienteHome.getPrdsReqEtapa(eta)}" var="req">
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+							<p:paragraph>#{req.producto.referencia}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+							<p:paragraph>#{req.producto.nombre}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingBottom="2" paddingRight="10" >
+							<p:paragraph>#{req.cantidad}</p:paragraph>
+						</p:cell>
+					</ui:repeat>
+				</p:table>
+			</p:cell>
+		</ui:repeat>
+				
+	</p:table>
+	<p:table columns="6" widthPercentage="100" headerRows="0"  widths="2 1 1 1 1 1" rendered="#{reparacionClienteHome.instance.estado=='DLV'}">
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthRight="0">
+					<p:paragraph>CONFIRMACION DE ENTREGA</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+					<p:paragraph>
+						<p:text value="Fecha: " />
+						<p:text value="#{reparacionClienteHome.instance.fechaEntrega}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+					<p:paragraph>
+						<p:text value="Valor reparación: " />
+						<p:paragraph><p:text value="#{reparacionClienteHome.instance.costo}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingWidthBottom="0" borderWidthBottom="0" borderWidthLeft="0">
+				</p:cell>
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2"  paddingLeft="14" colspan="6" borderWidthTop="0" borderWidthBottom="0" minimumHeight="15">
+					<p:paragraph>#{reparacionClienteHome.instance.detalleEntrega}</p:paragraph>
+				</p:cell>
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" paddingLeft="14" borderWidthTop="0" borderWidthRight="0">
+					<p:paragraph>Nombre de quien recibe:</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" colspan="5" borderWidthTop="0" borderWidthLeft="0">
+					<p:paragraph>#{reparacionClienteHome.instance.nombreRecibe}</p:paragraph>
+				</p:cell>
+			</p:table>	
+</p:font>
+	
+</p:document>

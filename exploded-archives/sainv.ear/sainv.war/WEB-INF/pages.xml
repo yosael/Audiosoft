@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages login-view-id="/loginAdmin.xhtml"
+ no-conversation-view-id="/home.xhtml"
+ xmlns="http://jboss.com/products/seam/pages"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+ <page view-id="*">
+  <param name="tabSel" required="false"/>
+  <navigation>
+   <rule if-outcome="home">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+   <rule if-outcome="end">
+    <begin-conversation join="true"/>
+    <redirect view-id="/loginAdmin.xhtml"/>
+   </rule>
+   <rule if-outcome="endCli">
+    <begin-conversation join="true"/>
+    <redirect view-id="/web/index.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ <page login-required="true" view-id="/admin/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ <page login-required="true" view-id="/sainv/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ <page login-required="true" view-id="/vtas/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ <page login-required="true" view-id="/taller/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ 
+  <page login-required="true" view-id="/acct/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ 
+ <page login-required="true" view-id="/medical/*">
+  <action execute="#{kuPermisos.comprobarAcceso()}"/>
+  <navigation from-action="#{kuPermisos.comprobarAcceso()}">
+   <rule if-outcome="false">
+    <redirect view-id="/home.xhtml"/>
+   </rule>
+  </navigation>
+ </page>
+ <page view-id="/security/*">
+  <begin-conversation join="true"/>
+ </page>
+ <exception class="javax.persistence.OptimisticLockException">
+  <end-conversation/>
+  <redirect view-id="/security/error.xhtml">
+   <message severity="warn">Otro usuario esta modificando el mismo registro por favor intentelo mas tarde</message>
+  </redirect>
+ </exception>
+ <exception class="org.jboss.seam.security.AuthorizationException">
+  <redirect view-id="/security/error.xhtml">
+   <message severity="error">Usted no tiene los permisos para acceder a este recurso</message>
+  </redirect>
+ </exception>
+ <exception class="org.jboss.seam.security.NotLoggedInException">
+  <redirect view-id="/loginAdmin.xhtml">
+   <message severity="warn">#{messages['org.jboss.seam.NotLoggedIn']}</message>
+  </redirect>
+ </exception>
+ <exception class="javax.faces.application.ViewExpiredException">
+  <redirect view-id="/security/error.xhtml">
+   <message severity="warn">Su sesion ha finalizado, por favor intentelo de nuevo.</message>
+  </redirect>
+ </exception>
+ <exception class="org.jboss.seam.ConcurrentRequestTimeoutException" log-level="trace">
+  <http-error error-code="503"/>
+ </exception>
+ <exception>
+  <redirect view-id="/security/error.xhtml">
+   <message severity="error">Ha ocurrido un error inesperado por favor intentelo de nuevo</message>
+  </redirect>
+ </exception>
+</pages>

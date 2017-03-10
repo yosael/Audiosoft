@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="id" value="#{codigoDescuentoCorpHome.codId}" required="false" />
+	<action execute="#{codigoDescuentoCorpHome.load()}" on-postback="false" />
+
+	<navigation from-action="#{codigoDescuentoCorpHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/vtas/descuentos_corp/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{codigoDescuentoCorpHome.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/vtas/descuentos_corp/list.xhtml" />
+		</rule>
+		
+		<rule if-outcome="false">
+			<redirect view-id="/vtas/descuentos_corp/master.xhtml" />
+		</rule>
+	</navigation>
+	
+</page>

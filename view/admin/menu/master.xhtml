@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{menuHome.managed?sainv_view_messages.get('menumast_head_edit'):sainv_view_messages.get('menumast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formmenu">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.menumast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_name_es}:</ui:define>
+							<h:inputText value="#{menuHome.instance.nombreSpanish}" required="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_name_en}:</ui:define>
+							<h:inputText value="#{menuHome.instance.nombreEnglish}" required="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_url}:</ui:define>
+							<h:inputText value="#{menuHome.instance.url}" required="false"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_visible}:</ui:define>
+							<h:selectBooleanCheckbox value="#{menuHome.instance.visible}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_system}:</ui:define>
+							<h:selectOneMenu value="#{menuHome.instance.sistema}" required="true">
+								<s:selectItems value="#{sistemaList.resultList}" var="_sis" 
+									label="#{_sis.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" reRender="_menuFather" 
+									action="#{menuHome.cargarMenus()}"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_menuFather">
+							<ui:define name="label">#{app.menumast_menu_father}:</ui:define>
+							<h:selectOneMenu value="#{menuHome.instance.menuPadre}" rendered="#{localeSelector.language=='es'}">
+								<s:selectItems value="#{menuHome.menusDisponibles}" var="_menu" 
+									label="#{_menu.nombreSpanish}" noSelectionLabel=" " />
+								<s:convertEntity />
+							</h:selectOneMenu>
+							<h:selectOneMenu value="#{menuHome.instance.menuPadre}" rendered="#{localeSelector.language=='en'}">
+								<s:selectItems value="#{menuHome.menusDisponibles}" var="_menu" 
+									label="#{_menu.nombreEnglish}" noSelectionLabel=" " />
+								<s:convertEntity />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{menuHome.managed}">
+							<ui:define name="label">#{app.menumast_state}:</ui:define>
+							<h:selectOneMenu value="#{menuHome.estado}">
+								<f:selectItem itemLabel="Activo" itemValue="ACT"/>
+								<f:selectItem itemLabel="Inactivo" itemValue="INA"/>
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" 
+									reRender="_actions" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.menumast_order}:</ui:define>
+							<h:inputText value="#{menuHome.instance.orden}" required="false"/>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<s:button view="/admin/menu/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/admin/menu/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{menuHome.save()}" reRender="formmenu"
+						rendered="#{not menuHome.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{menuHome.modify()}" reRender="formmenu"
+						rendered="#{menuHome.managed and menuHome.estado=='ACT'}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{menuHome.managed and menuHome.estado=='INA'}" 
+						styleClass="modifyBtn" ajaxSingle="true"
+						value="#{msn.button_modify}" onclick="#{rich:component('confirmation')}.show();"/>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation"  width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.menulist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.menumast_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{menuHome.modify()}" reRender="formmenu"
+							styleClass="modifyBtn"
+							value="#{msn.button_continue}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

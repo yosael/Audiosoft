@@ -1,0 +1,165 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{cuentaContHome.managed?sainv_view_messages.get('cuentac_head_edit'):sainv_view_messages.get('cuentac_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formcuentac">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.cuentac_legend}</legend> 
+					
+					<center><table style="width:600px;">
+					<tr><td style="width:74%;">
+					<h:panelGrid columns="2">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_codcuenta}:</ui:define>
+							<h:inputText value="#{cuentaContHome.instance.codCuenta}" required="true" >
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_name}:</ui:define>
+							<h:inputText value="#{cuentaContHome.instance.nombre}" required="true" >
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_tipocuenta}:</ui:define>
+							<h:inputText value="#{app.cuentac_activo}" readonly="true"
+								rendered="#{not empty cuentaContHome.instance.cuentaPadre and 
+											cuentaContHome.instance.cuentaPadre.tipoCuenta.codigo=='AC'}" />
+							<h:inputText value="#{app.cuentac_pasivo}"  readonly="true"
+								rendered="#{not empty cuentaContHome.instance.cuentaPadre and 
+											cuentaContHome.instance.cuentaPadre.tipoCuenta.codigo=='PV'}" />
+							<h:inputText value="#{app.cuentac_cc}" readonly="true"
+								rendered="#{not empty cuentaContHome.instance.cuentaPadre and 
+											cuentaContHome.instance.cuentaPadre.tipoCuenta.codigo=='CC'}" />
+							
+							<h:selectOneMenu value="#{cuentaContHome.instance.tipoCuenta}" required="true"
+								rendered="#{empty cuentaContHome.instance.cuentaPadre}">
+								<s:selectItems value="#{cuentaContHome.tiposCuenta}" var="_tpc" 
+									label="#{_tpc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+							</h:selectOneMenu>
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_description}:</ui:define>
+							<h:inputTextarea value="#{cuentaContHome.instance.descripcion}" >
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_cuentapadre}:</ui:define>
+							<h:inputText value="#{cuentaContHome.instance.cuentaPadre.nombre}" style="width:200px;" 
+								rendered="#{not empty cuentaContHome.instance.cuentaPadre}" />
+							<h:inputText style="width:200px;" rendered="#{empty cuentaContHome.instance.cuentaPadre}" />
+							<a:commandButton onclick="#{rich:component('selCtaPadre')}.show();" ajaxSingle="true"   
+								action="#{cuentaContHome.cargarCuentasPadre()}" reRender="mCtas" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				</td>
+					<td style="padding-left:16px;">
+					<p:accordionPanel autoHeight="false">
+					<p:tab title="#{app.cuentac_listhijas}" >
+					<rich:tree style="width:300px" nodeFace="#{item.tieneHijos}" 
+		                ajaxSubmitSelection="false" switchType="client" 
+		                value="#{cuentaContHome.rootNode}" var="item" ajaxKeys="#{null}">
+					    <rich:treeNode iconLeaf="/kubeImg/cuentacPapa.png" 
+					    				icon="/kubeImg/cuentacPapa.png" type="true">
+		                	<h:outputText escape="false" value="#{item.nombre}" />
+		                </rich:treeNode>
+		                <rich:treeNode iconLeaf="/kubeImg/cuentacHija.png" 
+		                				icon="/kubeImg/cuentacHija.png" type="false">
+		                	<h:outputText escape="false" value="#{item.nombre}" />
+		                </rich:treeNode>
+		            </rich:tree>	
+		            </p:tab>
+					</p:accordionPanel>				
+					</td></tr>
+				</table></center>
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/acct/cuentac/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/acct/cuentac/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{cuentaContHome.save()}" reRender="formcuentac"
+						rendered="#{not cuentaContHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"  
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{cuentaContHome.modify()}" reRender="formcuentac"
+						rendered="#{cuentaContHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{cuentaContHome.managed}" styleClass="deleteBtn" 
+						onclick="#{rich:component('confirmation')}.show();" 
+							ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_delete}" />
+				</s:decorate>
+				</fieldset>
+								
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="selCtaPadre"  width="600" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selCtaPadre');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+						onclick="#{rich:component('selCtaPadre')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="mCtas"><ui:include  src="ctasPadres.xhtml" /></s:div>
+		</rich:modalPanel>
+		<rich:modalPanel id="confirmation"  width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.cuentac_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.cuentac_confirmdel}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{cuentaContHome.delete()}" reRender="formcuentac"
+						rendered="#{cuentaContHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

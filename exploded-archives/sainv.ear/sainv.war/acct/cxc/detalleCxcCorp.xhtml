@@ -1,0 +1,150 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Cuentas por Cobrar de un cliente corporativo</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 2 2 3" >			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.usuariolist_col1}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >COT#{ventaComboHome.cotizacion.id}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.repcli_cliente}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >#{ventaComboHome.cotizacion.cliente.nombres} #{ventaComboHome.cotizacion.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.aparcli_earphone}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+				<p:paragraph>
+				<p:text value="#{msn.button_yes}" rendered="#{ventaComboHome.cotizacion.retroAuricular}" />
+				<p:text value="#{msn.button_no}" rendered="#{not ventaComboHome.cotizacion.retroAuricular}" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.aparcli_earside}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+				<p:paragraph>
+				<p:text value="#{msn.side_left}" rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}" />
+				<p:text value="#{msn.side_right}" rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}" />
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">
+				<p:paragraph>#{ventaComboHome.cotizacion.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.cotiz_fechaing}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{ventaComboHome.cotizacion.fechaIngreso}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_detalle}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell colspan="3" verticalAlignment="middle">
+				<p:paragraph>#{ventaComboHome.cotizacion.detalleAparato}</p:paragraph>
+			</p:cell>
+			
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="3" widthPercentage="100" headerRows="2"  widths="3 1 1" >
+			<p:cell colspan="3" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" size="16" >
+					<p:paragraph alignment="center">Detalle de la cotización</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.parvta_description}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.report_move_col1}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold" paddingRight="6">
+					<p:paragraph alignment="right">#{app.combapa_apaprpal}</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="ctct" value="#{ventaComboHome.cotizacion.combo.costosCombo}" >
+			<h:panelGroup rendered="#{ctct.showCotizacion}">
+				<p:cell verticalAlignment="middle">
+					<p:paragraph>#{ctct.servicio.name}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="center">
+					<p:paragraph>-</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center">
+					<p:paragraph>-</p:paragraph>
+				</p:cell>
+				</h:panelGroup>
+			</ui:repeat>
+			<ui:repeat var="dtct" value="#{ventaComboHome.cotizacion.itemsCotizacion}">
+				<p:cell verticalAlignment="middle">
+					<p:paragraph>#{dtct.producto.nombre}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>#{dtct.cantidad}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+					<p:paragraph>
+					<p:text value="#{msn.button_yes}" rendered="#{dtct.principal}" />
+					<p:text value="#{msn.button_no}" rendered="#{not dtct.principal}" />
+					</p:paragraph>
+				</p:cell>
+			</ui:repeat>
+			
+			<p:cell colspan="2" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4" paddingRight="6">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">COSTO DEL COMBO</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{ventaComboHome.totalCostos}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+						
+		</p:table>
+		
+</p:document>

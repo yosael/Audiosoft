@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detalle del cliente" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formclicorp">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					
+					<h:panelGrid columns="3" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Nombre/Razón social:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.nombre}" maxlenght="80" required="true" maxlength="40" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Apellido:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.apellido}" maxlenght="80" required="false" maxlength="40" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">NIT:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.nit}" maxlength="18" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">DUI:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.dui}" maxlength="10" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Telefono 1:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.telefono1}" maxlength="12" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Telefono 2:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.telefono2}" maxlength="12" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">NRC:</ui:define>
+							<h:inputText value="#{clienteDocHome.instance.nrc}" maxlength="10" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Tipo de Contribuyente:</ui:define>
+							<h:selectOneMenu value="#{clienteDocHome.instance.tipoContribuyente}" required="false">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItem itemLabel="Chico" itemValue="1" />
+								<f:selectItem itemLabel="Mediano" itemValue="2" />
+								<f:selectItem itemLabel="Grande" itemValue="3" /> 
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+						</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Direccion:</ui:define>
+							<h:inputTextarea required="false" style="width:210px;" maxlength="300" value="#{clienteDocHome.instance.direccion}" >
+									<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>		
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Giro:</ui:define>
+							<h:inputTextarea required="false" style="width:210px;" maxlength="100" value="#{clienteDocHome.instance.giro}" >
+									<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>		
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Exento:</ui:define>
+							<h:selectBooleanCheckbox value="#{clienteDocHome.instance.exento}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>	
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Omitir monto mínimo para retención/percepción:</ui:define>
+							<h:selectBooleanCheckbox value="#{clienteDocHome.instance.omisionMinimoRet}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>																																											
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/vta/clienteDoc/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/vta/clienteDoc/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{clienteDocHome.save()}" reRender="formclicorp"
+						rendered="#{not clienteDocHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{clienteDocHome.modify()}" reRender="formclicorp"
+						rendered="#{clienteDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

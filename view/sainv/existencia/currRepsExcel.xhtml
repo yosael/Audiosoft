@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_excel_movements_worksheet}"
+		value="#{productoHome.prdsExistenciasExl}" var="bean">
+		<e:header> 
+			<f:facet name="left">
+				#{app.etarepcli_repJobsRep}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="Cod. PRD." style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.referencia}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="Cod. CAT." style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.categoria.codigo}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col2}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.nombre}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.productolist_col5}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.marca.nombre}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header"> 
+				<e:cell value="#{app.producto_prc1}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.prcNormal}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.existencia_totglobal}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.totalPrds}" forceType="text" />
+		</e:column>
+		
+	</e:worksheet>
+
+</e:workbook>
+</html>

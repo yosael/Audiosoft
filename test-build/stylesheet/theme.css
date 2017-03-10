@@ -1,0 +1,311 @@
+html {
+	overflow-y: scroll;
+}
+
+body {
+	
+}
+
+a img {
+	border: none;
+	color: white;
+}
+
+a {
+	color: white;
+}
+
+a:visited {
+	color: white;
+}
+
+a:hover {
+	color: white;
+}
+
+h1 {
+	font-size: 1.6em;
+	margin-top: 0;
+}
+
+td {
+	vertical-align: top;
+}
+
+input[type=submit],input[type=button] {
+	font-size: 11px;
+	margin: 5px 5px 5px 0;
+	cursor: pointer;
+	background-color: #75A4D1;
+	height: 25px;
+	color: white;
+	font-weight: bold;
+	border: 0px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border: 0px;
+}
+
+input[type=submit]:focus,input[type=button]:focus,input[type=submit]:hover,input[type=button]:hover
+	{ /*cambiar color*/
+	background-color: #5C88C1;
+}
+
+input[type=submit]:disabled,input[type=button]:disabled {
+	/*cambiar color*/
+	background-color: #D9D9D9;
+	color: #5C88C1;
+}
+
+input[type=text],input[type=password],textarea {
+	font-size: 12px;
+	padding-left: 1px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+select {
+	font-size: 13px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+.tableControl,.actionButtons {
+	width: 100%;
+}
+
+.tableControl a {
+	padding-left: 10px;
+}
+
+.tableControl {
+	text-align: right;
+}
+
+.footer {
+	text-align: center;
+	font-size: 11px;
+	margin-bottom: 10px;
+}
+
+.rich-table {
+	width: 100%;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+.body {
+	padding: 30px;
+}
+
+.message {
+	padding: 5px;
+	list-style: none;
+	border: 0;
+	background: none;
+	padding: 0;
+	color: #000000;
+	margin: 5px 0 8px 0;
+	font-size: 12px;
+	width: 60%;
+}
+
+.message li {
+	background: no-repeat left center;
+	padding-top: 1px;
+	padding-left: 20px;
+	margin-left: 3px;
+	font-weight: bold;
+	text-align: left;
+}
+
+.name {
+	vertical-align: top;
+	font-weight: bold;
+	width: 115px;
+	float: left;
+	padding: 5px;
+	margin-top: 3px;
+	clear: left;
+}
+
+.value {
+	float: left;
+	padding: 5px;
+}
+
+.errors {
+	background-color: #FFBABA;
+	padding: 1px 1px 1px 1px;
+	color: #cc0000;
+	border: 2px solid #cc0000 !important; 
+	vertical-align: middle;
+	font-weight: bold;
+	margin-bottom: 6px !important;
+}
+
+.error {
+	float: left;
+	padding: 5px;
+	font-weight: bolder;
+}
+
+img.errors {
+	padding-right: 5px;
+}
+
+/*.errors input,.errors textarea,.errors select {
+	border: 2px solid #5C88C1 !important;
+}*/
+.required {
+	color:  #ff0000;
+	padding-left: 2px;
+	font-weight: bolder;
+}
+
+.rich-stglpanel-body {
+	overflow: auto;
+}
+
+/* the specificity here is necessary to override the defaults */ /*
+.rich-panel .rich-panel-header,
+.rich-stglpanel .rich-stglpanel-header {
+	padding: 2px 3px;
+}*/
+.rich-panel input[type=submit],.rich-panel input[type=button],.rich-tabpanel input[type=submit],.rich-tabpanel input[type=button]
+	{
+	margin-bottom: 0;
+}
+
+.tableControl input[type=submit],.tableControl input[type=button],.tableControl select
+	{
+	margin: 5px 0 5px 5px;
+}
+
+/* I don't know why this is necessary, but the select is off by a pixel on the top and is padding too much on the left */
+.tableControl select {
+	margin-left: 2px;
+	position: relative;
+	top: 1px;
+}
+
+.rich-table-cell {
+	text-align: center;
+	vertical-align: top;
+}
+
+.rich-table-cell a {
+	color: #75A4D1;
+	font-weight: bolder;
+}
+
+.rich-table-cell a:hover {
+	color: #5C88C1;
+}
+
+.rich-panel  a {
+	color: #75A4D1;
+	font-weight: bolder;
+}
+
+.rich-panel a:hover {
+	color: #5C88C1;
+}
+
+
+.dr-pnl-h {
+	background-color: none !important;
+	border-color: none !important;
+	font-size: 16px;
+	font-weight: bold;
+	font-decoration:underline;
+	font-family: Arial,Verdana,sans-serif;
+	background-image: none;
+	text-align: left;
+}
+
+.dr-pnl-h-custom {
+	background-color: #F38409 !important;;
+	border-color: #D97336 !important;
+	font-size: 16px;
+	font-weight: bold;
+	font-decoration:underline;
+	font-family: Arial,Verdana,sans-serif;
+	background-image: none;
+	text-align: left;
+	
+}
+
+.actionButtons {
+	padding-left: 1px;
+}
+
+.actionButtons select {
+	margin: 5px 5px 5px 0;
+	vertical-align: bottom;
+}
+
+.rich-toolbar-item a {
+	text-decoration: none;
+}
+
+.rich-toolbar-item a:hover,.rich-ddmenu-label-select {
+	text-decoration: underline;
+}
+
+.rich-toolbar-item .rich-menu-item a:hover {
+	text-decoration: none;
+}
+
+.rich-datalist {
+	list-style: square;
+	margin: 6px 0 1px 0;
+	padding-left: 18px;
+}
+
+.rich-list-item {
+	padding-bottom: 4px;
+}
+
+div.info {
+	font-size: 1.2em;
+}
+
+ul.bullets {
+	list-style: square;
+}
+
+ul.bullets li {
+	padding-bottom: 2px;
+}
+
+td.action {
+	text-align: center;
+	width: 8em;
+	white-space: nowrap;
+}
+
+td.action a {
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+table.radio {
+	border: 0;
+}
+
+table.radio td {
+	padding: 0 2px;
+}
+
+table.radio input[type=radio] {
+	vertical-align: bottom;
+}
+
+.rich-tool-tip {
+	background-color: #FAE6B0;
+	border-color: #E5973E;
+	border-width: 2px;
+	padding: 5px;
+	color: black;
+}

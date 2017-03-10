@@ -1,0 +1,169 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">#{app.report_movements_head}</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+					<h:panelGrid columns="4">
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter0}:</ui:define>
+							<h:selectOneMenu value="#{reporte.tipoMovimiento}" >
+								<f:selectItem itemLabel=" " />
+								<f:selectItem itemLabel="#{app.movimiento_movement_type_e}" itemValue="E"/>
+								<f:selectItem itemLabel="#{app.movimiento_movement_type_s}" itemValue="S"/>																		
+		                          <a:support event="onchange" ajaxSingle="true" action="#{reporte.listarMovimientos()}" 
+		                          	eventsQueue="q1" reRender="_tblRes"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+							<rich:calendar value="#{reporte.fechaInicio}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" action="#{reporte.listarMovimientos()}" eventsQueue="q1" reRender="_tblRes"/>
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+							<rich:calendar value="#{reporte.fechaFin}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" action="#{reporte.listarMovimientos()}" eventsQueue="q1" reRender="_tblRes"/>
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.report_movements_filter5}:</ui:define>
+							<h:selectOneMenu value="#{reporte.empresaSeleccionada}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{reporte.cargarSucursales()}" 
+									ajaxSingle="true" reRender="formA"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.report_movements_filter5}:</ui:define>
+							<h:inputText value="#{reporte.empresaSeleccionada.nombre}" readonly="true"/>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.report_movements_filter6}:</ui:define>
+							<h:selectOneMenu value="#{reporte.sucursalSeleccionada}">
+								<s:selectItems value="#{reporte.sucursales}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{reporte.listarMovimientos()}" 
+									ajaxSingle="true" reRender="_tblRes"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.report_movements_filter6}:</ui:define>
+							<h:inputText value="#{reporte.sucursalSeleccionada.nombre}" readonly="true"/>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter3}:</ui:define>
+							<h:selectOneMenu value="#{reporte.categoriaSeleccionada}">
+								<s:selectItems value="#{categoriaList.resultList}" var="_cat" 
+									label="#{_cat.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{reporte.cargarProductos()}" 
+									ajaxSingle="true" reRender="formA"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter4}:</ui:define>
+							<h:selectOneMenu value="#{reporte.productoSeleccionado}">
+								<s:selectItems value="#{reporte.productos}" var="_prod" 
+									label="#{_prod.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{reporte.listarMovimientos()}" 
+									ajaxSingle="true" reRender="_tblRes"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+					</h:panelGrid>
+					
+					<rich:spacer height="10"/>
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/sainv/reportes/movimientos/movExcel.xhtml" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" rendered="true">
+						</s:button>
+						<a:commandButton oncomplete="showReport('movPDF', '#{conversation.id}')" action="#{reporte.listarMovimientos()}"
+							styleClass="pdfBtn" value="#{msn.button_pdf}" rendered="true" propagation="join">
+						</a:commandButton>
+					</s:decorate>
+					</center>
+					<rich:spacer height="8"/>
+				<rich:dataTable var="res" value="#{reporte.items}" id="_tblRes"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header" rendered="#{report.tipoMovimiento==null}">#{app.report_movements_items_list_head}</f:facet>
+					<f:facet name="header" rendered="#{report.tipoMovimiento=='E'}">#{app.report_movements_items_list_entries_head}</f:facet>
+					<f:facet name="header" rendered="#{report.tipoMovimiento=='S'}">#{app.report_movements_items_list_outputs_head}</f:facet>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col1}</f:facet>
+						<h:outputText value="#{res.movimiento.fecha}" />
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col3}</f:facet>
+						<h:outputText value="#{res.inventario.producto.categoria.nombre}" />
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col4}</f:facet>
+						<h:outputText value="#{res.cantidad}" />
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col5}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_filter0}</f:facet>
+						<h:outputText value="#{reporte.obtenerTipoMovimiento(res)}" />
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{app.report_movements_items_list_col6}</f:facet>
+						<h:outputText value="#{reporte.obtenerTipoTransaccion(res)}" />
+					</rich:column>
+					
+					<rich:column rendered="#{loginUser.user.sucursal==null}">
+						<f:facet name="header">#{app.report_movements_items_list_col7}</f:facet>
+						<h:outputText value="#{res.movimiento.sucursal.empresa.nombre}" />
+					</rich:column>
+					
+					<rich:column rendered="#{loginUser.user.sucursal==null}">
+						<f:facet name="header">#{app.report_movements_items_list_col8}</f:facet>
+						<h:outputText value="#{res.movimiento.sucursal.nombre}" />
+					</rich:column>
+					
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

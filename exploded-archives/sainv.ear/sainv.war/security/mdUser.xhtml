@@ -1,0 +1,272 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{msn.mdus_head}</f:facet>
+			<rich:tabPanel selectedTab="#{(userMaster.managed)?'t2':'t1'}"
+				id="master" switchType="client">
+				<rich:tab name="t1" label="#{msn.label_query}">
+					<h:form id="formZ">
+						<p:growl globalOnly="true" sticky="false" life="3000" />
+						<p:focus />
+						<a:queue name="q1" />
+						<s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.mdus_name}:</ui:define>
+							<h:inputText value="#{userMaster.searchName}"
+								styleClass="inputField upper" required="true">
+							</h:inputText>
+						</s:decorate>
+						<s:decorate template="/layout/kActions.xhtml">
+							<a:commandButton action="#{userMaster.search}"
+								value="#{msn.button_search}" styleClass="searchBtn"
+								onclick="upperCaseAllInputs();" reRender="formZ">
+								<s:defaultAction />
+							</a:commandButton>
+						</s:decorate>
+						<rich:spacer height="20" />
+						<rich:dataTable var="res" value="#{userMaster.resultQuery}"
+							rendered="#{not empty userMaster.resultQuery}" rows="10"
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll" width="50%">
+							<f:facet name="header">#{msn.mdus_list}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{msn.mdus_col1}</f:facet>
+								<h:outputText value="#{res.id}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msn.mdus_col2}</f:facet>
+								<h:outputText value="#{res.userName}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msn.mdus_col3}</f:facet>
+								<h:outputText value="#{res.email}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msn.col_actions}</f:facet>
+								<a:commandLink action="#{userMaster.select(res)}" eventsQueue="q1"
+									value="#{msn.link_selection}" reRender="master"
+									ajaxSingle="true" styleClass="linkAction">
+								</a:commandLink>
+							</rich:column>
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</rich:dataTable>
+					</h:form>
+				</rich:tab>
+				<rich:tab name="t2" label="#{msn.label_admin}">
+					<h:form id="formA">
+						<p:growl globalOnly="true" sticky="false" life="3000" />
+						<a:queue name="q2" />
+						<s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.mdus_name}:</ui:define>
+							<h:inputText value="#{userMaster.instance.userName}"
+								styleClass="upper" required="true">
+							</h:inputText>
+						</s:decorate>
+						<s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.mdus_email}:</ui:define>
+							<h:inputText value="#{userMaster.instance.email}" required="true">
+							</h:inputText>
+						</s:decorate>
+						<s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.mdus_state}:</ui:define>
+							<h:selectBooleanCheckbox value="#{userMaster.instance.active}"
+								required="true" />
+						</s:decorate>
+						<s:div id="photo">
+							<s:decorate template="/layout/kEditSpace.xhtml"
+								rendered="#{userMaster.instance.userPhoto == null}"
+								style="padding-left:120px;">
+								<ui:define name="label">#{msn.mdus_photo}:</ui:define>
+								<rich:spacer width="10" />
+								<rich:fileUpload fileUploadListener="#{userMaster.listener}"
+									maxFilesQuantity="1" id="upload"
+									stopControlLabel="#{msn.upload_stop}"
+									stopEntryControlLabel="#{msn.upload_stop}"
+									uploadControlLabel="#{msn.upload_upload}"
+									clearAllControlLabel="#{msn.upload_clean_all}"
+									clearControlLabel="#{msn.upload_clean}"
+									addControlLabel="#{msn.upload_load_photo}"
+									acceptedTypes="bmp,gif,jpg,jpeg,dib,jpe,jfif,png"
+									doneLabel="#{msn.upload_done_label}"
+									cancelEntryControlLabel="#{msn.upload_cancel}"
+									transferErrorLabel="#{msn.upload_error_transfer}"
+									sizeErrorLabel="#{msn.upload_error_size}" listHeight="100px"
+									progressLabel="#{msn.upload_progress_label}">
+									<a:support event="onuploadcomplete" ajaxSingle="true" />
+								</rich:fileUpload>
+							</s:decorate>
+							<s:decorate template="/layout/kEdit.xhtml"
+								rendered="#{userMaster.instance.userPhoto != null}">
+								<ui:define name="label">#{msn.mdus_photo}: </ui:define>
+								<h:panelGrid columns="1" style="margin-left:10px;">
+									<h:graphicImage value="#{userMaster.instance.formatPhoto()}"
+										height="80px" />
+									<a:commandLink action="#{userMaster.newPhoto()}" eventsQueue="q1"
+										value="Cambiar foto" ajaxSingle="true" reRender="photo" />
+								</h:panelGrid>
+							</s:decorate>
+						</s:div>
+						<s:decorate template="/layout/kActions.xhtml">
+							<s:button view="#{conversation.viewId}" propagation="begin"
+								value="#{msn.button_new}" styleClass="newBtn" />
+							<a:commandButton action="#{userMaster.save}"
+								value="#{msn.button_save}" reRender="formA"
+								rendered="#{not userMaster.managed}" styleClass="saveBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton action="#{userMaster.modify}"
+								value="#{msn.button_modify}" reRender="formA"
+								rendered="#{userMaster.managed}" styleClass="modifyBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton action="#{userMaster.delete}"
+								value="#{msn.button_delete}" reRender="formA"
+								rendered="#{userMaster.managed and false}"
+								styleClass="deleteBtn" />
+							<a:commandButton action="#{officeAsignationDAO.clean()}"
+								value="#{msn.mdus_button_add}" reRender="formModal"
+								styleClass="addBtn" ajaxSingle="true"
+								oncomplete="#{rich:component('office')}.show();" />
+						</s:decorate>
+						<rich:spacer height="20" />
+						<s:div id="list">
+							<rich:dataTable var="res"
+								value="#{userMaster.myOfficeAsignations}"
+								rendered="#{not empty userMaster.myOfficeAsignations}" rows="10"
+								align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll" width="50%"
+								reRender="ds1">
+								<f:facet name="header">#{msn.mdus_asign}</f:facet>
+								<rich:column>
+									<f:facet name="header">#{msn.mdus_office}</f:facet>
+									<h:outputText value="#{res.office.name}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{msn.mdus_state}</f:facet>
+									<h:outputText value="#{msn.enabled}" rendered="#{res.enabled}" />
+									<h:outputText value="#{msn.disabled}"
+										rendered="#{not res.enabled}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink action="#{officeAsignationDAO.select(res)}" eventsQueue="q1"
+										value="#{msn.mdus_link_edit}" reRender="formModal"
+										ajaxSingle="true" styleClass="linkAction"
+										oncomplete="#{rich:component('office')}.show();">
+									</a:commandLink>
+									<br />
+									<a:commandLink action="#{officeAsignationDAO.select(res)}" eventsQueue="q1"
+										value="#{msn.mdus_link_remove}" reRender="formModalDelete"
+										ajaxSingle="true" styleClass="linkAction"
+										oncomplete="#{rich:component('delete')}.show();">
+									</a:commandLink>
+								</rich:column>
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+							</rich:dataTable>
+						</s:div>
+					</h:form>
+				</rich:tab>
+			</rich:tabPanel>
+		</rich:panel>
+		<rich:modalPanel id="office" minWidth="700" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('office')">
+			<f:facet name="header">
+				#{msn.mdus_modal_head}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('office')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="formModal">
+				<a:queue name="q3" />
+				<s:div id="modalA">
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.mdus_enabled}:</ui:define>
+						<h:selectBooleanCheckbox
+							value="#{officeAsignationDAO.instance.enabled}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.mdus_office}:</ui:define>
+						<h:selectOneMenu value="#{officeAsignationDAO.instance.office}"
+							required="true"
+							rendered="#{not userMaster.myOfficeAsignations.contains(officeAsignationDAO.instance)}">
+							<s:selectItems value="#{officeQuery.resultList}" var="off"
+								label="#{off.name}" />
+							<s:convertEntity />
+						</h:selectOneMenu>
+						<h:outputText
+							rendered="#{userMaster.myOfficeAsignations.contains(officeAsignationDAO.instance)}"
+							value="#{officeAsignationDAO.instance.office.name}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.mdus_roles}:</ui:define>
+						<rich:pickList value="#{officeAsignationDAO.instance.rolesList}"
+							copyControlLabel="#{msn.pick_add}"
+							copyAllControlLabel="#{msn.pick_addAll}"
+							removeAllControlLabel="#{msn.pick_removeAll}"
+							removeControlLabel="#{msn.pick_remove}">
+							<s:selectItems value="#{roleQuery.resultList}" var="role"
+								label="#{role.name}" />
+							<s:convertEntity />
+						</rich:pickList>
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<h:messages styleClass="message" errorClass="errormsg"
+							infoClass="infomsg" warnClass="warnmsg" globalOnly="true" />
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_close}"
+							onclick="#{rich:component('office')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{userMaster.addOfficeAsignation()}"
+							value="#{msn.button_save}" reRender="formModal,list"
+							rendered="#{not userMaster.myOfficeAsignations.contains(officeAsignationDAO.instance)}"
+							styleClass="saveBtn" onclick="upperCaseAllInputs();" />
+						<a:commandButton action="#{officeAsignationDAO.associate()}"
+							value="#{msn.button_modify}" reRender="formModal,list"
+							rendered="#{userMaster.myOfficeAsignations.contains(officeAsignationDAO.instance)}"
+							styleClass="modifyBtn" onclick="upperCaseAllInputs();" />
+					</s:decorate>
+				</s:div>
+			</h:form>
+		</rich:modalPanel>
+		<rich:modalPanel id="delete" minWidth="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('delete')">
+			<f:facet name="header">
+				#{msn.mdus_modal_delete}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('delete')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="formModalDelete">
+				<a:queue name="q4" />
+				<s:div id="modalB">
+					<p align="center">#{msn.mdus_delete_msg}</p>
+					<s:decorate template="/layout/kActions.xhtml">
+						<h:messages styleClass="message" errorClass="errormsg"
+							infoClass="infomsg" warnClass="warnmsg" globalOnly="true" />
+						<a:commandButton action="#{userMaster.removeOfficeAsignation()}"
+							value="#{msn.button_delete}" reRender="formModalDelete,formA"
+							styleClass="deleteBtn" onclick="upperCaseAllInputs();"
+							oncomplete="#{rich:component('delete')}.hide();" />
+					</s:decorate>
+				</s:div>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,67 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formArmApa">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<h:panelGrid columns="2">
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:auto;">
+							<ui:define name="label">#{app.aparcli_earside}:</ui:define>
+							<h:selectOneMenu
+								value="#{ventaItemHome.selectedItem.aparato.ladoAparato}"
+								required="true" id="_selLadoNrml">
+								 <f:selectItem itemValue="#{null}" itemLabel="Seleccione lado"/>
+								<f:selectItem itemLabel="#{msn.side_left}" itemValue="IZQ" />
+								<f:selectItem itemLabel="#{msn.side_right}" itemValue="DER" />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:auto;" id="_tmGar">
+							<ui:define name="label">#{app.combapa_time_gar}:</ui:define>
+							<h:selectOneMenu 
+								value="#{ventaItemHome.selectedItem.aparato.periodoGarantia}"
+								style="width:160px;">
+								 <f:selectItem itemValue="#{null}" itemLabel="#{app.combapa_selval_nosel}" />								
+								<f:selectItem itemLabel="#{app.combapa_gar_30d}" itemValue="30" />
+								<f:selectItem itemLabel="#{app.combapa_gar_60d}" itemValue="60" />
+								<f:selectItem itemLabel="#{app.combapa_gar_183d}"
+									itemValue="183" />
+								<f:selectItem itemLabel="#{app.combapa_gar_366d}"
+									itemValue="366" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectOneMenu>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:auto;">
+							<ui:define name="label">#{app.aparcli_earphone}:</ui:define>
+							<h:selectBooleanCheckbox
+								value="#{ventaItemHome.selectedItem.aparato.retroAuricular}">
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml"
+													style="width:180px;">
+									<ui:define name="label">#{app.vtaprs_verdet_apa}:</ui:define>
+									<h:inputTextarea value="#{ventaItemHome.selectedItem.aparato.detalleAparato}">
+									<a:support event="onblur" ajaxSingle="true"
+											eventsQueue="q1" />
+									</h:inputTextarea>
+								</s:decorate>
+							</h:panelGrid>
+			</h:form>
+	
+</ui:composition>

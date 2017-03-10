@@ -1,0 +1,139 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.libmay_head}</f:facet>
+			<rich:spacer height="10"/>
+			<h:form id="formLib">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<table style="width:1000px;">
+				<tr><td style="width:500px; padding:0px 20px 0px 20px;">
+				<center><p:accordionPanel autoHeight="false" style="width:60%;">
+					<p:tab title="CUENTAS DE ACTIVOS" />
+				</p:accordionPanel></center>
+				</td>
+				<td style="padding:0px 20px 0px 20px;">
+				<center><p:accordionPanel autoHeight="false" style="width:60%;">
+					<p:tab title="CUENTAS DE PASIVOS" />
+				</p:accordionPanel></center>
+				</td></tr>
+				<tr><td style="width:500px; padding:0px 20px 0px 20px;">
+				<p:accordionPanel autoHeight="false">
+					<c:forEach items="#{libroDiaMayHome.libroMayorAct}" var="cta">
+					<p:tab title="#{cta.nombre}">
+			            
+			            <rich:dataTable var="res" value="#{cta.asientosCuenta}" rows="20"
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.libmyr_det}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_codigo}</f:facet>
+								<h:outputText value="#{res.asiento.codigo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_fechaasi}</f:facet>
+								<h:outputText value="#{res.asiento.fechaAsiento}" >
+									<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+								</h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.usuariomast_branch}</f:facet>
+								<h:outputText value="#{res.asiento.sucursal.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_concepto}</f:facet>
+								<h:outputText value="#{res.asiento.concepto.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">DEBE</f:facet>
+								<h:outputText value="#{res.monto}" rendered="#{res.tipo=='CRG'}" >
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">HABER</f:facet>
+								<h:outputText value="#{res.monto}" rendered="#{res.tipo=='ABO'}" >
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								<h:outputText value="Total: #{cta.totalMovs}" size="8" />
+							</f:facet>
+						</rich:dataTable>
+			        </p:tab>
+					</c:forEach>
+		    	</p:accordionPanel>
+		    	</td>
+				<td style="padding:0px 20px 0px 20px;">
+				<p:accordionPanel autoHeight="false">
+					<c:forEach items="#{libroDiaMayHome.libroMayorPsv}" var="cta">
+					<p:tab title="#{cta.nombre}">
+						<s:label value="#{app.etarepcli_estado}" style="font-weight:bold;" />
+			            
+			            <rich:dataTable var="res" value="#{cta.asientosCuenta}" rows="20"
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.libmyr_det}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_codigo}</f:facet>
+								<h:outputText value="#{res.asiento.codigo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_fechaasi}</f:facet>
+								<h:outputText value="#{res.asiento.fechaAsiento}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.usuariomast_branch}</f:facet>
+								<h:outputText value="#{res.asiento.sucursal.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.asicont_concepto}</f:facet>
+								<h:outputText value="#{res.asiento.concepto.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">DEBE</f:facet>
+								<h:outputText value="#{res.monto}" rendered="#{res.tipo=='CRG'}" >
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">HABER</f:facet>
+								<h:outputText value="#{res.monto}" rendered="#{res.tipo=='ABO'}" >
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								<h:outputText value="#{cta.totalMovs}" size="8" >
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</f:facet>
+						</rich:dataTable>
+			        </p:tab>
+					</c:forEach>
+		    	</p:accordionPanel>
+		    	</td></tr>
+		    	</table>
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

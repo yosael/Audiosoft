@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{marcaHome.managed?sainv_view_messages.get('marcamast_head_edit'):sainv_view_messages.get('marcamast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formmarca">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.marcamast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.marcamast_name}:</ui:define>
+							<h:inputText value="#{marcaHome.instance.nombre}" required="true" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.marcamast_description}:</ui:define>
+							<h:inputTextarea value="#{marcaHome.instance.descripcion}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.marcamast_company}:</ui:define>
+							<h:outputText value="#{marcaHome.instance.empresa.nombre}"/>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.marcamast_company}:</ui:define>
+							<h:selectOneMenu value="#{marcaHome.instance.empresa}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />								
+							</h:selectOneMenu>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/marca/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/sainv/marca/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{marcaHome.save()}" reRender="formmarca"
+						rendered="#{not marcaHome.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{marcaHome.modify()}" reRender="formmarca"
+						rendered="#{marcaHome.managed}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,111 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{empresaHome.managed?sainv_view_messages.get('empresamast_head_edit'):sainv_view_messages.get('empresamast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formEmpresa">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.empresamast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.empresamast_code}:</ui:define>
+							<h:inputText value="#{empresaHome.instance.codigo}"
+								styleClass="upper" required="true" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.empresamast_name}:</ui:define>
+							<h:inputText value="#{empresaHome.instance.nombre}" required="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.empresamast_giro}:</ui:define>
+							<h:inputText value="#{empresaHome.instance.giro}" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.empresamast_description}:</ui:define>
+							<h:inputTextarea value="#{empresaHome.instance.descripcion}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{empresaHome.managed}">
+							<ui:define name="label">#{app.empresamast_state}:</ui:define>
+							<h:selectOneMenu value="#{empresaHome.estado}">
+								<f:selectItem itemLabel="Activo" itemValue="ACT"/>
+								<f:selectItem itemLabel="Inactivo" itemValue="INA"/>
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" 
+									reRender="_actions" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<s:button view="/admin/empresa/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/admin/empresa/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{empresaHome.save()}" reRender="formEmpresa"
+						rendered="#{not empresaHome.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{empresaHome.modify()}" reRender="formempresa"
+						rendered="#{empresaHome.managed and empresaHome.estado=='ACT'}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{empresaHome.managed and empresaHome.estado=='INA'}" 
+						styleClass="modifyBtn" ajaxSingle="true"
+						value="#{msn.button_modify}" onclick="#{rich:component('confirmation')}.show();"/>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.empresalist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.empresamast_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{empresaHome.modify()}" reRender="formempresa"
+							styleClass="modifyBtn" oncomplete="upperCaseAllInputs();"
+							value="#{msn.button_continue}" 
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

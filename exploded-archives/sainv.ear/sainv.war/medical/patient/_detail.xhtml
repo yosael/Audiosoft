@@ -1,0 +1,436 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"> 
+	<rich:tabPanel switchType="client" selectedTab="#{clienteHome.tab}">
+		<rich:tab name="tab1" label="#{app.patimast_tab1}">
+			<ui:insert name="patientInfo" />
+		</rich:tab>
+		<rich:tab name="tab2" label="#{app.patimast_tab2}" disabled="#{empty clienteHome.medicalAppointmentList}">
+			<h:form id="formD">
+			<p:growl globalOnly="true" sticky="false" life="5000" />
+					<p:focus />
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.medicalAppointmentList}" rows="20"
+					rendered="#{not empty clienteHome.medicalAppointmentList}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.schedlist_header_patient}</f:facet>
+					<rich:column sortBy="#{res.dateTime}">
+						<f:facet name="header">#{app.schedlist_col0}</f:facet>
+						<h:outputText value="#{res.dateTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.doctor.fullName}"
+						filterEvent="onkeyup">
+						<f:facet name="header">#{app.schedlist_col7}</f:facet>
+						<h:outputText value="#{res.doctor.fullName}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col4}</f:facet>
+						<h:outputText value="#{res.comment}" />
+					</rich:column>
+					<rich:column sortBy="#{res.status}">
+						<f:facet name="header">#{app.schedlist_col5}</f:facet>
+						<h:outputText value="#{app.sched_scheduled}"
+							rendered="#{res.status==0}" />
+						<h:outputText value="#{app.sched_served}"
+							rendered="#{res.status==1}" />
+						<h:outputText value="#{app.sched_canceled}"
+							rendered="#{res.status==2}" />
+						<h:outputText value="#{app.sched_absence}"
+							rendered="#{res.status==3}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink title="#{app.sched_app_detail}"
+							action="#{medicalAppointmentDAO.select(res)}" ajaxSingle="true"
+							oncomplete="#{rich:component('modalAppointment')}.show();"
+							reRender="fm1,renderImp">
+							<h:graphicImage value="/kubeImg/detail16.png" />
+						</a:commandLink>
+						<rich:spacer width="10" />
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:tab>
+		<rich:tab name="tab3" label="#{app.patimast_tab3}" disabled="#{empty clienteHome.clinicalHistoryList}">
+			<h:form id="formE"> 			
+				<table id="tabHistory" style="width: 100%;">
+					<tr>
+						<td style="width:25%;">
+							<h:panelGroup id="myPanel">								
+								<rich:dataTable style="margin:0 auto;"
+									value="#{clienteHome.clinicalHistoryList}" rows="5"
+									 var="res"
+									id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.histlist_header}</f:facet>
+									<!--  
+									<rich:column filterBy="#{res.consecutive}" filterEvent="onkeyup"
+										sortBy="#{res.consecutive}">
+										<f:facet name="header">#{app.histlist_col0}</f:facet>
+										<h:outputText value="#{res.consecutive}" />
+									</rich:column>
+									-->
+									<rich:column sortBy="#{res.creationDate}">
+										<f:facet name="header">#{app.histlist_col2}</f:facet>
+										<h:outputText value="#{res.creationDate}">
+											<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" /> 
+										</h:outputText>
+									</rich:column>
+									
+									<rich:column filterBy="#{res.doctor.fullName}"
+										filterEvent="onkeyup">
+										<f:facet name="header">#{app.histlist_col3}</f:facet>
+										<h:outputText value="#{res.doctor.fullName}" />
+									</rich:column>
+									<rich:column >
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<!-- 
+										<s:link propagation="begin" title="#{app.hist_detail}"
+											view="/medical/clinicalHistory/generalMedical/step1.xhtml">
+											<h:graphicImage value="/kubeImg/detail16.png" />
+											<f:param name="id" value="#{res.medicalAppointment.id}" />
+											<f:param name="historyId" value="#{res.consecutive}" />
+										</s:link>
+										-->
+										<a:commandButton value="Cargar" reRender="details" action="#{wizardGeneralMedical.load2()}" style="margin:0px; padding: 1px 9px; " >
+											<f:setPropertyActionListener value="#{res.medicalAppointment.id}" target="#{medicalAppointmentDAO.appointmentId}" />
+											<f:setPropertyActionListener value="#{res.consecutive}" target="#{wizardGeneralMedical.consecutive}" />
+										</a:commandButton>
+									</rich:column>
+									<f:facet name="footer">
+										<rich:datascroller id="ds1" renderIfSinglePage="true" />
+									</f:facet>
+								</rich:dataTable>
+							</h:panelGroup>
+						</td>
+						<td>
+							<h:panelGroup id="details">
+								<rich:tabPanel switchType="client" rendered="#{not empty wizardGeneralMedical.consecutive}">
+									<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
+										</s:div>	
+									</rich:tab>
+									<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
+										</s:div>
+									</rich:tab>
+									<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
+										</s:div>
+									</rich:tab>
+								</rich:tabPanel>
+							</h:panelGroup>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</rich:tab>
+		<rich:tab name="tab4" label="Ventas efectuadas"
+			disabled="#{empty clienteHome.ventasEfectuadas}">
+			<h:form id="formF">
+			
+				<h:panelGrid columns="5">
+				
+					<span style="font-weight:bold; font-size: x-large; position: relative; top: 5px;">#{app.monto_total}: &nbsp;&nbsp;</span>
+					<h:outputText id="sumaVtasCli" value="#{clienteHome.sumaVentasCliente}" style="font-weight:bold; font-size: x-large; position: relative; top: 5px;" >
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            					groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>	
+				
+					
+					
+					<rich:calendar value="#{clienteHome.fechaVtasUs1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+						<a:support event="oncollapse" reRender="table,sumaVtasCli" action="#{clienteHome.buscarRangoVentas()}" ajaxSingle="true" eventsQueue="q1" />
+					</rich:calendar>
+					
+					<rich:calendar value="#{clienteHome.fechaVtasUs2}" datePattern="dd/MM/yyyy"   style="width:60px;" >
+						<a:support event="oncollapse" reRender="table,sumaVtasCli" action="#{clienteHome.buscarRangoVentas()}" ajaxSingle="true" eventsQueue="q1" /> 
+					</rich:calendar>
+					
+					<!-- <a:commandButton   value="Buscar" reRender="table,sumaVtasCli" action="#{clienteHome.buscarRangoVentas()}" /> -->
+					 
+				</h:panelGrid>
+				
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.ventasEfectuadas}" rows="20"
+					rendered="#{not empty clienteHome.ventasEfectuadas}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Ventas efectuadas al paciente</f:facet>
+					
+					<rich:column filterBy="#{res.id}"
+						filterEvent="onkeyup">
+						<f:facet name="header">Id Venta</f:facet>
+						<h:panelGroup style="vertical-align:middle;">
+						<h:outputText  value="#{res.id}" />
+						<s:link title="#{msn.button_acc}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage style="margin-left:4px; width:15px;" value="/kubeImg/taller.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						</h:panelGroup>
+					</rich:column>
+					<rich:column filterValue="#{clienteHome.fechaPFlt1}" 
+						filterExpression="#{clienteHome.comparaFechas(clienteHome.fechaPFlt1,res.fechaVenta)}">
+						<f:facet name="header"><h:panelGroup>
+							#{app.vtaprs_fecha}<br />
+							<rich:calendar value="#{clienteHome.fechaPFlt1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="formF" />
+							</rich:calendar>
+                        </h:panelGroup></f:facet>
+						<h:outputText value="#{res.fechaVenta}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.tipoVenta}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_tipovta}</f:facet>
+						<h:outputText value="#{app.vtaprs_cmbapa}" rendered="#{res.tipoVenta=='CMB'}" />
+						<h:outputText value="#{app.status_servmed}" rendered="#{res.tipoVenta=='CST'}" />
+						<h:outputText value="#{app.status_taller}" rendered="#{res.tipoVenta=='TLL'}" />
+						<h:outputText value="#{app.status_items}" rendered="#{res.tipoVenta=='ITM'}" />
+						<h:outputText value="#{app.status_examen}" rendered="#{res.tipoVenta=='EXA'}" />
+						<h:outputText value="Abono" rendered="#{res.tipoVenta=='ABN'}" />
+					</rich:column>
+					<rich:column filterBy="#{res.monto}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.parvta_tp_monto}</f:facet>
+						<h:outputText value="#{res.monto}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.usuariomast_branch}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_estado}</f:facet>
+						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='PEN'}" />
+						<h:outputText value="#{msn.status_approved}" rendered="#{res.estado=='APR'}" />
+						<h:outputText value="#{msn.status_rejected}" rendered="#{res.estado=='ANU'}" />
+						<h:outputText value="Abono Finalizado" rendered="#{res.estado=='ABF'}" />
+					</rich:column>
+					<rich:column rendered="false">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>						
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:tab>
+		<rich:tab name="tab7" label="Aparatos auditivos"
+			disabled="#{empty clienteHome.instance.aparatosAuditivos}">
+			<h:form id="formJ">
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.instance.aparatosAuditivos}" rows="20"
+					rendered="#{not empty clienteHome.instance.aparatosAuditivos}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.aparcli_list}</f:facet>
+					<rich:column rendered="#{loginUser.getUser().isAccionEspecial()}">
+					<f:facet name="header">#{app.empresamast_state}</f:facet>
+						<h:panelGroup>
+						<h:graphicImage value="/kubeImg/enabled.png"
+						rendered="#{res.activo}" title="#{app.productomast_activoa}" />
+					<h:graphicImage value="/kubeImg/disabled.png"
+						rendered="#{not res.activo}" title="#{app.productomast_activoi}" />
+							<h:selectBooleanCheckbox
+								value="#{res.activo}">
+								<a:support reRender="formD, formJ" ajaxSingle="true" event="onchange" action="#{aparatoclienteHome.setActivo(res)}" update="growl" />
+							</h:selectBooleanCheckbox>
+						</h:panelGroup>
+					</rich:column>
+					<rich:column filterValue="#{clienteHome.fechaPFlt1}" 
+						filterExpression="#{clienteHome.comparaFechas(clienteHome.fechaPFlt1,res.fechaAdquisicion)}">
+						<f:facet name="header"><h:panelGroup>
+							#{app.aparcli_fechadq}<br />
+							<rich:calendar value="#{clienteHome.fechaPFlt1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="formJ" />
+							</rich:calendar>
+                        </h:panelGroup></f:facet>
+						<h:outputText value="#{res.fechaAdquisicion}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_name}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.marca}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_brand}</f:facet>
+						<h:outputText value="#{res.marca}" />
+					</rich:column>
+					<rich:column filterBy="#{res.modelo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_model}</f:facet>
+						<h:outputText value="#{res.modelo}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earphone}</f:facet>
+						<h:outputText value="#{msn.button_yes}" rendered="#{res.retroAuricular==true}" />
+						<h:outputText value="#{msn.button_no}" rendered="#{res.retroAuricular==false}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earside}</f:facet>
+						<h:outputText value="#{msn.side_left}" rendered="#{res.ladoAparato=='IZQ'}" />
+						<h:outputText value="#{msn.side_right}" rendered="#{res.ladoAparato=='DER'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:outputText value="#{res.numSerie}" />
+					</rich:column>
+					<rich:column rendered="false">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>						
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:tab>
+		<rich:tab name="tab11" label="Trabajos de taller"
+			disabled="#{empty clienteHome.instance.reparacionesTaller}">
+			<h:form id="formP">
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.instance.reparacionesTaller}" rows="20"
+					rendered="#{not empty clienteHome.instance.reparacionesTaller}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.aparcli_lstreps}</f:facet>
+					<rich:column filterBy="#{res.proceso.prcCode}#{res.id}"
+						filterEvent="onkeyup">
+						<f:facet name="header">#{app.repcli_id}</f:facet>
+						<h:panelGroup style="vertical-align:middle;">
+						<h:outputText  value="#{res.proceso.prcCode}#{res.id}" />
+						<s:link title="#{msn.button_acc}" rendered="true"
+							view="/taller/trackReparacion/master.xhtml" propagation="begin">
+							<h:graphicImage style="margin-left:4px; width:15px;" value="/kubeImg/taller.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						</h:panelGroup>
+					</rich:column>
+					<rich:column filterValue="#{clienteHome.fechaPFlt1}" 
+						filterExpression="#{clienteHome.comparaFechas(clienteHome.fechaPFlt1,res.fechaIngreso)}">
+						<f:facet name="header"><h:panelGroup>
+							#{app.aparcli_fechadq}<br />
+							<rich:calendar value="#{clienteHome.fechaPFlt1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="formP" />
+							</rich:calendar>
+                        </h:panelGroup></f:facet>
+						<h:outputText value="#{res.fechaIngreso}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_sucursal}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.aparatoRep.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.aparcli_apacl}</f:facet>
+						<h:outputText value="#{res.aparatoRep.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.proceso.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.repcli_proceso}</f:facet>
+						<h:outputText value="#{res.proceso.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:outputText value="#{res.aparatoRep.numSerie}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Estado</f:facet>
+						
+						<h:outputText value="Esperando aprobacion de inicio"
+							rendered="#{res.aprobada==false and res.estado!='REC'}" />
+						<h:outputText value="Cancelado por el cliente"
+							rendered="#{res.estado=='REC'}" />
+						<h:outputText value="Trabajo de taller finalizado"
+							rendered="#{res.estado=='FIN'}" />
+						<h:outputText value="En proceso"
+							rendered="#{res.aprobada==true and res.estado=='PEN'}" />
+						<h:outputText value="Aparato entregado al cliente"
+							rendered="#{res.estado=='DLV'}" />
+					</rich:column>
+					<rich:column rendered="false">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>						
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:tab>
+		<rich:tab name="tab5" label="#{app.patimast_tab5}"
+			disabled="#{empty clienteHome.servicesPending}">
+			<h:form id="formG">
+				<rich:dataTable style="margin:0 auto;"
+					value="#{clienteHome.servicesPending}" rows="20"
+					rendered="#{not empty clienteHome.servicesPending}" var="res"
+					id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.patiservlist_header}</f:facet>
+					<rich:column sortBy="#{res.medicalAppointment.dateTime}">
+						<f:facet name="header">#{app.patiservlist_col0}</f:facet>
+						<h:outputText value="#{res.medicalAppointment.dateTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.service.name}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.patiservlist_col2}</f:facet>
+						<h:outputText value="#{res.service.name}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink title="#{app.sched_app_detail}"
+							action="#{medicalAppointmentDAO.select(res.medicalAppointment)}"
+							ajaxSingle="true"
+							oncomplete="#{rich:component('modalAppointment')}.show();"
+							reRender="fm1,renderImp">
+							<h:graphicImage value="/kubeImg/detail16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:tab>
+		<ui:insert name="moreTabs" />
+	</rich:tabPanel>
+
+	<ui:include src="/medical/medicalAppointment/_modalDetail.xhtml" />
+	<s:div id="renderImp">
+		<ui:include src="/imp/impAppointment.xhtml" />
+	</s:div>
+	<ui:insert name="moreResources" />
+</ui:composition>

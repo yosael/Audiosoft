@@ -1,0 +1,175 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{prescriptionHome.managed?sainv_view_messages.get('prescriptionmast_head_edit'):sainv_view_messages.get('prescriptionmast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.prescriptionmast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.patimast_num_id}:</ui:define>
+							<h:inputText value="#{clienteHome.instance.docId}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.patimast_type_id}:</ui:define>
+							<h:inputText value="#{clienteHome.instance.tipoDoc}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+							<h:inputText value="#{clienteHome.instance.nombres}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+							<h:inputText value="#{clienteHome.instance.apellidos}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.prescriptionmast_date}:</ui:define>
+							<h:inputText value="#{prescriptionHome.instance.fechaGeneracion}" readonly="true" >
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.prescriptionmast_doctor}:</ui:define>
+							<h:inputText value="#{prescriptionHome.instance.medicalAppointment.doctor.fullName}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.transferenciamast_observation}:</ui:define>
+							<h:inputTextarea value="#{prescriptionHome.instance.observaciones}" 
+								/>
+						</s:decorate>
+				</h:panelGrid> 
+
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{prescriptionHome.itemsAgregados}" id="_table"
+					rendered="#{not empty prescriptionHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.medicm_legend}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col3}</f:facet>
+						<h:outputText value="#{res.cantidad}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Medicamento</f:facet>
+						<h:outputText value="#{res.medicamento.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Dosificacion</f:facet>
+						<h:outputText value="#{res.dosificacion.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Presentacion</f:facet>
+						<h:outputText value="#{res.presentacion.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink reRender="formA" eventsQueue="q1"
+							action="#{prescriptionHome.removerItem(res)}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/medical/pharmacy/pendinglist.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<a:commandButton onclick="#{rich:component('approveConfirmation')}.show();" ajaxSingle="true" 
+						reRender="m1"
+						styleClass="apprBtn" value="#{msn.button_approve_prescription}">
+					</a:commandButton>
+					<a:commandButton onclick="#{rich:component('rejectConfirmation')}.show();" ajaxSingle="true" 
+						reRender="m2"
+						styleClass="rejectBtn" value="#{msn.button_reject_prescription}">
+					</a:commandButton>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="approveConfirmation" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.pedidolist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('approveConfirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.prescriptionlist_approve_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('approveConfirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{prescriptionHome.approve()}" reRender="formA"
+							rendered="#{prescriptionHome.managed}" styleClass="apprBtn"
+							value="#{msn.button_approve}"
+							onclick="#{rich:component('approveConfirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="rejectConfirmation" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.pedidolist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('rejectConfirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm2">
+					<p>#{app.prescriptionlist_reject_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m2">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('rejectConfirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{prescriptionHome.reject()}" reRender="formA"
+							rendered="#{prescriptionHome.managed}" styleClass="apprBtn"
+							value="#{msn.button_reject}"
+							onclick="#{rich:component('rejectConfirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form> 
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

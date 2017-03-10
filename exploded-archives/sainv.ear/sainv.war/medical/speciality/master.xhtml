@@ -1,0 +1,80 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{specialtyDAO.managed?sainv_view_messages.get('specmast_head_edit'):sainv_view_messages.get('specmast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formSpeciality">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset><legend>#{app.specmast_legend}</legend> <h:panelGrid
+					columns="2" style="padding-left:100px;">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.specmast_code}:</ui:define>
+						<h:inputText value="#{specialtyDAO.instance.code}" required="true"
+							rendered="#{not specialtyDAO.managed}">
+						</h:inputText>
+						<h:outputText value="#{specialtyDAO.instance.code}"
+							rendered="#{specialtyDAO.managed}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.specmast_name}:</ui:define>
+						<h:inputText value="#{specialtyDAO.instance.name}" required="true">
+						</h:inputText>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.specmast_description}:</ui:define>
+						<h:inputTextarea value="#{specialtyDAO.instance.description}" >
+						</h:inputTextarea>
+					</s:decorate>
+				</h:panelGrid> 
+				<s:decorate template="/layout/kEdit.xhtml">
+					<ui:define name="label">#{app.specmast_services}:</ui:define>
+					<h:inputText value="#{serviceSearch.text}" style="width:250px;">
+						<a:support ajaxSingle="true" event="onkeyup"
+							action="#{serviceSearch.search()}" reRender="pick" />
+					</h:inputText>
+					<br /> 
+					<br />
+					<rich:pickList value="#{specialtyDAO.servicesList}"
+						copyControlLabel="#{msn.pick_add}"
+						copyAllControlLabel="#{msn.pick_addAll}"
+						removeAllControlLabel="#{msn.pick_removeAll}"
+						removeControlLabel="#{msn.pick_remove}" id="pick">
+						<s:selectItems value="#{serviceSearch.resultList}" var="serv"
+							label="#{serv.name}" />
+						<s:convertEntity />
+					</rich:pickList>
+				</s:decorate> <s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/medical/speciality/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/medical/speciality/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{specialtyDAO.save()}" reRender="formSpeciality"
+						rendered="#{not specialtyDAO.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"></a:commandButton>
+					<a:commandButton action="#{specialtyDAO.modify()}" reRender="formSpeciality"
+						rendered="#{specialtyDAO.managed}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}">
+					</a:commandButton>
+				</s:decorate></fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

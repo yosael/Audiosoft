@@ -1,0 +1,104 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml" >
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.combapa_head}</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<center>
+					<h:panelGrid columns="2">
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/vtas/combo/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_register}" rendered="true">	
+							<f:param name="id" value="" />
+						</s:button>
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton value="#{app.bt_rep_cmb_cat}" oncomplete="showReport('/sainv/rep/vta/catCombosPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+					</s:decorate>
+					</h:panelGrid>
+				</center>
+					<a:queue name="q1" />
+				<center>
+						<s:span styleClass="busHead">#{app.combapa_head_buscar}:</s:span>
+						<rich:spacer width="0" /> <s:decorate></s:decorate>
+						<h:inputText styleClass="busProd" value="#{comboAparatoHome.nomCoinci}"
+							 id="_nomCoinci">
+						<a:support  event="onkeydown" reRender="#{rich:clientId('_table')}"	ajaxSingle="true" action="#{comboAparatoHome.buscadorCombos()}" />
+						<a:support event="onkeyup" reRender="#{rich:clientId('_table')}"	ajaxSingle="true" action="#{comboAparatoHome.buscadorCombos()}" />
+					</h:inputText>
+					</center>
+					
+				<rich:spacer height="10" />
+				<rich:dataTable var="res" value="#{comboAparatoHome.resultList}" 
+					 rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll" id="_table">
+					<f:facet name="header">#{app.combapa_list}</f:facet>
+					<rich:column >
+						<f:facet name="header">#{app.combapa_codigo}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column >
+						<f:facet name="header">#{app.combapa_nombre}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column >
+						<f:facet name="header">#{app.combapa_description}</f:facet>
+						<h:outputText value="#{res.descripcion}" />
+					</rich:column>
+					<rich:column filterBy="#{comboAparatoHome.filterEstado}" filterExpression="#{empty comboAparatoHome.filterEstado?(true):(comboAparatoHome.filterEstado==res.estado)}" >
+						<f:facet name="header">
+							<h:panelGroup>
+								#{app.combapa_estado}<br/>
+								 <h:selectOneMenu value="#{comboAparatoHome.filterEstado}">
+		                        	<f:selectItem itemLabel=" " itemValue="" />
+		                        	<f:selectItem itemLabel="Activo" itemValue="ACT" />
+		                            <f:selectItem itemLabel="Inactivo" itemValue="INA" />
+		                            <a:support reRender="_table" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+							</h:panelGroup>
+						</f:facet>
+						<h:outputText value="#{msn.status_active}" rendered="#{res.estado=='ACT'}" />
+						<h:outputText value="#{msn.status_inactive}" rendered="#{res.estado=='INA'}" />
+						<h:graphicImage value="/kubeImg/enabled.png" rendered="#{res.estado=='ACT'}" title= "#{app.productomast_activoa}"/>
+						<h:graphicImage value="/kubeImg/disabled.png" rendered="#{res.estado=='INA'}" title= "#{app.productomast_activoi}"/>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.combapa_edit}" rendered="true"
+							view="/vtas/combo/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<a:status id="stateStatus" startText="#{app.general_espere}"
+			startStyle="background-color: #c0c7d1;
+   			border-style: groove;
+			border-width:15px;
+			border-color: #818fa3 #5a687b #465160 #323a44;
+		   font-weight:bold;
+		   font-size: 12px;
+		   text-align: center;
+		   position:absolute; 
+		   right: 50%; 
+		   top: 1px; 
+		   width: auto;" />
+	</ui:define>
+</ui:composition>

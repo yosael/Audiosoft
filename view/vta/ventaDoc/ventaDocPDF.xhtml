@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">FICHA DE LA VENTA</p:paragraph>
+	</p:font>
+	
+	<p:html><br /></p:html>
+	
+	<p:table columns="6" widthPercentage="98" headerRows="0" widths="1 1 1 1 1 1" >
+	
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Fecha de la venta: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.fecha}" >
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text>				
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Num. documento: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.correlativo}" />
+			</p:paragraph>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Descuento: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.descuento}" />
+			</p:paragraph>
+		</p:cell>		
+		
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Num. Serie: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.serie}" >
+				</p:text>				
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Forma de Pago: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="Efectivo" rendered="#{ventaDocHome.instance.formaPago == 'EFE'}" />
+				<p:text value="Tarjeta" rendered="#{ventaDocHome.instance.formaPago == 'TRJ'}" />
+				<p:text value="Cheque" rendered="#{ventaDocHome.instance.formaPago == 'CHQ'}" />
+			</p:paragraph>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Cliente: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.cliente.nombre}" />
+			</p:paragraph>
+		</p:cell>		
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Tipo de Comprobante: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.comprobante.nombre}" >
+				</p:text>				
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">Empresa: </p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.comprobante.empresaDoc.nombre}" />
+			</p:paragraph>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center"></p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+
+		</p:cell>		
+		
+	</p:table>	
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">DETALLE DE LA VENTA</p:paragraph>
+	</p:font>
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		
+		<p:table columns="7" widthPercentage="98" headerRows="1"  widths="1 1 1 1 1 1 1" >
+			<p:font color="black" style="bold" size="9">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Cantidad</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Detalle</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Precio Unitario</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Tipo</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Vtas. No Sujetas</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Vtas. Excentas</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">Vtas. Grabadas</p:paragraph>
+			</p:cell>																						
+			</p:font>
+
+			<ui:repeat var="res" value="#{ventaDocHome.detVentasDoc}">
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.cantidad}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.detalle}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.precioUnitario}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.tipo}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.total}" rendered="#{res.tipo == 'J'}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.total}" rendered="#{res.tipo == 'E'}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{res.total}" rendered="#{res.tipo == 'G'}" />
+					</p:paragraph>
+				</p:cell> 
+			</ui:repeat>
+			
+		</p:table>
+	
+	</p:font>
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		
+		<p:table columns="6" widthPercentage="98" headerRows="0" widths="1 1 1 1 1 1" >
+
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center"></p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+								
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center"></p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph>
+					<p:text value="Vtas. No Sujetas" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph>
+					<p:text value="Vtas. Excentas" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>		
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph>
+					<p:text value="Vtas. Grabadas" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+	
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">(+) IVA PERCIBIDO</p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.percibido}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>				
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">SUB-TOTALES</p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.subTotalNs}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>
+			</p:paragraph>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.subTotalE}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>
+			</p:paragraph>
+		</p:cell>		
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.subTotalG}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>
+			</p:paragraph>
+		</p:cell>				
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">(-) IVA RETENIDO</p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.retenido}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>				
+			</p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" backgroundColor="#E4E4E4" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:font color="black" style="bold" size="9">
+				<p:paragraph alignment="center">DESCUENTO</p:paragraph>
+			</p:font>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				<p:text value="#{ventaDocHome.instance.descuento}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                 groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+				</p:text>
+			</p:paragraph>
+		</p:cell>						
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				
+			</p:paragraph>
+		</p:cell>		
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3">
+			<p:paragraph>
+				
+			</p:paragraph>
+		</p:cell>		
+		
+		</p:table>
+		
+	</p:font>				
+		
+
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema CRM - #{infoEmpresaHome.empresaAct.nombreComercial}
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

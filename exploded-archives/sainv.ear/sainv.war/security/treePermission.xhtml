@@ -1,0 +1,229 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{msn.tree_head3}</f:facet>
+			<!-- Arbol -->
+			<s:div id="arbol" styleClass="panelMid divOverTree">
+				<rich:spacer height="10" />
+				<a:form id="formA">
+					<a:queue name="q1" />
+					<rich:tree value="#{treeSecurity.root}" var="arb" switchType="ajax"
+						id="tree" nodeFace="#{arb.type}" stateAdvisor="#{treeOpen}">
+						<rich:treeNode type="-1" icon="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.createNewModule(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action3}" rendered="#{not arb.permission}"
+								reRender="formularios,formB,formC" ajaxSingle="true"
+								focus="mod1" limitToList="true" />
+						</rich:treeNode>
+						<rich:treeNode type="165" icon="/kubeImg/package.png"
+							iconLeaf="/kubeImg/package.png">
+							<h:outputText value="#{arb.name}" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.createNewModule(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action3}" rendered="#{not arb.permission}"
+								reRender="formularios,formB,formC" ajaxSingle="true"
+								focus="mod1" limitToList="true" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.createNewPermission(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action4}" rendered="#{arb.module}"
+								reRender="formularios,formB,formC" ajaxSingle="true"
+								focus="per1" limitToList="true" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.select(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action5}" rendered="#{arb.module}"
+								reRender="formularios,formB,formC" ajaxSingle="true"
+								limitToList="true" />
+						</rich:treeNode>
+						<rich:treeNode type="856" iconLeaf="/kubeImg/permission.png">
+							<h:outputText value="#{arb.name}" />
+							<rich:spacer width="10" />
+							<a:commandLink action="#{treeSecurity.select(arb)}" eventsQueue="q1"
+								value="#{msn.tree_action5}" rendered="#{arb.permission}"
+								reRender="formularios,formB,formC" ajaxSingle="true"
+								limitToList="true" />
+						</rich:treeNode>
+					</rich:tree>
+				</a:form>
+			</s:div>
+			<rich:spacer width="5" />
+			<!-- Formulario de ingreso de modulos -->
+			<s:div id="formularios" styleClass="panelMid">
+				<h:form id="formB">
+					<p:growl globalOnly="true" sticky="false" life="3000" />
+					<a:queue name="q2" />
+					<s:div rendered="#{treeSecurity.nodeSel.module}">
+						<fieldset><legend><s:span styleClass="title"
+							rendered="#{moduleDAO.managed}">#{msn.tree_title5}</s:span> <s:span
+							styleClass="title" rendered="#{!moduleDAO.managed}">#{msn.tree_title6}</s:span>
+						</legend> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_field3}:</ui:define>
+							<h:outputText value="#{treeSecurity.nodeParent.name}" />
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml" id="s1">
+							<ui:define name="label">#{msn.tree_field4}:</ui:define>
+							<h:inputText value="#{moduleDAO.instance.name}" required="true"
+								id="mod1">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_field5}:</ui:define>
+							<h:inputText value="#{moduleDAO.instance.icon}">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_field_bundle}:</ui:define>
+							<h:selectBooleanCheckbox value="#{moduleDAO.instance.el}"
+								styleClass="booleanCheck" required="true" />
+						</s:decorate> <s:decorate template="/layout/kActions.xhtml" id="s2">
+							<a:commandButton action="#{moduleDAO.clean}"
+								value="#{msn.button_new}" reRender="formB" styleClass="newBtn"
+								ajaxSingle="true" />
+							<a:commandButton action="#{treeSecurity.saveNode}"
+								value="#{msn.button_save}" reRender="formA,formB"
+								rendered="#{not moduleDAO.managed}" styleClass="saveBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton action="#{treeSecurity.modifyNode}"
+								value="#{msn.button_modify}" reRender="formA,formB"
+								rendered="#{moduleDAO.managed}" styleClass="modifyBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton value="#{msn.button_delete}" id="but1"
+								rendered="#{moduleDAO.managed and not moduleDAO.canDelete()}"
+								styleClass="deleteBtn">
+								<rich:componentControl for="deleteModule" attachTo="but1"
+									operation="show" event="onclick" />
+							</a:commandButton>
+							<a:commandButton action="#{treeSecurity.deleteNode}"
+								value="#{msn.button_delete}" styleClass="deleteBtn"
+								reRender="formA,formB,tree"
+								rendered="#{moduleDAO.managed and moduleDAO.canDelete()}">
+							</a:commandButton>
+						</s:decorate></fieldset>
+					</s:div>
+				</h:form>
+				<!-- Formulario de ingreso de permisos-->
+				<h:form id="formC">
+					<p:growl globalOnly="true" sticky="false" life="3000" />
+					<a:queue name="q3" />
+					<s:div rendered="#{treeSecurity.nodeSel.permission}">
+						<fieldset><legend><s:span styleClass="title"
+							rendered="#{permissionDAO.managed}">#{msn.tree_title7}</s:span> <s:span
+							styleClass="title" rendered="#{!permissionDAO.managed}">#{msn.tree_title8}</s:span></legend>
+						<s:decorate template="/layout/kEdit.xhtml">
+							<ui:define name="label">#{msn.tree_field6}:</ui:define>
+							<h:outputText value="#{treeSecurity.nodeParent.name}" />
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml" id="s3">
+							<ui:define name="label">#{msn.tree_field7}:</ui:define>
+							<h:selectOneMenu
+								value="#{permissionDAO.instance.objectPermission}"
+								required="true" id="per1" style="max-width:150px;">
+								<s:selectItems var="obj"
+									value="#{objectPermissionQuery.resultList}" label="#{obj.name}"
+									noSelectionLabel="#{msn.select}" />
+								<s:convertEntity />
+								<a:support action="#{permissionDAO.loadDefaultValues}" 
+									event="onchange" eventsQueue="q3" ajaxSingle="true"
+									reRender="s4,s5" limitToList="true" />
+							</h:selectOneMenu>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml" id="s4">
+							<ui:define name="label">#{msn.tree_field8}:</ui:define>
+							<h:inputText value="#{permissionDAO.instance.name}"
+								styleClass="upper" required="true">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml" id="s5">
+							<ui:define name="label">#{msn.tree_field9}:</ui:define>
+							<h:inputText value="#{permissionDAO.instance.action}"
+								required="true">
+							</h:inputText>
+						</s:decorate> <s:decorate template="/layout/kEdit.xhtml" id="s6">
+							<ui:define name="label">#{msn.tree_field10}:</ui:define>
+							<h:selectBooleanCheckbox
+								value="#{permissionDAO.instance.enabled}" required="true" />
+						</s:decorate> <s:decorate template="/layout/kActions.xhtml" id="s7">
+							<a:commandButton action="#{permissionDAO.clean}"
+								value="#{msn.button_new}" reRender="formC" styleClass="newBtn"
+								ajaxSingle="true" />
+							<a:commandButton action="#{treeSecurity.saveNode}"
+								value="#{msn.button_save}" reRender="formA,formC"
+								rendered="#{not permissionDAO.managed}" styleClass="saveBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton action="#{treeSecurity.modifyNode}"
+								value="#{msn.button_modify}" reRender="formA,formC"
+								rendered="#{permissionDAO.managed}" styleClass="modifyBtn"
+								onclick="upperCaseAllInputs();" />
+							<a:commandButton value="#{msn.button_delete}" id="but2"
+								rendered="#{permissionDAO.managed and not empty permissionDAO.instance.menu}"
+								styleClass="deleteBtn">
+								<rich:componentControl for="deletePermission" attachTo="but2"
+									operation="show" event="onclick" />
+							</a:commandButton>
+							<a:commandButton action="#{treeSecurity.deleteNode}"
+								rendered="#{permissionDAO.managed and empty permissionDAO.instance.menu}"
+								value="#{msn.button_delete}" styleClass="deleteBtn"
+								reRender="formA,formC">
+							</a:commandButton>
+						</s:decorate></fieldset>
+					</s:div>
+				</h:form>
+			</s:div>
+			<div style="clear: both" />
+		</rich:panel>
+		<rich:modalPanel id="deleteModule" minWidth="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('deleteModule')">
+			<f:facet name="header">
+				#{msn.modal_alert}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('deleteModule')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="formModal1">
+				<s:div id="divModal1">
+					<p>#{msn.tree_modal_msn1}</p>
+					<rich:spacer height="20" />
+				</s:div>
+			</h:form>
+		</rich:modalPanel>
+		<rich:modalPanel id="deletePermission" minWidth="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('deletePermission')">
+			<f:facet name="header">
+				#{msn.modal_alert}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('deletePermission')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="formModa2">
+				<a:queue name="q4" />
+				<s:div id="divModa2">
+					<p>#{msn.tree_modal_msn2}</p>
+					<rich:spacer height="20" />
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton action="#{treeSecurity.deleteNode}"
+							value="#{msn.button_delete}" styleClass="deleteBtn"
+							reRender="formA,formC"
+							oncomplete="javascript:Richfaces.hideModalPanel('deletePermission')">
+						</a:commandButton>
+						<a:commandButton value="#{msn.button_cancel}"
+							styleClass="cancelBtn"
+							oncomplete="javascript:Richfaces.hideModalPanel('deletePermission')" />
+					</s:decorate>
+				</s:div>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,40 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKu.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.sched_new_head}</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<s:button value="#{msn.button_cancel}" styleClass="cancelBtn"
+							action="sent" propagation="join"/>
+					<a:commandButton value="#{app.button_send}" action="#{sendMessage.send()}"
+							styleClass="apprBtn" ignoreDupResponses="true"/>
+				</s:decorate>
+				<rich:spacer height="20" />
+				<center>
+					<rich:editor value="#{sendMessage.text}" theme="advanced" viewMode="visual" 
+						plugins="save,paste" width="600" height="400">
+						<f:param name="theme_advanced_toolbar_location" value="top"/>                               
+						<f:param name="theme_advanced_toolbar_align" value="left"/>
+						<f:param name="theme_advanced_buttons1_add" value="fontsize"/>	
+						<f:param name="theme_advanced_buttons2_add_before" value="cut,copy,paste,pasteword,|" />
+					</rich:editor>
+							
+				</center>
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

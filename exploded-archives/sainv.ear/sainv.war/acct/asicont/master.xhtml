@@ -1,0 +1,274 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body"> 
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{asientoContableHome.managed?sainv_view_messages.get('asicont_head_edit'):sainv_view_messages.get('asicont_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formasicont">
+				<center>
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.asicont_legend}</legend> 
+					
+					
+					<h:panelGrid columns="3">
+												
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+							<ui:define name="label">#{app.vtaitm_cliente}:</ui:define>
+							<h:inputText value="#{asientoContableHome.instance.cliente.nombres} #{asientoContableHome.instance.cliente.apellidos}" 
+								readonly="true" required="false" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selClient')}.show();" ajaxSingle="true"  
+								action="#{clienteCRMHome.cargarListaClientes()}" reRender="cli" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.asicont_monto}:</ui:define>
+							<h:inputText value="#{asientoContableHome.instance.monto}" required="true" 
+								onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" reRender="_btnAddCtAct,_btnAddCtPsv" />
+							</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.ctxcb_concepto}:</ui:define>
+							<h:inputText value="#{conceptoMovHome.concepto}" required="true" id="conceptoMov" 
+								readonly="#{asientoContableHome.managed}" disabled="#{asientoContableHome.managed}" >
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputText>
+							<rich:suggestionbox fetchValue="#{conceptoMovHome.instance.nombre}" for="conceptoMov"
+								suggestionAction="#{conceptoMovHome.getConceptosCoincidence}" 
+								var="conc" minChars="2" usingSuggestObjects="false">
+								<h:column>
+									<h:outputText value="#{conc.nombre}" />
+								</h:column>
+							</rich:suggestionbox>	
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:selectOneMenu value="#{cuentaContableHome.instance.sucursal}" required="false">
+								<s:selectItems value="#{cuentaContableHome.sucursales}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:inputText value="#{loginUser.user.sucursal.nombre}" disabled="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.cuentac_description}:</ui:define>
+							<h:inputTextarea value="#{asientoContableHome.instance.comentario}" >
+								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/acct/asicont/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/acct/asicont/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{asientoContableHome.save()}" reRender="formasicont"
+						rendered="#{not asientoContableHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"  
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{asientoContableHome.modify()}" reRender="formasicont"
+						rendered="#{asientoContableHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{asientoContableHome.managed}" styleClass="deleteBtn" 
+						onclick="#{rich:component('confirmation')}.show();" 
+							ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_delete}" />
+				</s:decorate>
+				</fieldset>
+				<table>
+				<tr><td style="width:460px;">
+				<center>
+					<a:commandButton action="#{asientoContableHome.addCta('AC')}" reRender="_tableDetAct"
+							disabled="#{empty asientoContableHome.instance.monto}" styleClass="saveBtn" 
+							 ajaxSingle="true" eventsQueue="q1"  id="_btnAddCtAct"
+							value="#{app.button_addCtaAsi}"/>
+				</center>
+				<rich:spacer width="10" />
+				<rich:dataTable var="res" value="#{asientoContableHome.ctasActivo}" id="_tableDetAct" 
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.asicont_listdetact}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_monto}</f:facet>
+						<h:inputText value="#{res.monto}" size="8" 
+							onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+							<a:support event="onblur" action="#{asientoContableHome.actualizarTotal()}"
+							ajaxSingle="true" eventsQueue="q1" reRender="_tableDetAct,_clTotal,_clTotalAct" />
+						</h:inputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_tipoas}</f:facet>
+						<h:selectOneMenu value="#{res.tipo}" required="true">
+							<f:selectItem itemLabel="#{app.asicont_crg}" itemValue="CRG" />
+							<f:selectItem itemLabel="#{app.asicont_abo}" itemValue="ABO" />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+							action="#{asientoContableHome.actualizarTotal()}" reRender="_clTotal,_clTotalAct" />
+						</h:selectOneMenu>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_cuenta}</f:facet>
+						<h:inputText value="#{res.cuenta.nombre}" style="width:140px;" rendered="#{not empty res.cuenta}" readonly="true" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_tableDetAct" />
+						</h:inputText>
+						<h:inputText value="" style="width:140px;" rendered="#{empty res.cuenta}" readonly="true" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_tableDetAct" />
+						</h:inputText>
+						<a:commandButton ajaxSingle="true"
+							action="#{asientoContableHome.selCuentaAsi(res,'AC')}" reRender="sCta" 
+							onclick="#{rich:component('selCta')}.show();" 
+							styleClass="modifyBtn" value=" " style="width:30px;">
+						</a:commandButton>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink reRender="_tableDetAct" eventsQueue="q1"
+							action="#{asientoContableHome.removerCta(res,'AC')}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<h:outputText value="#{app.asicont_totact}: #{asientoContableHome.totalActivos}" size="8" id="_clTotalAct" />
+					</f:facet>
+				</rich:dataTable>
+				</td>
+				<td style="width:460px;">
+				<center>
+					<a:commandButton action="#{asientoContableHome.addCta('PV')}" reRender="_tableDetPsv"
+							disabled="#{empty asientoContableHome.instance.monto}" styleClass="saveBtn" 
+							eventsQueue="q1" ajaxSingle="true" id="_btnAddCtPsv" 
+							value="#{app.button_addCtaAsi}"/>
+				</center>
+				<rich:spacer width="10" />
+				<rich:dataTable var="res" value="#{asientoContableHome.ctasPasivo}" id="_tableDetPsv"
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.asicont_listdetpsv}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_monto}</f:facet>
+						<h:inputText value="#{res.monto}" size="8" 
+							onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+							<a:support event="onblur" action="#{asientoContableHome.actualizarTotal()}"
+							ajaxSingle="true" eventsQueue="q1" reRender="_tableDetPsv,_clTotal,_clTotalPsv"/>
+						</h:inputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_tipoas}</f:facet>
+						<h:selectOneMenu value="#{res.tipo}" required="true">
+							<f:selectItem itemLabel="#{app.asicont_crg}" itemValue="CRG" />
+							<f:selectItem itemLabel="#{app.asicont_abo}" itemValue="ABO" />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+							action="#{asientoContableHome.actualizarTotal()}" reRender="_clTotal,_clTotalPsv" />
+						</h:selectOneMenu>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.asicont_cuenta}</f:facet>
+						<h:inputText value="#{res.cuenta.nombre}" style="width:140px;" rendered="#{not empty res.cuenta}" readonly="true" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_tableDetPsv" />
+						</h:inputText>
+						<h:inputText value="" style="width:140px;" rendered="#{empty res.cuenta}" readonly="true" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_tableDetPsv" />
+						</h:inputText>
+						<a:commandButton ajaxSingle="true"
+							action="#{asientoContableHome.selCuentaAsi(res,'PV')}" reRender="sCta" 
+							onclick="#{rich:component('selCta')}.show();" 
+							styleClass="modifyBtn" value=" " style="width:30px;">
+						</a:commandButton>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink reRender="_tableDetPsv" eventsQueue="q1"
+							action="#{asientoContableHome.removerCta(res,'PV')}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<h:outputText value="#{app.asicont_totpsv}: #{asientoContableHome.totalPasivos}" size="8" id="_clTotalPsv" />
+					</f:facet>
+				</rich:dataTable>
+				</td></tr>
+				</table>
+				<h:outputText value="#{app.asicont_tottot}: #{asientoContableHome.total}" size="8" id="_clTotal" >
+					<f:convertNumber groupingUsed="true" maxFractionDigits="2" />
+				</h:outputText>
+				</center>				
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="selCta"  width="600" moveable="true" autosized="true"  top="40" 
+			onbeforeshow="activeModal.setActiveModalPanel('selCta');">
+			<f:facet name="header">#{app.general_lov}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+						onclick="#{rich:component('selCta')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="sCta"><ui:include src="selCta.xhtml" /></s:div>
+		</rich:modalPanel>
+		<rich:modalPanel id="selClient"  width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selClient');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selClient')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="cli" ><ui:include  src="selClient.xhtml" /></s:div>
+		</rich:modalPanel>
+		<rich:modalPanel id="confirmation"  width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.asicont_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.asicont_confirmdel}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{asientoContableHome.delete()}" reRender="formasicont"
+						rendered="#{asientoContableHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,184 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{movimientoHome.managed?sainv_view_messages.get('movimientomast_head_edit'):sainv_view_messages.get('movimientomast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formmovimiento">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.movimientomast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_date}:</ui:define>
+							<rich:calendar value="#{movimientoHome.instance.fecha}" required="true" datePattern="dd/MM/yyyy" 
+								readonly="#{movimientoHome.managed}">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"/>
+							</rich:calendar>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_observation}:</ui:define>
+							<h:inputTextarea value="#{movimientoHome.instance.observacion}" readonly="#{movimientoHome.managed}">
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+							</h:inputTextarea>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_movement_type}:</ui:define>
+							<h:selectOneMenu value="#{movimientoHome.instance.tipoMovimiento}" 
+								disabled="#{movimientoHome.managed}">
+								<f:selectItem itemLabel="#{app.movimiento_movement_type_e}" itemValue="E"/>
+								<f:selectItem itemLabel="#{app.movimiento_movement_type_s}" itemValue="S"/>																		
+		                          <a:support event="onchange" ajaxSingle="true" action="#{movimientoHome.clearItems()}" 
+		                          	eventsQueue="q1" reRender="formmovimiento"/>
+							</h:selectOneMenu>							
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_reason}:</ui:define>
+							<h:selectOneMenu value="#{movimientoHome.instance.razon}" disabled="#{movimientoHome.managed}">
+								<f:selectItem itemLabel="#{app.movimiento_reason_o}" itemValue="O"/>									
+		                        <a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+							</h:selectOneMenu>							
+						</s:decorate>
+									
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.movimientomast_company}:</ui:define>
+							<h:selectOneMenu value="#{movimientoHome.empresaSeleccionada}" disabled="#{movimientoHome.managed}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{movimientoHome.cargarSucursales()}" 
+									ajaxSingle="true" reRender="_branch"/>
+							</h:selectOneMenu>
+						</s:decorate>
+							
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.movimientomast_branch}:</ui:define>
+							<h:selectOneMenu value="#{movimientoHome.instance.sucursal}" required="false" 
+								disabled="#{movimientoHome.managed}">
+								<s:selectItems value="#{movimientoHome.sucursales}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+									reRender="formmovimiento, m1" action="#{movimientoHome.asignarSucursal()}"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.movimientomast_branch}:</ui:define>
+							<h:inputText value="#{movimientoHome.instance.sucursal.nombre}" readonly="true"/>
+						</s:decorate>
+
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<a:commandButton onclick="#{rich:component('confirmation')}.show();" ajaxSingle="true" 
+						action="#{productoHome.cargarListaProductos()}" reRender="m1" 
+						styleClass="addBtn" value="#{msn.button_add_product}" 
+						rendered="#{not movimientoHome.managed}"
+						disabled="#{movimientoHome.instance.sucursal==null}">  
+					</a:commandButton>
+				</s:decorate>
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{movimientoHome.itemsAgregados}" id="_table"
+					rendered="#{not empty movimientoHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.movimiento_itemlist_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.inventario.cantidadActual}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.productolist_col7}</f:facet>
+						<h:outputText value="#{res.inventario.cantidadActual}" >
+							<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+						<h:inputText value="#{res.cantidad}" size="8" onkeypress="return restrictNumDigits(event, this, 8);"  >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+						</h:inputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+						<h:inputText value="#{res.costoUnitario}" size="8" readonly="#{movimientoHome.instance.tipoMovimiento=='S'}"
+							onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+						</h:inputText>						
+					</rich:column>
+					<rich:column rendered="#{not movimientoHome.managed}">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink reRender="formmovimiento" eventsQueue="q1"
+							action="#{movimientoHome.removerItem(res)}" ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/movimiento/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/sainv/movimiento/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{movimientoHome.save()}" reRender="formmovimiento"
+						rendered="#{not movimientoHome.managed}" styleClass="saveBtn" 
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				
+				<f:facet name="header">
+					#{app.movimientolist_add_products_modal}
+				</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1">
+					<ui:include src="addProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,64 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<h:form id="formCobroDia">
+		<p:growl globalOnly="true" sticky="false" life="3000" />
+		<p:focus />
+		<a:queue name="q1" />
+		<center>
+			<rich:dataTable var="res" value="#{ventaProdServHome.resultList}"
+				rendered="#{not empty ventaProdServHome.resultList}" rows="10"
+				align="center" rowClasses="tblEven,tblOdd"
+				onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+				onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+				headerClass="tablaHeader" footerClass="tableScroll">
+				<f:facet name="header">#{app.cobro_list}</f:facet>
+
+				<rich:column width="20%">
+					<f:facet name="header">#{app.vtaprs_fecha}</f:facet>
+					<h:outputText value="#{res.fechaVenta}">
+						<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="60%" filterBy="#{res.monto}" filterEvent="onkeyup">
+					<f:facet name="header">#{app.vtaprs_monto}</f:facet>
+					<h:outputText value="#{res.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>
+				</rich:column>
+				<rich:column width="20%">
+					<f:facet name="header">#{msn.col_actions}</f:facet>
+					<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/cobro/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+				</rich:column>
+			</rich:dataTable>
+			</center>
+			<rich:dataTable rows="1">
+			<rich:column>
+			
+			</rich:column>
+			</rich:dataTable>
+		<s:div style="text-align:center; margin-top:6px; margin-right:10px;" width="100%">
+		<h:outputLabel style="font-weight:bold; font-size:12px;}'" value="TOTAL " /> <h:outputText value="#{ventaProdServHome.getTotalPend()}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+		</h:outputText>
+		</s:div>
+		
+	</h:form>
+
+
+</ui:composition>

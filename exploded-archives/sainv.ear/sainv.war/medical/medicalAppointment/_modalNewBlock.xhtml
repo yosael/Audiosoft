@@ -1,0 +1,42 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	 
+		<rich:panel>
+			<f:facet name="header">#{app.sched_new_head}</f:facet>
+			<h:form id="formBlock">
+								<s:decorate template="/layout/kEditSpace.xhtml" id="_branch">
+						<ui:define name="label">#{app.compramast_branch}:</ui:define>
+						<h:selectOneMenu
+							value="#{medicalAppointmentDAO.instance.sucursal}"
+							required="true">
+							<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc"
+								label="#{_suc.nombre}" noSelectionLabel=" " />
+							<s:convertEntity />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+						</h:selectOneMenu>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_new_comment}:</ui:define>
+						<h:inputTextarea id="comment"
+							value="#{medicalAppointmentDAO.instance.comment}">
+							<a:support reRender="formApp" event="onblur" eventsQueue="q1" />
+							<p:watermark for="comment" value="#{app.sched_new_commentwm}"
+								id="watermark" />
+						</h:inputTextarea>
+					</s:decorate>
+					<a:commandButton action="#{medicalAppointmentDAO.agendarBloque()}"
+						reRender="formA,table" styleClass="saveBtn"
+						onclick="#{rich:component('newBlock')}.hide();" value="#{msn.button_save}"
+						rendered="#{not medicalAppointmentDAO.managed}">
+					</a:commandButton>
+			</h:form>
+			</rich:panel>
+</ui:composition>

@@ -1,0 +1,81 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formCodPrd">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<table style="width:400px;" >   
+				<tr>
+					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.productomast_ref}" />:</td>
+					<td><h:inputText value="#{requisicionEtaHome.selectedItem.inventario.producto.referencia}" readonly="true" style="width:200px;" />
+					</td>
+				</tr>
+				<tr>
+					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.productolist_col2}" />:</td>
+					<td><h:inputText value="#{requisicionEtaHome.selectedItem.inventario.producto.nombre}" readonly="true" style="width:200px;" />
+					</td>
+				</tr>
+				<tr>
+				<td colspan="4">
+					<table style="width:100%;">
+						<tr>
+							<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.transferencia_itemlist_col3}" />:</td>
+							<td><h:inputText value="#{requisicionEtaHome.selectedItem.cantidad}" readonly="true" style="width:50px;" />
+							</td>
+							<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.transferencia_codrest}" />:</td>
+							<td><h:inputText value="#{requisicionEtaHome.codigosRestantes}" readonly="true" style="width:50px;" id="_codsRestantes" >
+							</h:inputText></td>
+						</tr>
+					</table>
+				</td></tr>
+				</table>
+				
+				<rich:dataTable var="res" value="#{requisicionEtaHome.currCodigos}" id="_tableCod" rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+										
+					<rich:column filterBy="#{res.numLote}" filterEvent="onkeyup" style="width:140px;" >
+						<f:facet name="header">#{app.producto_codlot}</f:facet>
+						<h:inputText value="#{res.numLote}" size="20" maxLength="20" readonly="true"
+							rendered="#{res.inventario.producto.categoria.tieneNumLote==true}" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+						</h:inputText>
+						<h:outputText value="---" rendered="#{res.inventario.producto.categoria.tieneNumLote==false}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.numSerie}" filterEvent="onkeyup" style="width:140px;" >
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:inputText value="#{res.numSerie}" size="20" maxLength="20" readonly="true"
+							rendered="#{res.inventario.producto.categoria.tieneNumSerie==true}" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+						</h:inputText>
+						<h:outputText value="---" rendered="#{res.inventario.producto.categoria.tieneNumSerie==false}" />
+					</rich:column>
+					
+					<rich:column style="width:50px;" >
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:selectBooleanCheckbox value="#{res.transferido}" >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tableCod, _codsRestantes" 
+									action="#{requisicionEtaHome.limitSelectedCodes(res)}" />
+						</h:selectBooleanCheckbox>
+					</rich:column>
+					
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				</center>
+			</h:form>
+	
+</ui:composition>

@@ -1,0 +1,149 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>
+			<rich:spacer height="20" />
+			<center>
+			<h:form id="formA">
+				<a:queue name="q1" />
+				<table style="width:1000px;">
+				<tr>
+				<td style="width:400px;" rowspan="2">
+				<p:accordionPanel autoHeight="false" style="width:500px;">  
+					<c:forEach items="#{etapaRepCliHome.etapasRepCli}" var="eta">
+					<p:tab title="#{eta.etapaRep.nombre}">
+						<s:label value="#{app.etarepcli_estado}" style="font-weight:bold;" />:
+			            <h:outputText value="#{msn.status_pending}" rendered="#{eta.estado==null}" />
+			            <h:outputText value="#{msn.status_pending}" rendered="#{eta.estado=='PEN'}" />
+			            <h:outputText value="#{msn.status_approved}" rendered="#{eta.estado=='APR'}" />
+			            <h:outputText value="#{msn.status_rejected}" rendered="#{eta.estado=='REC'}" />
+			            <h:outputText value="No Aprobado(a)" rendered="#{eta.estado=='NAP'}" />
+			            <br />
+			            <s:label value="#{app.etarepcli_area}" style="font-weight:bold;" />:
+			            <h:outputText value="#{eta.etapaRep.areaEncargada.nombre}">
+			            </h:outputText><br />
+			             <s:label value="#{app.etarepcli_fechaEstFin}" style="font-weight:bold;" />:
+			            <h:outputText value="#{eta.fechaEstFin}">
+			            	<s:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText><br />
+			            <s:label value="#{app.etarepcli_fechaReaFin}" style="font-weight:bold;" />:
+			            <h:outputText value="#{eta.fechaRealFin}">
+			            	<s:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText><br />
+			            
+			            <s:label value="Usuario" style="font-weight:bold;" />:
+			            <h:outputText rendered="#{eta.estado!='PEN' and eta.estado!=null}" value="#{eta.usuario.nombreCompleto}">
+			            </h:outputText><br />
+			            
+			            
+			            <s:label value="#{app.etarepcli_comentarios}" style="font-weight:bold;" />:
+			            <h:outputText value="#{eta.descripcion}" /> <br />
+			           
+			           	<s:label value="#{app.etarepcli_tieres}" style="font-weight:bold; display:inline-block;" />:
+		            	<div style="display:inline-block;">
+		            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+											rendered="#{not empty eta.fechaInicio and etapaRepCliHome.calcTiempoRespuesta(eta) eq 'g'}" />
+						<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+											rendered="#{not empty eta.fechaInicio and etapaRepCliHome.calcTiempoRespuesta(eta) eq 'o'}" />
+						<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+											rendered="#{not empty eta.fechaInicio and etapaRepCliHome.calcTiempoRespuesta(eta) eq 'r'}" />
+						<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+											rendered="#{not empty eta.fechaInicio and etapaRepCliHome.calcTiempoRespuesta(eta) eq 'y'}" />		
+						</div>
+			        </p:tab>
+					</c:forEach>
+		    	</p:accordionPanel>
+				</td>
+				<td>
+				<rich:dataTable var="res" value="#{reparacionClienteHome.instance.serviciosRep}"
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  id="_tblSrvs" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.etarepcli_costossrv}</f:facet>
+					<rich:column  filterBy="#{res.servicio.name}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_fechaIng}</f:facet>
+						<h:outputText value="#{res.servicio.name}" />
+					</rich:column>
+					<rich:column filterBy="#{res.servicio.costo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_fechaApr}</f:facet>
+						<h:outputText value="#{res.servicio.costo}">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<f:facet name="footer">
+						
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						<h:outputText value="#{app.general_total}:  " />
+						<h:outputText value="#{reparacionClienteHome.totalServs}" id="_totItm">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</f:facet>
+				</rich:dataTable>
+				</td>
+				</tr>
+				<tr>
+				<td>
+					<rich:dataTable var="res" value="#{etapaRepCliHome.itmsRequi}" 
+							rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.etarepcli_itmsrequi}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
+								<h:outputText value="#{res.producto.referencia}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+								<h:outputText value="#{res.producto.nombre}" />
+							</rich:column>
+							<rich:column >
+								<f:facet name="header">#{app.requeta_numitems}</f:facet>
+								<h:outputText value="#{res.cantidad}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+								<h:outputText value="#{res.producto.prcNormal}" />
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								<h:outputText value="#{app.general_total}:  " />
+								<h:outputText value="#{reparacionClienteHome.totalItems}" id="_totItm">
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+												groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText>
+							</f:facet>
+						</rich:dataTable>
+						<rich:spacer width="2px" height="21px"></rich:spacer>
+						<h:panelGroup style="font-weight:bold; font-size:16px;"> <h:outputText value="#{app.general_total}:  " />
+								<h:outputText value="#{reparacionClienteHome.totalItems+reparacionClienteHome.totalServs}" id="_totItm">
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+												groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</h:outputText> </h:panelGroup>
+				</td>
+				</tr>
+				</table>					
+							
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/taller/trackReparacion/master.xhtml" propagation="join"
+					styleClass="backBtn" value="#{msn.button_back}" rendered="true">
+				</s:button>
+			</s:decorate>
+			
+			</h:form>
+			</center>
+			
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

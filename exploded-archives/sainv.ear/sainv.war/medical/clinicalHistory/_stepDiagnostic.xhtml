@@ -1,0 +1,318 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<rich:panel>
+		<f:facet name="header">#{app.diagnostic_head_diag}</f:facet>
+		<h:form id="formA">
+			<p:growl globalOnly="true" sticky="false" life="3000" />
+			<ui:insert name="cons" />
+			<p:accordionPanel styleClass="kubeAccordion" event="click">
+			
+				<p:tab title="#{app.diagnostic_tab}"><center>
+				
+					<table style="width:980px; height:600px;">
+					<tr>
+					<td style="width:60%;">
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton onclick="#{rich:component('selDiagn')}.show();" ajaxSingle="true" 
+						rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+							action="#{diagnosticoMedHome.getDiagnostListByName()}" reRender="d1"
+							styleClass="addBtn" value="#{app.button_add_diagn}">
+						</a:commandButton>
+					</s:decorate>
+					<rich:spacer height="10" />
+					<rich:dataTable var="res" value="#{prescriptionHome.diagnosticosAgregados}" id="_tblDiagn"
+						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.diagmed_list_sel}</f:facet>
+						
+						<rich:column>
+							<f:facet name="header">#{app.diagnos_name}</f:facet>
+							<h:outputText value="#{res.diagnostico.nombre}" />
+						</rich:column>	
+						<rich:column style="width:50px;" >
+							<f:facet name="header">#{app.diagn_prpal}</f:facet>
+							<h:selectBooleanCheckbox value="#{res.principal}" disabled="#{medicalAppointmentDAO.instance.clinicalHistory!=null}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tblDiagn" 
+										action="#{prescriptionHome.setDiagnPrpal(res)}" />
+							</h:selectBooleanCheckbox>
+						</rich:column>
+						<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink reRender="_tblDiagn"
+								action="#{prescriptionHome.removerDiagnostico(res)}" ajaxSingle="true" eventsQueue="q1" >
+								<h:graphicImage value="/kubeImg/table_delete16.png" />
+							</a:commandLink>
+						</rich:column>	
+					</rich:dataTable>
+					</td>
+					<td>
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" rendered="#{clienteHome.instance.diagnosSordera!=null}">
+							<ui:define name="label">#{app.diagn_sordera}:</ui:define>
+							<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
+									<s:convertDateTime pattern="dd/MM/yyyy" />
+								</h:inputText>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" rendered="#{clienteHome.instance.diagnosSordera==null}">
+							<ui:define name="label">#{app.diagn_sordera_d}:</ui:define>
+							<h:selectBooleanCheckbox value="#{prescriptionHome.diagnSordera}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+					</td>
+					<td>
+						<center><s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.diagnostic_treatment}:</ui:define>
+							<h:inputTextarea value="#{generalContainer.treatment}" style="width:310px;"
+								rows="3" disabled="#{generalContainer.mode=='r' || medicalAppointmentDAO.instance.clinicalHistory!=null}" >
+								<a:support event="onblur" ajaxSingle="true"/>
+							</h:inputTextarea>
+						</s:decorate></center>
+					</td>
+					
+					</tr>
+					
+					
+					<!-- Para extra necesario validar -->
+					<tr>
+						<td colspan="3">
+								<s:decorate template="/layout/kActions.xhtml">
+									<a:commandButton onclick="#{rich:component('selExam')}.show();" ajaxSingle="true" 
+										rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+										action="#{serviceDAO.loadServiciosExa()}" reRender="e1"
+										styleClass="addBtn" value="#{app.button_add_exam}">
+									</a:commandButton>
+								</s:decorate>
+								<rich:spacer height="10" />	
+								
+																		
+								<rich:dataTable var="res" value="#{prescriptionHome.examenesAgregados}" id="_tblExam" 
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.examed_list_sel}</f:facet>
+									
+									<rich:column >
+										<f:facet name="header">#{app.medicm_name}</f:facet>
+										<h:outputText value="#{res.examen.name}" />
+									</rich:column>		
+									<rich:column >
+										<f:facet name="header">#{app.cjachi_comentario}</f:facet>
+										<h:inputTextarea value="#{res.comentario}" style="width:98%;"
+											rows="2" readonly="#{medicalAppointmentDAO.instance.clinicalHistory!=null}" >
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+										</h:inputTextarea>
+									</rich:column>		
+									
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink reRender="formA"
+											action="#{prescriptionHome.removerExamen(res)}" ajaxSingle="true">
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+						</td>
+					</tr>
+					
+					<!-- Fin parte de ingreso de examenes -->
+					
+					
+				</table>
+				
+				</center></p:tab>
+				<p:tab title="Recomendaciones y sugerencias"><center>
+
+					<table style="width:980px; height:80%;">
+						<tr>
+							<td style="width:60%;">
+								<s:decorate template="/layout/kActions.xhtml">
+									<a:commandButton onclick="#{rich:component('selRecomed')}.show();" ajaxSingle="true" 
+									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+										action="#{recomendacionMedHome.getRecomenList()}" reRender="r1"
+										styleClass="addBtn" value="#{app.button_add_recomed}">
+									</a:commandButton>
+								</s:decorate>
+								<rich:spacer height="10" />
+								<rich:dataTable var="res" value="#{prescriptionHome.recomendacionesAgregadas}" id="_tblRecom"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.recomed_list_sel}</f:facet>
+									
+									<rich:column>
+										<f:facet name="header">#{app.medicm_name}</f:facet>
+										<h:outputText value="#{res.recomendacion.nombre}" />
+									</rich:column>	
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink reRender="formA"
+											action="#{prescriptionHome.removerRecomendacion(res)}" ajaxSingle="true">
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>	
+								</rich:dataTable>
+							
+							</td>
+							<td>
+								<s:decorate template="/layout/kActions.xhtml">
+									<a:commandButton onclick="#{rich:component('selServ')}.show();" ajaxSingle="true"
+										rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" 
+										action="#{serviceDAO.loadServiciosList('MED')}" reRender="s1"
+										styleClass="addBtn" value="#{app.button_add_servcon}">
+									</a:commandButton>
+								</s:decorate>
+								<rich:spacer height="10" />
+								<rich:dataTable var="res" value="#{prescriptionHome.serviciosAgregados}" id="_tblServ" 
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.serv_list_selmed}</f:facet>
+									
+									<rich:column>
+										<f:facet name="header">#{app.medicm_name}</f:facet>
+										<h:outputText value="#{res.service.name}" />
+									</rich:column>						
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink reRender="formA" rendered="#{res.medicalAppointmentServiceId==null}"
+											action="#{prescriptionHome.removerServicio(res)}" ajaxSingle="true">
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>	
+								</rich:dataTable>
+							</td>
+						
+						</tr>
+						
+						
+						<tr>
+							<td colspan="2">
+								<s:decorate template="/layout/kActions.xhtml">
+									<a:commandButton onclick="#{rich:component('selMedicm')}.show();" ajaxSingle="true" 
+										rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+										action="#{medicamentoHome.getMedicamentosList()}" reRender="m1"
+										styleClass="addBtn" value="#{app.button_add_medicm}">
+									</a:commandButton>
+								</s:decorate>
+								<rich:spacer height="10" />					
+								<rich:dataTable var="res" value="#{prescriptionHome.itemsAgregados}" id="_tableMedSug" 
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.compra_itemlist_list}</f:facet>
+									
+									<rich:column >
+										<f:facet name="header">#{app.medicm_name}</f:facet>
+										<h:outputText value="#{res.medicamento.nombre}" />
+									</rich:column>						
+									<rich:column >
+										<f:facet name="header">#{app.medicm_sustancia}</f:facet>
+										<h:outputText value="#{res.medicamento.sustanciaAct.nombre}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">#{app.medicm_dosif}</f:facet>
+										<h:selectOneMenu value="#{res.selDosif}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
+											<s:selectItems value="#{res.medicamento.dosificaciones}" var="_dos" 
+												label="#{_dos.dosificacion.nombre}" noSelectionLabel=" "/>
+											<s:convertEntity />
+											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+										</h:selectOneMenu>
+										<h:outputText value="#{res.dosificacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" />
+									</rich:column>
+									<rich:column >
+										<f:facet name="header">#{app.medicm_presen}</f:facet>
+										<h:selectOneMenu value="#{res.selPresen}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
+											<s:selectItems value="#{res.medicamento.presentaciones}" var="_pre" 
+												label="#{_pre.presentacion.nombre}" noSelectionLabel=" "/>
+											<s:convertEntity />
+											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+										</h:selectOneMenu>
+										<h:outputText value="#{res.presentacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" />
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink reRender="formA"
+											action="#{prescriptionHome.removerItem(res)}" ajaxSingle="true">
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+							</td>
+						
+						</tr>
+					</table>
+					
+				</center></p:tab>
+			</p:accordionPanel>
+			<rich:spacer height="10" />
+			<s:decorate template="/layout/kActions.xhtml">
+				<h:commandButton action="back" value="#{app.diagnostic_back}"
+					styleClass="leftBtn">
+					<s:conversationPropagation type="join" />
+				</h:commandButton>
+				<ui:insert name="actions" />
+			</s:decorate>
+		</h:form>
+		
+			<rich:modalPanel id="selMedicm" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selMedicm');">
+				<f:facet name="header">Medicamentos recetables</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selMedicm')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1"><ui:include src="/medical/clinicalHistory/addMedicm.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selRecomed" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selRecomed');">
+				<f:facet name="header">Recomendaciones m�dicas</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selRecomed')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="r1"><ui:include src="/medical/clinicalHistory/addRecomed.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selDiagn" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selDiagn');">
+				<f:facet name="header">Diagn�sticos m�dicos</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selDiagn')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="d1"><ui:include src="/medical/clinicalHistory/addDiagn.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selServ" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selServ');">
+				<f:facet name="header">Servicios m�dicos registrados</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selServ')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="s1"><ui:include src="/medical/clinicalHistory/addService.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selExam" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selExam');">
+				<f:facet name="header">Ex�menes m�dicos</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExam')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="e1"><ui:include src="/medical/clinicalHistory/addExam.xhtml" /></s:div>
+			</rich:modalPanel>
+	</rich:panel>
+	<ui:include src="/medical/clinicalHistory/addExam.xhtml" />
+</ui:composition>

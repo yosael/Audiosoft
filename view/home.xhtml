@@ -1,0 +1,63 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+	<!-- <h:form id="formIni"><h:message /><h:messages />  </h:form> -->
+	<rich:panel>
+		
+		<rich:modalPanel id="invBajoLim" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('invBajoLim');">
+				
+				<f:facet name="header">Detalle de productos con existencias bajo el límite</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('invBajoLim')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1"><ui:include src="detProdExisLim.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+		<rich:modalPanel id="tallerPendientes" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('tallerPendientes');">
+				
+				<f:facet name="header">Trabajos de taller pendiente</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('tallerPendientes')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="tall"><ui:include src="tallerPendientes.xhtml" /></s:div>
+				
+		</rich:modalPanel>	
+			
+		<s:div rendered="#{loginUser.user.notificacionInv==true}" id="algo" >
+			<script type="text/javascript" language="javascript">
+				#{rich:component('invBajoLim')}.show();
+				//document.getElementById('invBajoLim').show();
+			</script>
+		</s:div>
+		
+		<s:div rendered="#{notificacionUserHome.trabajosTaller==true}" id="notiTaller" >
+			<script type="text/javascript" language="javascript">
+				#{rich:component('tallerPendientes')}.show();
+				//document.getElementById('invBajoLim').show();
+			</script>
+		</s:div>
+		
+	</rich:panel>
+	</ui:define>
+	
+	
+</ui:composition>

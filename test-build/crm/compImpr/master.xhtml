@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detalle del comprobante asignado a un usuario" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formclicorp">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_usr" >
+							<ui:define name="label">Usuario:</ui:define>
+							<h:inputText value="#{comprobanteUsuarioDocHome.instance.usuario.nombreCompleto}"
+								readonly="true" required="true" style="width:200px;" />
+							
+							<a:commandButton onclick="#{rich:component('selUsr')}.show();" ajaxSingle="true"  
+								action="#{usuarioHome.cargarListaUsuarios()}" reRender="usradd" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_compImpr" >
+							<ui:define name="label">Comprobante Impresion:</ui:define>
+							<h:inputText value="#{comprobanteUsuarioDocHome.instance.comprobante.nombre}"
+								readonly="true" required="true" style="width:200px;" />
+								
+							<a:commandButton onclick="#{rich:component('selComprbt')}.show();" ajaxSingle="true"  
+								action="#{comprobanteImpresionHome.cargarListaComprobantes()}" reRender="comprbt" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/crm/compImpr/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/crm/compImpr/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{comprobanteUsuarioDocHome.save()}" reRender="formclicorp"
+						rendered="#{not comprobanteUsuarioDocHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{comprobanteUsuarioDocHome.modify()}" reRender="formclicorp"
+						rendered="#{comprobanteUsuarioDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+		
+		<rich:modalPanel id="selComprbt" width="800" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selComprbt');">
+			<f:facet name="header">Comprobantes</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selComprbt')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="comprbt" ><ui:include src="selComprbt.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selUsr" width="800" moveable="true" autosized="true" top="50px"  left="10"
+			onbeforeshow="activeModal.setActiveModalPanel('selUsr');">
+			<f:facet name="header">Usuarios</f:facet>
+			<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selUsr')}.hide();" />
+					</h:panelGroup>
+			</f:facet>
+			<s:div id="usradd" ><ui:include src="selUsr.xhtml" /></s:div>
+		</rich:modalPanel>		
+	</ui:define>
+</ui:composition>

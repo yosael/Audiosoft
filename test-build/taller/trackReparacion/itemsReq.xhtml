@@ -1,0 +1,46 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formReq">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<rich:dataTable var="res" value="#{requisicionEtaHome.itemsAgregados}" id="_table"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.reqeta_sel_items}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.producto.nombre}" />
+					</rich:column>
+					<rich:column filterEvent="onkeyup">
+						<f:facet name="header">#{app.requeta_numitems}</f:facet>
+						<h:inputText value="#{res.cantidad}" size="8" 
+							disabled="true" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+						</h:inputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.producto.prcNormal}" size="8" >
+						</h:outputText>
+					</rich:column>
+				</rich:dataTable>
+				
+			</h:form>
+	
+</ui:composition>

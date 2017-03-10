@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<rich:modalPanel id="modalAppointment" width="400" moveable="true" autosized="true"  top="40"
+		onbeforeshow="activeModal.setActiveModalPanel('modalAppointment');">
+		<f:facet name="header">
+				#{app.sched_modal_head1}
+			</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+					onclick="#{rich:component('modalAppointment')}.hide();" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="fm1">
+			<rich:tabPanel switchType="client">
+				<rich:tab label="#{app.sched_new_tab1}">
+					<h:panelGrid columns="2" style="padding-left:10px;">
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_new_date}:</ui:define>
+							<h:outputText value="#{medicalAppointmentDAO.instance.dateTime}">
+								<s:convertDateTime pattern="yyyy/MM/dd HH:mm" />
+							</h:outputText>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_new_doctor}:</ui:define>
+							<h:outputText
+								value="#{medicalAppointmentDAO.instance.doctor.fullName}" />
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_new_patient}:</ui:define>
+							<s:div style="padding-left:10px;">
+								<h:outputText
+									value="#{medicalAppointmentDAO.instance.cliente.fullName}" />
+								<br />
+								<h:outputText
+									value="#{medicalAppointmentDAO.instance.cliente.tipoDoc} : #{medicalAppointmentDAO.instance.cliente.docId}" />
+								<br />
+							</s:div>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_new_services}:</ui:define>
+							<s:div
+								style="padding-left: 10px;max-height: 50px;overflow: auto;">
+								<rich:dataList value="#{medicalAppointmentDAO.appointmentItems}"
+									var="item">
+									<h:outputText value="#{item.service.name}" />
+								</rich:dataList>
+							</s:div>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_new_comment}:</ui:define>
+							<h:outputText value="#{medicalAppointmentDAO.instance.comment}" />
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Subsecuente:</ui:define>
+							<h:outputText value="#{medicalAppointmentDAO.verificarSubsecuente()}" />
+						</s:decorate>
+					</h:panelGrid>
+				</rich:tab>
+				<rich:tab label="#{app.sched_new_tab2}">
+					<rich:dataTable var="res"
+						value="#{medicalAppointmentDAO.appointmentItems}"
+						rendered="#{not empty medicalAppointmentDAO.appointmentItems}"
+						rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.sched_new_service_list}</f:facet>
+						<rich:column>
+							<f:facet name="header">#{app.sched_new_service_col1}</f:facet>
+							<h:outputText value="#{res.service.name}" />
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable>
+					<rich:spacer height="10" />
+				</rich:tab>
+			</rich:tabPanel>
+			<div><s:decorate template="/layout/kActions.xhtml">
+				<a:commandButton styleClass="cancelBtn" value="#{msn.button_close}"
+					onclick="#{rich:component('modalAppointment')}.hide();">
+				</a:commandButton>
+			</s:decorate></div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

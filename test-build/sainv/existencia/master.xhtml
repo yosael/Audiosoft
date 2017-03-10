@@ -1,0 +1,129 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml" >
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{productoHome.managed?sainv_view_messages.get('existencia_head_edit'):sainv_view_messages.get('existencia_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formproducto">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.existencia_legend}</legend> 
+					<center>
+					<table style="">
+						<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.existencia_ref}:</ui:define>
+								<h:inputText value="#{productoHome.instance.referencia}" readonly="true" />
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.existencia_name}:</ui:define>
+								<h:inputText value="#{productoHome.instance.nombre}" readonly="true" />
+							</s:decorate></td>
+							<td rowspan="3" style="width:300px;">
+								<rich:dataTable var="res" value="#{productoHome.existencias}" id="_tblExis"  rows="10"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.productolist_list}</f:facet>
+									
+									<rich:column filterBy="#{res.sucursal.empresa.nombre}" filterEvent="onkeyup" rendered="#{loginUser.user.sucursal==null}">
+										<f:facet name="header">#{app.compramast_company}</f:facet>
+										<h:outputText value="#{res.sucursal.empresa.nombre}" />
+									</rich:column>
+									<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+										<f:facet name="header">#{app.compramast_branch}</f:facet>
+										<h:outputText value="#{res.sucursal.nombre}" />
+									</rich:column>
+									<rich:column filterBy="#{res.producto.nombre}" filterEvent="onkeyup">
+										<f:facet name="header">#{app.productolist_col7}</f:facet>
+										<h:outputText value="#{res.cantidadActual}" >
+											<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+										</h:outputText>
+									</rich:column>
+									<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink title="#{msn.button_addcod}" reRender="m2" eventsQueue="q1" 
+											rendered="#{res.cantidadActual>0 and (res.producto.categoria.tieneNumSerie==true or 
+														res.producto.categoria.tieneNumLote==true)}"
+											action="#{productoHome.cargarListaCodigos(res)}" ajaxSingle="true"
+											onclick="#{rich:component('lstCodigos')}.show();">
+											<h:graphicImage value="/kubeImg/table_detail2.png" />
+										</a:commandLink>
+									</rich:column>
+									<f:facet name="footer">
+										<rich:datascroller id="ds1" renderIfSinglePage="true" />
+									</f:facet>
+								</rich:dataTable>
+							</td>
+							<td rowspan="3" style="width:300px;">
+								<s:graphicImage id="graphPrd" width="300px" height="257px"
+									value="#{productoHome.instance.image}"
+									rendered="#{not empty productoHome.instance.image}" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+								<ui:define name="label">#{app.existencia_modelo}:</ui:define>
+								<h:inputText value="#{productoHome.instance.modelo}" readonly="true" />
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+								<ui:define name="label">#{app.existencia_min_amount}:</ui:define>
+								<h:inputText value="#{productoHome.instance.cantidadMinima}" readonly="true" />
+							</s:decorate></td>
+						</tr>
+						
+						<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+								<ui:define name="label">#{app.existencia_category}:</ui:define>
+								<h:inputText value="#{productoHome.instance.categoria.nombre}" readonly="true" />
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;"
+								rendered="#{loginUser.user.sucursal!=null}">
+								<ui:define name="label">#{app.existencia_codubi}:</ui:define>
+								<h:inputText value="#{productoHome.codUbicacion.nombre}" readonly="true" />
+							</s:decorate></td>
+						</tr>
+					</table>
+					</center>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/existencia/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+				</s:decorate>
+				</fieldset>
+				<rich:modalPanel id="lstCodigos" width="800" moveable="true" autosized="true"  top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+					
+					<f:facet name="header">
+						#{app.compralist_add_products_modal}
+					</f:facet>
+					
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('lstCodigos')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="m2">
+						<ui:include src="codsProducts.xhtml" />
+					</s:div>
+				</rich:modalPanel>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

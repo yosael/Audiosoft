@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{pedidoHome.managed?sainv_view_messages.get('pedidomast_head_edit'):sainv_view_messages.get('pedidomast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formpedido">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.pedidomast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.pedidomast_date}:</ui:define>
+							<h:outputText value="#{pedidoHome.instance.fechaInicio}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.pedidomast_supplier}:</ui:define>
+							<h:outputText value="#{pedidoHome.instance.proveedor.razonSocial}"/>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.pedidomast_description}:</ui:define>
+							<h:outputText value="#{pedidoHome.instance.descripcion}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.pedidomast_company}:</ui:define>
+							<h:outputText value="#{pedidoHome.instance.sucursal.empresa.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.pedidomast_branch}:</ui:define>
+							<h:outputText value="#{pedidoHome.instance.sucursal.nombre}"/>
+						</s:decorate>
+				</h:panelGrid> 
+
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{pedidoHome.itemsAgregados}" id="_table"
+					rendered="#{not empty pedidoHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.pedido_itemlist_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col5}</f:facet>
+						<h:outputText value="#{res.inventario.producto.categoria.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col6}</f:facet>
+						<h:outputText value="#{res.inventario.producto.marca.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col3}</f:facet>
+						<h:outputText value="#{res.cantidad}" size="8" style="text-align:right;" >
+							<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" /> 
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.pedido_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" size="8"  style="text-align:right;">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" /> 
+						</h:outputText>
+					</rich:column>					
+					<f:facet name="footer">
+						<h:outputText value="Subtotal: #{pedidoHome.instance.subtotal}" size="8" />
+					</f:facet>
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/pedido/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

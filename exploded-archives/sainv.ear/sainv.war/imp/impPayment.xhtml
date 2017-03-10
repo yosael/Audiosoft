@@ -1,0 +1,49 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<div id="imp_payment"
+		style="display: none; width: 700px; border: 2px black solid;">
+	<table border="1" cellspacing="1" width="700px">
+		<tr>
+			<td>#{imp.payment_code}:</td>
+			<td><h:outputText value="#{paymentDAO.instance.id}" /></td>
+			<td>#{imp.payment_date}:</td>
+			<td><h:outputText value="#{paymentDAO.instance.date}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText></td>
+		</tr>
+		<tr>
+			<td>#{imp.payment_id}:</td>
+			<td><h:outputText
+				value="#{paymentDAO.instance.bill.third.identificationType.description} : #{paymentDAO.instance.bill.third.thirdId.numId}" /></td>
+			<td>#{imp.payment_name}:</td>
+			<td><h:outputText
+				value="#{paymentDAO.instance.bill.third.socialReason}" /></td>
+		</tr>
+		<tr>
+			<td>#{imp.payment_value}:</td>
+			<td><h:outputText value="#{paymentDAO.instance.value}">
+				<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+				groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+			</h:outputText></td>
+			<td>#{imp.payment_residue}:</td>
+			<td><h:outputText value="#{paymentDAO.instance.residue}">
+				<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+				groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+			</h:outputText></td>
+		</tr>
+		<tr>
+			<td>#{imp.payment_comment}:</td>
+			<td colspan="3"><h:outputText
+				value="#{paymentDAO.instance.comment}" /></td>
+		</tr>
+	</table>
+	</div>
+</ui:composition>

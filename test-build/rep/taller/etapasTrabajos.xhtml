@@ -1,0 +1,152 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Reporte de trabajos de taller por etapas</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>					
+					<legend>#{app.report_rwrk_tll}</legend>
+					<center>
+					<h:panelGrid columns="3">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+							<rich:calendar value="#{repTaller.fechaInicio}"  datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+							<rich:calendar value="#{repTaller.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.repcli_proceso}:</ui:define>		                        
+		                        <h:selectOneMenu value="#{repTaller.procesoTll}">
+								    <s:selectItems value="#{reparacionClienteHome.procesosTaller}" var="_sis" 
+										label="#{_sis.nombre}" noSelectionLabel=" "/>
+									<s:convertEntity />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" reRender="_table" />
+								</h:selectOneMenu>										
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.etarepcli_etapa}:</ui:define>		                        
+		                        <h:selectOneMenu value="#{repTaller.valCmb1}">
+		                        	<f:selectItem itemLabel=" " itemValue="" />
+		                            <f:selectItem itemLabel="Evaluacion" itemValue="EVA" />
+		                            <f:selectItem itemLabel="Pendiente de aprobar" itemValue="APR" />
+									<f:selectItem itemLabel="En taller" itemValue="REP" />
+									<f:selectItem itemLabel="Control de calidad" itemValue="CC" />
+									<f:selectItem itemLabel="Finalizado" itemValue="LST" />
+									<f:selectItem itemLabel="Entregado" itemValue="FIN" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" reRender="_table" />
+								</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:selectOneMenu value="#{repTaller.sucursal}" required="false">
+								<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" reRender="_table" />
+							</h:selectOneMenu>
+						</s:decorate>
+					</h:panelGrid>
+					
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/rep/taller/ensamblajesExcel.xhtml" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" rendered="false">
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" action="#{repTaller.repTrabajosTaller()}" />
+						</s:button>
+						<a:commandButton oncomplete="showReport('wrkTallerPDF', '#{conversation.id}');"
+							styleClass="pdfBtn" action="#{repTaller.repTrabajosTaller()}"
+							value="#{msn.button_pdf}" rendered="true">
+						</a:commandButton>
+					</s:decorate>
+					</center>		
+				</fieldset>
+				
+				<rich:dataTable var="res" value="#{repTaller.reparaciones}" id="_table"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Trabajos de taller</f:facet>
+					<rich:column filterValue="#{repTaller.fechaPFlt1}" 
+						filterExpression="#{repTaller.comparaFechas(repTaller.fechaPFlt1,res.fechaIngreso)}">
+						<f:facet name="header"><h:panelGroup>
+							#{app.vtaprs_fecha}<br />
+							<rich:calendar value="#{repTaller.fechaPFlt1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" reRender="_table" />
+							</rich:calendar>
+                        </h:panelGroup></f:facet>
+						<h:outputText value="#{res.fechaIngreso}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.cliente.nombres} #{res.cliente.apellidos}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_cliente}</f:facet>
+						<h:outputText value="#{res.cliente.nombres} #{res.cliente.apellidos}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.usuariomast_branch}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.proceso.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_proceso}</f:facet>
+						<h:outputText value="#{res.proceso.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.aparatoRep.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_aparato}</f:facet>
+						<h:outputText value="#{res.aparatoRep.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.currEtapa.etapaRep.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_etapa}</f:facet>
+						<h:outputText value="#{res.currEtapa.etapaRep.nombre}" rendered="#{res.currEtapa!=null}" />
+						<h:outputText value="Reparación finalizada" rendered="#{res.currEtapa==null}" />
+					</rich:column>
+					<rich:column filterBy="#{res.costo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.parvta_tp_monto}</f:facet>
+						<h:outputText value="#{res.costo}" rendered="#{res.costo!=null}">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+						<h:outputText value="-" rendered="#{res.costo==null}" />
+					</rich:column>
+					<f:facet name="footer">
+						<h:panelGrid columns="2">
+						<s:decorate  style="width:1000px;">
+							<div style="display:inline; float :left; width:200px;">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" align="center" />
+							</div>
+							<div style="display:inline; float:right; width:100px;">
+							<h:outputText value="#{repTaller.totDec1}" size="8" id="_total" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+							</div>
+							</s:decorate>
+						</h:panelGrid>
+					</f:facet>
+				</rich:dataTable>
+			
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

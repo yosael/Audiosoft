@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="reqId" value="#{requisicionEtaHome.reqId}" required="false" />
+	<action execute="#{requisicionEtaHome.load()}" on-postback="false" />
+	
+	<navigation from-action="#{requisicionEtaHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/master.xhtml" />
+		</rule>
+	</navigation>
+
+</page>

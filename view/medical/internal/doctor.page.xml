@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="numId" value="#{doctorDAO.numId}" required="false" />
+	<action execute="#{doctorDAO.load()}" on-postback="false" />
+	
+	<navigation from-action="#{doctorDAO.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/internal/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{doctorDAO.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/internal/list.xhtml" />
+		</rule>
+	</navigation>
+</page>

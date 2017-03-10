@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">#{app.report_cotiz_cmb_apa}</f:facet>
+			<rich:spacer height="20" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>					
+					<legend>#{app.report_rpcotiz_cmb_apa}</legend>
+					<center>
+					<h:panelGrid columns="3">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+							<rich:calendar value="#{repVenta.fechaInicio}"  datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+							<rich:calendar value="#{repVenta.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:selectOneMenu value="#{repVenta.sucursal}" required="false">
+								<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" reRender="_table" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+							<s:button 
+								  value="Ver en detalle"  propagation="begin"  view="/rep/cot/cotizacionDetalle.xhtml"   rendered="true"  >
+							</s:button>
+						</s:decorate> -->
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<s:button 
+								  value="Reporte detalle cotizacion"  propagation="begin"  view="/rep/cot/cotizacionCliente.xhtml"   rendered="true"  >
+							</s:button>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<s:button 
+								  value="Reporte aparatos vendidos"  propagation="begin"  view="/rep/cot/repVentasAparatos.xhtml"   rendered="true"  >
+							</s:button>
+						</s:decorate>
+						<!--<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+							<ui:define name="label">Solo binaurales:</ui:define>
+							<h:selectBooleanCheckbox value="#{repVenta.flag1}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" reRender="_table" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+						 -->
+					</h:panelGrid>
+					
+					<rich:spacer height="10"/>
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/rep/taller/ensamblajesExcel.xhtml" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" rendered="false">
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" />
+						</s:button>
+						<!-- <a:commandButton oncomplete="showReport('cotizComboPDF', '#{conversation.id}');"
+							styleClass="pdfBtn" action="#{repVenta.cotizacionCombo()}"
+							value="#{msn.button_pdf}" rendered="true">
+						</a:commandButton> -->
+					</s:decorate>
+					</center>		
+				</fieldset>
+				<rich:dataTable var="res" value="#{repVenta.cotizacionesCombo}" id="_table"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Cotizaciones de combos de aparatos</f:facet>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.combapa_combo}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column sortBy="#{res.total}" >
+						<f:facet name="header">Total Cotizaciones</f:facet>
+						<h:outputText value="#{res.total}" />
+					</rich:column>
+					
+					<rich:column  sortBy="#{res.totalCotizado}" >
+						<f:facet name="header">#  Cotizadas</f:facet>
+						<h:outputText value="#{res.totalCotizado}" />
+					</rich:column>
+					
+					<rich:column  sortBy="#{res.totalVendido}" >
+						<f:facet name="header">#  Vendidas</f:facet>
+						<h:outputText value="#{res.totalVendido}" /> 
+					</rich:column>
+					
+					<rich:column  sortBy="#{res.totalCxc}" >
+						<f:facet name="header"># Cuenta por cobrar</f:facet>
+						<h:outputText value="#{res.totalCxc}" /> 
+					</rich:column>
+					
+					<!--<rich:column rendered="#{flag1==false || flag1==null}" sortBy="#{res[2]}" >
+						<f:facet name="header">$ Monto</f:facet>  Formato1 
+						<h:outputText value="#{res[2]}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column> -->
+					
+					<rich:column  filterBy="#{res.sucursal}" filterEvent="onkeyup">
+						<f:facet name="header">Sucursal</f:facet>
+						<h:outputText value="#{res.sucursal}" >
+						</h:outputText>
+					</rich:column>
+					<!-- <rich:column>
+						<f:facet name="header">#{app.cotapa_esbinr}</f:facet>
+						<h:outputText value="No" rendered="#{res.hijoBin.size()==0}" />
+						<h:outputText value="Si" rendered="#{res.hijoBin.size()!=0}" />
+					</rich:column> -->
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

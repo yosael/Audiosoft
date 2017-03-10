@@ -1,0 +1,863 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="#{app.etarepcli_legend}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<center>
+			<h:form id="formreparacioncli">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.etarepcli_legend}</legend> 
+					<table style="">
+						<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionClienteHome.managed}" >
+								<ui:define name="label">#{app.repcli_id}:</ui:define>
+								<h:inputText value="#{reparacionClienteHome.instance.proceso.prcCode}#{reparacionClienteHome.instance.id}" disabled="true">
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+								</h:inputText>
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">#{app.etarepcli_proceso}:</ui:define>
+								<h:inputText value="#{etapaRepCliHome.instance.etapaRep.procesoTll.nombre}" readonly="true" >
+								</h:inputText>
+							</s:decorate></td>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">#{app.etarepcli_etapa}:</ui:define>
+								<h:inputText value="#{etapaRepCliHome.instance.etapaRep.nombre}" readonly="true" >
+								</h:inputText>
+							</s:decorate></td>
+						</tr>
+						<tr>
+							
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">#{app.etarepcli_fechaEstFin}:</ui:define>
+									<h:inputText value="#{etapaRepCliHome.instance.fechaEstFin}" readonly="true" >
+										<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+									</h:inputText>
+								</s:decorate>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.repcli_cliente}:</ui:define>
+									<h:inputText id="lblSelPat"
+										value="#{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}"
+										readonly="true" disabled="true" style="width:200px;" />
+									<a:commandButton
+										onclick="#{rich:component('infoCliMod')}.show();"
+										ajaxSingle="true"
+										action="#{clienteHome.cargarPaciente(reparacionClienteHome.instance.cliente)}"
+										reRender="modInfoCl" disabled="#{empty reparacionClienteHome.instance.cliente}"
+										styleClass="listBtn" style="width:18px;height:19px;    background-position: 1px 1px;" id="infoCliBtn" value="" >
+									</a:commandButton>
+								</s:decorate>
+							</td>
+							
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.repcli_aparato}:</ui:define>
+									<h:inputText value="#{reparacionClienteHome.instance.aparatoRep.nombre}" readonly="true" />
+								</s:decorate>
+							</td>
+							
+						</tr>
+						
+						<!-- Nueva fila de informacion del trabajo de taller -->
+						<tr>
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml"
+										id="_branch">
+										<ui:define name="label">#{app.compramast_branch}:</ui:define>
+										<h:selectOneMenu
+											value="#{reparacionClienteHome.instance.sucursal}"
+											required="true">
+											<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc"
+												label="#{_suc.nombre}" noSelectionLabel=" " />
+											<s:convertEntity />
+											<a:support event="onchange" ajaxSingle="true"
+												eventsQueue="q1" />
+										</h:selectOneMenu>
+									</s:decorate>
+								</td>
+						
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml">
+										<ui:define name="label">#{app.repcli_descripcion}:</ui:define>
+										<h:inputTextarea
+											value="#{reparacionClienteHome.instance.descripcion}"
+											cols="20" rows="3" style="width:220px;" required="false">
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+										</h:inputTextarea>
+									</s:decorate>
+								</td>
+			
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden>1}" >
+									<ui:define name="label">Comentario etapa anterior:</ui:define>
+									<h:inputTextarea value="#{etapaRepCliHome.comentarioAnterior}" required="false">
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+									</h:inputTextarea>
+									</s:decorate>
+									
+									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden eq 1}" >
+										<ui:define name="label">#{app.etarepcli_comentarios}:</ui:define>
+										<h:inputTextarea value="#{etapaRepCliHome.instance.descripcion}" required="false">
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+										</h:inputTextarea>
+									</s:decorate>
+									
+								</td>
+								
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml"  rendered="#{etapaRepCliHome.instance.etapaRep.nombre=='Informar'}">
+									<a:commandButton onclick="#{rich:component('modComentario')}.show()" value="Actualizar comentario" ajaxSingle="true" reRender="frComent" ></a:commandButton>
+								</s:decorate>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden>1}" >
+									<ui:define name="label">#{app.etarepcli_comentarios}:</ui:define>
+									<h:inputTextarea id="comentarioEtapa" value="#{etapaRepCliHome.instance.descripcion}" required="false">
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+									</h:inputTextarea>
+								</s:decorate>
+							</td>
+						</tr>
+							
+						<tr>
+							<td>
+								<s:decorate 
+									rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
+							and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
+									styleClass="radioB">
+									<h:outputLabel style="font-weight:bold;font-size:14px;" value="Cobrar aunque exista garantia? " />
+									<h:selectBooleanCheckbox
+										style="width:20px;height:20px;"
+										value="#{reparacionClienteHome.cobrarSiempre}">
+										<a:support eventsQueue="q1" ajaxSingle="true"
+											event="onchange" />
+									</h:selectBooleanCheckbox>
+								</s:decorate>
+							</td>
+						</tr>
+						
+						<tr>
+						<td colspan="3">
+							<p:accordionPanel autoHeight="false">
+								<p:tab title="#{app.repcli_apadet}" >
+								<table style="width:100%;">
+									<h:panelGroup>
+										<tr>
+											<td><span class="lblFrm"><h:outputText value="#{app.aparcli_brand}" />:</span></td>
+											<td>
+												<h:inputText value="#{reparacionClienteHome.instance.aparatoRep.marca}" readonly="true" />
+											</td>
+											<td><span class="lblFrm"><h:outputText value="#{app.aparcli_model}" />:</span></td>
+											<td>
+												<h:inputText value="#{reparacionClienteHome.instance.aparatoRep.modelo}" readonly="true" />
+											</td>
+											<td><span class="lblFrm"><h:outputText value="#{app.aparcli_serial}" />:</span></td>
+											<td>
+												<h:inputText value="#{reparacionClienteHome.instance.aparatoRep.numSerie}" readonly="true" />
+											</td>
+										</tr>
+										<tr>
+											<td colspan="6">
+											<table style="width:100%;">
+											<tr>
+												<td style="width:33%;"><span class="lblFrm"><h:outputText value="#{app.aparcli_amedida}" /></span>
+													<h:selectBooleanCheckbox value="#{reparacionClienteHome.instance.aparatoRep.hechoMedida}" disabled="true" />
+												</td>
+												<td style="width:33%;"><span class="lblFrm"><h:outputText value="#{app.aparcli_earphone}" /></span>
+													<h:selectBooleanCheckbox value="#{reparacionClienteHome.instance.aparatoRep.retroAuricular}" disabled="true" />
+												</td>
+												<td style="width:33%;"><span class="lblFrm"><h:outputText value="#{app.aparcli_earside}" />:</span>
+												<h:inputText value="#{app.aparcli_leftside}" 
+													rendered="#{reparacionClienteHome.instance.aparatoRep.ladoAparato=='IZQ'}" readonly="true" />
+												<h:inputText value="#{app.aparcli_rightside}" 
+													rendered="#{reparacionClienteHome.instance.aparatoRep.ladoAparato=='DER'}" readonly="true" />	
+											</td>
+											</tr>
+											</table>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="3">
+												<center>
+												<h:panelGroup rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia!=null}">
+												<div style="border:4px double blue;  width:80%;  padding:6px; margin-bottom:0px;">
+												<span class="lblFrm">
+												<h:outputText value="#{app.repcli_gar_vta}" />:<rich:spacer width="2" />
+												<h:outputText value="#{app.combapa_gar_30d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia==30}" />
+												<h:outputText value="#{app.combapa_gar_60d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia==60}" />
+												<h:outputText value="#{app.combapa_gar_183d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia==183}" />
+												<h:outputText value="#{app.combapa_gar_366d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia==366}" />
+												<rich:spacer width="2" /><h:outputText value="#{app.repcli_gar_desde} " /><rich:spacer width="2" />
+												<h:outputText value="#{reparacionClienteHome.instance.aparatoRep.fechaAdquisicion}" >
+													<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+												</h:outputText>,<rich:spacer width="2" />
+												<h:outputText value="VIGENTE" rendered="#{reparacionClienteHome.garVtaVigente==true}" />
+												<h:outputText value="NO VIGENTE" rendered="#{reparacionClienteHome.garVtaVigente==false}" />
+												</span>
+												</div>
+												</h:panelGroup>
+												<s:div style="border:4px double blue;  width:80%;  padding:10px; margin-bottom:0px;"
+													rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantia==null}">
+												<span class="lblFrm">
+												<h:outputText value="#{app.repcli_gar_vta_noexi}" />
+												</span>
+												</s:div>
+												</center>
+											</td>
+											<td colspan="3">
+												<center>
+												<h:panelGroup rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep!=null}">
+												<div style="border:4px double green;  width:100%;  padding:6px; margin-bottom:0px;">
+												<span class="lblFrm">
+												<h:outputText value="#{app.repcli_gar_rep}" />:<rich:spacer width="2" />
+												<h:outputText value="#{app.combapa_gar_30d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep==30}" />
+												<h:outputText value="#{app.combapa_gar_60d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep==60}" />
+												<h:outputText value="#{app.combapa_gar_183d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep==183}" />
+												<h:outputText value="#{app.combapa_gar_366d}" rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep==366}" />
+												<rich:spacer width="2" /><h:outputText value="#{app.repcli_gar_desde} " /><rich:spacer width="2" />
+												<h:outputText value="#{reparacionClienteHome.instance.aparatoRep.fechaGarRep}" >
+													<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+												</h:outputText>,<rich:spacer width="2" />
+												<h:outputText value="VIGENTE" rendered="#{reparacionClienteHome.garRepVigente==true}" />
+												<h:outputText value="NO VIGENTE" rendered="#{reparacionClienteHome.garRepVigente==false}" />
+												</span>
+												</div>
+												</h:panelGroup>
+												<s:div style="border:4px double green;  width:80%;  padding:10px; margin-bottom:0px;"
+													rendered="#{reparacionClienteHome.instance.aparatoRep.periodoGarantiaRep==null}">
+												<span class="lblFrm">
+													<h:outputText value="#{app.repcli_gar_rep_noexi}" />
+												</span>
+												</s:div>
+												</center>
+											</td>
+										</tr>
+									</h:panelGroup>
+									
+									<tr>
+									<td colspan="6">
+									<table style="width:100%;">
+										<tr>
+											<td>
+											<s:decorate template="/layout/kActions.xhtml">
+												<a:commandButton onclick="#{rich:component('condiciones')}.show();" ajaxSingle="true" 
+													action="#{condicionApaHome.getCondicionesList()}" reRender="mCond" 
+													styleClass="addBtn" value="#{app.button_add_cnd}" 
+													rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}" >  
+												</a:commandButton>
+												<br />
+											</s:decorate>
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selCondicionesApa}"
+												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+												headerClass="tablaHeader" footerClass="tableScroll">
+												<f:facet name="header">#{app.repcli_lstcnds}</f:facet>
+												<rich:column>
+													<h:outputText value="#{res.nombre}">
+													</h:outputText>
+												</rich:column>
+												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">
+												<a:commandLink title="#{app.compralist_delete}"  eventsQueue="q1"
+													action="#{reparacionClienteHome.delCondicionApa(res)}" ajaxSingle="true" reRender="formreparacioncli" >
+													<h:graphicImage value="/kubeImg/table_cancel.png" />
+												</a:commandLink>
+												</rich:column>
+												<f:facet name="footer">
+													<rich:datascroller id="ds1" renderIfSinglePage="true" />
+												</f:facet>
+											</rich:dataTable>
+											</td>
+											<td>
+											<s:decorate template="/layout/kActions.xhtml">
+												<a:commandButton onclick="#{rich:component('compdef')}.show();" ajaxSingle="true" 
+													action="#{componenteDefHome.getComponentesList()}" reRender="mComp" 
+													styleClass="addBtn" value="#{app.button_add_cmp}" 
+													rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}" >  
+												</a:commandButton>
+												<br />
+											</s:decorate>
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selComponentesDef}"
+												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+												headerClass="tablaHeader" footerClass="tableScroll">
+												<f:facet name="header">#{app.repcli_lstcmps}</f:facet>
+												<rich:column >
+													<h:outputText value="#{res.nombre}">
+													</h:outputText>
+												</rich:column>
+												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">
+												<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1"
+													action="#{reparacionClienteHome.delComponenteDef(res)}" ajaxSingle="true" reRender="formreparacioncli" >
+													<h:graphicImage value="/kubeImg/table_cancel.png" />
+												</a:commandLink>
+												</rich:column>
+												<f:facet name="footer">
+													<rich:datascroller id="ds1" renderIfSinglePage="true" />
+												</f:facet>
+											</rich:dataTable>
+											</td>
+											<td>
+											<s:decorate template="/layout/kActions.xhtml">
+												<a:commandButton onclick="#{rich:component('defcap')}.show();" ajaxSingle="true" 
+													action="#{defectoCapHome.getDefectosList()}" reRender="mDfc" 
+													styleClass="addBtn" value="#{app.button_add_cpd}" 
+													rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}" >  
+												</a:commandButton>
+												<br />
+											</s:decorate>
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selDefectosCap}"
+												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+												headerClass="tablaHeader" footerClass="tableScroll">
+												<f:facet name="header">#{app.repcli_lstcpds}</f:facet>
+												<rich:column >
+													<h:outputText value="#{res.nombre}">
+													</h:outputText>
+												</rich:column>
+												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">
+												<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" 
+													action="#{reparacionClienteHome.delDefectoCap(res)}" ajaxSingle="true" reRender="formreparacioncli" >
+													<h:graphicImage value="/kubeImg/table_cancel.png" />
+												</a:commandLink>
+												</rich:column>
+												<f:facet name="footer">
+													<rich:datascroller id="ds1" renderIfSinglePage="true" />
+												</f:facet>
+											</rich:dataTable>
+											</td>
+										</tr>
+									</table>
+									</td>
+									</tr>
+								</table>
+								</p:tab>
+							</p:accordionPanel>
+						</td>
+						</tr>
+					</table>
+				
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<s:button view="/taller/etasReparacion/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación'}" styleClass="saveBtn" ignoreDupResponses="true"
+						value="#{msn.button_approve}"  />
+						
+					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
+						value="No aprobar" />
+						
+					<a:commandButton
+							onclick="#{rich:component('confirmationDeliver')}.show();"
+							eventsQueue="q1" ajaxSingle="true"
+							action="#{reparacionClienteHome.setFlagPrsEntrega('D')}"
+							rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' and etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' }"
+							styleClass="detailBtn" ignoreDupResponses="true"
+							reREnder="_prsRec" value="#{app.button_rpc_delcli}" />
+						
+					<a:commandButton onclick="#{rich:component('confirmation')}.show();" reRender="formreparacioncli" ignoreDupResponses="true"
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.loopBack != null}" styleClass="doCancelBtn"
+						value="#{msn.button_reject}" />
+						
+						
+						<a:commandButton
+							onclick="#{rich:component('confirmationWrk')}.show();"
+							eventsQueue="q1" ajaxSingle="true"
+							styleClass="apprBtn" ignoreDupResponses="true"
+							value="#{app.button_rpc_aprcli}"  rendered="#{reparacionClienteHome.managed and etapaRepCliHome.instance.etapaRep.nombre=='Esperando Aprobación' }"/>
+							
+						<a:commandButton
+							onclick="#{rich:component('cancellationWrk')}.show();"
+							eventsQueue="q1" ajaxSingle="true"
+							rendered="#{reparacionClienteHome.managed and etapaRepCliHome.instance.etapaRep.nombre=='Esperando Aprobación' }"
+							styleClass="cancelBtn" ignoreDupResponses="true"
+							value="#{app.button_rpc_reccli}" />
+						
+				</s:decorate>
+				</fieldset>
+				<br />
+				<h:panelGroup id="pnlRequisiciones" ><!-- rendered="#{etapaRepCliHome.instance.etapaRep.aceptaReqs}" -->
+				<table style="width:1100px;">
+				<tr>
+					<td>
+						<s:decorate template="/layout/kActions.xhtml" rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)  and etapaRepCliHome.instance.etapaRep.aceptaReqs and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}">
+							<!-- <s:button view="/taller/etasReparacion/detRequisicion.xhtml" propagation="join"
+								styleClass="addBtn" value="#{msn.button_add_requi}" rendered="true"> <f:param name="idReq" value="" /> </s:button> -->
+								<a:commandButton onclick="#{rich:component('detReq')}.show();" ajaxSingle="true" 
+								 reRender="mReq" action="#{requisicionEtaHome.load()}"
+									styleClass="addBtn" value="#{msn.button_add_requi}" >  
+								<f:param name="idReq" value="" />
+								</a:commandButton>
+						</s:decorate>
+					</td>
+					<td>
+						<s:decorate template="/layout/kActions.xhtml" rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53) and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}">
+							<a:commandButton onclick="#{rich:component('servTll')}.show();" ajaxSingle="true"  
+								action="#{serviceDAO.loadServiciosList('TLL')}" reRender="srtll" 
+								styleClass="addBtn" value="#{app.button_add_svtll}" >  
+							</a:commandButton>
+						</s:decorate>
+					</td>
+				</tr>
+				<tr><td style="width:60%;">
+				<rich:dataTable var="res" id="tblRequisiciones" rendered="#{etapaRepCliHome.instance.etapaRep.aceptaReqs and not empty etapaRepCliHome.instance.requisicionesEtapa}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}"
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.etarepcli_requi}</f:facet>
+					<rich:column  filterBy="#{res.fechaIngreso}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_fechaIng}</f:facet>
+						<h:outputText value="#{res.fechaIngreso}">
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.fechaAprobacion}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_fechaApr}</f:facet>
+						<h:outputText value="#{res.fechaAprobacion}">
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.sucursalSol.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_sucursalSol}</f:facet>
+						<h:outputText value="#{res.sucursalSol.nombre}">
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.reqeta_estado}</f:facet>
+						<h:outputText value="#{msn.status_quoted}" rendered="#{res.estado=='COT'}" />
+						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='PEN'}" />
+			            <h:outputText value="#{msn.status_approved}" rendered="#{res.estado=='APR'}" />
+			            <h:outputText value="#{msn.status_rejected}" rendered="#{res.estado=='REC'}" />
+					</rich:column>
+					<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)}">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{msn.button_edit}" rendered="true"
+							view="/taller/etasReparacion/detRequisicion.xhtml" propagation="join">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="reqId" value="#{res.id}" />
+						</s:link>
+						<rich:spacer width="10" />
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				</td>
+				<td>
+					<rich:dataTable var="res" value="#{reparacionClienteHome.serviciosRep}"
+						rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42 || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad'  and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}"
+						rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  id="_tblSrvs" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.etarepcli_costossrv}</f:facet>
+						<rich:column  filterBy="#{res.servicio.name}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.reqeta_fechaIng}</f:facet>
+							<h:outputText value="#{res.servicio.name}" />
+						</rich:column>
+						<rich:column filterBy="#{res.servicio.costo}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.reqeta_fechaApr}</f:facet>
+							<h:outputText value="#{res.servicio.costo}">
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</rich:column>
+						<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)}">
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" rendered="#{res.estado==null or res.estado!='CBR'}" 
+								action="#{reparacionClienteHome.delServicioRep(res)}" ajaxSingle="true" reRender="_tblSrvs" >
+								<h:graphicImage value="/kubeImg/table_cancel.png" />
+							</a:commandLink>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable>
+				</td>
+				</tr>
+				</table>
+				</h:panelGroup>
+			</h:form>
+			</center>
+			<rich:modalPanel id="confirmAprob" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmAprob');">
+				<f:facet name="header">
+					ConfirmaciÃ³n de aprobaciÃ³n de etapa
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmAprob')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fm5">
+					<p>ESTA SEGURO QUE DESEA PASAR A LA SIGUIENTE ETAPA? UNA VEZ HECHO ESTO, NO PODRÃ³ DESHACER LOS CAMBIOS
+					NI REGRESAR PARA AGREGAR REQUISICIONES O SERVICIOS EN ESTA ETAPA.</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m5">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmAprob')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{etapaRepCliHome.aprobarEtapa()}" ignoreDupResponses="true" reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn"
+							value="Aprobar"
+							onclick="#{rich:component('confirmAprob')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			
+			<!-- Nuevo modal para no aprobar un trabajo de taller -->
+			<rich:modalPanel id="confirmNoAprobMod" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmNoAprobacion');">
+				<f:facet name="header">
+					ConfirmaciÃ³n de no aprobaciÃ³n de etapa
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmNoAprobMod')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmNoAprobar">
+					<p>ESTA SEGURO QUE DESEA NO APROBAR ESTA ETAPA?.</p>
+					<s:decorate template="/layout/kActions.xhtml" id="mNAP">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmNoAprobMod')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{etapaRepCliHome.noAprobarEtapa()}" ignoreDupResponses="true" reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn"
+							value="Aceptar"
+							onclick="#{rich:component('confirmNoAprobMod')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			
+			
+			<rich:modalPanel id="confirmation" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.usuariolist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmReproTall">
+					<p>Desea reprobar el proceso de reparaciÃ³n llevado a cabo?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{etapaRepCliHome.rechazarEtapa()}" ignoreDupResponses="true" reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn" value="Reprobar" ajaxSingle="true"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="condiciones"  width="800" moveable="true" autosized="true" top="50px" 
+				onbeforeshow="activeModal.setActiveModalPanel('condiciones');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('condiciones')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCond"><ui:include  src="../trackReparacion/addCondicion.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="compdef"  width="800" moveable="true" autosized="true" top="50px" 
+				onbeforeshow="activeModal.setActiveModalPanel('compdef');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('compdef')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mComp"><ui:include  src="../trackReparacion/addCompDef.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="detReq"  width="800" moveable="true" autosized="true" top="50px" 
+				onbeforeshow="activeModal.setActiveModalPanel('detReq');">
+				<f:facet name="header">Requisiciones</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('detReq')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mReq"><ui:include  src="detRequisicionMod.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="defcap"  width="800" moveable="true" autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('defcap');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('defcap')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mDfc"><ui:include  src="../trackReparacion/addDefCap.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="servTll"  width="800" moveable="true" autosized="true" top="50px" 
+				onbeforeshow="activeModal.setActiveModalPanel('servTll');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('servTll')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="srtll"><ui:include  src="addServicio.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
+			
+			<rich:modalPanel id="confirmationDeliver" width="500"
+					moveable="true" autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('confirmationDeliver');">
+					<f:facet name="header">#{app.categorialist_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('confirmationDeliver')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<center>
+						<h:form id="fm45">
+							<p>#{app.repcli_deliverapa}</p>
+
+							<table>
+								<tr>
+									<td><center>Persona que recibe el aparato:</center></td>
+									<td><center>Nombre:</center></td>
+								</tr>
+								<tr>
+									<td><h:selectOneRadio
+											value="#{reparacionClienteHome.flagPrsEntrega}"
+											required="true" styleClass="radioB"
+											style="width:60px; text-align:center;" id="_prsRec">
+											<f:selectItem itemLabel="#{app.repcli_rec_duenio}"
+												itemValue="D" />
+											<f:selectItem itemLabel="#{app.repcli_rec_otro}"
+												itemValue="O" />
+											<a:support event="onchange" eventsQueue="q1"
+												ajaxSingle="true" reRender="_nomRecibe" />
+										</h:selectOneRadio></td>
+									<td><h:panelGroup id="_nomRecibe">
+											<h:inputText
+												value="#{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}"
+												disabled="true" style="width:250px;"
+												rendered="#{reparacionClienteHome.flagPrsEntrega=='D'}" />
+											<h:inputText
+												value="#{reparacionClienteHome.instance.nombreRecibe}"
+												style="width:250px;"
+												rendered="#{reparacionClienteHome.flagPrsEntrega=='O'}" />
+										</h:panelGroup></td>
+								</tr>
+								<tr>
+									<td colspan="2">Comentarios relacionados a la entrega:</td>
+								</tr>
+								<tr>
+									<td colspan="2"><h:inputTextarea
+											value="#{reparacionClienteHome.instance.detalleEntrega}"
+											style="width:300px;" rows="3" /></td>
+								</tr>
+							</table>
+							<s:decorate template="/layout/kActions.xhtml" id="m2">
+								<a:commandButton styleClass="cancelBtn" value="#{msn.button_no}"
+									onclick="#{rich:component('confirmationDeliver')}.hide();">
+								</a:commandButton>
+								<a:commandButton
+									action="#{reparacionClienteHome.entregaCliente()}"
+									reRender="formreparacioncli" styleClass="apprBtn"
+									value="#{app.button_rpc_delcli}"
+									onclick="#{rich:component('confirmationDeliver')}.hide();">
+								</a:commandButton>
+							</s:decorate>
+
+						</h:form>
+					</center>
+				</rich:modalPanel>
+				
+				<!-- Nuevo modal para mostrar informacion del cliente -->
+				<rich:modalPanel id="infoCliMod" width="750" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('infoCliMod');">
+					<f:facet name="header">
+						Informacion del cliente seleccionado
+					</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('infoCliMod')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+
+					<s:div id="modInfoCl">
+
+						<s:div id="modInfoCl1" >
+							<ui:include src="infoClienteMod.xhtml" />
+						</s:div>
+					</s:div>
+				</rich:modalPanel>
+				
+				
+				<rich:modalPanel id="confirmationWrk" width="400" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('confirmationWrk');">
+					<f:facet name="header">#{app.categorialist_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('confirmationWrk')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<h:form id="fm1">
+						<p>#{app.repcli_confirmwrk}</p>
+						<s:decorate template="/layout/kActions.xhtml" id="m1">
+							<a:commandButton styleClass="cancelBtn" value="#{msn.button_no}"
+								onclick="#{rich:component('confirmationWrk')}.hide();">
+							</a:commandButton>
+							<a:commandButton
+								action="#{reparacionClienteHome.aprobacionCliente()}"
+								reRender="formreparacioncli" styleClass="apprBtn"
+								value="#{app.button_rpc_aprcli}"
+								onclick="#{rich:component('confirmationWrk')}.hide();">
+							</a:commandButton>
+						</s:decorate>
+					</h:form>
+				</rich:modalPanel>
+				
+				<rich:modalPanel id="modComentario" width="400" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('modComentario');">
+					<f:facet name="header">Comentario actual</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('modComentario')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<h:form id="frmComent">
+						<p>Actualizar comentario</p>
+						<h:panelGrid columns="1" style="margin:0 auto;">
+							<h:inputTextarea value="#{etapaRepCliHome.instance.descripcion}" style="width:355px;height:100px;" />
+							<s:decorate template="/layout/kActions.xhtml" id="m1">
+								<a:commandButton styleClass="cancelBtn" value="#{msn.button_no}"
+									onclick="#{rich:component('modComentario')}.hide();">
+								</a:commandButton>
+								<a:commandButton
+									action="#{etapaRepCliHome.actualizarComentario()}"
+									reRender="formreparacioncli" styleClass="apprBtn"
+									value="Actualizar"
+									onclick="#{rich:component('modComentario')}.hide();">
+								</a:commandButton>
+							</s:decorate>
+						</h:panelGrid>
+					</h:form>
+				</rich:modalPanel>
+
+				<rich:modalPanel id="cancellationWrk" width="400" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('cancellationWrk');">
+					<f:facet name="header">#{app.categorialist_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('cancellationWrk')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<h:form id="fm2">
+						<p>#{app.repcli_cancelwrk}</p>
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_srvCobrarLOV"
+							rendered="#{reparacionClienteHome.managed}">
+							<ui:define name="label">#{app.repcli_cbr_srv}:</ui:define>
+							<h:panelGroup>
+								<center>
+									<a:commandButton
+										onclick="#{rich:component('servsCbr')}.show();"
+										ajaxSingle="true"
+										action="#{serviceDAO.loadServiciosList('TLL')}"
+										reRender="mSrvC" styleClass="addBtn"
+										value="Agregar servicio para cobro">
+									</a:commandButton>
+									<rich:dataTable var="res"
+										value="#{reparacionClienteHome.servsCobro}" align="center"
+										id="tblSrCC" headerClass="tablaHeader">
+										<rich:column>
+											<f:facet name="header">#{app.servlist_col1}</f:facet>
+											<h:outputText value="#{res.codigo}" />
+										</rich:column>
+										<rich:column>
+											<f:facet name="header">#{app.servlist_col2}</f:facet>
+											<h:outputText value="#{res.name}" />
+										</rich:column>
+										<rich:column>
+											<f:facet name="header">#{msn.col_actions}</f:facet>
+											<a:commandLink title="Quitar servicio" eventsQueue="q1"
+												action="#{reparacionClienteHome.delServicioCbr(res)}"
+												ajaxSingle="true" reRender="tblSrCC">
+												<h:graphicImage value="/kubeImg/table_delete16.png" />
+											</a:commandLink>
+										</rich:column>
+									</rich:dataTable>
+								</center>
+							</h:panelGroup>
+						</s:decorate>
+						<s:decorate template="/layout/kActions.xhtml" id="m2">
+							<a:commandButton styleClass="cancelBtn" value="#{msn.button_no}"
+								onclick="#{rich:component('cancellationWrk')}.hide();">
+							</a:commandButton>
+							<a:commandButton
+								action="#{reparacionClienteHome.rechazoCliente()}"
+								reRender="formreparacioncli" styleClass="apprBtn"
+								value="#{app.button_rpc_reccli}"
+								onclick="#{rich:component('cancellationWrk')}.hide();">
+							</a:commandButton>
+						</s:decorate>
+
+					</h:form>
+				</rich:modalPanel>
+				
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

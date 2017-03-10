@@ -1,0 +1,232 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{aparatoClienteHome.managed?sainv_view_messages.get('aparcli_head_edit'):sainv_view_messages.get('aparcli_head_register')}" />
+			</f:facet>
+			<h:form id="formapaclidet">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+				<center>
+					<legend>#{app.combapa_legend}</legend> 
+					
+					<table>
+					<tr>
+					<td style="width:40%;">
+					<center>
+						<h:panelGrid columns="3" >
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.repcli_cliente}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.cliente.nombres} #{aparatoClienteHome.instance.cliente.apellidos}" 
+									readonly="true" required="true" disabled="true" style="width:200px;" />
+							</s:decorate>
+								
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+								<ui:define name="label">#{app.aparcli_detapa}:</ui:define>
+								<h:inputTextarea value="#{aparatoClienteHome.instance.detalleAparato}" style="width:180px;" >
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+								</h:inputTextarea>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
+								<ui:define name="label">#{app.aparcli_earphone}:</ui:define>
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.retroAuricular}" >
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+														
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+								<ui:define name="label">#{app.aparcli_amedida}:</ui:define>
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.hechoMedida}" disabled="#{aparatoClienteHome.managed}" >
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formapaclidet,_fldCustom" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" >
+								<ui:define name="label">#{app.aparcli_earside}:</ui:define>
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.ladoAparato}" required="true" style="width:180px;">
+									<f:selectItem itemLabel="#{msn.side_left}" itemValue="IZQ" />
+									<f:selectItem itemLabel="#{msn.side_right}" itemValue="DER" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								</h:selectOneMenu>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
+								<ui:define name="label">#{app.aparcli_customapa}:</ui:define>
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.customApa}" disabled="#{aparatoClienteHome.managed}" >
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formapaclidet,_fldCustom" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+								<ui:define name="label">#{app.combapa_tiene_gar}:</ui:define>
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.tieneGarantia}" disabled="#{aparatoClienteHome.managed}" >
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tmGar" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_tmGar" >
+								<ui:define name="label" >#{app.combapa_time_gar}:</ui:define>
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantia}" style="width:160px;" disabled="#{aparatoClienteHome.managed}" rendered="#{aparatoClienteHome.tieneGarantia==true}">
+									<f:selectItem itemLabel="#{app.combapa_gar_30d}" itemValue="30" />
+									<f:selectItem itemLabel="#{app.combapa_gar_60d}" itemValue="60" />
+									<f:selectItem itemLabel="#{app.combapa_gar_183d}" itemValue="183" />
+									<f:selectItem itemLabel="#{app.combapa_gar_366d}" itemValue="366" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								</h:selectOneMenu>
+							</s:decorate>
+														
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_tmGarRep" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}" >
+								<ui:define name="label" >#{app.aparcli_gar_tll_p}:</ui:define>
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantiaRep}" style="width:160px;" disabled="true">
+									<f:selectItem itemLabel="#{app.combapa_gar_30d}" itemValue="30" />
+									<f:selectItem itemLabel="#{app.combapa_gar_60d}" itemValue="60" />
+									<f:selectItem itemLabel="#{app.combapa_gar_183d}" itemValue="183" />
+									<f:selectItem itemLabel="#{app.combapa_gar_366d}" itemValue="366" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								</h:selectOneMenu>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}">
+								<ui:define name="label">#{app.aparcli_gar_tll_d}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.fechaGarRep}" readonly="true" style="width:200px;" >
+									<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+								</h:inputText>
+							</s:decorate>
+							
+						</h:panelGrid> 
+						</center>
+					</td>
+					<td style="width:50%;text-align:center;">
+						
+						
+						<h:panelGrid columns="2" id="_fldCustom" 
+							rendered="#{aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true}" >
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.productomast_name}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.nombre}" required="false" style="width:200px;" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.aparcli_brand}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.marca}" required="false" style="width:200px;" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.aparcli_model}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.modelo}" required="false" style="width:200px;" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+								<ui:define name="label">#{app.producto_codser}:</ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" required="true" style="width:200px;" />
+							</s:decorate>
+						
+						</h:panelGrid>
+						
+						
+					</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+						<rich:spacer height="10" />
+						<s:decorate template="/layout/kActions.xhtml" rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}">
+							<a:commandButton onclick="#{rich:component('selItem')}.show();" ajaxSingle="true" 
+								action="#{productoHome.cargarListaProductos()}" reRender="m1"
+								styleClass="addBtn" value="#{msn.button_add_product}">
+							</a:commandButton>
+						</s:decorate>
+						<rich:spacer height="10" />
+						<rich:dataTable var="res" value="#{aparatoClienteHome.items}" id="_tblItemsCmb" rows="10"
+							rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}"
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.aparcli_listitms}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.productomast_name}</f:facet>
+								<h:outputText value="#{res.inventario.producto.nombre}" rendered="#{res.inventario.producto!=null}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.combapa_apaprpal}</f:facet>
+								<center>
+								<h:selectBooleanCheckbox value="#{res.principal}" >
+									<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" reRender="_tblItemsCmb" action="#{aparatoClienteHome.setApaPrpal(res)}" />
+								</h:selectBooleanCheckbox>
+								</center>
+							</rich:column>
+							<rich:column style="width:140px;" >
+								<f:facet name="header">#{app.producto_codlot}</f:facet>
+								<h:inputText value="#{res.codProducto.numLote}" 
+									required="false" rendered="#{res.inventario.producto.categoria.tieneNumLote==true}" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" update="growl" />		
+									</h:inputText>
+							</rich:column>
+							<rich:column style="width:140px;" >
+								<f:facet name="header">#{app.producto_codser}</f:facet>
+								<h:inputText value="#{res.codProducto.numSerie}" 
+									required="false" rendered="#{res.inventario.producto.categoria.tieneNumSerie==true}" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" update="growl" />		
+									</h:inputText>
+							</rich:column>
+							<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+								<a:commandLink reRender="formapaclidet" eventsQueue="q1"
+									action="#{aparatoClienteHome.removerItem(res)}" ajaxSingle="true">
+									<h:graphicImage value="/kubeImg/table_delete16.png" />
+								</a:commandLink>
+							</rich:column>
+							<f:facet name="footer">
+							</f:facet>
+						</rich:dataTable>
+						</td>
+					</tr>
+					</table>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/taller/apacli/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<a:commandButton action="#{aparatoClienteHome.save()}" reRender="formapaclidet"
+						rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+						value="#{msn.button_save}"/>
+						
+					<a:commandButton action="#{aparatoClienteHome.modify()}" reRender="formapaclidet"
+						rendered="#{aparatoClienteHome.managed}" styleClass="modifyBtn" update="growl"
+						value="#{msn.button_modify}"> </a:commandButton>
+						
+				</s:decorate>
+				</center>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="selItem" width="800" moveable="false"
+				autosized="true" top="50px" onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+				
+				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selItem')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1"><ui:include src="addProducts.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

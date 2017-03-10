@@ -1,0 +1,178 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				#{app.transfer_confirm_request_head}
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formtransfer">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.transferenciamast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfer_detail_send_date}:</ui:define>
+							<rich:calendar value="#{transferenciaHome.instance.fecha}" readonly="true" datePattern="dd/MM/yyyy"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfersend_detail_branch_destiny}:</ui:define>
+							<h:inputText value="#{transferenciaHome.instance.sucursalDestino.nombre}" readonly="true"/>
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfersend_detail_observation_destiny}:</ui:define>
+							<h:inputTextarea value="#{transferenciaHome.instance.observacionDestino}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transfersend_detail_observation_origin}:</ui:define>
+							<h:inputTextarea value="#{transferenciaHome.instance.observacion}" readonly="false"/>
+						</s:decorate>
+				</h:panelGrid>
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{transferenciaHome.itemsAgregados}" id="_table"
+					rendered="#{not empty transferenciaHome.itemsAgregados}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.transferencia_itemlist_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+						<h:outputText value="#{res.cantidad}" size="8" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" size="8">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column
+						rendered="#{transferenciaHome.instance.estado=='P'}">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink title="#{app.transferencia_selcods}" reRender="m2"
+							eventsQueue="q1"
+							rendered="#{transferenciaHome.instance.estado=='P' and 
+									( res.inventario.producto.categoria.tieneNumSerie==true or  
+									res.inventario.producto.categoria.tieneNumLote==true ) }"
+							action="#{transferenciaHome.cargarListaCodigos(res)}"
+							ajaxSingle="true"
+							onclick="#{rich:component('lstCodigos')}.show();">
+							<h:graphicImage value="/kubeImg/table_detail2.png" />
+						</a:commandLink>
+					</rich:column>
+						<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/transferSend/transferPendingSend.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<a:commandButton onclick="#{rich:component('approveConfirmation')}.show();"
+						reRender="formtransfer" rendered="#{transferenciaHome.instance.estado=='P'}" styleClass="apprBtn" value="#{msn.button_approve}"/>
+						
+					<a:commandButton onclick="#{rich:component('rejectConfirmation')}.show();" 
+					 	reRender="formtransfer" rendered="#{transferenciaHome.instance.estado=='P'}" styleClass="rejectBtn" value="#{msn.button_reject}"/>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="approveConfirmation" width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('approveConfirmation');">
+				<f:facet name="header">
+					#{app.transferencialist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('approveConfirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.transferencialist_approve_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('approveConfirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{transferenciaHome.approve()}"  reRender="formtransfer"
+							styleClass="apprBtn" value="#{msn.button_continue}"
+							onclick="#{rich:component('approveConfirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="rejectConfirmation" width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('rejectConfirmation');">
+				<f:facet name="header">
+					#{app.transferencialist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('rejectConfirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm2">
+					<p>#{app.transferencialist_reject_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m2">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('rejectConfirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{transferenciaHome.reject()}"  reRender="formtransfer"
+							styleClass="apprBtn" value="#{msn.button_continue}"
+							onclick="#{rich:component('rejectConfirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+						<rich:modalPanel id="lstCodigos" width="700" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.compralist_add_products_modal}
+				</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('lstCodigos')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m2">
+					<ui:include src="codsProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

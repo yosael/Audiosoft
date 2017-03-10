@@ -1,0 +1,211 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{usuarioHome.managed?sainv_view_messages.get('usuariomast_head_edit'):sainv_view_messages.get('usuariomast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formusuario">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<fieldset>
+					<legend>#{app.usuariomast_legend}</legend> 
+					
+					<h:panelGrid columns="3" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.usuariomast_username}:</ui:define>
+							<h:inputText value="#{usuarioHome.instance.nombreUsuario}" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Nombre completo:</ui:define>
+							<h:inputText value="#{usuarioHome.instance.nombreCompleto}" required="true" />
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{usuarioHome.managed}">
+							<ui:define name="label">#{app.usuariomast_datelast}:</ui:define>
+							<rich:calendar value="#{usuarioHome.instance.fechaUltimoAcceso}" datePattern="dd/MM/yyyy" disabled="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.usuariomast_branch}:</ui:define>
+							<h:selectOneMenu value="#{usuarioHome.instance.sucursal}" required="false">
+								<s:selectItems value="#{usuarioHome.sucursales}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:div rendered="#{!usuarioHome.managed}">
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.usuariomast_pass}:</ui:define>
+								 <p:password value="#{usuarioHome.pass}" required="true" 
+								 	promptLabel="#{app.usuariomast_pass_prompt}" weakLabel="#{app.usuariomast_pass_weak}"  
+	                        		goodLabel="#{app.usuariomast_pass_good}" strongLabel="#{app.usuariomast_pass_strong}" 
+	                        		minLength="6"/>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.usuariomast_confirmation}:</ui:define>
+								 <h:inputSecret value="#{usuarioHome.confirmacion}" required="true"/>
+							</s:decorate>
+						</s:div>
+						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{usuarioHome.managed}">
+							<ui:define name="label">#{app.usuariomast_pass}:</ui:define>
+							 <p:password value="#{usuarioHome.pass}" required="false" 
+							 	promptLabel="#{app.usuariomast_pass_prompt}" weakLabel="#{app.usuariomast_pass_weak}"  
+	                       		goodLabel="#{app.usuariomast_pass_good}" strongLabel="#{app.usuariomast_pass_strong}" 
+	                       		minLength="6"/>
+						</s:decorate>
+							
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{usuarioHome.managed}">
+							<ui:define name="label">#{app.usuariomast_confirmation}:</ui:define>
+							 <h:inputSecret value="#{usuarioHome.confirmacion}" required="false"/>
+						</s:decorate>
+						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.usuariomast_company}:</ui:define>
+							<h:selectOneMenu value="#{usuarioHome.empresaSeleccionada}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{usuarioHome.cargarSucursales()}" 
+									ajaxSingle="true" reRender="_branch"/>
+							</h:selectOneMenu>
+						</s:decorate>
+							
+						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.usuariomast_branch}:</ui:define>
+							<h:inputText value="#{usuarioHome.instance.sucursal.nombre}" disabled="true"/>
+						</s:decorate>
+						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{usuarioHome.managed}">
+							<ui:define name="label">#{app.usuariomast_state}:</ui:define>
+							<h:selectOneMenu value="#{usuarioHome.estado}">
+								<f:selectItem itemLabel="Activo" itemValue="ACT"/>
+								<f:selectItem itemLabel="Inactivo" itemValue="INA"/>
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" 
+									reRender="_actions" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{usuarioHome.managed}" id="_fails">
+							<ui:define name="label">#{app.usuariomast_login_failed}:</ui:define>
+							<h:inputText value="#{usuarioHome.instance.numeroIntentos}" disabled="true" 
+								size="10"/>
+							<a:commandButton action="#{usuarioHome.resetCount()}" ajaxSingle="true" 
+								value="#{app.usuariomast_reset_fails}" 
+								reRender="formusuario" eventsQueue="q1" rendered="#{usuarioHome.instance.numeroIntentos>0}" 
+								styleClass="resetBtn"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.usuariomast_area}:</ui:define>
+							<h:selectOneMenu value="#{usuarioHome.instance.areaUsuario}" required="false" >
+								<s:selectItems value="#{usuarioHome.areasNegocio}" var="_are" 
+									label="#{_are.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" 
+									reRender="_actions" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+							<ui:define name="label">#{app.usuariomast_esp}:</ui:define>
+							<h:selectBooleanCheckbox value="#{usuarioHome.instance.accionEspecial}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+							<ui:define name="label">#{app.usuariomast_discount}:</ui:define>
+							<h:selectBooleanCheckbox value="#{usuarioHome.instance.autorizDesc}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+												
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+							<ui:define name="label">Notificaciones de inventario:</ui:define>
+							<h:selectBooleanCheckbox value="#{usuarioHome.instance.notificacionInv}" >
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+						
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<s:button view="/admin/usuario/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/admin/usuario/addrol.xhtml" propagation="join" rendered="#{usuarioHome.managed}"
+						styleClass="listBtn" value="#{msn.button_add_rol}" action="#{usuarioHome.cargarRolesDisponibles()}">
+					</s:button>
+					<s:button view="/admin/usuario/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{usuarioHome.save()}" reRender="formusuario"
+						rendered="#{not usuarioHome.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{usuarioHome.modify()}" reRender="formusuario"
+						rendered="#{usuarioHome.managed and usuarioHome.estado=='ACT'}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{usuarioHome.managed and usuarioHome.estado=='INA'}" 
+						styleClass="modifyBtn" ajaxSingle="true"
+						value="#{msn.button_modify}" onclick="#{rich:component('confirmation')}.show();"/>
+				</s:decorate>
+				</fieldset>
+				</center>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.usuariolist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.usuariomast_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{usuarioHome.modify()}" reRender="formusuario"
+							styleClass="modifyBtn"
+							value="#{msn.button_continue}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

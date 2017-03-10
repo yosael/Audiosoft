@@ -1,0 +1,158 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="18 18 30 30" orientation="landscape">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Reporte de cheques emitidos</p:paragraph>
+	</p:font>
+	
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="64" headerRows="0" widths="0.7 1 0.7 1 " >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repPlantilla.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repPlantilla.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Empresa: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repPlantilla.valCmb2}" /></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Proveedor: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repPlantilla.valCmb1}" /></p:paragraph>
+		</p:cell>	
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Estado: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text rendered="#{repPlantilla.valCmb3=='APL'}" value="Aplicados" />
+				<p:text rendered="#{repPlantilla.valCmb3=='ANU'}" value="Anulados" />
+			</p:paragraph>
+		</p:cell>			
+	</p:table>
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="6" widthPercentage="100" headerRows="2"  widths="0.5 1.5 1 1 1 0.5" >
+			<p:font color="black" style="bold" size="10">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+					<p:paragraph alignment="center">FECHA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+					<p:paragraph alignment="center">EMPRESA</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+					<p:paragraph alignment="center">PROVEEDOR</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+					<p:paragraph alignment="center">ORDEN DE</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="18">
+					<p:paragraph alignment="center">ESTADO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4"  minimumHeight="18">
+					<p:paragraph alignment="center">MONTO</p:paragraph>
+				</p:cell>
+			</p:font>
+		
+			<ui:repeat var="res" value="#{repPlantilla.dtRp['cheques']}">
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph><p:text value="#{res.fecha}">
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>#{res.comprobante.empresaDoc.nombre}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>#{res.proveedor.razonSocial}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>#{res.ordenDe}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text rendered="#{res.estado=='APL'}" value="Aplicado" />
+						<p:text rendered="#{res.estado=='ANU'}" value="Anulado" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="5" minimumHeight="16">
+					<p:paragraph><p:text value="#{res.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:font size="13">
+			<p:table columns="4" widthPercentage="60" headerRows="0" widths="1 0.8 1 0.8" >
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" fixedHeight="24">
+					<p:paragraph alignment="center">Numero de cheques: </p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="24">
+					<p:paragraph><p:text value="#{repPlantilla.dtRp['cheques'].size()}">
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4"  fixedHeight="24">
+					<p:paragraph alignment="center">Monto total: </p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="24">
+					<p:paragraph><p:text value="#{repPlantilla.dtRp['montoCheques']}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+							groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+			</p:table>	
+		</p:font>	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clinica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

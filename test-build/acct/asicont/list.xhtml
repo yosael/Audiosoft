@@ -1,0 +1,77 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.asicont_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/acct/asicont/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="id" value="" />
+				</s:button>
+			</s:decorate>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<center>
+				<rich:dataTable var="res" value="#{asientoContableHome.resultList}"
+					rendered="#{not empty asientoContableHome.resultList}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.asicont_list}</f:facet>
+					<rich:column filterBy="#{res.codigo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.asicont_codigo}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.compramast_branch}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{asientoContableHome.filtrarFecha(res.fechaAsiento)}" filterEvent="onkeyup"> 
+						<h:outputText value="#{res.fechaAsiento}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					
+					<rich:column filterBy="#{res.concepto.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.asicont_concepto}</f:facet>
+						<h:outputText value="#{res.concepto.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.monto}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.asicont_monto}</f:facet>
+						<h:outputText value="#{asientoContableHome.moneyDecimal(res.monto)}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.asicont_edit}" rendered="true"
+							view="/acct/asicont/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				</center>
+				
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+<style type="text/css">
+
+.bigHd {
+	background-color: #4A75B5;
+    border-color: #4A75B5;
+    font-size: 16px;
+    color: #FFF;
+    font-weight: bold;
+    font-family: Arial,Verdana,sans-serif;
+    text-align:center;
+ 	
+}
+</style>
+		<h:form id="frmSelUbix">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<div class="bigHd"><h:outputLabel id="productoLabel"
+				value="#{productoHome.instance.nombre}"  /><br />
+				<h:outputLabel id="UbicacionesLabel" 
+                       value="#{app.productomast_manageLocation}" /> <br /> </div>
+
+		<div>
+			<rich:spacer height="10px" />
+			<rich:spacer height="20px" width="10px" />
+			<h:outputLabel value="#{app.productomast_warehouse}:"/>
+			<rich:spacer height="20px" width="6px" />
+			
+			<h:selectOneMenu value="#{productoHome.sucursalSeleccionada}"
+				required="true">
+				<s:selectItems value="#{sucursalList.resultList}" var="suc"
+					label="#{suc.nombre}" noSelectionLabel="Seleccione una sucursal" />
+				<s:convertEntity />
+				<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"
+					action="#{productoHome.cargarListaUbicaciones()}"
+					reRender="panel,_tblUbis" />
+			</h:selectOneMenu>
+		</div>
+		
+		<h:panelGroup id="panel">
+				<rich:dataTable var="res" value="#{productoHome.ubicacionesPrd}" id="_tblUbis"  rows="10"
+					rendered="#{not empty productoHome.ubicacionesPrd}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.ubiprdsuc_list}</f:facet>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.sucursal_ubiprd}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column>
+					<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.movimientomast_select_product}" eventsQueue="q1"
+							action="#{productoHome.actuUbicacion(res)}" ajaxSingle="true"
+							onclick="#{rich:component('selUbicacion')}.hide();" reRender="_tblUbis,btnUbiPrd" >
+							
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				</h:panelGroup>
+			</h:form>
+	
+</ui:composition>

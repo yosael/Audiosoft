@@ -1,0 +1,151 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<script type="text/javascript">
+		  function showReport(conversationId) {
+		  if (document.getElementById("messages") != null) {
+		    return;
+		  }
+		  var reportWin = window.open('#{reporte.detailPDF}' + '&amp;cid=' + conversationId);
+		  if (!reportWin) {
+		    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
+		  }
+		  }
+		</script>
+	
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{app.report_detail_product_head}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formproducto">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.productomast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_name}:</ui:define>
+							<h:outputText value="#{reporte.inventario.producto.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productolist_col7}:</ui:define>
+							<h:outputText value="#{reporte.inventario.cantidadActual}" >
+								<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+							</h:outputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_value}:</ui:define>
+							<h:outputText value="#{reporte.inventario.producto.prcNormal}">
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_brand}:</ui:define>
+							<h:outputText value="#{reporte.inventario.producto.marca.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_unit}:</ui:define>
+							<h:outputText value="#{reporte.inventario.producto.unidadMedida.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.productomast_category}:</ui:define>
+							<h:outputText value="#{reporte.inventario.producto.categoria.nombre}"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_start_date}:</ui:define>
+							<rich:calendar value="#{reporte.fechaInicio}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" action="#{reporte.consultarMovimientos()}" 
+									reRender="formproducto" eventsQueue="q1" ajaxSingle="true"/>
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_end_date}:</ui:define>
+							<rich:calendar value="#{reporte.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" action="#{reporte.consultarMovimientos()}" 
+									reRender="formproducto" eventsQueue="q1" ajaxSingle="true"/>
+							</rich:calendar>
+						</s:decorate>
+						
+				</h:panelGrid>
+				
+				<rich:spacer height="20"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/reportes/inventarios/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_report}">
+					</s:button>
+					<s:button view="/sainv/reportes/inventarios/detailInvExcel.xhtml" propagation="join"
+						styleClass="excBtn" value="#{msn.button_excel}" rendered="#{not empty reporte.items}">
+					</s:button>
+					<a:commandButton oncomplete="showReport('#{conversation.id}')"
+						styleClass="pdfBtn" value="#{msn.button_pdf}" rendered="#{not empty reporte.items}">
+					</a:commandButton>
+				</s:decorate>	 
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{reporte.items}" 
+					rendered="#{not empty reporte.items}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.report_move_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.report_move_col1}</f:facet>
+						<h:outputText value="#{res.cantidad}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.report_move_col2}</f:facet>
+						<h:outputText value="#{res.movimiento.fecha}" >
+							<s:convertDateTime type="date"/>
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.report_move_col3}</f:facet>
+						<h:outputText value="Entrada" rendered="#{res.movimiento.tipoMovimiento=='E'}"/>
+						<h:outputText value="Salida" rendered="#{res.movimiento.tipoMovimiento=='S'}"/>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.report_move_col4}</f:facet>
+						<h:outputText value="Transferencia" rendered="#{res.movimiento.razon=='T'}"/>
+						<h:outputText value="Pedido" rendered="#{res.movimiento.razon=='P'}"/>
+						<h:outputText value="Compra" rendered="#{res.movimiento.razon=='C'}"/>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.report_move_col5}</f:facet>
+						<h:outputText value="#{res.movimiento.usuario.nombreUsuario}"/>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/>
+				
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,148 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.sched_search_head}</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset><legend>#{app.sched_search_data}</legend> <h:panelGrid
+					columns="2" style="padding-left:100px;">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_search_date1}:</ui:define>
+						<rich:calendar value="#{medicalAppointmentSearch.date1}"
+							datePattern="dd/MM/yyyy" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_search_date2}:</ui:define>
+						<rich:calendar value="#{medicalAppointmentSearch.date2}"
+							datePattern="dd/MM/yyyy" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml"
+						rendered="#{not identity.hasRole('doctor')}">
+						<ui:define name="label">#{app.sched_search_doctor}:</ui:define>
+						<h:selectOneMenu value="#{medicalAppointmentSearch.doctor}"
+							style="width:200px;">
+							<s:selectItems var="res" value="#{doctorQuery.resultList}"
+								label="#{res.fullName}" noSelectionLabel=" " />
+							<s:convertEntity />
+						</h:selectOneMenu>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_search_status}:</ui:define>
+						<h:selectOneRadio value="#{medicalAppointmentSearch.status}" styleClass="radioB">
+							<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0" />
+							<f:selectItem itemLabel="#{app.sched_served}" itemValue="1" />
+							<f:selectItem itemLabel="#{app.sched_canceled}" itemValue="2" />
+							<f:selectItem itemLabel="#{app.sched_absence}" itemValue="3" />
+						</h:selectOneRadio>
+					</s:decorate>
+				</h:panelGrid> <s:decorate template="/layout/kActions.xhtml">
+					<s:button propagation="begin" view="#{conversation.viewId}"
+						styleClass="newBtn" value="#{msn.button_new}" />
+					<a:commandButton action="#{medicalAppointmentSearch.search()}"
+						reRender="formA" styleClass="searchBtn"
+						value="#{msn.button_search}">
+						<s:defaultAction />
+					</a:commandButton>
+				</s:decorate></fieldset>
+				<rich:spacer height="20" />
+				<rich:extendedDataTable style="margin:0 auto;"
+					value="#{medicalAppointmentSearch.resultList}"
+					rendered="#{not empty medicalAppointmentSearch.resultList}"
+					var="res" id="table" width="600px" height="300px" sortMode="single"
+					selectionMode="single"
+					selection="#{medicalAppointmentSearch.selection}" align="center"
+					 rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  headerClass="tablaHeader"
+					footerClass="tableScroll" enableContextMenu="false"
+					activeClass="selectRow" selectedClass="selectRow">
+					<f:facet name="header">#{app.schedlist_header}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col1}</f:facet>
+						<h:outputText value="#{res.dateTime}"
+							styleClass="timeText #{res.status == 2?'canceled':''}">
+							<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col2}</f:facet>
+						<h:outputText value="#{res.cliente.fullName}"
+							styleClass="#{res.status == 2?'canceled':''}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col3}</f:facet>
+						<h:outputText value="#{res.cliente.telefono1}"
+							styleClass="#{res.status == 2?'canceled':''}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col4}</f:facet>
+						<h:outputText value="#{res.comment}"
+							styleClass="#{res.status == 2?'canceled':''}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.schedlist_col5}</f:facet>
+						<h:outputText value="#{app.sched_scheduled}"
+							rendered="#{res.status==0}" />
+						<h:outputText value="#{app.sched_served}"
+							rendered="#{res.status==1}" />
+						<h:outputText value="#{app.sched_canceled}"
+							rendered="#{res.status==2}" styleClass="canceled" />
+						<h:outputText value="#{app.sched_absence}"
+							rendered="#{res.status==3}" />
+					</rich:column>
+					<a:support reRender="action,renderImp" 
+						action="#{medicalAppointmentSearch.takeSelection()}"
+						event="onselectionchange" ajaxSingle="true" />
+				</rich:extendedDataTable>
+				<rich:spacer height="10" />
+				<s:decorate template="/layout/kActions.xhtml" id="action">
+					<!--  ver el modal de detalle de las citas-->
+					<a:commandButton value="#{app.sched_modal}" reRender="fm1"
+						rendered="#{(medicalAppointmentDAO.managed) and (medicalAppointmentSearch.selection.size() == 1)}"
+						styleClass="modalBtn" ajaxSingle="true"
+						oncomplete="#{rich:component('modalAppointment')}.show();" />
+					<!--  detalle del historial clinico-->
+					<s:button propagation="begin"
+						view="/medical/clinicalHistory/generalMedical/step1.xhtml"
+						rendered="#{(medicalAppointmentDAO.managed) and (medicalAppointmentSearch.selection.size() == 1) and 
+								(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+						styleClass="detailBtn" value="#{app.sched_detail}">
+						<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" />
+						<f:param name="historyId"
+							value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
+					</s:button>
+					<!--  atender la cita solo debe ser visto por el doctor que va a atender la cita-->
+					<s:button propagation="join"
+						view="/medical/medicalAppointment/attend.xhtml"
+						rendered="#{(medicalAppointmentDAO.managed) and (medicalAppointmentSearch.selection.size() == 1) and 
+								(medicalAppointmentDAO.instance.status == 0) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
+								(identity.hasRole('doctor')) and (medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
+						styleClass="detailBtn" value="#{app.sched_attend}">
+						<f:param name="back" value="#{conversation.viewId}" />
+					</s:button>
+					<!--  cambiar estados-->
+					<a:commandButton value="#{app.sched_state}" reRender="fm2"
+						rendered="#{(medicalAppointmentDAO.managed) and (medicalAppointmentSearch.selection.size() == 1) and 
+								(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)}"
+						styleClass="cancelBtn" ajaxSingle="true"
+						oncomplete="#{rich:component('modalState')}.show();" />
+				</s:decorate>
+			</h:form>
+		</rich:panel>
+		<ui:include src="/medical/medicalAppointment/_modalDetail.xhtml" />
+		<ui:include src="/medical/medicalAppointment/_modalStatus.xhtml" />
+		<s:div id="renderImp">
+			<ui:include src="/imp/impAppointment.xhtml" />
+		</s:div>
+	</ui:define>
+</ui:composition>

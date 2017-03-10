@@ -1,0 +1,116 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Comprobante" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Comprobante de Compra</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 3 2 2" >			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >Factura:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >#{compraHome.instance.numeroFactura}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.vtaprs_fecha}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{compraHome.instance.fecha}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">
+				<p:paragraph>#{compraHome.instance.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>Observacion:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell colspan="3" verticalAlignment="middle">
+				<p:paragraph>#{compraHome.instance.observacion}</p:paragraph>
+			</p:cell>
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1" >
+			<p:cell colspan="4" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" size="16" >
+					<p:paragraph alignment="center">Detalle</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.parvta_description}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.report_move_col1}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold" paddingRight="6">
+					<p:paragraph alignment="right">#{app.compra_itemlist_col4}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.vtaprs_monto}</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="dtCom" value="#{compraHome.itemsAgregados}">
+				<p:cell verticalAlignment="middle">
+					<p:paragraph>#{dtCom.inventario.producto.nombre}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>#{dtCom.cantidad}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{dtCom.costoUnitario}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{dtCom.costoUnitario*dtCom.cantidad}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+                    </p:text></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+			
+			<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4" paddingRight="6">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">TOTAL</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{compraHome.instance.subTotal}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+						
+		</p:table>
+		
+</p:document>

@@ -1,0 +1,194 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 20 20">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">#{app.report_rdtvtas_mens}</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repVenta.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Tipo de venta: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{app.vtaprs_cmbapa}" rendered="#{repVenta.valCmb1=='CMB'}" />
+				<p:text value="#{app.status_servmed}" rendered="#{repVenta.valCmb1=='CST'}" />
+				<p:text value="#{app.status_taller}" rendered="#{repVenta.valCmb1=='TLL'}" />
+				<p:text value="#{app.status_items}" rendered="#{repVenta.valCmb1=='ITM'}" />				
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Sucursal: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repVenta.sucursal.nombre}" />
+			</p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Cod. producto/servicio: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repVenta.valCmb5}" />				
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">#{app.vtaprs_codsrv}: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repVenta.codsServ}" />
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="11" widthPercentage="100" headerRows="1"  widths="1 1 0.8 1 1 0.9 1.2 2 1 1 1" >
+			<p:font color="black" style="bold" size="10">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">TIPO DET.</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">COD.</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">FECHA DE VENTA</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="right">TIPO DE VENTA</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">SUCURSAL</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">ESTADO</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">VENDIÓ</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">DETALLE</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">NUM. SERIE</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">CANTIDAD</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">MONTO</p:paragraph>
+			</p:cell>
+			
+			</p:font>
+
+			
+		<ui:repeat var="vta" value="#{repVenta.detVentas}">
+		
+		
+		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text rendered="#{vta.codClasifVta=='CMB'}" value="Combo" />
+					<p:text rendered="#{vta.codClasifVta=='CMBBIN'}" value="Cmb. binaural" />
+					<p:text rendered="#{vta.codClasifVta=='SRV'}" value="Servicio" />
+					<p:text rendered="#{vta.codClasifVta=='PRD'}" value="Producto" />
+					<p:text rendered="#{vta.codClasifVta=='PRQ'}" value="Producto Req." />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{vta.codExacto}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph><p:text value="#{vta.venta.fechaVenta}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph rendered="#{vta.venta.tipoVenta=='CMB'}">#{app.vtaprs_cmbapa}</p:paragraph>
+				<p:paragraph rendered="#{vta.venta.tipoVenta=='CST'}">#{app.status_servmed}</p:paragraph>
+				<p:paragraph rendered="#{vta.venta.tipoVenta=='TLL'}">#{app.status_taller}</p:paragraph>
+				<p:paragraph rendered="#{vta.venta.tipoVenta=='ITM'}">#{app.status_items}</p:paragraph>
+			</p:cell>		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{vta.venta.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph rendered="#{vta.venta.estado=='PEN'}">#{msn.status_pending}</p:paragraph>
+				<p:paragraph rendered="#{vta.venta.estado=='APR'}">#{msn.status_approved}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{vta.venta.usrEfectua.nombreCompleto}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{vta.detalle}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{vta.numSerie}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+				<p:paragraph>#{vta.cantidad}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+				<p:paragraph><p:text value="#{vta.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+		</ui:repeat>
+			<p:font color="black" style="bold" size="10">
+			<p:cell horizontalAlignment="right" colspan="7" verticalAlignment="middle" paddingBottom="4"  paddingRight="4" >
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="17">
+				<p:paragraph><p:text value="#{repVenta.totDec1}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+			</p:font>
+	</p:table>
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

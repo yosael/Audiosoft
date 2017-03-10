@@ -1,0 +1,101 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<!-- <center>
+					<s:span styleClass="busHead">#{app.repcli_bus_head}</s:span>
+					<rich:spacer width="0" />
+					<s:decorate></s:decorate>
+					<h:inputText styleClass="busProd"
+						value="#{etapaRepCliHome.nomCoinci}" id="_nomCoinci" autocomplete="off">
+						<a:support event="onkeyup"
+							reRender="repsPendientes" ajaxSingle="true"
+							action="#{etapaRepCliHome.repsPendientes()}" />
+						<a:support event="onkeydown"
+							reRender="repsPendientes" ajaxSingle="true"
+							action="#{etapaRepCliHome.repsPendientes()}" />
+						
+					</h:inputText>
+				</center> --> 
+				<rich:dataTable id="repsPendientes" 
+				var="res" value="#{etapaRepCliHome.etapasRepCli}"
+					rendered="#{not empty etapaRepCliHome.etapasRepCli}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>
+					<rich:column width="20px;" filterBy="#{res[8]}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.repcli_id}</f:facet>
+						<h:outputText value="#{res[7]}#{res[8]}" />
+					</rich:column>
+					<!-- <rich:column filterBy="#{res[3]}" filterEvent="onkeyup" >
+						<f:facet name="header">#{app.etarepcli_aparato}</f:facet>
+						<h:outputText value="#{res[3]}" />
+					</rich:column> -->
+					<rich:column filterBy="#{res[0]}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_proceso}</f:facet>
+						<h:outputText value="#{res[0]}" />
+					</rich:column>
+					<rich:column filterBy="#{res[2]}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.repcli_cliente}</f:facet>
+						<h:outputText value="#{res[2]}" />
+					</rich:column>
+					<rich:column filterBy="#{res[1]}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_etapa}</f:facet>
+						<h:panelGroup>
+						<h:outputText value="#{res[1]}" />
+						<div style="display:inline-block;">
+			            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'g'}" />
+							<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'o'}" />
+							<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'r'}" />
+							<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+												rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'y'}" />		
+							<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+												rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'na'}" />
+						</div>
+						</h:panelGroup>
+					</rich:column>
+					<rich:column width="25px;" sortBy="#{res[4]}"  >
+						<f:facet name="header">Fecha de ingreso</f:facet>
+						<h:outputText value="#{res[4]}" >
+							<s:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res[9]}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.etarepcli_sucursal}</f:facet>
+						<h:outputText value="#{res[9]}" />
+					</rich:column>				
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{msn.button_edit}" rendered="true"
+							view="/taller/etasReparacion/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res[6]}" />
+						</s:link>
+						
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

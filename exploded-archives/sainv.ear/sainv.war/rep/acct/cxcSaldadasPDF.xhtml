@@ -1,0 +1,129 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="portrait" margins="20 20 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Reporte de cuentas por cobrar saldadas</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repContabilidad.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repContabilidad.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Sucursal: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repContabilidad.sucursal.nombre}" />
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Cliente C.: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repContabilidad.fltObj1.nombre}" />
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="6" widthPercentage="100" headerRows="0"  widths="0.7 1.1 1 2 1.7 0.9" >
+			
+			<p:font color="black" style="bold" size="10">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="center">FECHA INGRESO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="right">FECHA FINALIZACIÓN</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="center">SUCURSAL</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="center">CLIENTE</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="center">CLIENTE CORPORATIVO</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4" minimumHeight="24">
+					<p:paragraph alignment="center">MONTO</p:paragraph>
+				</p:cell>
+			</p:font>
+			<ui:repeat var="cxc" value="#{repContabilidad.dtRp['lst']}">
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph><p:text value="#{cxc.fechaIngreso}">
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph><p:text value="#{cxc.fechaIngreso}">
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{cxc.sucursal.nombre}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{cxc.cliente.nombreCompleto}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+					<p:paragraph>
+						<p:text value="#{cxc.cliCorp.nombre}" />
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+					<p:paragraph><p:text value="#{cxc.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

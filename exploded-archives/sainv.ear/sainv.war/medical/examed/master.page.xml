@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="id" value="#{serviceDAO.serviceId}" required="false" />
+	<action execute="#{serviceDAO.loadExa()}" on-postback="false" />
+	
+	<navigation from-action="#{serviceDAO.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/examed/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{serviceDAO.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/examed/list.xhtml" />
+		</rule>
+	</navigation>
+</page>

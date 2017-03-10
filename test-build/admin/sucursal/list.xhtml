@@ -1,0 +1,99 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.sucursallist_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/admin/sucursal/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="code" value="" />	
+				</s:button>
+			</s:decorate>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<rich:dataTable var="res" value="#{sucursalList.resultList}"
+					rendered="#{not empty sucursalList.resultList}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.sucursallist_list}</f:facet>
+					<rich:column filterBy="#{res.codigo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.sucursallist_col1}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.sucursallist_col2}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.sucursallist_col3}</f:facet>
+						<h:outputText value="Activo" rendered="#{res.estado=='ACT'}"/>
+						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}"/>
+					</rich:column>
+					<rich:column filterBy="#{res.empresa.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.sucursallist_col4}</f:facet>
+						<h:outputText value="#{res.empresa.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sucursalSuperior.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">Sucursal superior</f:facet>
+						<h:outputText value="#{res.sucursalSuperior.nombre}" rendered="#{res.sucursalSuperior != null}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.sucursallist_edit}" rendered="true"
+							view="/admin/sucursal/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="code" value="#{res.codigo}" />
+						</s:link>
+						<rich:spacer width="10" />
+						<a:commandLink title="#{app.sucursallist_delete}" reRender="m1" eventsQueue="q1"
+							action="#{sucursalHome.select(res)}" ajaxSingle="true" rendered="false"
+							onclick="#{rich:component('confirmation')}.show();">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.sucursallist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.sucursallist_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{sucursalHome.delete()}" reRender="formA"
+						rendered="#{sucursalHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,102 @@
+@CHARSET "ISO-8859-1";
+
+/*estilos del login de los usuarios administrativos*/
+body {
+	margin: 0px 0px 0px 0px;
+	
+	font-size: 12px;
+	font-family: sans-serif;
+	background-image: -webkit-gradient(
+	    linear,
+	    left bottom,
+	    left top,
+	    color-stop(0.15, rgb(181,181,181)),
+	    color-stop(0.58, rgb(231,231,231))
+	);
+	background-image: -moz-linear-gradient(
+	    center bottom,
+	    rgb(181,181,181) 15%,
+	    rgb(231,231,231) 58%
+	);
+	
+}
+
+td {
+	font-size: 12px;
+}
+
+#container {
+	width: 600px;
+	margin: 0 auto;
+	padding-top: 80px;
+	/*border: 1px solid gray;*/
+}
+
+#logo {
+	width: 200px;
+	height: 100px;
+	margin: 0 auto;
+	padding-bottom: 40px;
+	/*border: 1px solid gray;*/
+}
+
+#language{
+	width: 70px;
+	height: 35px;
+	margin-left: 440px;
+	padding-bottom: 0px;
+	position: relative;
+}
+
+#fields {
+	width: 400px;
+	margin: 0 auto;
+}
+
+#fields fieldset legend {
+	font-size: 1.5em;
+	font-weight: bolder;
+}
+
+#fields fieldset {
+	padding-left: 50px;
+	
+	padding-top: 20px;
+}
+
+#fields input[type=text],input[type=password],select {
+	width: 200px;
+}
+
+.label {
+	font-weight: bold;
+}
+
+#actions {
+	text-align: center;
+}
+
+.links {
+	font-size: 0.8em;
+}
+
+.msn {
+	font-weight: bold;
+}
+
+.msn li {
+	list-style: none;
+	list-style-type: none;
+}
+
+#footer {
+	margin-top: 10px;
+	text-align: center;
+}
+
+.loginBtn {
+	background-image: url(../kubeImg/lock16.png);
+	background-position: 5px 4px;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+}

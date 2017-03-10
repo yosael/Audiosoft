@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/stylesheet/kubestilo.css" />
+	<style type="text/css" >
+	
+		@media print, screen {
+			div.printArea {
+				width:890px; 
+				padding:0px 0px 0px 26mm;
+			}
+			
+			body, .printArea, .tblDet, .tbl200 {
+				font-size:11px; 
+				font-family:sans-serif;			
+				text-transform:uppercase;
+			}
+			
+			.headTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.bld {
+				font-weight:bold;
+			}
+			
+			.footerTkt {
+				margin-top:40px;
+				margin-bottom:30px;
+			}
+			
+			.footerTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.detVta {
+				font-size:18px;
+				margin-top:15px;
+				margin-bottom:15px;
+			}
+			
+			.hdDtItm {
+				border-bottom:1px solid black;
+			}
+			
+			.dtItm {
+				height:30px;
+			}
+			
+		}
+	
+		@media print {
+			.noPrint {
+				display:none;
+			}
+		}
+		
+	</style>
+<h:form id="frmTk">
+	<s:div rendered="#{ventaDocHome.instance.comprobante!=null}">
+	<script type="text/javascript" language="javascript">
+	function imprimirComprobante() {
+		try {
+			jsPrintSetup.setPrinter(#{'\''}#{ventaDocHome.instance.comprobante.impresor}#{'\''});
+			jsPrintSetup.setSilentPrint(1);
+			jsPrintSetup.print();
+		} catch(err) {
+			alert(err.message); 
+			window.print();  
+		}
+	}
+	</script>
+	</s:div>
+	<s:div rendered="#{ventaDocHome.instance.comprobante==null}">
+		<script type="text/javascript" language="javascript">
+		function imprimirComprobante() {
+			window.print();
+		}
+		</script>
+	</s:div>	
+	<p:growl globalOnly="true" sticky="false" life="3000" />
+	<a:queue name="q69" />
+	<center>
+	
+	<s:div rendered="#{ventaDocHome.showComp}" styleClass="noPrint">
+		<a:commandButton onclick="imprimirComprobante();" styleClass="printBtn" value="Imprimir comprobante" />
+	</s:div>
+	</center>
+	
+	<div class="printArea">
+		<div style="width:100%; height:23mm;"></div>
+		<div style="height:5mm; width:100%;">
+			<div style="padding-left:20mm; width:45%; display:inline; float:left;" >
+				#{ventaDocHome.instance.cliente.personaoempresa}
+			</div>
+			<div style="text-align:left; padding-left:10mm; width:20%; display:inline; float:right;">
+				<h:outputText value="#{ventaDocHome.instance.fecha}" >
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</div>
+		</div>
+		<div style="height:4mm; width:100%;">
+			<div style="padding-left:28mm; width:65%; display:inline; float:left;" >#{ventaDocHome.instance.cliente.direccion}</div>
+			<div style=" text-align:left; padding-left:40mm; width:20%; display:inline; float:right;" ></div>
+		</div>
+		<div style="width:100%; height:8mm;">
+			<div style="padding-left:28mm; width:55%; display:inline; float:left;" ></div>
+			<div style=" text-align:left; padding-left:40mm; width:25%; display:inline; float:right;" >
+				<div style="width:74px; text-align:center; float:left;"><h:outputText value="X" rendered="#{ventaDocHome.instance.formaPago=='EFE'}" /></div>
+				<div style="width:74px; text-align:center; float:left;"><h:outputText value="X" rendered="#{ventaDocHome.instance.formaPago=='CRD'}" /></div>
+				<div style="width:74px; text-align:center; float:left;">
+					<h:outputText value="X" 
+						rendered="#{ventaDocHome.instance.formaPago!='EFE' and ventaDocHome.instance.formaPago!='CRD'}" />
+				</div>
+			</div>
+		</div>
+		<div style="height:4mm; width:100%;">
+			<div style="padding-left:40mm; width:65%; display:inline; float:left;" >#{ventaDocHome.instance.cliente.nit}</div>
+			<div style=" text-align:left; padding-left:40mm; width:20%; display:inline; float:right;" ></div>
+		</div>		
+		<div style="width:100%; height:11mm;"></div>
+		<div style="height:29mm;">
+			<table style="width:100%;" cellpadding="0" cellspacing="0" border="0" class="tblDet" >
+				<ui:repeat var="dtv" value="#{ventaDocHome.detVentasDoc}">
+					<tr>
+						<td style="width:105mm;">#{dtv.detalle}</td>
+						<td style="text-align:right;width:16mm; padding-left:2mm;">
+							<h:outputText value="#{dtv.precioUnitario}">
+								<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right;width:11mm;">
+							<h:outputText value="#{dtv.total}" rendered="#{dtv.tipo=='J'}">
+								<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right;width:14mm;">
+							<h:outputText value="#{dtv.total}" rendered="#{dtv.tipo=='E'}">
+								<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+						</td>
+						<td style="text-align:right;width:21mm;">
+							<h:outputText value="#{dtv.total}" rendered="#{dtv.tipo=='G'}">
+								<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>
+						</td>
+					</tr>
+				</ui:repeat>
+			</table>
+		</div>
+		<table class="tblDet" style="width:100%;" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td rowspan="2" style="text-align:left; padding-left:30mm; width:134mm;">
+					<h:outputText value="#{ventaDocHome.getCantidadLetras(ventaDocHome.instance.total)}" />
+				</td>
+				<td rowspan="2"></td>
+				<td style="text-align:right; height:5mm; width:22mm;">
+					<h:outputText value="#{ventaDocHome.subTotalG}">
+						<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+					</h:outputText>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right; height:5mm;">
+					<h:outputText value="#{ventaDocHome.subTotalNs}">
+						<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+					</h:outputText>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"></td>
+				<td style="text-align:right; height:6mm;">
+					<h:outputText value="#{ventaDocHome.subTotalE}">
+						<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+					</h:outputText>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"></td>
+				<td style="text-align:right; height:5mm;">
+					<h:outputText value="#{ventaDocHome.instance.total}">
+						<f:convertNumber pattern="########0.00" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+					</h:outputText>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<s:div rendered="#{ventaDocHome.showComp}">
+		<script type="text/javascript" language="Javascript">
+			//Imprimimos de un solo el ticket
+			/*imprimirComprobante();
+			window.opener.nuevaVenta();
+			window.close();*/
+		</script>
+	</s:div>
+	
+</h:form>
+
+</ui:composition>

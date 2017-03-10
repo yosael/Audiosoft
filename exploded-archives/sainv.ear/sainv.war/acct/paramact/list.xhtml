@@ -1,0 +1,80 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.paramact_head}</f:facet>
+			
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+			
+				<rich:dataTable var="res" value="#{paramContHome.resultList}"
+					rendered="#{not empty paramContHome.resultList}" rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.paramact_list}</f:facet>
+					<rich:column filterBy="#{res.codigo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.paramact_codigo}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.paramact_nombre}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.descripcion}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.paramact_desc}</f:facet>
+						<h:outputText value="#{res.descripcion}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.paramact_valor}</f:facet>
+						<h:inputText value="#{res.selObj.nombre}" size="20" rendered="#{not empty res.selObj}" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_table"/>
+						</h:inputText>
+						<h:inputText value="" size="20" rendered="#{empty res.selObj}" >
+							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="_table"/>
+						</h:inputText>
+						<a:commandButton ajaxSingle="true"
+							action="#{paramContHome.selCuentaParam(res)}" reRender="sCta" 
+							onclick="#{rich:component('selCta')}.show();" 
+							styleClass="modifyBtn" value=" " style="width:30px;">
+						</a:commandButton>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/acct/paramact/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_cancel}">
+					</s:button>
+					<a:commandButton action="#{paramContHome.actualizarParam()}" reRender="formA"
+						rendered="#{not paramContHome.managed}" styleClass="saveBtn" 
+						ignoreDupResponses="true" eventsQueue="q1"  
+						value="#{app.button_svparam}"/>
+				</s:decorate>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="selCta"  width="600" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selCta');">
+			<f:facet name="header">#{app.general_lov}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+						onclick="#{rich:component('selCta')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="sCta"><ui:include  src="selCta.xhtml" /></s:div>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

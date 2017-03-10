@@ -1,0 +1,300 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+
+	<ui:define name="body">
+	
+	<script type="text/javascript">
+            //<![CDATA[
+            jQuery(function($) {
+               $(document).keydown(function(e) {
+                     var element = e.target.nodeName.toLowerCase();
+                    if (e.keyCode === 8 && element != 'input' && element != 'textarea') {
+                         return false;
+                    }
+               });
+            });
+            //]]>
+</script> 
+
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{compraHome.managed?sainv_view_messages.get('compramast_head_edit'):sainv_view_messages.get('compramast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formcompra">
+				<p:growl globalOnly="true" sticky="false" life="5000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.compramast_legend}</legend>
+
+					<h:panelGrid columns="2" style="padding-left:100px;">
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.compramast_date}:</ui:define>
+							<rich:calendar value="#{compraHome.instance.fecha}"
+								required="true" datePattern="dd/MM/yyyy"
+								disabled="#{compraHome.managed}">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" />
+							</rich:calendar>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.compramast_bill_number}:</ui:define>
+							<h:inputText value="#{compraHome.instance.numeroFactura}">
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+							</h:inputText>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.compramast_payment_type}:</ui:define>
+							<h:selectOneMenu value="#{compraHome.instance.formaPago}">
+								<f:selectItem itemLabel="#{app.compra_payment_type_e}"
+									itemValue="E" />
+								<f:selectItem itemLabel="#{app.compra_payment_type_c}"
+									itemValue="C" />
+								<f:selectItem itemLabel="#{app.compra_payment_type_tc}"
+									itemValue="TC" />
+								<f:selectItem itemLabel="#{app.compra_payment_type_td}"
+									itemValue="TD" />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectOneMenu>
+
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.compramast_observation}:</ui:define>
+							<h:inputTextarea value="#{compraHome.instance.observacion}">
+								<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+							</h:inputTextarea>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.compramast_company}:</ui:define>
+							<h:selectOneMenu value="#{compraHome.empresaSeleccionada}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp"
+									label="#{_emp.nombre}" noSelectionLabel=" " />
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1"
+									action="#{compraHome.cargarSucursales()}" ajaxSingle="true"
+									reRender="_branch" />
+							</h:selectOneMenu>
+						</s:decorate>
+	
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch"
+							rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:selectOneMenu value="#{compraHome.instance.sucursal}"
+								required="false">
+								<s:selectItems value="#{compraHome.sucursales}" var="_emp"
+									label="#{_emp.nombre}" noSelectionLabel=" " />
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.compramast_branch}:</ui:define>
+							<h:inputText value="#{compraHome.instance.sucursal.nombre}"
+								disabled="true" />
+						</s:decorate>
+						<s:decorate></s:decorate><s:decorate></s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<rich:suggestionbox immediate="true" ajaxSingle="true"
+								eventsQueue="q1" ignoreDupResponses="true" height="310"
+								autosized="true" id="suggestionBox" for="_nomCoinci"
+								fetchValue="#{compraHome.nomCoinci}"
+								suggestionAction="#{productoHome.coinciPrdSrv}" width="1000"
+								var="val" minChars="1"
+								nothingLabel='#{app.compramast_buscar_nomatch}'>
+								<h:column>
+									<f:facet name="header">
+										<h:outputText styleClass="headCoi bigHd" value="#{app.compramast_codigo}" />
+									</f:facet>
+									<h:outputText styleClass="bigCnt" value="#{val[0]}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputText styleClass="headCoi bigHd" value="#{app.compramast_descripcion}" />
+									</f:facet>
+									<h:outputText styleClass="bigCnt" value="#{val[1]}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputText styleClass="headCoi bigHd" value="#{app.compramast_marca}" />
+									</f:facet>
+									<h:outputText styleClass="bigCnt" value="#{val[2]}" />
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:outputText styleClass="headCoi bigHd" value="#{app.compramast_existencia}" />
+									</f:facet>
+									<h:outputText styleClass="bigCnt" value="#{val[3]}">
+										<f:convertNumber locale="en-US" groupingUsed="true"
+											integerOnly="true" maxFractionDigits="0" />
+									</h:outputText>
+								</h:column>
+
+								<a:support event="onselect" reRender="_table, formcompra"
+									eventsQueue="q1" ajaxSingle="true"
+									action="#{compraHome.agregarProducto(val[4])}"
+									focus="_nomCoinci" />
+
+							</rich:suggestionbox>
+							<rich:spacer width="4" />
+							<rich:spacer width="4" />
+							<rich:spacer width="10" />
+						</s:decorate>
+						<rich:spacer height="20" />
+					</h:panelGrid>
+
+					<center>
+						<s:span styleClass="busHead">#{app.compramast_buscar_product}:</s:span>
+						<rich:spacer width="0" /> <s:decorate></s:decorate>
+						<h:inputText styleClass="busProd" value="#{compraHome.nomCoinci}"
+							required="false" id="_nomCoinci" />
+					</center>
+
+
+					<rich:dataTable var="res" value="#{compraHome.itemsAgregados}"
+							id="_table" rendered="#{not empty compraHome.itemsAgregados}"
+							align="center" rowClasses="tblEven,tblOdd"
+							onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.compra_itemlist_list}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.compra_itemlist_col1}</f:facet>
+								<h:outputText value="#{res.inventario.producto.referencia}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.compra_itemlist_col2}</f:facet>
+								<h:outputText value="#{res.inventario.producto.nombre}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.productolist_col7}</f:facet>
+								<h:outputText value="#{res.inventario.cantidadActual}">
+									<f:convertNumber locale="en-US" groupingUsed="true"
+										integerOnly="true" maxFractionDigits="0" />
+								</h:outputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+								<h:inputText value="#{res.cantidad}" size="8"
+									onkeypress="return restrictNumDigits(event, this, 8);">
+									<a:support event="onblur"
+										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
+										eventsQueue="q1" reRender="_table" />
+								</h:inputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+								<h:inputText value="#{res.costoUnitario}" size="8"
+									readonly="true">
+									<a:support event="onblur"
+										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
+										eventsQueue="q1" reRender="_table" />
+								</h:inputText>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{msn.col_actions}</f:facet>
+								<a:commandLink title="#{msn.button_addcod}" reRender="m2"
+									eventsQueue="q1"
+									rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}"
+									action="#{compraHome.cargarListaCodigos(res)}"
+									ajaxSingle="true"
+									onclick="#{rich:component('lstCodigos')}.show();">
+									<h:graphicImage value="/kubeImg/table_detail2.png" />
+								</a:commandLink>
+								<rich:spacer width="10"
+									rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}" />
+								<a:commandLink reRender="formcompra" eventsQueue="q1"
+									action="#{compraHome.removerItem(res)}" ajaxSingle="true">
+									<h:graphicImage value="/kubeImg/table_delete16.png" />
+								</a:commandLink>
+
+							</rich:column>
+							<f:facet name="footer">
+								<h:outputText value="Subtotal: #{compraHome.instance.subTotal}"
+									size="8" />
+							</f:facet>
+						</rich:dataTable>
+
+						<rich:spacer height="20" />
+
+						<s:decorate template="/layout/kActions.xhtml">
+							<s:button view="/sainv/compra/list.xhtml" propagation="begin"
+								styleClass="listBtn" value="#{msn.button_list}">
+							</s:button>
+							<s:button view="/sainv/compra/master.xhtml" propagation="begin"
+								styleClass="newBtn" value="#{msn.button_new}">
+								<f:param name="id" value="" />
+							</s:button>
+							<a:commandButton action="#{compraHome.save()}"
+								reRender="formcompra" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();"
+								value="#{msn.button_save}" />
+							<a:commandButton action="#{compraHome.modify()}"
+								reRender="formcompra" rendered="#{compraHome.managed}"
+								styleClass="modifyBtn" onclick="upperCaseAllInputs();"
+								value="#{msn.button_modify}" />
+						</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation" width="900" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				
+				<f:facet name="header">
+					#{app.compralist_add_products_modal}
+				</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1">
+					<ui:include src="addProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			
+			
+			<rich:modalPanel id="lstCodigos" width="900" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				
+				<f:facet name="header">
+					#{app.compralist_add_products_modal}
+				</f:facet>
+				
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('lstCodigos')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m2">
+					<ui:include src="codsProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

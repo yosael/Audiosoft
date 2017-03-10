@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<action execute="#{cuentaCobrarHome.getCuentasCobrarList()}" on-postback="false" />
+	<action execute="#{cuentaCobrarHome.setRangoUlt30dias()}" on-postback="false" />
+	<action execute="#{cuentaCobrarHome.resetFltCorp()}" on-postback="false" />
+	<begin-conversation join="true" />
+	
+	<!-- <navigation from-action="#{cuentaCobrarHome.pagarSelCxc()}">
+		<rule if-outcome="true">
+			<redirect view-id="/acct/cxc/list.xhtml" />
+		</rule>
+	</navigation> -->
+	<navigation from-action="#{cuentaCobrarHome.actualizarOPagarSelCxc()}">
+		<rule if-outcome="true">
+			<redirect view-id="/acct/cxc/list.xhtml" />
+		</rule>
+	</navigation>
+	
+</page>

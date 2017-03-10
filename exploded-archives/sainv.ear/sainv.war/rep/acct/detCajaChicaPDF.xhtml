@@ -1,0 +1,165 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="portrait" margins="20 20 30 30">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">Reporte de gastos de las cajas chicas</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repContabilidad.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repContabilidad.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+	
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="18">
+			<p:paragraph alignment="center">Sucursal: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repContabilidad.sucursal.nombre}">
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	
+	<p:font size="10">
+	<p:table columns="5" widthPercentage="98" headerRows="1" widths="3 1.4 1.2 1.2 1.2" >
+		<p:font size="12" color="black" style="bold">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" fixedHeight="22">
+				<p:paragraph alignment="center">SUCURSAL</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" fixedHeight="22">
+				<p:paragraph alignment="center">FECHA</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" fixedHeight="22">
+				<p:paragraph alignment="center">INGRESOS</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" fixedHeight="22">
+				<p:paragraph alignment="center">GASTOS</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle"
+				backgroundColor="#E4E4E4" fixedHeight="22">
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+		</p:font>
+		
+		<ui:repeat var="cjc" value="#{repContabilidad.dtRp['lst']}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="17">
+				<p:paragraph>#{cjc.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="17">
+				<p:paragraph><p:text value="#{cjc.fecha}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="17">
+				<p:paragraph><p:text value="#{cjc.ingresos}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="17">
+				<p:paragraph><p:text value="#{cjc.gastos}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="17">
+				<p:paragraph><p:text value="#{cjc.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell colspan="6" rendered="#{repContabilidad.flag1==true}">
+				
+				<p:table columns="4" widthPercentage="92" headerRows="2" widths="2 1 1 2.5" >
+					<p:font size="10" color="black" style="bold">
+						<p:cell horizontalAlignment="center" verticalAlignment="middle" colspan="4" fixedHeight="19" borderWidth="0">
+							<p:paragraph alignment="center">MOVIMIENTOS DE LA CAJA CHICA</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" fixedHeight="18">
+							<p:paragraph alignment="center">CONCEPTO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" fixedHeight="18">
+							<p:paragraph alignment="center">INGRESO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" fixedHeight="18">
+							<p:paragraph alignment="center">GASTO</p:paragraph>
+						</p:cell>
+						<p:cell horizontalAlignment="center" verticalAlignment="middle"
+							backgroundColor="#E4E4E4" fixedHeight="18">
+							<p:paragraph alignment="center">COMENTARIOS</p:paragraph>
+						</p:cell>
+					</p:font>
+					<p:font size="9" color="black">
+						<ui:repeat var="dtc" value="#{cjc.detalleMovimientos}">
+							<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+								<p:paragraph>#{dtc.concepto.nombre}</p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+								<p:paragraph><p:text value="#{dtc.monto}" rendered="#{dtc.tipo=='CRG'}">
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</p:text></p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+								<p:paragraph><p:text value="#{dtc.monto}" rendered="#{dtc.tipo=='ABO'}">
+									<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+										groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+								</p:text></p:paragraph>
+							</p:cell>
+							<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingLeft="4" minimumHeight="16">
+								<p:paragraph>
+									<p:text value="#{dtc.comentario}" />
+								</p:paragraph>
+							</p:cell>
+						</ui:repeat>
+					</p:font>
+				</p:table>		
+			</p:cell>
+		</ui:repeat>
+	</p:table>
+	</p:font>	
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

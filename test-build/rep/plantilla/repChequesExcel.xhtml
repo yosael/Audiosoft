@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_excel_movements_worksheet}"
+		value="#{reporte.etapasRetr}" var="bean">
+		<e:header> 
+			<f:facet name="left">
+				#{app.etarepcli_repEtasRetr}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_cliente}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.cliente.nombres} #{bean.reparacionCli.cliente.apellidos}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_proceso}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.etapaRep.procesoTll.nombre}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_fechaIng}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.reparacionCli.fechaIngreso}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.etarepcli_etapa}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.etapaRep.nombre}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.etarepcli_fechaEstFin}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{bean.fechaEstFin}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true" >
+			<f:facet name="header">
+				<e:cell value="#{app.etarepcli_tieneRequi}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="Si" rendered="#{bean.requisicionesEtapa.size()!=0}" />
+			<e:cell value="No" rendered="#{bean.requisicionesEtapa.size()==0}" />
+		</e:column>
+		
+	</e:worksheet>
+
+</e:workbook>
+</html>

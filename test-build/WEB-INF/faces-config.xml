@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+	<application>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+		<locale-config>
+			<default-locale>es</default-locale>
+			<supported-locale>en</supported-locale>
+			<supported-locale>es</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>kubekit_messages</base-name>
+			<var>kit</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>kubeview_messages</base-name>
+			<var>msn</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>login_messages</base-name>
+			<var>login</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>menu_messages</base-name>
+			<var>menu</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>sainv_messages</base-name>
+			<var>sainv</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>sainv_view_messages</base-name>
+			<var>app</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>sainv_imp_messages</base-name>
+			<var>imp</var>
+		</resource-bundle>
+	</application>
+	<converter>
+		<converter-id>colorPickerConverter</converter-id>
+		<converter-class>
+			com.kubesoft.kubekit.action.util.ColorPickerConverter</converter-class>
+	</converter>
+</faces-config>

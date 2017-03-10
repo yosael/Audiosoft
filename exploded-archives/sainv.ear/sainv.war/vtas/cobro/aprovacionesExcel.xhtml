@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:e="http://jboss.com/products/seam/excel"
+	xmlns:f="http://java.sun.com/jsf/core">
+<e:workbook>
+	<e:worksheet name="#{app.report_excel_movements_worksheet}"
+		value="#{ventaProdServHome.resultList}" var="res">
+		<e:header> 
+			<f:facet name="left">
+				#{app.repcli_detreparaciones}
+			</f:facet>
+		</e:header>
+		<e:column style="xls-column-autosize: true" >
+			<f:facet name="header">
+				<e:cell value="Clientes" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			
+			<e:cell value="#{res.cliente.nombres} #{res.cliente.apellidos}" forceType="text" />
+			
+			
+			
+		</e:column>
+		<e:column style="xls-column-autosize: true" value="res.detVenta" var="var">
+			<f:facet name="header">
+				<e:cell value="Clientes" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			
+			<e:cell value="#{var.detalle}" forceType="text" />
+						
+			
+			
+		</e:column>
+		
+		
+		
+		
+		<!--  
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_costo}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.reparacionCli.costo}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_cliente}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.reparacionCli.cliente.nombvar} #{var.reparacionCli.cliente.apellidos}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_aparato}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.reparacionCli.aparatoRep.nombre} #{var.reparacionCli.aparatoRep.modelo}" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_proceso}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.reparacionCli.proceso.nombre}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_descripcion}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.reparacionCli.descripcion}" forceType="text" />
+		</e:column>
+		<e:column style="xls-column-autosize: true">
+			<f:facet name="header">
+				<e:cell value="#{app.repcli_tecnico}" style="xls-font: red bold 10 Verdana" />
+			</f:facet>
+			<e:cell value="#{var.usuario.nombreUsuario}" forceType="text" />
+		</e:column>
+		-->
+	</e:worksheet>
+
+</e:workbook>
+</html>

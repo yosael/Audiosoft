@@ -1,0 +1,89 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmHistorial">
+	
+		<table id="tabHistory" style="width: 100%;">
+					<tr>
+						<td style="width:25%;">
+							<h:panelGroup id="myPanel">								
+								<rich:dataTable style="margin:0 auto;"
+									value="#{clienteHome2.clinicalHistoryList}" rows="5"
+									 var="res"
+									id="table" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.histlist_header}</f:facet>
+									<!--  
+									<rich:column filterBy="#{res.consecutive}" filterEvent="onkeyup"
+										sortBy="#{res.consecutive}">
+										<f:facet name="header">#{app.histlist_col0}</f:facet>
+										<h:outputText value="#{res.consecutive}" />
+									</rich:column>
+									-->
+									<rich:column sortBy="#{res.creationDate}">
+										<f:facet name="header">#{app.histlist_col2}</f:facet>
+										<h:outputText value="#{res.creationDate}">
+										<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" /> 
+										</h:outputText>
+									</rich:column>
+									<rich:column filterBy="#{res.doctor.fullName}"
+										filterEvent="onkeyup">
+										<f:facet name="header">#{app.histlist_col3}</f:facet>
+										<h:outputText value="#{res.doctor.fullName}" />
+									</rich:column>
+									<rich:column >
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<!-- 
+										<s:link propagation="begin" title="#{app.hist_detail}"
+											view="/medical/clinicalHistory/generalMedical/step1.xhtml">
+											<h:graphicImage value="/kubeImg/detail16.png" />
+											<f:param name="id" value="#{res.medicalAppointment.id}" />
+											<f:param name="historyId" value="#{res.consecutive}" />
+										</s:link>
+										-->
+										<a:commandButton value="Cargar" reRender="details" action="#{wizardGeneralMedical2.load2()}" style="margin:0px; padding: 1px 9px; " >
+											<f:setPropertyActionListener value="#{res.medicalAppointment.id}" target="#{medicalAppointmentDAO2.appointmentId}" />
+											<f:setPropertyActionListener value="#{res.consecutive}" target="#{wizardGeneralMedical2.consecutive}" />
+										</a:commandButton>
+									</rich:column>
+									<f:facet name="footer">
+										<rich:datascroller id="ds1" renderIfSinglePage="true" />
+									</f:facet>
+								</rich:dataTable>
+							</h:panelGroup>
+						</td>
+						<td>
+							<h:panelGroup id="details">
+								<rich:tabPanel switchType="client" rendered="#{not empty wizardGeneralMedical2.consecutive}">
+									<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_step1-1.xhtml" />
+										</s:div>	
+									</rich:tab>
+									<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_step2-2.xhtml" />
+										</s:div>
+									</rich:tab>
+									<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+										<s:div>
+											<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic-2.xhtml" />
+										</s:div>
+									</rich:tab>
+								</rich:tabPanel>
+							</h:panelGroup>
+							<h:outputLabel rendered="#{empty clienteHome2.clinicalHistoryList}" style="color:green;font-size:18px;font-weight:bold;margin-left:50px;'" value="El paciente no tiene historial medico" />
+						</td>
+					</tr>
+				</table>
+				
+	</h:form>
+</ui:composition>

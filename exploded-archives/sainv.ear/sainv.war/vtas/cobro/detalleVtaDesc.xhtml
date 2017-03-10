@@ -1,0 +1,158 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Comprobante de Venta de Producto/Servicio con descuento</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 3 2 2" >			
+			<p:cell backgroundColor="#E4E4E4" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" >
+					<p:paragraph >#{app.repcli_cliente}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >#{ventaProdServHome.instance.cliente.nombres} #{ventaProdServHome.instance.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#E4E4E4" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" >
+					<p:paragraph >#{app.vtaprs_fecha}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{ventaProdServHome.instance.fechaVenta}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#E4E4E4" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" >
+					<p:paragraph >#{app.parvta_tipo}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+				<p:paragraph>
+				<p:text value="#{app.vtaprs_tpvt_tll}" rendered="#{ventaProdServHome.instance.tipoVenta=='TLL'}" />
+				<p:text value="#{app.vtaprs_tpvt_itm}" rendered="#{ventaProdServHome.instance.tipoVenta=='ITM'}" />
+				<p:text value="#{app.vtaprs_tpvt_cst}" rendered="#{ventaProdServHome.instance.tipoVenta=='CST'}" />
+				<p:text value="#{app.vtaprs_tpvt_cmb}" rendered="#{ventaProdServHome.instance.tipoVenta=='CMB'}" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#E4E4E4" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">
+				<p:paragraph>#{ventaProdServHome.instance.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#E4E4E4" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" ><p:paragraph>#{app.vtaitm_detalle}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell colspan="3" verticalAlignment="middle">
+				<p:paragraph>#{ventaProdServHome.instance.detalle}</p:paragraph>
+			</p:cell>
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1 " >
+			<p:cell colspan="4" backgroundColor="#E4E4E4" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="black" style="bold" size="16" >
+					<p:paragraph alignment="center">Detalle de la Venta</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">#{app.parvta_description}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">#{app.report_move_col1}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:font color="black" style="bold" paddingRight="6">
+					<p:paragraph alignment="right">#{app.compra_itemlist_col4}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">#{app.vtaprs_monto}</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="dtvt" value="#{ventaProdServHome.instance.detVenta}">
+				<p:cell verticalAlignment="middle">
+					<p:paragraph>#{dtvt.detalle}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>#{dtvt.cantidad}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{dtvt.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text></p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{dtvt.monto*dtvt.cantidad}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+                    </p:text></p:paragraph>
+				</p:cell>
+				
+			</ui:repeat>
+			
+			<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" paddingRight="6">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">Total sin descuento</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{ventaProdServHome.instance.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+			
+				<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" paddingRight="6">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">Descuento</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{ventaProdServHome.instance.cantidadDescuento}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+			
+			<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" paddingRight="6">
+				<p:font color="black" style="bold">
+					<p:paragraph alignment="center">Total a cancelar</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{ventaProdServHome.instance.monto-ventaProdServHome.instance.cantidadDescuento}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+						
+		</p:table>
+		
+</p:document>

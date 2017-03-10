@@ -1,0 +1,105 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<div id="imp_bill"
+		style="display: none; width: 700px; border: 2px black solid;"><s:div
+		rendered="#{billDAO.instance.status==3}">#{imp.bill_anulate}</s:div>
+	<table border="0" cellspacing="1" width="700px">
+		<tr>
+			<td><h:outputText value="#{billDAO.instance.office.name}" /></td>
+			<td><h:outputText value="#{billDAO.instance.date}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText></td>
+			<td><h:outputText value="#{loginUser.office.billResolution}" /></td>
+			<td style="font-size: 1.3em; font-weight: bold;"><h:outputText
+				value="#{billDAO.instance.office.billPrefix} #{billDAO.instance.billId.consecutive}" /></td>
+		</tr>
+		<tr>
+			<td style="font-weight: bold;">#{imp.bill_id}:</td>
+			<td><h:outputText
+				value="#{billDAO.instance.third.identificationType.description} : #{billDAO.instance.third.thirdId.numId}" /></td>
+			<td style="font-weight: bold;">#{imp.bill_name}:</td>
+			<td><h:outputText value="#{thirdDAO.instance.socialReason}" /></td>
+		</tr>
+		<tr>
+			<td style="font-weight: bold;">#{imp.bill_telephone}:</td>
+			<td><h:outputText value="#{billDAO.instance.third.telephone}" /></td>
+			<td style="font-weight: bold;">#{imp.bill_address}:</td>
+			<td><h:outputText value="#{billDAO.instance.third.address}" /></td>
+		</tr>
+		<tr>
+			<td style="font-weight: bold;">#{imp.bill_payment}:</td>
+			<td><h:outputText value="#{billDAO.instance.paymentForm.name}" /></td>
+			<td style="font-weight: bold;">#{imp.bill_iva}:</td>
+			<td><h:outputText value="%#{billDAO.instance.iva}" /></td>
+		</tr>
+	</table>
+	<rich:spacer height="10" />
+	<table cellpadding="1" cellspacing="1" border="1" width="700px">
+		<tr style="font-weight: bold;">
+			<td>#{imp.bill_item_col1}</td>
+			<td>#{imp.bill_item_col2}</td>
+			<td>#{imp.bill_item_col3}</td>
+			<td>#{imp.bill_item_col4}</td>
+			<td>#{imp.bill_item_col5}</td>
+			<td>#{imp.bill_item_col6}</td>
+			<td>#{imp.bill_item_col7}</td>
+		</tr>
+		<ui:repeat value="#{billDAO.billItemList}" var="item">
+			<tr>
+				<td><h:outputText value="#{item.conceptCode}" /></td>
+				<td><h:outputText value="#{item.description}" /></td>
+				<td><h:outputText value="#{item.quantity}" /></td>
+				<td><h:outputText value="#{item.value}">
+					<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+						type="currency" />
+				</h:outputText></td>
+				<td><h:outputText value="#{item.coopayment}">
+					<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+						type="currency" />
+				</h:outputText></td>
+				<td><h:outputText value="#{item.discount}" /></td>
+				<td><h:outputText
+					value="#{(item.value * item.quantity)-((item.value * item.quantity)*(item.discount)/100)}">
+					<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+						type="currency" />
+				</h:outputText></td>
+			</tr>
+		</ui:repeat>
+	</table>
+	<rich:spacer height="10" />
+	<table border="0" width="700px">
+		<tr style="font-weight: bold;">
+			<td>#{imp.bill_subtotal}</td>
+			<td>#{imp.bill_total_coopayment}</td>
+			<td>#{imp.bill_total_discount}</td>
+			<td>#{imp.bill_total}</td>
+		</tr>
+		<tr>
+			<td><h:outputText value="#{billDAO.instance.subtotal}">
+				<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+					type="currency" />
+			</h:outputText></td>
+			<td><h:outputText value="#{billDAO.instance.totalCoopayment}">
+				<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+					type="currency" />
+			</h:outputText></td>
+			<td><h:outputText value="#{billDAO.instance.totalDiscount}">
+				<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+					type="currency" />
+			</h:outputText></td>
+			<td><h:outputText value="#{billDAO.instance.total}">
+				<f:convertNumber maxFractionDigits="2" currencySymbol="$"
+					type="currency" />
+			</h:outputText></td>
+		</tr>
+	</table>
+	</div>
+</ui:composition>

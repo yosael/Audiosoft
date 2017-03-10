@@ -1,0 +1,117 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<h:form id="formA">
+			<f:facet name="header">#{app.transferencialist_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/sainv/transferencia/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="id" value="" />
+				</s:button>
+				<!-- <a:commandButton 
+					styleClass="refreshBtn" value=" "  rendered="true" reRender="_table"  action="#{transferenciasGeneradasList.refresh()}" >
+				</a:commandButton> --><!--  <a:support event="onclick" ajaxSingle="true" reRender="_table" action=""></a:support > -->
+				<s:button 
+					styleClass="refreshBtn" value="Actualizar" propagation="begin"  view="/sainv/transferencia/list.xhtml"   rendered="true"  >
+					
+				</s:button>
+				 
+			</s:decorate>
+			<rich:spacer height="10" />
+			
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				
+				<p:focus />
+				<a:queue name="q1" />
+				<!-- <rich:dataTable id="_table" var="res" value="#{transferenciasGeneradasList.resultList}" -->
+				<rich:dataTable id="_table" var="res"   rendered="#{not empty transferenciaHome.resultListGen}" value="#{transferenciaHome.resultListGen}"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.transferencialist_list}</f:facet>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.transferencialist_col1}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.transferencialist_col2}</f:facet>
+						<h:outputText value="#{msn.status_generated}" rendered="#{res.estado=='G'}"/>
+						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='P'}"/>
+						<h:outputText value="#{msn.status_finished}" rendered="#{res.estado=='A'}"/>
+						<h:outputText value="#{msn.status_discarded}" rendered="#{res.estado=='D'}"/>
+						<h:outputText value="#{msn.status_rejected}" rendered="#{res.estado=='R'}"/>
+						<h:outputText value="#{msn.status_sent}" rendered="#{res.estado=='S'}"/>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.transferencialist_col3}</f:facet>
+						<h:outputText value="#{res.items.size()}"/>
+					</rich:column>
+					<rich:column filterBy="#{transferenciasGeneradasList.filtrarFecha(res.fecha)}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.transferencialist_col4}</f:facet>
+						<h:outputText value="#{res.fecha}">
+							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{transferenciasGeneradasList.filtrarFecha(res.fechaRecibo)}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.transferencialist_col5}</f:facet>
+						<h:outputText value="#{res.fechaRecibo}">
+							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.transferencialist_edit}" rendered="#{res.estado=='G' or res.estado=='S'}"
+							view="/sainv/transferencia/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						<rich:spacer width="10" />
+						<a:commandLink title="#{app.transferencialist_delete}" reRender="m1" eventsQueue="q1"
+							rendered="#{res.estado=='G'}" action="#{transferenciaHome.select(res)}" 
+							ajaxSingle="true" onclick="#{rich:component('confirmation')}.show();">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.transferencialist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.transferencialist_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{transferenciaHome.delete()}" reRender="formA"
+						rendered="#{transferenciaHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

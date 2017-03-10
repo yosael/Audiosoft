@@ -1,0 +1,101 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<h:form id="formClien">
+		<p:growl globalOnly="true" sticky="false" life="3000" />
+		<p:focus />
+		<a:queue name="q1" />
+		
+		<fieldset>
+			<legend>#{app.patimast_legend}</legend>
+			<h:panelGrid columns="2" style="padding-left:100px;">
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_num_id}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.docId}" 
+						required="#{clienteHome.esInfante==false}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+					<h:graphicImage value="/kubeImg/accept16.png"
+						rendered="#{clienteHome.instance.docId!= null and clientehome.instance.docId!=''}" />
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_type_id}:</ui:define>
+					<h:selectOneMenu value="#{clienteHome.instance.tipoDoc}">
+						<f:selectItem itemValue="DUI"
+							itemLabel="#{app.patimast_doc_1}" />
+						<f:selectItem itemValue="Pasaporte"
+							itemLabel="#{app.patimast_doc_2}" />
+						<f:selectItem itemValue="Otro"
+							itemLabel="#{app.patimast_doc_3}" />
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:selectOneMenu>
+					<h:graphicImage value="/kubeImg/accept16.png"
+						rendered="#{not empty clienteHome.instance.tipoDoc}" />
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.nombres}"
+						required="true">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+					<h:graphicImage value="/kubeImg/accept16.png"
+						rendered="#{not empty clienteHome.instance.nombres}" />
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">	
+					<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.apellidos}"
+						required="true">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+					<h:graphicImage value="/kubeImg/accept16.png"
+						rendered="#{not empty clienteHome.instance.apellidos}" />
+				</s:decorate>
+											
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">E-mail:</ui:define>
+					<h:inputText value="#{clienteHome.instance.email}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+		
+
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.telefono1}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.telefono2}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_address}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.direccion}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.patimast_pais}:</ui:define>
+					<h:inputText value="#{clienteHome.instance.pais.nombreEsp}">
+						<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>							
+
+			</h:panelGrid>
+		</fieldset>
+	</h:form>
+	
+</ui:composition>

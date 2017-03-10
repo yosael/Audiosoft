@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Reporte de Cuentas por Cobrar de Clientes</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<h:panelGrid columns="4">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+						<rich:calendar value="#{repContabilidad.fechaInicio}"  datePattern="dd/MM/yyyy">
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" />
+						</rich:calendar>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+						<rich:calendar value="#{repContabilidad.fechaFin}" datePattern="dd/MM/yyyy">
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" />
+						</rich:calendar>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Estado:</ui:define>		                        
+	                        <h:selectOneMenu value="#{repContabilidad.valCmb1}">
+	                        	<f:selectItem itemLabel=" " itemValue="" />
+	                            <f:selectItem itemLabel="Pendientes" itemValue="ACT" />
+								<f:selectItem itemLabel="Pagadas" itemValue="PGD" />
+								<f:selectItem itemLabel="Canceladas" itemValue="CAN" />																	
+	                            <a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+	                        </h:selectOneMenu>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Tipo de cliente:</ui:define>		                        
+	                        <h:selectOneMenu value="#{repContabilidad.valCmb2}">
+	                        	<f:selectItem itemLabel=" " itemValue="" />
+	                            <f:selectItem itemLabel="Persona natural" itemValue="NRM" />
+								<f:selectItem itemLabel="Corporativo" itemValue="CRP" />																	
+	                            <a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+	                        </h:selectOneMenu>
+					</s:decorate>
+					
+				</h:panelGrid>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<a:commandButton oncomplete="showReport('cxcPendPDF', '#{conversation.id}');"
+						styleClass="pdfBtn" action="#{repContabilidad.repCxcClientes()}"
+						value="Cuentas por cobrar" rendered="true">
+					</a:commandButton>
+				</s:decorate>
+				</center>
+				
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

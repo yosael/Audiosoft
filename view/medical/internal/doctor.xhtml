@@ -1,0 +1,119 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{doctorDAO.managed?ofiuco_view_messages.get('docmast_head_edit'):ofiuco_view_messages.get('docmast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset><legend>#{app.docmast_legend}</legend> 
+				<h:panelGrid columns="2" style="padding-left:100px;">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_user_name}:</ui:define>
+						<h:inputText value="#{doctorDAO.instance.usuario.nombreUsuario}" 
+							readonly="true" required="true" style="width:200px;" />
+						<a:commandButton onclick="#{rich:component('selUsuario')}.show();" ajaxSingle="true"  
+							action="#{usuarioHome.cargarListaUsuarios()}" reRender="usu" 
+							styleClass="modifyBtn" value=" " style="width:30px;">
+						</a:commandButton>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_email}:</ui:define>
+						<h:inputText value="#{doctorDAO.instance.email}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_profesional_card}:</ui:define>
+						<h:inputText value="#{doctorDAO.instance.profesionalCard}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_firstname}:</ui:define>
+						<h:inputText value="#{doctorDAO.instance.nombres}"
+							required="true" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_lastname}:</ui:define>
+						<h:inputText value="#{doctorDAO.instance.apellidos}"
+							required="true" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_profesional_info}:</ui:define>
+						<h:inputTextarea value="#{doctorDAO.instance.profesionalInfo}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.intermast_extra_info}:</ui:define>
+						<h:inputTextarea value="#{doctorDAO.instance.extraInfo}" />
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+						<ui:define name="label">#{app.usuariomast_company}:</ui:define>
+						<h:selectOneMenu value="#{usuarioHome.empresaSeleccionada}">
+							<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+								label="#{_emp.nombre}" noSelectionLabel=" "/>
+							<s:convertEntity />
+							<a:support event="onchange" eventsQueue="q1" action="#{usuarioHome.cargarSucursales()}" 
+								ajaxSingle="true" reRender="_branch"/>
+						</h:selectOneMenu>
+					</s:decorate>
+										
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kEdit.xhtml"
+					style="padding-left:17px;">
+					<ui:define name="label">#{app.docmast_specialty}:</ui:define>
+					<rich:pickList value="#{doctorDAO.specialtyList}"
+						copyControlLabel="#{msn.pick_add}"
+						copyAllControlLabel="#{msn.pick_addAll}"
+						removeAllControlLabel="#{msn.pick_removeAll}"
+						removeControlLabel="#{msn.pick_remove}">
+						<s:selectItems var="res" value="#{specialtyQuery.resultList}"
+							label="#{res.code} : #{res.name}" />
+						<s:convertEntity />
+					</rich:pickList>
+				</s:decorate> 
+				<s:decorate template="/layout/kActions.xhtml" id="action">
+					<s:button view="/medical/internal/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}"></s:button>
+					<s:button view="/medical/internal/internal.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="numId" value="-1" />
+					</s:button>
+					<a:commandButton action="#{doctorDAO.save()}" reRender="formA"
+						rendered="#{not doctorDAO.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"></a:commandButton>
+					<a:commandButton action="#{doctorDAO.modify()}" reRender="formA"
+						rendered="#{doctorDAO.managed}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}">
+					</a:commandButton>
+				</s:decorate></fieldset>
+			</h:form>
+			<rich:spacer height="20" />
+			
+		</rich:panel>
+		<rich:modalPanel id="selUsuario" width="600" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selUsuario');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selUsuario')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="usu" ><ui:include  src="selUsuario.xhtml" /></s:div>
+		</rich:modalPanel>
+		
+	</ui:define>
+</ui:composition>

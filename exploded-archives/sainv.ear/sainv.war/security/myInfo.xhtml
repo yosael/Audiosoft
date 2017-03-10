@@ -1,0 +1,56 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{msn.myin_head1}</f:facet>
+			<ui:include src="/security/changeMyPassword.xhtml" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus for="#{rich:clientId('email')}" />
+				<a:queue name="q1" />
+				<rich:spacer height="10" />
+				<fieldset><legend>#{msn.myin_head2}</legend> <h:panelGrid
+					columns="2">
+					<s:decorate template="/layout/kEdit.xhtml" style="width:280px;">
+						<ui:define name="label">#{msn.myin_user}:</ui:define>
+						<h:outputText value="#{userNow.instance.userName}"
+							styleClass="upper" />
+					</s:decorate>
+					<s:decorate template="/layout/kEdit.xhtml">
+						<ui:define name="label">#{msn.myin_email}:</ui:define>
+						<h:inputText value="#{userNow.instance.email}" required="true"
+							size="20" id="email">
+						</h:inputText>
+					</s:decorate>
+				</h:panelGrid> <s:decorate template="/layout/kEdit.xhtml"
+					style="padding-left:17px;" id="s1">
+					<ui:define name="label">#{msn.myin_links}:</ui:define>
+					<rich:pickList value="#{associateFavorite.menusLinks}"
+						copyControlLabel="#{msn.pick_add}"
+						copyAllControlLabel="#{msn.pick_addAll}"
+						removeAllControlLabel="#{msn.pick_removeAll}"
+						removeControlLabel="#{msn.pick_remove}">
+						<s:selectItems var="_menu" value="#{menuQuery.resultList}"
+							label="#{(_menu.el)?menu[_menu.displayName]:_menu.displayName}" />
+						<s:convertEntity />
+					</rich:pickList>
+				</s:decorate> <s:decorate template="/layout/kActions.xhtml">
+					<s:button value="#{msn.button_new}" propagation="begin"
+						view="#{conversation.viewId}" styleClass="newBtn" />
+					<a:commandButton action="#{userNow.modify()}"
+						value="#{msn.button_modify}" reRender="formA"
+						styleClass="modifyBtn" />
+				</s:decorate></fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

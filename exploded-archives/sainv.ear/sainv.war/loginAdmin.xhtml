@@ -1,0 +1,110 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view contentType="text/html" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:a="http://richfaces.org/a4j">
+	<html>
+	<head>
+	<title>Login</title>
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/kubeImg/miniKube.png" />
+	<link rel="stylesheet" type="text/css"
+		href="stylesheet/loginStyle.css" />
+	<link rel="stylesheet" type="text/css" href="stylesheet/kubestilo.css" />
+	<a:loadStyle src="resource:///stylesheet/theme.css" />
+	<a:loadStyle src="resource:///stylesheet/classic.css" />
+	<script type="text/javascript" src="script/kubescript.js"></script>
+	<p:resources />
+	</head>
+	<body>
+	<f:loadBundle var="login" basename="login_messages" />
+	<p:focus />
+	<div id="container">
+	<div id="logo"></div>
+	
+	<!-- 
+	<div id="language">
+	</div>
+	 -->
+	<div id="fields">
+	<fieldset style="border:none;"><!-- <legend>#{login.head}</legend>--><center><h:graphicImage value="/kubeImg/AudioSoft.png" style="width:180px; height:60px; margin-left:10px;" /></center> <h:form id="formLogin"><p:growl globalOnly="true" sticky="false" life="3000" />
+		<table>
+			<tr>
+				<td><h:outputText value="#{login.user}:" styleClass="label" /></td>
+				<td><h:inputText id="userName" value="#{credentials.username}"
+					required="true" requiredMessage="#{login.req_username}"
+					disabled="#{identity.loggedIn}"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><h:message for="userName" styleClass="msn" /></td>
+			</tr> 
+			<tr>
+				<td><h:outputText value="#{login.password}:" styleClass="label" /></td>
+				<td><h:inputSecret value="#{credentials.password}"
+					id="password" required="true"
+					requiredMessage="#{login.req_password}"
+					disabled="#{identity.loggedIn}" /></td>
+			</tr>
+			<tr>
+				<td><h:outputText value="#{login.language}:" styleClass="label" /></td>
+				<td>
+					<h:form>
+					<a:commandLink action="#{loginUser.selecLanguage('es')}" ajaxSingle="true" eventsQueue="q1" 
+						reRender="formLogin"> 
+						<h:graphicImage value="/kubeImg/spanish.png" title="#{msn.lang_spanish}" />
+					</a:commandLink>
+					<rich:spacer width="14" />
+					<a:commandLink action="#{loginUser.selecLanguage('en')}" ajaxSingle="true" eventsQueue="q1" 
+						reRender="formLogin"> 
+						<h:graphicImage value="/kubeImg/english.png" title="#{msn.lang_english}" />
+					</a:commandLink>
+					</h:form>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><h:message for="password" styleClass="msn" /></td>
+			</tr>
+			<tr>
+				<td><h:outputText value="#{login.remember}:" styleClass="label" /></td>
+				<td><h:selectBooleanCheckbox value="#{rememberMe.enabled}"
+					disabled="#{identity.loggedIn}" styleClass="booleanCheck" /></td>
+			</tr>
+		</table>
+		<div id="actions">
+		 
+			<h:commandButton value="#{login.button}"
+			title="#{login.button}" action="#{loginUser.startSession}"
+			disabled="#{identity.loggedIn}" onclick="upperCaseAllInputs();"
+			styleClass="loginBtn" />
+			
+		<p class="links" align="right">
+			<s:link value="#{login.end_session}" styleClass="linkWeb"
+			action="#{loginUser.endSession}" title="#{login.end_session}"
+			rendered="#{identity.loggedIn}" /><rich:spacer width="5" /> <s:link
+			styleClass="linkWeb" value="#{login.go_home}"
+			view="home.xhtml"
+			rendered="#{identity.loggedIn}" /><rich:spacer width="15" /></p><!-- view="/admin/medicalAppointment/scheduler.xhtml" -->
+		</div>
+	</h:form></fieldset>
+	</div>
+	<div id="footer">
+	<table border="0" align="center">
+		<tr>
+			<td><a id="linkSA" href="http://www.solucionesaplicativas.com" target="_blank" class="linkWeb" style="color:black;">Desarrollado por Soluciones Aplicativas S.A. de C.V.</a></td>
+		</tr>
+		<tr align="center">
+			<!-- <td> <p><h:outputText value="#{version.nomSistema} #{version.version}" /></p> </td> -->
+		</tr>
+	</table>
+	</div>
+	</div>
+	</body>
+	</html>
+</f:view>

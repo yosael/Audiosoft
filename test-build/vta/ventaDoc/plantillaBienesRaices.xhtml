@@ -1,0 +1,271 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/stylesheet/kubestilo.css" />
+	<style type="text/css" >
+	
+		/*@media print, screen {
+			div.printArea {
+				width:460px; 
+				padding:0px;
+			}
+			
+			body, .printArea, .tblDet, .tbl200 {
+				font-size:11px; 
+				font-family:sans-serif;			
+				text-transform:uppercase;
+			}
+			
+			.headTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.bld {
+				font-weight:bold;
+			}
+			
+			.footerTkt {
+				margin-top:40px;
+				margin-bottom:30px;
+			}
+			
+			.footerTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.detVta {
+				font-size:18px;
+				margin-top:15px;
+				margin-bottom:15px;
+			}
+			
+			.hdDtItm {
+				border-bottom:1px solid black;
+			}
+			
+			.dtItm {
+				height:30px;
+			}
+			
+		}
+	
+		@media print {
+			.noPrint {
+				display:none;
+			}
+		}*/
+		
+		.head-comp{ font:12px/13px Arial; border:1px solid #333333; padding:10px;}
+		.h1{font:26px/27px Arial; font-weigh:bold;}
+		.head-comp-sec{ padding:10px; margin-top:8px; font:12px/13px Arial;}
+		.head-comp-tbl{ padding:10px; margin-top:8px; font:10px/11px Arial;}
+		.table{ font:12px/13px Arial; border:1px solid #333333;}
+		.table thead th{ font-weght:bold; padding:4px 10px; background:#F4F4F4; border:1px solid #333333;}
+		.table tbody td{ padding:4px 10px; border:1px solid #333333; }
+		.footer-comp-tbl{ border:1px solid #333333; padding:10px; margin-top:5px;}
+		.footer-comp-tbl 
+		.tableftr{font:12px/13px Arial;}
+		
+	</style>
+<h:form id="frmTk">
+	<s:div>
+	<script type="text/javascript" language="javascript">
+	function imprimirComprobante() {
+		try {
+			jsPrintSetup.setPrinter(#{'\''}#{configImpresionHome.instance.nombrePrinter}#{'\''});
+			jsPrintSetup.setSilentPrint(#{configImpresionHome.instance.impresionSilenciosa});
+			jsPrintSetup.setOption('marginTop', #{configImpresionHome.instance.margenSup});
+			jsPrintSetup.setOption('marginBottom', #{configImpresionHome.instance.margenInf});
+			jsPrintSetup.setOption('marginLeft', #{configImpresionHome.instance.margenIzq});
+			jsPrintSetup.setOption('marginRight', #{configImpresionHome.instance.margenDer});
+			jsPrintSetup.setOption('headerStrLeft', #{'\''}#{configImpresionHome.instance.headerIzq}#{'\''});
+			jsPrintSetup.setOption('headerStrCenter', #{'\''}#{configImpresionHome.instance.headerCtr}#{'\''});
+			jsPrintSetup.setOption('headerStrRight', #{'\''}#{configImpresionHome.instance.headerDer}#{'\''});
+			jsPrintSetup.setOption('footerStrLeft', #{'\''}#{configImpresionHome.instance.footerIzq}#{'\''});
+			jsPrintSetup.setOption('footerStrCenter', #{'\''}#{configImpresionHome.instance.footerCtr}#{'\''});
+			jsPrintSetup.setOption('footerStrRight', #{'\''}#{configImpresionHome.instance.footerDer}#{'\''});
+			jsPrintSetup.setOption('shrinkToFit', #{configImpresionHome.instance.ajustarImpresionPrt});
+
+			/*jsPrintSetup.definePaperSize(69, 69, 'na_factura', 
+					'na_factura', 
+					'Formato factura', 
+					#{configImpresionHome.instance.anchoPapel}, 
+					#{configImpresionHome.instance.altoPapel}, 
+					1);
+			jsPrintSetup.setPaperSizeData(69);*/
+			
+			jsPrintSetup.print();
+		} catch(err) {
+			alert(err.message); 
+			window.print();  
+		}
+	}
+	</script>
+	</s:div>
+	<s:div>
+		<script type="text/javascript" language="javascript">
+		function imprimirComprobante() {
+			window.print();
+		}
+		</script>
+	</s:div>	
+	<p:growl globalOnly="true" sticky="false" life="3000" />
+	<a:queue name="q69" />
+	<center>
+	
+	<s:div rendered="#{ventaDocHome.showComp}">
+		<a:commandButton onclick="imprimirComprobante();" styleClass="printBtn" value="Imprimir comprobante" />
+	</s:div>
+	</center>
+	
+	<div class="printArea">
+		<div class="headTkt">
+			<h1 class="h1">Comprobante de Venta Bienes raices</h1>
+			
+			<div class="head-comp">
+					<table cellpadding="0" cellspacing="0" border="0">
+						<tr>
+							<td><strong>Numero de Documento: </strong></td>
+							<td style="padding-left:15px;"><h:outputText value="#{ventaDocHome.instance.correlativo}" style="text-align:right;" /></td>
+							<td width="25">&nbsp;</td>
+							<td><strong>Num. Serie: </strong></td>
+							<td style="padding-left:15px;"><h:outputText value="#{ventaDocHome.instance.serie}" style="text-align:right;" /></td>							
+						</tr>	
+						<tr>
+							<td colspan="4" width="25"></td>
+						</tr>										
+						<tr>
+							<td><strong>Fecha: </strong></td>
+							<td style="padding-left:15px;"><h:outputText value="#{ventaDocHome.instance.fecha}" style="text-align:right;" /></td>
+							<td width="25">&nbsp;</td>
+							<td><strong></strong></td>
+							<td style="padding-left:15px;"></td>							
+						</tr>
+					</table>
+			</div>
+			<div class="head-comp-sec">
+				<table cellpadding="0" cellspacing="0" border="0">
+					<tr>
+						<td><strong>Forma de Pago: </strong></td>
+						<td style="padding-left:15px;">
+							<h:outputText value="Efectivo" rendered="#{ventaDocHome.instance.formaPago == 'EFE'}" />
+							<h:outputText value="Tarjeta" rendered="#{ventaDocHome.instance.formaPago == 'TRJ'}" />
+							<h:outputText value="Cheque" rendered="#{ventaDocHome.instance.formaPago == 'CHQ'}" />
+						</td>
+						<td width="25">&nbsp;</td>
+						<td><strong>Cliente: </strong></td>
+						<td style="padding-left:15px;"><h:outputText value="#{ventaDocHome.instance.cliente.personaoempresa}" style="text-align:right;" /></td>							
+						<td width="25">&nbsp;</td>
+						<td><strong>Tipo de Comprobante: </strong></td>
+						<td style="padding-left:15px;"><h:outputText value="#{ventaDocHome.instance.comprobante.nombre}" style="text-align:right;" /></td>						
+					</tr>
+				</table>
+			</div> 
+			
+			<div class="head-comp-tbl">
+				<table class="table" width="100%" cellpadding="0" cellspacing="0" border="1">
+					<thead>
+						<tr>
+							<th>CANTIDAD</th>
+							<th>DETALLE</th>
+							<th>PRECIO UNITARIO</th>
+							<th>TIPO</th>
+							<th>VTAS. NO SUJETAS</th>
+							<th>VTAS. EXCENTAS</th>
+							<th>VTAS. GRABADAS</th>
+						</tr>
+					</thead>
+					<tbody>
+					<ui:repeat var="res" value="#{ventaDocHome.detVentasDoc}">
+						<tr>
+							<td><p>&nbsp;<h:outputText value="#{res.cantidad}" style="text-align:right;" /></p></td>
+							<td><p>&nbsp;<h:outputText value="#{res.detalle}" style="text-align:right;" /></p></td>
+							<td><p>&nbsp;<h:outputText value="#{res.precioUnitario}" style="text-align:right;" /></p></td>
+							<td><p>&nbsp;
+								<h:outputText value="Exento" rendered="#{res.tipo == 'E'}" />
+								<h:outputText value="Gravado" rendered="#{res.tipo == 'G'}" />
+								<h:outputText value="No sujeto" rendered="#{res.tipo == 'J'}" /></p>
+							</td>
+							<td><p>&nbsp;<h:outputText value="#{res.total}" rendered="#{res.tipo == 'J'}" /></p></td>
+							<td><p>&nbsp;<h:outputText value="#{res.total}" rendered="#{res.tipo == 'E'}" /></p></td>
+							<td><p>&nbsp;<h:outputText value="#{res.total}" rendered="#{res.tipo == 'G'}" /></p></td>
+						</tr>
+					</ui:repeat>
+					</tbody>				
+				</table>
+			</div>
+			<div class="footer-comp-tbl">
+				<table class="tableftr" cellpadding="0" border="0" cellspacing="9">
+					<tr>
+						<td><strong>(+) IVA PERCIBIDO</strong></td>
+						<td>
+							<h:outputText value="#{ventaDocHome.instance.percibido}" style="text-align:right;"  >
+					       		<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                   		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						   	</h:outputText>								
+						</td>
+						<td>&nbsp;</td>
+						<td><strong>SUB-TOTALES</strong></td>
+						<td>
+							<h:outputText value="#{ventaDocHome.subTotalNs}" style="text-align:right;" >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                        	groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						    </h:outputText>								
+						</td>
+						<td>
+							<h:outputText value="#{ventaDocHome.subTotalE}" style="text-align:right;">
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                        	groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+							</h:outputText>								
+						</td>
+						<td>
+							<h:outputText value="#{ventaDocHome.subTotalG}" style="text-align:right;">
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                        	groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						    </h:outputText>								
+						</td>																
+					</tr>
+					<tr>
+						<td><strong>(-) IVA RETENIDO</strong></td>
+						<td>
+							<h:outputText value="#{ventaDocHome.instance.retenido}" style="text-align:right;"  >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                            		groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						    </h:outputText>								
+						</td> 
+						<td>&nbsp;</td>
+						<td><strong>DESCUENTO</strong></td>
+						<td colspan="3">
+							<h:outputText value="#{ventaDocHome.instance.descuento}" style="text-align:right;"  >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"	
+		                        	groupingUsed="true" integerOnly="true" maxFractionDigits="2" minFractionDigits="2" />
+						    </h:outputText>
+						</td>
+					</tr>
+				</table>			
+			</div>
+			
+		</div>
+	</div>
+	
+	<s:div rendered="#{ventaDocHome.showComp}">
+		<script type="text/javascript" language="Javascript">
+			//Imprimimos de un solo el ticket
+			imprimirComprobante();
+			window.opener.nuevaVenta();
+			window.close();
+		</script>
+	</s:div>
+	
+</h:form>
+
+</ui:composition>

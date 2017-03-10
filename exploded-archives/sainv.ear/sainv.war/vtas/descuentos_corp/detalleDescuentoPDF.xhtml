@@ -1,0 +1,124 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Descuentos" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Catalogo descuentos</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 2 2 2" >	
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >Codigo:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >#{codigoDescuentoCorpHome.instance.codigo}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>Cliente Corporativo:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell colspan="3" verticalAlignment="middle">
+				<p:paragraph>#{codigoDescuentoCorpHome.instance.clienteCorp.nombre}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >Fecha emision:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{codigoDescuentoCorpHome.instance.fechaEmision}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>Fecha finalizacion:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{codigoDescuentoCorpHome.instance.fechaFinalizacion}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1" >
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Producto/Servicio</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Precio</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Descuento</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Total</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="res" value="#{codigoDescuentoCorpHome.listaDetalle}">
+				<p:cell verticalAlignment="middle"  >
+					<p:paragraph>
+						<p:text value="#{res.producto.nombre}" rendered="#{res.producto!=null}" >
+						</p:text>
+						<p:text value="#{res.service.name}" rendered="#{res.service!=null}" >
+						</p:text>
+					</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>
+						<p:text value="#{res.producto.prcNormal}" rendered="#{res.producto!=null}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text>
+						<p:text value="#{res.service.costo}" rendered="#{res.service!=null}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{res.descuento}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+                    </p:text></p:paragraph>
+				</p:cell>
+				
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>
+						<p:text value="#{res.producto.prcNormal-res.descuento}" rendered="#{res.producto!=null}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text>
+						<p:text value="#{res.service.costo-res.descuento}" rendered="#{res.service!=null}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				
+			</ui:repeat>
+			
+						
+		</p:table>
+		
+</p:document>

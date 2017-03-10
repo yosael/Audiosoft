@@ -1,0 +1,142 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Comprobante cuenta por cobrar" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Comprobante de cuenta por cobrar / pagos</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 3 2 2" >			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >#{app.repcli_cliente}:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+					<p:paragraph >#{cuentaCobrarHome.instance.cliente.nombres} #{cuentaCobrarHome.instance.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >Fecha registro:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">	
+				<p:paragraph><p:text value="#{cuentaCobrarHome.instance.fechaIngreso}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph ># Comprobante:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle">
+				<p:paragraph>
+					<p:text value="#{cuentaCobrarHome.instance.comprobante}"  /><!-- rendered="#{cuentaCobrarHome.instance.diasPlazo}" -->
+				</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle">
+				<p:paragraph>#{cuentaCobrarHome.instance.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_detalle}:</p:paragraph></p:font>
+			</p:cell>
+			<p:cell colspan="3" verticalAlignment="middle">
+				<p:paragraph>#{cuentaCobrarHome.instance.comentario}</p:paragraph>
+			</p:cell>
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1" >
+			<p:cell colspan="4" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" size="16" >
+					<p:paragraph alignment="center">Detalle de los pagos</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.parvta_description}</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Condicion de pago</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold" paddingRight="6">
+					<p:paragraph alignment="right">Fecha</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">#{app.vtaprs_monto}</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="dtPagos" value="#{cuentaCobrarHome.instance.pagosCxc}">
+				<p:cell verticalAlignment="middle">
+					<p:paragraph>#{dtPagos.comentario}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>#{dtPagos.condicionPago.nombre}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph>
+						<p:text value="#{dtPagos.fechaIngreso}" >
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" /> 
+						</p:text>
+					</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+					<p:paragraph><p:text value="#{dtPagos.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+                    </p:text></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+			
+			
+			<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4" paddingRight="6">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Monto de cuenta por cobrar</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{cuentaCobrarHome.instance.monto}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+			
+			<p:cell colspan="3" horizontalAlignment="right" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4" paddingRight="6">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Remanente</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:font style="bold" size="13">
+				<p:paragraph><p:text value="#{cuentaCobrarHome.instance.remanente}">
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+               	</p:text></p:paragraph>
+                </p:font>
+			</p:cell>
+						
+		</p:table>
+		
+</p:document>

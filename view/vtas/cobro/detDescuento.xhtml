@@ -1,0 +1,95 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<style>
+	table.radioB input {
+		width: 20px;
+		}
+	</style>	
+	<h:form id="formDescuento">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<table style="width:500px;" >
+				<tr>
+					<td style="text-align:center;vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.vtaprs_usrdesc}" /></td>
+					<td style="text-align:center;vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.vtaprs_montodesc}" /></td>
+					<td style="text-align:center;vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.vtaprs_tipodesc}" /></td>
+				</tr>   
+				<tr>
+					<td>
+						<h:inputText value="#{ventaProdServHome.instance.usrDescuento.nombreCompleto}" 
+							readonly="true" required="true" style="width:220px;" />
+						<a:commandButton onclick="#{rich:component('selUsuario')}.show();" ajaxSingle="true"  
+							action="#{usuarioHome.getUsersAuthDisc()}" reRender="usu" 
+							styleClass="modifyBtn" value=" " style="width:30px;">
+						</a:commandButton>
+					</td>
+					<td>
+						<h:inputText value="#{ventaProdServHome.instance.cantidadDescuento}" id="valor" required="true" style="width:80px;"  
+							onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" >
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"/>
+						</h:inputText>						
+					</td>
+					<td>						
+						<h:selectOneRadio value="#{ventaProdServHome.instance.tipoDescuento}" id="radio" styleClass="radioB" required="true" >
+							<f:selectItem itemLabel="$" itemValue="M" />
+							<f:selectItem itemLabel="%" itemValue="P" />
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"  />
+						</h:selectOneRadio>						
+					</td>
+				</tr>
+				<tr>
+				<td colspan="3"><center>
+					<a:commandButton action="#{ventaProdServHome.ponerDescuento()}" reRender="formvta" ajaxSingle="true" eventsQueue="q1"
+						onclick="#{rich:component('detDescuento')}.hide();" styleClass="updateBtn" value="#{app.bt_vtprs_setDesc}"/>
+					<!--
+					<a:commandButton action="#{ventaProdServHome.setLlevaDescuento(true)}" reRender="formDescuento,formvta" ajaxSingle="true" eventsQueue="q1"
+						onclick="#{rich:component('detDescuento')}.hide();" styleClass="updateBtn" value="#{app.bt_vtprs_setDesc}" 
+						rendered="#{not ventaProdServHome.llevaDescuento}" />  
+					<a:commandButton action="#{ventaProdServHome.setLlevaDescuento(false)}" reRender="formDescuento,formvta, lblDiscM, lblDiscP" ajaxSingle="true" eventsQueue="q1" 
+						onclick="#{rich:component('detDescuento')}.hide();" styleClass="updateBtn" value="#{app.bt_vtprs_quitDesc}" 
+						rendered="#{ventaProdServHome.llevaDescuento}"  />
+					-->	
+				</center></td>
+				</tr>
+				</table>
+				
+				</center>
+			</h:form>
+			<rich:modalPanel id="selUsuario" width="800" moveable="true" autosized="true"  top="100"
+				onbeforeshow="activeModal.setActiveModalPanel('selUsuario');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selUsuario')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="usu" ><ui:include  src="selUsuario.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="er" width="300" moveable="true" autosized="true"  top="100"
+				onbeforeshow="activeModal.setActiveModalPanel('er');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('er')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<center>
+					<s:span> Campos no validos! </s:span>
+					<s:button value="Cerrar" onclick="#{rich:component('er')}.hide(); return false;"></s:button>
+				</center>
+			</rich:modalPanel>
+	
+</ui:composition>

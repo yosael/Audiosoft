@@ -1,0 +1,162 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+	<style>
+	table.radioB input {
+		width: 20px;
+		}
+	</style>
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{cajaChicaHome.managed?sainv_view_messages.get('cjachi_head_edit'):sainv_view_messages.get('cjachi_head_register')}" />
+			</f:facet>
+			<style>
+				.radito {width:50px;}
+			</style>
+			<h:form id="formcjachidet">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				<h:panelGrid columns="4">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.cjachi_fecha}:</ui:define>
+						<h:inputText value="#{cajaChicaHome.instance.fecha}" disabled="true">
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+						</h:inputText>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" rendered="#{loginUser.user.accionEspecial==true}">
+						<ui:define name="label">#{app.usuariomast_branch}:</ui:define>
+						<h:selectOneMenu value="#{cajaChicaHome.instance.sucursal}" required="false">
+							<s:selectItems value="#{sucursalHome.resultList}" var="_emp" 
+								label="#{_emp.nombre}" noSelectionLabel=" "/>
+							<s:convertEntity />
+						</h:selectOneMenu>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.accionEspecial==false}">
+						<ui:define name="label">#{app.usuariomast_branch}:</ui:define>
+						<h:inputText value="#{loginUser.user.sucursal.nombre}" disabled="true"/>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Monto actual caja chica:</ui:define>
+						<h:outputText value="#{cajaChicaHome.instance.monto}" style="font-weight:bold; font-size:16px;">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           				groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</s:decorate>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="5">
+					<s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+						<ui:define name="label">#{app.cjachi_concepto}:</ui:define>
+						<h:inputText value="#{conceptoMovHome.concepto}" required="true" id="conceptoMov"
+							disabled="#{cajaChicaHome.cajaActiva==false}" style="width:180px;">
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+						</h:inputText>
+						<rich:suggestionbox fetchValue="#{conceptoMovHome.instance.nombre}" for="conceptoMov"
+							suggestionAction="#{conceptoMovHome.getConceptosCoincidence}" 
+							var="conc" minChars="2" usingSuggestObjects="false">
+							<h:column>
+								<h:outputText value="#{conc.nombre}" />
+							</h:column>
+						</rich:suggestionbox>	
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" style="width:140px;">	
+						<ui:define name="label">Tipo de movimiento:</ui:define>
+						<h:selectOneMenu value="#{cajaChicaHome.tipoMov}" required="true" style="width:100px;">
+							<f:selectItem noSelectionOption="true"/>
+							<f:selectItem itemLabel="#{app.cjachi_gasto}" itemValue="ABO" />
+							<f:selectItem itemLabel="#{app.cjachi_ingreso}" itemValue="CRG" />
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+						</h:selectOneMenu>
+					</s:decorate>
+								
+					<s:decorate template="/layout/kEditSpace.xhtml" style="width:120px;">
+						<ui:define name="label">#{app.cjachi_monto}:</ui:define>
+						<h:inputText value="#{cajaChicaHome.monto}" style="width:80px; text-align:right; padding-right:4px;" required="true"
+							onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);" disabled="#{cajaChicaHome.cajaActiva==false}" >
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+						</h:inputText>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" style="width:280px;">
+						<ui:define name="label">#{app.cjachi_comentario}:</ui:define>
+						<h:inputText value="#{cajaChicaHome.comentario}" required="false" id="conceptoMov"
+							disabled="#{cajaChicaHome.cajaActiva==false}" style="width:250px;" >
+							<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+						</h:inputText>
+					</s:decorate>
+					
+					<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+						<a:commandButton action="#{cajaChicaHome.guardarMovCaja()}" reRender="formcjachidet" style="width:120px;"
+							rendered="#{cajaChicaHome.managed and cajaChicaHome.cajaActiva==true}" styleClass="btnapp btnsav" 
+							ignoreDupResponses="true" eventsQueue="q1" value="AGREGAR"/>
+					</s:decorate>
+				</h:panelGrid>
+						
+					<rich:dataTable var="res" value="#{cajaChicaHome.instance.detalleMovimientos}"
+						rendered="#{not empty cajaChicaHome.instance.detalleMovimientos}" rows="7"
+						align="center" rowClasses="tblEven,tblOdd" 
+						onRowMouseOver="this.style.backgroundColor='#D1F4B3'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<rich:column filterBy="#{res.concepto.nombre}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.cjachi_concepto}</f:facet>
+							<h:outputText value="#{res.concepto.nombre}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{app.cjachi_ingreso}</f:facet>
+							<h:outputText value="#{res.monto}" rendered="#{res.tipo=='CRG'}" style="width:100px;"  >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                          				groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{app.cjachi_gasto}</f:facet>
+							<h:outputText value="#{res.monto}" rendered="#{res.tipo=='ABO'}" style="width:100px;"  >
+								<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                           				groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+							</h:outputText>
+						</rich:column>
+						<rich:column filterBy="#{res.comentario}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.cjachi_comentario}</f:facet>
+							<h:outputText value="#{res.comentario}" />
+						</rich:column>
+						<rich:column rendered="#{cajaChicaHome.cajaActiva==true}">
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandLink eventsQueue="q1" action="#{cajaChicaHome.borrarMovCaja(res)}" rendered="#{cajaChicaHome.managed}"
+							 	reRender="formcjachidet" ajaxSingle="true" immediate="true" ignoreDupResponses="true" title="Eliminar">
+	                                 <h:graphicImage value="/kubeImg/table_delete16.png" />
+	                         </a:commandLink>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable>
+				</center>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/acct/cjachi/list.xhtml" propagation="begin"
+					styleClass="btnapp btnstd" value="#{msn.button_list}">
+				</s:button>
+				
+			</s:decorate>								
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

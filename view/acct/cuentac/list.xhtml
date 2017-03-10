@@ -1,0 +1,85 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.cuentac_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/acct/cuentac/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="id" value="" />
+				</s:button>
+			</s:decorate>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<center><table style="width:90%;">
+					<tr><td style="width:74%;">
+					<rich:dataTable var="res" value="#{cuentaContHome.resultList}"
+						rendered="#{not empty cuentaContHome.resultList}" rows="10"
+						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.cuentac_list}</f:facet>
+						<rich:column filterBy="#{res.codCuenta}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.cuentac_codcuenta}</f:facet>
+							<h:outputText value="#{res.codCuenta}" />
+						</rich:column>
+						<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.cuentac_name}</f:facet>
+							<h:outputText value="#{res.nombre}" />
+						</rich:column>
+						<rich:column filterBy="#{res.tipoCuenta}" filterEvent="onkeyup">
+							<f:facet name="header">#{app.cuentac_tipocuenta}</f:facet>
+							<h:outputText value="#{app.cuentac_activo}" rendered="#{res.tipoCuenta.codigo=='AC'}" />
+							<h:outputText value="#{app.cuentac_pasivo}" rendered="#{res.tipoCuenta.codigo=='PV'}" />
+							<h:outputText value="#{app.cuentac_cc}" rendered="#{res.tipoCuenta.codigo=='CC'}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<s:link title="#{app.cuentac_edit}" rendered="true"
+								view="/acct/cuentac/master.xhtml" propagation="begin">
+								<h:graphicImage value="/kubeImg/table_edit16.png" />
+								<f:param name="id" value="#{res.id}" />
+							</s:link>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable>
+					</td>
+					<td style="padding-left:16px;">
+					<p:accordionPanel autoHeight="false">
+					<p:tab title="#{app.cuentac_treectas}" >
+					<rich:tree style="width:300px" nodeFace="#{item.tieneHijos}" 
+		                ajaxSubmitSelection="false" switchType="client" 
+		                value="#{cuentaContHome.rootNode}" var="item" ajaxKeys="#{null}">
+					    <rich:treeNode iconLeaf="/kubeImg/cuentacPapa.png" 
+					    				icon="/kubeImg/cuentacPapa.png" type="true">
+		                	<h:outputText escape="false" value="#{item.nombre}" />
+		                </rich:treeNode>
+		                <rich:treeNode iconLeaf="/kubeImg/cuentacHija.png" 
+		                				icon="/kubeImg/cuentacHija.png" type="false">
+		                	<h:outputText escape="false" value="#{item.nombre}" />
+		                </rich:treeNode>
+		            </rich:tree>	
+		            </p:tab>
+					</p:accordionPanel>				
+					</td></tr>
+				</table></center>
+				
+			</h:form>
+		</rich:panel>
+		
+	</ui:define>
+</ui:composition>

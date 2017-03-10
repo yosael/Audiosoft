@@ -1,0 +1,129 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/stylesheet/kubestilo.css" />
+	<style type="text/css" >
+	
+		@media print, screen {
+			div.printArea {
+				width:980px; 
+				padding:15mm 0px 0px 15mm;
+			}
+			
+			body, .printArea, .tblDet, .tbl200 {
+				font-size:14px; 
+				font-family:sans-serif;			
+				text-transform:uppercase;
+			}
+			
+			.headTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.bld {
+				font-weight:bold;
+			}
+			
+			.footerTkt {
+				margin-top:40px;
+				margin-bottom:30px;
+			}
+			
+			.footerTkt div {
+				text-align:center;
+				width:100%;
+			}
+			
+			.detVta {
+				font-size:18px;
+				margin-top:15px;
+				margin-bottom:15px;
+			}
+			
+			.hdDtItm {
+				border-bottom:1px solid black;
+			}
+			
+			.dtItm {
+				height:30px;
+			}
+			
+			
+		.rotacion90 {
+			/* Safari */
+			-webkit-transform: rotate(-90deg);
+			-webkit-transform-origin: left;
+			/* Firefox */
+			-moz-transform: rotate(-270deg);
+			/* IE */
+			-ms-transform: rotate(-90deg);
+			/* Opera */
+			-o-transform: rotate(-90deg);
+			/* Internet Explorer */
+			filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			
+		}
+		
+		@media print {
+			.noPrint {
+				display:none;
+			}
+		}
+		
+	</style>
+<h:form id="frmTk">
+	<s:div>
+		<script type="text/javascript" language="javascript">
+		function imprimirComprobante() {
+			try {
+				jsPrintSetup.setPrinter(#{'\''}#{chequeDocHome.instance.comprobante.impresor}#{'\''});
+				jsPrintSetup.setSilentPrint(1);			
+				jsPrintSetup.print();
+			} catch(err) {
+				alert(err.message); 
+				window.print();  
+			}
+		}
+		</script>
+	</s:div>
+	<p:growl globalOnly="true" sticky="false" life="3000" />
+	<a:queue name="q69" />
+	<center>
+		<s:div rendered="#{chequeDocHome.showComp or chequeDocHome.managed}" styleClass="noPrint">
+			<a:commandButton onclick="imprimirComprobante();" styleClass="printBtn" value="Imprimir Comprobante" />
+		</s:div>
+	</center>
+	<div class="printArea ">
+		<div style="width:100%; height:10mm;"></div>
+		<div style="height:5mm; width:100%;">
+			<div style="padding-left:60mm; width:45%; display:inline; float:left;" >
+				<h:outputText value="#{chequeDocHome.instance.lugar}" /><h:outputText value=", " />
+				<h:outputText value="#{chequeDocHome.instance.fecha}" >
+					<s:convertDateTime pattern="dd ' de ' MMMMMMMMMM ' de ' yyyy" type="date" />
+				</h:outputText>
+			</div>
+			<div style=" text-align:left; padding-left:0mm; width:24%; display:inline; float:right;" >
+				<h:outputText value="#{chequeDocHome.instance.monto}">
+					<f:convertNumber pattern="########0.##" locale="en-US" groupingUsed="true" maxFractionDigits="2" minFractionDigits="2" />
+				</h:outputText>
+			</div>
+		</div>
+		<div style="height:6mm; width:100%;">
+			<div style="padding-left:56mm; width:45%; display:inline; float:left;" ><h:outputText value="#{chequeDocHome.instance.ordenDe}" style="text-align:right;" /></div>
+			<div style=" text-align:left; padding-left:10mm; width:40%; display:inline; float:right;" ></div>
+		</div>
+		<div style="height:5mm; width:100%;">
+			<div style="padding-left:39mm; width:85%; display:inline; float:left;" ><h:outputText value="#{chequeDocHome.instance.montoLetras}" /></div>
+		</div>
+	</div>
+</h:form>
+
+</ui:composition>

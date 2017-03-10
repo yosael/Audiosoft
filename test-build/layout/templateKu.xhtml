@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:s="http://jboss.com/products/seam/taglib" contentType="text/html">
+	<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>AUDIOSOFT</title>
+	<link rel="shortcut icon"
+		href="#{request.contextPath}/kubeImg/miniKube.png" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/stylesheet/sainv.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/stylesheet/styleKu.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{request.contextPath}/stylesheet/kubestilo.css" />
+	<a:loadStyle src="resource:///stylesheet/theme.css" />
+	<a:loadStyle src="resource:///stylesheet/classic.css" />
+	<script type="text/javascript"
+		src="#{request.contextPath}/script/kubescript.js"></script>
+		<script type="text/javascript">
+		  function showReport(urlRep, conversationId) {
+		  if (document.getElementById("messages") != null) {
+		    return;
+		  }
+		  var reportWin = window.open(urlRep + '.sa?docId=1' + '&amp;cid=' + conversationId);
+		  if (!reportWin) {
+		    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
+		  }
+		  }
+		</script>
+	<p:resources />
+	<ui:insert name="head" />
+	</head>
+	<body>
+	<div id="body">
+	<div id="body-right"> 
+		<div id="headBanner" style="vertical-align: middle;">
+			<table>
+			<tr>
+			<td><h:graphicImage value="/kubeImg/logoCli.png" style="width:68px; height:30px; margin-left:10px;" /></td>
+			<td>
+				<div style="font: 18px Tahoma, Helvetica, Arial, Sans-Serif; margin-top:4px; margin-left:14px; margin-right:26px;
+				text-align: center; color: #F3F3F3; text-shadow: 0px 2px 3px #222;">
+				Sistema de Inventario, Clínica, Contabilidad y Ventas
+				</div>
+			</td>
+			<td valign="bottom">
+				<div style="font-family:trebuchet MS,Tahoma,Arial,Verdana;color:white; font-weight:normal; 
+					margin-left:0px; margin-top:8px; ">
+					<h:outputText value="#{app.loggedas_withusr}: " style="font-weight:bold;"
+						rendered="#{not empty loginUser.user}" />
+					<h:outputText value="#{loginUser.user.nombreUsuario}"
+						rendered="#{not empty loginUser.user}" />
+					<rich:spacer width="10" />
+					
+					<h:outputText value="#{app.loggedas_fromsuc}: " style="font-weight:bold;"
+						rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user}" />
+					<h:outputText value="#{loginUser.user.sucursal.nombre}" 
+						rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and empty loginUser.user.sucursal.sucursalSuperior}" />
+					<h:outputText value="#{loginUser.user.sucursal.sucursalSuperior.nombre}" 
+						rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and not empty loginUser.user.sucursal.sucursalSuperior}" />
+						<rich:spacer width="10" />
+					<h:outputText value="#{app.loggedas_frombod}: " style="font-weight:bold;"
+						rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and not empty loginUser.user.sucursal.sucursalSuperior}" />
+						
+					<h:outputText value="#{loginUser.user.sucursal.nombre}" 
+						rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and not empty loginUser.user.sucursal.sucursalSuperior}" />
+					<h:outputText value="#{app.loggedas_nosuc}" 
+						rendered="#{empty loginUser.user.sucursal and not empty loginUser.user}" />
+				</div>
+			</td>
+			</tr>
+			</table>
+			
+		</div>
+		<div id="menu-bar" style="border-top:1px solid #333333;">
+			<h:form id="fMenu">
+				<ui:include src="/layout/menu.xhtml" />
+			</h:form>
+		</div>
+	<ui:insert name="body" /></div>
+	<div class="clear" />
+	</div>
+	</body>
+	</html>
+</f:view>

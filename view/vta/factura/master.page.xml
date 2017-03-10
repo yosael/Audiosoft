@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	
+	<param name="id" value="#{ventaDocHome.ventaDocId}" required="false" />
+	<action execute="#{ventaDocHome.load()}" on-postback="false"/>
+	
+	<navigation from-action="#{ventaDocHome.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/vta/ventaDoc/master.xhtml" >
+				<param name="shwC" value="true" />
+			</redirect>					
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{ventaDocHome.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/vta/ventaDoc/master.xhtml" />
+		</rule>
+		
+		<rule if-outcome="false">
+			<redirect view-id="/vta/ventaDoc/master.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{ventaDocHome.anularVenta()}">
+		<rule if-outcome="true">
+			<redirect view-id="/vta/ventaDoc/list.xhtml" />
+		</rule>
+		
+		<rule if-outcome="false">
+			<redirect view-id="/vta/ventaDoc/list.xhtml" />
+		</rule>
+	</navigation>	
+	
+	<navigation from-action="#{ventaDocHome.load()}">
+		<rule if-outcome="false">
+			<redirect view-id="/vta/ventaDoc/master.xhtml" >
+			</redirect>					
+		</rule>
+	</navigation>	
+</page>

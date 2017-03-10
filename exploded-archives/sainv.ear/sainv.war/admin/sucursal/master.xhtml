@@ -1,0 +1,197 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{sucursalHome.managed?sainv_view_messages.get('sucursalmast_head_edit'):sainv_view_messages.get('sucursalmast_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formSucursal">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.sucursalmast_legend}</legend> 
+					<table style="">
+						<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.sucursalmast_code}:</ui:define>
+								<h:inputText value="#{sucursalHome.instance.codigo}"
+									styleClass="upper" required="true" />
+							</s:decorate></td>
+							
+							<td><s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.sucursalmast_name}:</ui:define>
+								<h:inputText value="#{sucursalHome.instance.nombre}" required="true"/>
+							</s:decorate></td>
+							
+							<td rowspan="3" style="width:320px;" class="kEditSpace"><center>
+								<h:outputText value="#{app.sucursal_ubiprd}" class="col1" />:
+								<rich:spacer width="10" />
+								<h:inputText value="#{sucursalHome.nomUbicacion}" required="false" maxLength="10" style="width:100px;" >
+									<a:support event="onkeydown" eventsQueue="q1" ajaxSingle="true" reRender="_ubiBtnAdd" />
+								</h:inputText>
+								<rich:spacer width="10" />
+								<a:commandButton action="#{sucursalHome.guardarUbicacion()}" reRender="_tblUbis,formSucursal" id="_ubiBtnAdd"
+									disabled="#{sucursalHome.nomUbicacion==null or sucursalHome.nomUbicacion==''}" style="width:130px;"
+									rendered="true" styleClass="saveBtn"  value="#{app.btn_save_ubiprd}"/>
+								<br /><br />
+								<rich:dataTable var="res" value="#{sucursalHome.instance.ubicacionesPrd}" id="_tblUbis"  rows="10"
+									rendered="#{not empty sucursalHome.instance.ubicacionesPrd}" 
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">#{app.ubiprdsuc_list}</f:facet>
+									<rich:column sortBy="#{res.nombre}" sortOrder="ASCENDING" filterBy="#{res.nombre}" filterEvent="onkeyup">
+										<f:facet name="header">#{app.sucursal_ubiprd}</f:facet>
+										<h:inputText value="#{res.nombre}" required="false" maxLength="10" >
+											<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+										</h:inputText>
+									</rich:column>
+									<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink title="#{app.sucursallist_delete}" reRender="_tblUbis" eventsQueue="q1"
+											action="#{sucursalHome.borrarUbicacion(res)}" ajaxSingle="true" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+									<f:facet name="footer">
+										<rich:datascroller id="ds1" renderIfSinglePage="true" />
+									</f:facet>
+								</rich:dataTable>
+							</center></td>
+						</tr>
+						<tr>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+									<ui:define name="label">#{app.sucursalmast_company}:</ui:define>
+									<h:selectOneMenu value="#{sucursalHome.instance.empresa}">
+										<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+											label="#{_emp.nombre}" noSelectionLabel=" "/>
+										<s:convertEntity />
+									</h:selectOneMenu>
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+									<ui:define name="label">#{app.sucursalmast_company}:</ui:define>
+									<h:inputText value="#{sucursalHome.instance.empresa.nombre}" disabled="true"/>
+								</s:decorate>
+							</td>
+							
+							<td><s:decorate template="/layout/kEditSpace.xhtml" rendered="#{sucursalHome.managed}">
+								<ui:define name="label">#{app.sucursalmast_state}:</ui:define>
+								<h:selectOneMenu value="#{sucursalHome.estado}">
+									<f:selectItem itemLabel="Activo" itemValue="ACT"/>
+									<f:selectItem itemLabel="Inactivo" itemValue="INA"/>
+									<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" 
+										reRender="_actions" />
+								</h:selectOneMenu>
+							</s:decorate></td>
+							</tr>
+							<tr>
+							<td><s:decorate template="/layout/kEditSpace.xhtml" >
+								<ui:define name="label">#{app.sucursalmast_sucsup}:</ui:define>
+								<h:selectOneMenu value="#{sucursalHome.instance.sucursalSuperior}">
+									<s:selectItems value="#{sucursalHome.sucursalesSup}" var="_suc" 
+										label="#{_suc.nombre}" noSelectionLabel=" " />
+										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
+									<s:convertEntity />
+								</h:selectOneMenu>
+							</s:decorate></td>
+							<td>
+								<h:outputLabel value="Es bodega?" style="font-weight:bold" />
+								<rich:spacer width="10" />
+								<h:selectBooleanCheckbox value="#{sucursalHome.instance.bodega}">
+								</h:selectBooleanCheckbox>
+								<!-- <a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="tabcito,_tableMedSug" 
+												action="#{prescriptionHome.agregarMedicamento(res)}" /> -->
+							</td>			
+						</tr>
+					</table> 
+				
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<s:button view="/admin/sucursal/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/admin/sucursal/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{sucursalHome.save()}" reRender="formSucursal"
+						rendered="#{not sucursalHome.managed}" styleClass="saveBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{sucursalHome.modify()}" reRender="formsucursal"
+						rendered="#{sucursalHome.managed and sucursalHome.estado=='ACT'}" styleClass="modifyBtn"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+					<a:commandButton rendered="#{sucursalHome.managed and sucursalHome.estado=='INA'}" 
+						styleClass="modifyBtn" ajaxSingle="true"
+						value="#{msn.button_modify}" onclick="#{rich:component('confirmation')}.show();"/>
+				</s:decorate>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="confirmation"  width="400" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+				<f:facet name="header">
+					#{app.sucursallist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmation')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="fm1">
+					<p>#{app.sucursalmast_confirm}</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m1">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{sucursalHome.modify()}" reRender="formsucursal"
+							styleClass="modifyBtn"
+							value="#{msn.button_continue}"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="delubi"  width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('delubi');">
+			<f:facet name="header">
+				#{app.sucursallist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('delubi')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm2">
+				<p>#{app.delubi_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m2">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('delubi')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{sucursalHome.borrarUbicacion()}" reRender="_tblUbis"
+						rendered="#{sucursalHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('delubi')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

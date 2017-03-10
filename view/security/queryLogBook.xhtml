@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">Consulta de logs</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<h:panelGrid columns="2" style="margin-left:100px;">
+					<s:decorate template="/layout/kEditSpace.xhtml" id="usuario">
+						<ui:define name="label">Usuario:</ui:define>
+						<h:inputText value="#{kubeLogger.searchUserName}"
+							styleClass="upper" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Operación</ui:define>
+						<h:selectOneMenu value="#{kubeLogger.operation}"
+							styleClass="menuCombo">
+							<f:selectItem id="noselect" itemLabel="Seleccione"
+								itemValue="null" />
+							<f:selectItem id="estado0" itemLabel="GUARDAR"
+								itemValue="GUARDAR" />
+							<f:selectItem id="estado1" itemLabel="CONSULTA"
+								itemValue="CONSULTA" />
+							<f:selectItem id="estado2" itemLabel="MODIFICAR"
+								itemValue="MODIFICAR" />
+							<f:selectItem id="estado3" itemLabel="ELIMINAR"
+								itemValue="ELIMINAR" />
+							<f:selectItem id="estado4" itemLabel="INICIAR SESION"
+								itemValue="INICIAR_SESION" />
+							<f:selectItem id="estado5" itemLabel="TERMINAR SESION"
+								itemValue="TERMINAR_SESION" />
+							<f:selectItem id="estado6" itemLabel="ACCESO A PAGINA"
+								itemValue="ENTRO_PAGINA" />
+						</h:selectOneMenu>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Fecha de inicio:</ui:define>
+						<rich:calendar value="#{kubeLogger.searchDate1}"
+							datePattern="MM dd yyyy" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Fecha de fin:</ui:define>
+						<rich:calendar value="#{kubeLogger.searchDate2}"
+							datePattern="MM dd yyyy" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Entidad:</ui:define>
+						<h:inputText value="#{kubeLogger.entity}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Dirección IP:</ui:define>
+						<h:inputText value="#{kubeLogger.ip}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">Palabras claves:</ui:define>
+						<h:inputText value="#{kubeLogger.searchWords}" />
+					</s:decorate>
+				</h:panelGrid>
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="#{conversation.viewId}" propagation="begin"
+						value="Limpiar" styleClass="newBtn" />
+					<a:commandButton value="Consultar" action="#{kubeLogger.search}"
+						reRender="formA,formB" limitToList="true"
+						onclick="upperCaseAllInputs();" styleClass="searchBtn">
+						<s:defaultAction />
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+			<rich:spacer height="10px" />
+			<h:form id="formB">
+				<rich:dataTable value="#{logBooks}" var="_bit" rows="10"
+					rendered="#{not empty logBooks}" align="center">
+					<f:facet name="header">
+						<span>Resultados de la búsqueda</span>
+					</f:facet>
+					<rich:column sortBy="#{_bit.code}">
+						<f:facet name="header">
+							<h:outputText value="Código" />
+						</f:facet>
+						<h:outputText value="#{_bit.code}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header" sortBy="#{_bit.user.userName}">
+							<h:outputText value="Usuario" />
+						</f:facet>
+						<h:outputText value="#{_bit.user.userName}" />
+					</rich:column>
+					<rich:column sortBy="#{_bit.date}">
+						<f:facet name="header">
+							<h:outputText value="Fecha" />
+						</f:facet>
+						<h:outputText value="#{_bit.date}">
+							<s:convertDateTime type="date" dateStyle="full"
+								pattern="dd/MM/yyyy HH:mm" />
+						</h:outputText>
+					</rich:column>
+					<rich:column sortBy="#{_bit.operation}">
+						<f:facet name="header">
+							<h:outputText value="Operación" />
+						</f:facet>
+						<h:outputText value="#{_bit.operation}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Descripción" />
+						</f:facet>
+						<h:outputText value="#{_bit.description}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Entidad" />
+						</f:facet>
+						<h:outputText value="#{_bit.entity}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="IP" />
+						</f:facet>
+						<h:outputText value="#{_bit.ip}" />
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller renderIfSinglePage="false" id="ds" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>			
+		</rich:panel>
+	</ui:define>
+</ui:composition>

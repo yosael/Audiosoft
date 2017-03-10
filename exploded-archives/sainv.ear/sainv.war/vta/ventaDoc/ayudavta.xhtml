@@ -1,0 +1,64 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formAyuda">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+					<span class="hlpTitulo">�QUE PASOS DEBO SEGUIR PARA PODER EFECTUAR UNA VENTA?</span>
+										
+				</center>
+				<ol>
+					<li>Seleccione el tipo de documento (Factura, Ticket, Cr�dito Fiscal) de la venta.</li>
+					<li>Al seleccionar el tipo de documento, el sistema autom�ticamente carga el n�mero de serie (factura y cr�dito fiscal) y n�mero correlativo. El correlativo debe
+					de coincidir con la factura o cr�dito fiscal que se imprimir�, al igual que la serie. Sin embargo, si por alguna raz�n estos no coinciden, usted puede editar ambos
+					campos.</li>
+					<li>Puede asociar una orden de trabajo a la venta. Los pasos para asociar la orden de trabajo son los siguientes:
+						<ul>
+							<li>De click al bot�n azul con un �cono dorado, ubicado a la par de la caja de texto de la Orden de Trabajo</li>
+							<li>Selecciona la orden de trabajo haciendo click en el link "Seleccionar" ubicado en la �ltima columna de la orden de trabajo.</li>
+							<li>Si la orden de trabajo escogida tiene un anticipo, este se cargar� en el apartado "Formas de pago" ubicado al lado derecho.</li>
+						</ul>
+					</li>
+					<li>Puede asociar un cliente a la venta. Para un cr�dito fiscal es obligatorio seleccionar un cliente
+					que posea DUI, NIT y NRC. Tambi�n el cliente ser� obligatorio
+					en caso que se guarde un cr�dito para dicho cliente. Los pasos para seleccionar un cliente son los siguientes:
+						<ul>
+							<li>De click al bot�n azul con un �cono dorado, ubicado a la par de la caja de texto de Cliente (2do campo de la segunda fila)</li>
+							<li>Seleccione el cliente haciendo click en el link "Seleccionar" ubicado en la �ltima columna de la tabla.</li>
+						</ul>
+					</li>
+					<li>Puede asociar un descuento a la venta, para ello los pasos son los siguientes:
+						<ul>
+							<li>De click al bot�n azul con un �cono dorado, ubicado a la par de la caja de texto del Descuento de venta (3er campo de la segunda fila)</li>
+							<li>Se desplegar� una ventana donde solicitar� la contrase�a de un descuento. Esta debe de ingresarla el supervisor.</li>
+							<li>Luego de aceptar la contrase�a, mostrar� la lista de descuentos. Seleccione un descuento haciendo click en el link "Seleccionar" ubicado en la �ltima columna de la tabla.</li>
+						</ul>
+					</li>
+					<li>Debe de agregar al menos un producto o servicio a la venta para que pueda efectuarse. Para ello debe de seguir los siguientes pasos:
+						<ul>
+							<li>De click al bot�n "Agregar producto" � "Agregar servicio" dependiendo de lo que desee agregar.</li>
+							<li>Seleccione el producto/servicio deseado haciendo click en el link "Seleccionar" ubicado en la �ltima columna de la tabla.</li>
+						</ul>
+					</li>
+					<li>Una vez agregado todos los productos/servicios que se vender�n, se escoger� la forma de pago, ya sea por partes entre varias formas de pago o una sola. 
+					Para ello, usted podr� ingresar en las cajas de texto el total pagado en cada forma de pago. En caso de pagar enteramente
+					con una forma de pago, debe presionar el cheque ubicado a la par de la forma de pago y el sistema autom�ticamente asignar� el monto de la venta a dicha forma de pago.</li>
+					<li>Si hace falta una parte del monto total en las formas de pago, lo restante se utilizar� para generar un cr�dito del cliente, en el apartado "Cr�dito",
+					donde puede especificar el plazo para pagar.</li>
+					<li>Finalmente, presione el bot�n "Efectuar Venta" para guardar la venta y sacar el comprobante en pantalla. En caso de haber olvidado llenar un campo requerido, el sistema le 
+					mostrar� una alerta en la esquina superior derecha y no guardar� la venta hasta que todos los campos requeridos est�n llenos.</li>
+				</ol>
+			</h:form>
+	
+</ui:composition>

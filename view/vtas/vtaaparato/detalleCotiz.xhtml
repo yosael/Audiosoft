@@ -1,0 +1,228 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Comprobante Cotizacion"
+	creator="Soluciones Aplicativas" pageSize="612 396" type="pdf"
+	margins="30	30 10 30">
+	<p:font size="10">
+		<p:paragraph
+			rendered="#{not empty ventaComboHome.cotizacion.getCliente().getNombreCompleto()}"
+			alignment="center">
+			<p:font style="bold">
+				<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} |<p:font
+				style="bold">
+				<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} | <p:font
+				style="bold">
+				<p:text value=" #{app.report_cotiz_cmb_apa_vali}"></p:text> <p:text value= ": "/> </p:font> <p:text value="#{ventaComboHome.validez} #{app.patimast_age_3}"></p:text>
+		</p:paragraph>
+
+	</p:font>
+	<p:html>
+	<br />
+	</p:html>
+	<h:panelGroup rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}">
+	<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0"
+		borderVisible="false">
+		<p:cell backgroundColor="#ffe6e6" horizontalAlignment="center"
+			verticalAlignment="middle">
+			<p:font color="black" style="bold" size="10">
+				<p:paragraph>
+					<p:text value="#{sainv.vtaitm_left_ear}"
+						rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}" />
+					<p:text value="#{sainv.vtaitm_right_ear}"
+						rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+	</p:table>
+	</h:panelGroup>
+	<h:panelGroup rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}">
+			<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0"
+		borderVisible="false">
+		<p:cell backgroundColor="#e6f2ff" horizontalAlignment="center"
+			verticalAlignment="middle">
+			<p:font color="black" style="bold" size="10">
+				<p:paragraph>
+					<p:text value="#{sainv.vtaitm_left_ear}"
+						rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}" />
+					<p:text value="#{sainv.vtaitm_right_ear}"
+						rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+	</p:table>
+</h:panelGroup>
+
+
+	<p:table columns="2" widthPercentage="100" headerRows="0"
+		borderVisible="true" widths="2 9.7">
+		<h:panelGroup rendered="#{ventaComboHome.selCmbsList.size > 0}">
+			<ui:repeat var="combo" value="#{ventaComboHome.selCmbsList}">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="90">
+					<p:image value="#{ventaComboHome.getImgApaPrincipal(combo)}" />
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="90">
+					<p:paragraph alignment="center">
+						<p:font size="10"> #{app.report_cotiz_cmb_apa_opc}: #{ventaComboHome.selCmbsList.indexOf(combo)+1}  | #{app.report_cotiz_cmb_apa_precio}: <p:text
+								value=" "></p:text>
+							<p:text value="#{ventaComboHome.calcPreReporte(combo)}">
+								<f:convertNumber currencySymbol="$" type="currency"
+									locale="en-US" groupingUsed="true" integerOnly="true"
+									maxFractionDigits="2" />
+							</p:text>
+						</p:font>
+					</p:paragraph>
+
+					<p:font size="8">
+					<ui:repeat var="apaPrin" value="#{combo.itemsCombo}"
+						keepTogether="true">
+						<h:panelGroup rendered="#{apaPrin.principal}">
+							<p:paragraph alignment="left ">
+								<p:font style="bold">
+									<p:text value="Marca: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.marca.nombre}     "></p:text>
+								<p:font style="bold">
+									<p:text value="Modelo: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.modelo}     "></p:text>
+								<p:font style="bold">
+									<p:text value="Origen: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.origen.nombreEsp}"></p:text>
+							</p:paragraph>
+							<p:paragraph>
+								<p:font style="bold">
+									<p:text value="#{app.servlist_col3}:" />
+								</p:font>
+								<p:text value=" #{apaPrin.producto.descripcion}"></p:text>
+							</p:paragraph>
+						</h:panelGroup>
+					</ui:repeat>
+					<p:font size="8"  style="bold">
+									<p:text value=" Incluye: " />
+								</p:font>
+					<h:panelGroup rendered="#{combo.periodoGarantia > 0}">
+								<p:text value="Garantia: #{ventaComboHome.calcGarantia(combo)}"></p:text>
+								</h:panelGroup>
+					<p:paragraph>
+					<ui:repeat var="apaPrin" value="#{combo.itemsCombo}">
+							<p:text value="- #{apaPrin.producto.nombre}  "/>
+					</ui:repeat>
+					</p:paragraph>
+					</p:font>
+				</p:cell>
+			</ui:repeat>
+		</h:panelGroup>
+	</p:table>
+	
+	<!-- Comienza contenido del combo binaural -->
+	
+	
+	
+	<p:html>
+	<br />
+	</p:html>
+	<p:table rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='DER'}"  columns="1" widthPercentage="100" height="10px" headerRows="0"
+		borderVisible="false">
+		<p:cell backgroundColor="#ffe6e6" horizontalAlignment="center"
+			verticalAlignment="middle">
+			<p:font color="black" style="bold" size="10">
+				<p:paragraph>
+					<p:text value="#{sainv.vtaitm_left_ear}"
+						rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='IZQ'}" />
+					<p:text value="#{sainv.vtaitm_right_ear}"
+						rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='DER'}" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+	</p:table>
+		<p:table rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='IZQ'}" columns="1" widthPercentage="100" height="10px" headerRows="0"
+		borderVisible="false">
+		<p:cell backgroundColor="#e6f2ff" horizontalAlignment="center"
+			verticalAlignment="middle">
+			<p:font color="black" style="bold" size="10">
+				<p:paragraph>
+					<p:text value="#{sainv.vtaitm_left_ear}"
+						rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='IZQ'}" />
+					<p:text value="#{sainv.vtaitm_right_ear}"
+						rendered="#{aparatoClienteHome.getInstance().ladoAparatoBin=='DER'}" />
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+	</p:table>
+
+	<p:table columns="2" widthPercentage="100" headerRows="0"
+		borderVisible="true" widths="2 9.7">
+		<h:panelGroup rendered="#{ventaComboHome.selCmbsListBin.size > 0}">
+			<ui:repeat var="combo" value="#{ventaComboHome.selCmbsListBin}">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle" fixedHeight="90">
+					<p:image value="#{ventaComboHome.getImgApaPrincipal(combo)}" />
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="top" fixedHeight="90">
+					<p:paragraph alignment="center">
+						<p:font size="10"> #{app.report_cotiz_cmb_apa_opc}: #{ventaComboHome.selCmbsListBin.indexOf(combo)+1}  | #{app.report_cotiz_cmb_apa_precio}: <p:text
+								value=" "></p:text>
+							<p:text value="#{ventaComboHome.calcPreReporte(combo)}">
+								<f:convertNumber currencySymbol="$" type="currency"
+									locale="en-US" groupingUsed="true" integerOnly="true"
+									maxFractionDigits="2" />
+							</p:text>
+						</p:font>
+					</p:paragraph>
+
+					<p:font size="8">
+					<ui:repeat var="apaPrin" value="#{combo.itemsCombo}"
+						keepTogether="true">
+						<h:panelGroup rendered="#{apaPrin.principal}">
+							<p:paragraph alignment="left ">
+								<p:font style="bold">
+									<p:text value="Marca: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.marca.nombre}     "></p:text>
+								<p:font style="bold">
+									<p:text value="Modelo: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.modelo}     "></p:text>
+								<p:font style="bold">
+									<p:text value="Origen: "></p:text>
+								</p:font>
+								<p:text value="#{apaPrin.producto.origen.nombreEsp}"></p:text>
+							</p:paragraph>
+							<p:paragraph>
+								<p:font style="bold">
+									<p:text value="#{app.servlist_col3}:" />
+								</p:font>
+								<p:text value=" #{apaPrin.producto.descripcion}"></p:text>
+							</p:paragraph>
+						</h:panelGroup>
+					</ui:repeat>
+					<p:font size="8"  style="bold">
+									<p:text value=" Incluye: " />
+								</p:font>
+					<h:panelGroup rendered="#{combo.periodoGarantia > 0}">
+								<p:text value="Garantia: #{ventaComboHome.calcGarantia(combo)}"></p:text>
+								</h:panelGroup>
+					<p:paragraph>
+					<ui:repeat var="apaPrin" value="#{combo.itemsCombo}">
+							<p:text value="- #{apaPrin.producto.nombre}  "/>
+					</ui:repeat>
+					</p:paragraph>
+					</p:font>
+				</p:cell>
+			</ui:repeat>
+		</h:panelGroup>
+	</p:table>
+	
+	
+	
+	<!-- Termina contenido del combo binaural -->
+	
+	
+<!-- <p:paragraph><p:font size="8"> <p:text value="Forma de pago: Tarteja de credito Citibank (12 meses)"></p:text></p:font> </p:paragraph> -->
+
+</p:document>

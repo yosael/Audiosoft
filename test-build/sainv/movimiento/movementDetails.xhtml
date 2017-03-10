@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{app.movimientodetail_head}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formmovimiento">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" /> 
+				<fieldset>
+					<legend>#{app.movimientomast_legend}</legend> 
+					
+					<h:panelGrid columns="2" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_date}:</ui:define>
+							<h:inputText value="#{movimientoHome.instance.fecha}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_observation}:</ui:define>
+							<h:inputTextarea value="#{movimientoHome.instance.observacion}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.movimientomast_movement_type}:</ui:define>							
+							<h:inputText value="#{app.movimiento_movement_type_e}" rendered="#{movimientoHome.instance.tipoMovimiento=='E'}" readonly="true"/>
+							<h:inputText value="#{app.movimiento_movement_type_s}" rendered="#{movimientoHome.instance.tipoMovimiento=='S'}" readonly="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.movimientomast_reason}:</ui:define>
+							<h:inputText value="#{app.movimiento_reason_o}" readonly="true" rendered="#{movimientoHome.instance.razon=='O'}" />
+							<h:inputText value="#{app.movimiento_reason_c}" readonly="true" rendered="#{movimientoHome.instance.razon=='C'}" />
+							<h:inputText value="#{app.movimiento_reason_p}" readonly="true" rendered="#{movimientoHome.instance.razon=='P'}" />
+							<h:inputText value="#{app.movimiento_reason_t}" readonly="true" rendered="#{movimientoHome.instance.razon=='T'}" />
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.movimientomast_company}:</ui:define>
+							<h:inputText value="#{movimientoHome.instance.sucursal.empresa.nombre}" readonly="true"/>
+						</s:decorate>
+							
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch">
+							<ui:define name="label">#{app.movimientomast_branch}:</ui:define>
+							<h:inputText value="#{movimientoHome.instance.sucursal.nombre}" readonly="true"/>
+						</s:decorate>
+
+						
+				</h:panelGrid> 
+				
+				<rich:spacer height="20"/>
+				
+				<rich:dataTable var="res" value="#{movimientoHome.itemsAgregados}" id="_table"
+					rendered="#{not empty movimientoHome.itemsAgregados}" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.movimiento_itemlist_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col3}</f:facet>
+						<h:outputText value="#{res.cantidad}" size="8" >
+							<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" /> 
+						</h:outputText>
+							
+ 					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.movimiento_itemlist_col4}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" size="8" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" /> 
+						</h:outputText>
+					</rich:column>					
+				</rich:dataTable>
+				
+				<rich:spacer height="20"/>
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/movimiento/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>					
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

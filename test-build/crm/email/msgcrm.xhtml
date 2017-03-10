@@ -1,0 +1,11 @@
+<m:message xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:m="http://jboss.com/products/seam/mail" importance="normal">
+	<m:header name="X-Composed-By" value="AUDIOSOFT" />
+	<m:from name="AUDIOSOFT" address="audiosoft@audiomed.com.sv" />
+	<m:to name="#{info.fullName}">#{info.email}</m:to>
+	<m:subject>#{app.mail_subject}</m:subject>
+	<m:body>
+		<h:outputText value="#{msg.text}" escape="false"/>	
+	</m:body>
+</m:message>

@@ -1,0 +1,45 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="16" style="bold">
+		<p:paragraph alignment="center">#{app.repcli_detreparaciones}</p:paragraph>
+	</p:font>
+	<p:html>
+	<br /><br /><br />
+	</p:html>
+		<p:table columns="7" widthPercentage="100"  headerRows="1">
+			<p:cell backgroundColor="gray" >#{app.repcli_fechaIng}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_costo}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_cliente}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_aparato}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_proceso}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_descripcion}</p:cell>
+			<p:cell backgroundColor="gray" >#{app.repcli_tecnico}</p:cell>
+			
+			<ui:repeat var="res" value="#{repTaller.resultList}">
+				<p:cell><p:text value="#{res.reparacionCli.fechaIngreso}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:cell>
+				
+				<p:cell><p:text value="#{res.reparacionCli.costo}">
+				<f:convertNumber currencySymbol="$" type="currency"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text></p:cell>
+				
+				<p:cell><p:text value="#{res.reparacionCli.cliente.nombres} #{res.reparacionCli.cliente.apellidos}"/></p:cell>
+					
+				<p:cell><p:text value="#{res.reparacionCli.aparatoRep.nombre} #{res.reparacionCli.aparatoRep.modelo}"/></p:cell>
+				
+				<p:cell><p:text value="#{res.reparacionCli.proceso.nombre}"/></p:cell>
+				<p:cell><p:text value="#{res.reparacionCli.descripcion}"/></p:cell>
+				<p:cell><p:text value="#{res.usuario.nombreUsuario}"/></p:cell>
+			</ui:repeat>
+		</p:table>
+	
+</p:document>

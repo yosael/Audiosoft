@@ -1,0 +1,61 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<!-- Modal para consultar el usuario -->
+	<rich:modalPanel id="searchUser" minWidth="400" moveable="false"
+		autosized="true" top="50px"
+		onbeforeshow="activeModal.setActiveModalPanel('searchUser')">
+		<f:facet name="header">
+				#{msn.mdus_modal}
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+					onclick="#{rich:component('searchUser')}.hide();" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formModal">
+			<a:queue name="qUser" />
+			<s:div id="divModal">
+				<s:decorate template="/layout/kEdit.xhtml">
+					<ui:define name="label">#{msn.mdus_name}:</ui:define>
+					<h:inputText value="#{userDAO.searchName}" id="bus1"
+						styleClass="inputField upper" required="true">
+					</h:inputText>
+				</s:decorate>
+				<s:decorate template="/layout/kActions.xhtml">
+					<h:messages styleClass="message" errorClass="errormsg"
+						infoClass="infomsg" warnClass="warnmsg" globalOnly="true" />
+					<a:commandButton action="#{userDAO.search}"
+						value="#{msn.button_query}" styleClass="searchBtn"
+						onclick="upperCaseAllInputs();" reRender="formModal">
+						<s:defaultAction />
+					</a:commandButton>
+				</s:decorate>
+				<rich:spacer height="20px" />
+				<rich:dataTable var="res" value="#{userDAO.resultQuery}"
+					rendered="#{not empty userDAO.resultQuery}" rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll" width="80%">
+					<f:facet name="header">#{msn.mdus_list}</f:facet>
+					<rich:column>
+						<f:facet name="header">#{msn.mdus_col1}</f:facet>
+						<h:outputText value="#{res.id}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.mdus_col2}</f:facet>
+						<h:outputText value="#{res.userName}" />
+					</rich:column>
+					<ui:insert name="columns" />
+					<rich:datascroller id="ds1" renderIfSinglePage="true" />
+				</rich:dataTable>
+			</s:div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

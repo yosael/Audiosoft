@@ -1,0 +1,68 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formAdd">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<rich:dataTable var="res" value="#{reparacionClienteHome.aparatosCli}" id="_table"
+					rendered="#{not empty reparacionClienteHome.aparatosCli}" rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.productolist_list}</f:facet>
+					
+					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.productolist_col2}</f:facet>
+						<h:outputText value="#{res.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.marca}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.productolist_col2}</f:facet>
+						<h:outputText value="#{res.marca}" />
+					</rich:column>
+					<rich:column filterBy="#{res.modelo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.productolist_col2}</f:facet>
+						<h:outputText value="#{res.modelo}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earphone}</f:facet>
+						<h:outputText value="#{msn.button_yes}" rendered="#{res.retroAuricular==true}" />
+						<h:outputText value="#{msn.button_no}" rendered="#{res.retroAuricular==false}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.aparcli_earside}</f:facet>
+						<h:outputText value="#{msn.side_left}" rendered="#{res.ladoAparato=='IZQ'}" />
+						<h:outputText value="#{msn.side_right}" rendered="#{res.ladoAparato=='DER'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.producto_codser}</f:facet>
+						<h:outputText value="#{res.numSerie}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.compramast_select_product}" reRender="formreparacioncli"
+							action="#{reparacionClienteHome.seleccionarAparato(res)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('confirmation')}.hide();">
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				<h:panelGrid rendered="#{empty reparacionClienteHome.aparatosCli}}" columns="1" style="margin:0 auto;">
+					<h:outputText value="No se encontraron aparatos" style="color:green;font-size:18px;"  />
+				</h:panelGrid>
+				
+				
+			</h:form>
+	
+</ui:composition>

@@ -1,0 +1,94 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText value="Detalle del proveedor" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formclicorp">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					
+					<h:panelGrid columns="3" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Razon Social:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.razonSocial}" maxlenght="80" required="true" maxlength="40" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">NIT:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.nit}" maxlength="18" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">DUI:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.dui}" maxlength="10" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">NRC:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.nrc}" maxlength="10" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Nombre del Contacto:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.nomContacto}" maxlength="30" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Telefono Contacto:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.telContacto}" maxlength="12" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Telefono:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.telefono}" maxlength="12" required="false" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Email:</ui:define>
+							<h:inputText value="#{proveedorDocHome.instance.email}" maxlength="30" required="false" />
+						</s:decorate>						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Dirección:</ui:define>
+							<h:inputTextarea required="true" style="width:360px;" maxlength="300" value="#{proveedorDocHome.instance.direccion}" >
+									<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
+							</h:inputTextarea>
+						</s:decorate>									
+
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/crm/proveedor/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/crm/proveedor/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{proveedorDocHome.save()}" reRender="formclicorp"
+						rendered="#{not proveedorDocHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_save}"/>
+					<a:commandButton action="#{proveedorDocHome.modify()}" reRender="formclicorp"
+						rendered="#{proveedorDocHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,335 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">	
+			<rich:panel>			
+			<f:facet name="header">#{app.sched_new_head}</f:facet>
+			<h:form id="formApp">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				
+				<p:focus />
+				<a:queue name="q1" />
+				<h:panelGrid columns="2" style="padding-left:100px;">
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_new_date}:</ui:define>
+						<h:outputText value="#{medicalAppointmentDAO.instance.dateTime}">
+							<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
+						</h:outputText>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_new_doctor}:</ui:define>
+						<h:outputText
+							value="#{medicalAppointmentDAO.instance.doctor.fullName}" />
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_new_patient}:</ui:define>
+						<h:outputLabel id="lblSelPat"
+							value="#{medicalAppointmentDAO.instance.cliente.nombres} #{medicalAppointmentDAO.instance.cliente.apellidos}"
+							style="width:200px;" />
+						<h:inputText id="patSearch" styleClass="busProd" onfocus="this.value='';"
+							style="width:200px;" />
+						<p:watermark for="patSearch" value="#{app.sched_new_searchpat}"
+							id="watermark" />
+							<a:commandLink  value="info" id="idInfoCliente"
+								onclick="#{rich:component('infoCliMod')}.show();" 
+								ajaxSingle="true" reRender="modInfoCl"
+								disabled="#{empty medicalAppointmentDAO.instance.cliente}"
+								action="#{clienteHome.cargarPaciente(medicalAppointmentDAO.instance.cliente)}" 
+								/>
+	
+						<a:commandButton onclick="#{rich:component('selClient')}.show();"
+							ajaxSingle="true"
+							action="#{clienteCRMHome.cargarListaClientes()}" reRender="cli"
+							styleClass="modifyBtn" value="#{app.general_vertodos}"
+							style="width:auto; height:23px;">
+						</a:commandButton>
+						<a:commandLink value="#{app.patimast_add}" action="#{clienteHome.newPatient(true,-1)}" 
+							onclick="#{rich:component('addClient')}.show();"
+							ajaxSingle="true">
+						</a:commandLink>
+
+						<rich:suggestionbox immediate="true" ajaxSingle="true"
+							eventsQueue="q1" ignoreDupResponses="true" height="310"
+							autosized="true" id="suggestionBox" for="patSearch"
+							suggestionAction="#{clienteHome.getPacientesByName}" width="1000"
+							var="val" minChars="1"
+							nothingLabel='#{app.compramast_buscar_nomatch}'>
+							<h:column>
+								<f:facet name="header">
+									<h:outputText styleClass="headCoi bigHd"
+										value="#{app.patimast_firstname1}" />
+								</f:facet>
+								<h:outputText styleClass="bigCnt" value="#{val[0]}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputText styleClass="headCoi bigHd"
+										value="#{app.patimast_lastname1}" />
+								</f:facet>
+								<h:outputText styleClass="bigCnt" value="#{val[1]}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputText styleClass="headCoi bigHd"
+										value="#{app.patimast_telephone}" />
+								</f:facet>
+								<h:outputText styleClass="bigCnt" value="#{val[2]}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<h:outputText styleClass="headCoi bigHd"
+										value="#{app.patimast_email}" />
+								</f:facet>
+								<h:outputText styleClass="bigCnt" value="#{val[3]}">
+								</h:outputText>
+							</h:column>
+
+							<a:support event="onselect" reRender="lblSelPat,idInfoCliente" eventsQueue="q1"
+								ajaxSingle="true"
+								action="#{medicalAppointmentDAO.instance.setCliente(val[4])}"
+								 />
+							<a:support event="onselect" reRender="patSearch,idInfoCliente" eventsQueue="q1"
+								ajaxSingle="true"
+								action="#{medicalAppointmentDAO.setSearch('')}"
+								 />
+																
+						</rich:suggestionbox>
+
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml" id="_branch">
+						<ui:define name="label">#{app.compramast_branch}:</ui:define>
+						<h:selectOneMenu value="#{medicalAppointmentDAO.instance.sucursal}" id="su" rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and empty loginUser.user.sucursal.sucursalSuperior}" >
+							
+							<f:selectItem selected="true" itemValue="#{loginUser.user.sucursal}" itemLabel="#{loginUser.user.sucursal.nombre}"  />
+							
+							<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc" 
+								label="#{_suc.nombre}"  hideNoSelectionLabel="true" />
+							<s:convertEntity />
+							<a:support event="onchange" reRender="formApp" eventsQueue="q1" />
+						</h:selectOneMenu>
+						<h:selectOneMenu value="#{medicalAppointmentDAO.instance.sucursal}" id="su2" rendered="#{not empty loginUser.user.sucursal and not empty loginUser.user and not empty loginUser.user.sucursal.sucursalSuperior}" >
+							
+							<f:selectItem selected="true" itemValue="#{loginUser.user.sucursal.sucursalSuperior}" itemLabel="#{loginUser.user.sucursal.sucursalSuperior.nombre}" />
+							
+							<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc" 
+								label="#{_suc.nombre}"  hideNoSelectionLabel="true" />
+							<s:convertEntity />
+							<a:support event="onchange" reRender="formApp" eventsQueue="q1" />
+						</h:selectOneMenu>
+					</s:decorate>
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<ui:define name="label">#{app.sched_new_comment}:</ui:define>
+						<h:inputTextarea id="comment"
+							value="#{medicalAppointmentDAO.instance.comment}">
+							<a:support reRender="formApp" event="onblur" eventsQueue="q1" />
+							<p:watermark for="comment" value=" "
+								id="watermark" />
+						</h:inputTextarea>
+					</s:decorate>
+				</h:panelGrid>
+				<s:decorate template="/layout/kEditSpace.xhtml"
+					style="padding-left:100px;">
+					<ui:define name="label">#{app.sched_new_services}:</ui:define>
+					<table style="width: 100%;">
+						<tr>
+							<td><h:inputText id="servSearch" styleClass="busProd"
+									style="width:215px;" /> <p:watermark for="servSearch"
+									value="#{app.sched_new_searchserv}" id="watermark" /> <rich:suggestionbox
+									immediate="true" ajaxSingle="true" eventsQueue="q1"
+									ignoreDupResponses="true" height="310" autosized="true"
+									id="suggestionBox" for="servSearch"
+									suggestionAction="#{serviceDAO.findServiciosByName}"
+									width="1000" var="val" minChars="1"
+									nothingLabel='#{app.compramast_buscar_nomatch}'>
+									<h:column>
+										<f:facet name="header">
+											<h:outputText styleClass="headCoi bigHd"
+												value="#{app.servmast_code}" />
+										</f:facet>
+										<h:outputText styleClass="bigCnt" value="#{val[0]}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<h:outputText styleClass="headCoi bigHd"
+												value="#{app.servlist_col2}" />
+										</f:facet>
+										<h:outputText styleClass="bigCnt" value="#{val[1]}" />
+									</h:column>
+
+									<a:support event="onselect" reRender="formApp" eventsQueue="q1"
+										ajaxSingle="true"
+										action="#{medicalAppointmentDAO.addServicio(val[2])}"/>
+								</rich:suggestionbox> <a:commandButton
+									onclick="#{rich:component('lstServs')}.show();"
+									ajaxSingle="true"
+									action="#{serviceDAO.loadServiciosList('EXA', 'MED')}"
+									reRender="srv" styleClass="modifyBtn"
+									value="#{app.general_vertodos}">
+								</a:commandButton></td>
+							<td><rich:dataTable var="res"
+									value="#{medicalAppointmentDAO.servicios}" id="_tableSrv"
+									align="center" rowClasses="tblEven,tblOdd"
+									onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+									onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+									style="width:400px;" headerClass="tablaHeader"
+									footerClass="tableScroll">
+									<f:facet name="header">Servicios de la consulta</f:facet>									
+									
+									<!-- creacion de la lista de servicios  -->
+									<rich:column>
+										<f:facet name="header">#{app.servmast_code}</f:facet>
+										<h:outputText value="#{res.codigo}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">#{app.servlist_col2}</f:facet>
+										<h:outputText value="#{res.name}" />
+									</rich:column>																		
+									<rich:column>
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink reRender="_tableSrv" eventsQueue="q1"
+											action="#{medicalAppointmentDAO.removerServicio(res)}"
+											ajaxSingle="true">
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</s:decorate>
+
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton action="#{appointmentGrid.revertirCambios()}" styleClass="backBtn" value="#{msn.button_back}"
+						reRender="formApp,renderImp,formA,table" 
+						onclick="#{rich:component('newAppointment')}.hide();" >
+					</a:commandButton> 
+					
+					
+					<a:commandButton action="#{appointmentGrid.rediRect2()}"
+						 
+						reRender="renderImp,formApp,table,val" styleClass="saveBtn"
+						 value="#{msn.button_save}" oncomplete="validar()"
+						 eventsQueue="q1"
+						rendered="#{not medicalAppointmentDAO.managed}" actionListener="#{appointmentGrid.registerNew()}" >
+						<f:setPropertyActionListener value="#{appointmentGrid.doctorSel.id}" target="#{appointmentGrid.idDoctor}" />
+					</a:commandButton>
+					
+					<!-- <a:commandButton action="#{appointmentGrid.registerNew()}" 
+						reRender="renderImp,formApp,table,val" styleClass="saveBtn"
+						 value="#{msn.button_save}" oncomplete="validar()"
+						rendered="#{not medicalAppointmentDAO.managed}" >
+					</a:commandButton>
+					 -->
+					<s:div id="val" >
+						<script type="text/javascript"> 
+						function validar(){																
+							if(#{medicalAppointmentDAO.managed}){
+								#{rich:component('newAppointment')}.hide();					
+							}					
+							}
+						</script>
+					</s:div>						
+					<a:commandButton styleClass="impBtn" value="#{msn.button_imp}"
+						onclick="printArea('imp_appointment','');" ajaxSingle="true"
+						rendered="#{medicalAppointmentDAO.managed}">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:panel>
+		<s:decorate template="/medical/patient/_modalSearchPatient.xhtml"
+			id="modalPatient">
+			<ui:define name="action">
+				<a:commandLink
+					action="#{medicalAppointmentDAO.associateClient(res)}"
+					ajaxSingle="true" reRender="formApp" title="#{app.patisearch_link1}"
+					oncomplete="#{rich:component('searchPatient')}.hide();">
+					<h:graphicImage value="/kubeImg/accept16.png" />
+				</a:commandLink>
+			</ui:define>
+		</s:decorate>
+		<h:form id="formApp2">
+		</h:form>
+		<s:div id="renderImp">
+			<ui:include src="/imp/impAppointment.xhtml" />
+		</s:div>
+		
+		<rich:modalPanel id="selClient" width="800" moveable="true"
+			autosized="true" top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selClient');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selClient')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="cli">
+				<ui:include src="selClient.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="addClient" width="800" moveable="true"
+			autosized="true" top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('addClient');">
+			<f:facet name="header">#{app.patimast_head_register}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('addClient')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="addCli">
+				<ui:include src="addClient.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+
+		
+		<rich:modalPanel id="lstServs" width="800" moveable="true"
+			autosized="true" top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('lstServs');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('lstServs')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="srv">
+				<ui:include src="selServicios.xhtml" />
+			</s:div>
+		</rich:modalPanel>
+		
+		<!-- Nuevo modal para mostrar informacion del cliente -->
+			 <rich:modalPanel id="infoCliMod" width="750" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('infoCliMod');">
+					<f:facet name="header">
+						Informacion del cliente seleccionado
+					</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('infoCliMod')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+
+					<s:div id="modInfoCl">
+
+						 <s:div id="modInfoCl1" >
+							<ui:include src="infoClienteMod.xhtml" />
+						</s:div>
+					</s:div>
+				</rich:modalPanel>
+	 	
+		
+		
+		
+	    </ui:composition>

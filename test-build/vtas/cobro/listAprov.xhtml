@@ -1,0 +1,239 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml" >
+	<ui:define name="body">
+	
+		<rich:panel>
+			<f:facet name="header">#{app.aprovList_head}</f:facet>
+			<h:form id="formvta">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<s:decorate template="/layout/kActions.xhtml" id="_actions">
+					<a:commandButton value="#{app.bt_vtprs_lst_cobros}" action="#{ventaProdServHome.fltVtasRep()}"
+						oncomplete="showReport('listadoCobros', '#{conversation.id}');" styleClass="pdfBtn" rendered="false"  />
+				</s:decorate>				
+					<rich:spacer height="0" />
+					
+				<span style="font-weight:bold;">#{app.fecha_inicial}: &nbsp;&nbsp;</span>
+				<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calIniFlt"
+					value="#{ventaProdServHome.fechaPFlt1}" inputStyle="width:120px; height:12px;">
+					<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{ventaProdServHome.setRangoVentasAprovadas()}" reRender="formvta,_calIniFlt,_calFinFlt,tMonto,tDescuento,tRango" />
+				</rich:calendar>
+				<rich:spacer height="34" />					
+					<span style="font-weight:bold;">#{app.fecha_final}: &nbsp;&nbsp;</span>
+					<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calFinFlt"
+						value="#{ventaProdServHome.fechaPFlt2}" inputStyle="width:120px; height:12px;">
+						<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{ventaProdServHome.setRangoVentasAprovadas()}" reRender="formvta,_calIniFlt,_calFinFlt,tMonto,tDescuento,tRango" />
+					</rich:calendar>
+					<rich:spacer width="10" />
+					<a:commandButton value="#{app.bt_dia_actual}" action="#{ventaProdServHome.setDA(false,false)}"	styleClass="backBtn" reRender="formvta,_calIniFlt,_calFinFlt,tMonto,tDescuento,tRango"  />
+					<rich:spacer width="10" />
+					<a:commandButton value=" " action="#{ventaProdServHome.setDiaAtrasAdelante(true)}" styleClass="leftBtn2" reRender="formvta,_calIniFlt,_calFinFlt,tMonto,tDescuento,tRango"/>
+					<rich:spacer width="10" />
+					<a:commandButton value=" " action="#{ventaProdServHome.setDiaAtrasAdelante(false)}" styleClass="rightBtn2" reRender="formvta,_calIniFlt,_calFinFlt,tMonto,tDescuento,tRango" />										
+					<rich:spacer width="10" />
+						<s:button action="#{ventaProdServHome.exportarExcel()}" ajax="false" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" rendered="#{not empty ventaProdServHome.resultList}">
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+						</s:button>
+					<rich:spacer width="10" />
+															
+				<rich:separator lineType="none" height="10"/>
+				
+					<span style="font-weight:bold; font-size: x-large; position: relative; top: 5px;">#{app.monto_total}: &nbsp;&nbsp;</span>
+					<h:outputText value="#{ventaProdServHome.totalRestante}" style="font-weight:bold; font-size: x-large; position: relative; top: 5px;" id="tMonto">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            					groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>	
+					<rich:spacer width="10" />					
+					<span style="font-weight:bold; font-size: x-large; position: relative; top: 5px;">#{app.monto_descuento}: &nbsp;&nbsp;</span>
+					<h:outputText value="#{ventaProdServHome.totalDescuento}" style="font-weight:bold; font-size: x-large; position: relative; top: 5px;" id="tDescuento">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            					groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>	
+					<rich:spacer width="10" />					
+					<span style="font-weight:bold; font-size: x-large; position: relative; top: 5px;">#{app.monto_rango}: &nbsp;&nbsp;</span>
+					<h:outputText value="#{ventaProdServHome.totalRango}" style="font-weight:bold; font-size: x-large; position: relative; top: 5px;" id="tRango">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            					groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</h:outputText>					
+					
+				<rich:separator lineType="none" height="10"/>
+				
+				<h:panelGrid  > </h:panelGrid>
+
+					<s:div style="width:100%; align-items:flex-start;">
+						<s:div style="width:60%; float:left;">
+						
+						
+							<rich:dataTable id="tblAprov" var="res" value="#{ventaProdServHome.resultList}"
+								rendered="#{not empty ventaProdServHome.resultList}" rows="20"
+			  					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">#{app.cobro_list}</f:facet>																					
+								<rich:column filterBy="#{res.cliente.nombres} #{res.cliente.apellidos}" filterEvent="onkeyup">
+									<f:facet name="header">#{app.vtaprs_cliente}</f:facet>
+									<h:outputText value="#{res.cliente.nombres} #{res.cliente.apellidos}" />
+								</rich:column>
+								<rich:column filterBy="#{res.tipoVenta}" filterEvent="onkeyup">
+									<f:facet name="header">Tipo Venta</f:facet>							
+									<h:outputText value="#{app.vtaprs_cmbapa}" rendered="#{res.tipoVenta=='CMB'}" />
+									<h:outputText value="#{app.status_servmed}" rendered="#{res.tipoVenta=='CST'}" />
+									<h:outputText value="#{app.status_taller}" rendered="#{res.tipoVenta=='TLL'}" />
+									<h:outputText value="#{app.status_items}" rendered="#{res.tipoVenta=='ITM'}" />
+									<h:outputText value="#{app.status_examen}" rendered="#{res.tipoVenta=='EXA'}" />
+									<h:outputText value="Abono" rendered="#{res.tipoVenta=='ABN'}" />  	  																
+								</rich:column>
+								<rich:column filterBy="#{res.codTipoVenta}" filterEvent="onkeyup">
+									<f:facet name="header">Cod de Venta</f:facet>
+									<s:link title="Comprobante" rendered="#{res.tipoVenta=='ABN'}"
+										view="/acct/cxc/master2.xhtml" propagation="begin">
+										<h:outputText value="#{res.codTipoVenta}" />
+										<f:param name="codComprobante" value="#{res.codTipoVenta}" />
+									</s:link>
+									<s:link title="Comprobante" rendered="#{res.tipoVenta=='TLL'}"
+										view="/taller/trackReparacion/master.xhtml" propagation="begin">
+										<h:outputText value="#{res.codTipoVenta}" />
+										<f:param name="id" value="#{res.codTipoVenta}" />
+									</s:link>
+									<!-- <h:outputText value="#{res.codTipoVenta}" /> -->
+								</rich:column>				
+								<rich:column >
+									<f:facet name="header">Detalle de Venta: </f:facet>
+								    <rich:dataTable var="var" value="#{res.detVenta}" id="_tblServices"  rows="15"
+										align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" 
+										onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+										headerClass="tablaHeader" footerClass="tableScroll">						
+										<rich:column>								
+											<h:outputText value="#{var.detalle}" />
+											<h:outputText value=" S/N #{var.numSerie}" rendered="#{var.numSerie!=null and var.numSerie!=''}" />
+											<h:outputText value=" LOTE #{var.numLote}" rendered="#{var.numLote!=null and var.numLote!=''}" />
+										</rich:column>
+										<rich:column style="width:55px;">							
+											<h:outputText value="#{var.cantidad}" readonly="false" />
+										</rich:column>
+										<rich:column style="width:55px;">							
+											<h:outputText value="#{var.monto}" readonly="false">
+												<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+	                            					groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+											</h:outputText>
+										</rich:column>																		
+									</rich:dataTable>
+								</rich:column>
+								<rich:column filterBy="#{res.restante}" filterEvent="onkeyup" style="width:8%">
+									<f:facet name="header">#{app.vtaprs_monto}</f:facet>
+									<h:outputText value="#{res.restante}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+								</rich:column>
+								<rich:column filterBy="#{res.cantidadDescuento}" filterEvent="onkeyup" style="width:8%">
+									<f:facet name="header">Descuento</f:facet>
+									<h:outputText value="#{res.cantidadDescuento}" rendered="#{res.tipoDescuento eq 'M' and res.cantidadDescuento!=null}">
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+									<h:outputText value="#{res.cantidadDescuento} %" rendered="#{res.tipoDescuento eq 'P' and res.cantidadDescuento!=null}"/>
+									
+									<h:outputText value="#{res.totalDescuentoCorp}" rendered="#{res.totalDescuentoCorp!=null}">
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+									</h:outputText>
+								</rich:column>
+										
+										<!--filterBy="#{res.sucursal.nombre}" este era un atributo-->				
+								<rich:column   filterEvent="onkeyup" style="width:12%">
+									<f:facet name="header">Estado</f:facet>
+										<f:facet name="header">#{app.vtaprs_estado}</f:facet>			
+										
+											
+											<h:outputText value="Abonando a venta" rendered="#{res.estado=='ABN'}" />
+											<h:outputText value="Abono Finalizado" rendered="#{res.estado=='ABF'}" />
+											
+								</rich:column>					
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+							</rich:dataTable>
+							
+							</s:div>
+							
+							
+							<s:div style="width:40%; float:left;">
+							<rich:dataTable var="p"  value="#{ventaProdServHome.prodServList}" 
+							    rendered="#{not empty ventaProdServHome.prodServList}" rows="30"
+								align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">Lista de productos y servicios:</f:facet>						
+								<rich:column filterBy="#{p[0]}" filterEvent="onkeyup" >
+									<f:facet name="header">Cod. Tipo:</f:facet>
+									<h:outputText value="#{p[0]}"/>
+									<!--  			
+									<h:outputText value="Producto" rendered="#{p[0]=='PRD'}"/>
+									<h:outputText value="Servicio" rendered="#{p[0]=='SRV'}"/>
+									<h:outputText value="Combo" rendered="#{p[0]=='CMB'}"/>
+									-->																		
+								</rich:column>
+								
+								<!-- 
+								<rich:column filterBy="#{p[1]}" filterEvent="onkeyup" >
+									<f:facet name="header">Codigo:</f:facet>			
+									<h:outputText value="#{p[1]}" />																		
+								</rich:column>  
+								
+								<rich:column >
+									<f:facet name="header">Listado de productos:</f:facet>			
+									<h:outputText value="#{p[2]}" />																		
+								</rich:column>
+								<rich:column style="width:55px;">							
+									<f:facet name="header">Cantidad:</f:facet>
+									<h:outputText value="#{p[3]}" />
+								</rich:column>	
+								<rich:column style="width:55px;">							
+									<f:facet name="header">Total Ingreso:</f:facet>									
+									<h:outputText value="#{p[4]}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />										
+									</h:outputText>
+								</rich:column> -->
+								
+								<rich:column >
+									<f:facet name="header">Listado de productos:</f:facet>			
+									<h:outputText value="#{p[1]}" />																		
+								</rich:column>
+								<rich:column style="width:55px;" sortBy="#{p[2]}">							
+									<f:facet name="header">Cantidad:</f:facet>
+									<h:outputText value="#{p[2]}" />
+								</rich:column>	
+								
+								<rich:column style="width:55px;">							
+									<f:facet name="header">Total Ingreso:</f:facet>									
+									<h:outputText value="#{p[3]}" rendered="#{p[3]>0}" >
+										<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+											groupingUsed="true" integerOnly="true" maxFractionDigits="2" />										
+									</h:outputText>
+									<h:outputText value="$0.0" rendered="#{p[3]==NULL || p[3]==0}"  >
+											
+									</h:outputText>
+								</rich:column>
+								
+								<f:facet name="footer">
+									<rich:datascroller id="ds2" renderIfSinglePage="true" />
+								</f:facet>																			
+							</rich:dataTable>			
+							</s:div>	
+					</s:div>
+
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

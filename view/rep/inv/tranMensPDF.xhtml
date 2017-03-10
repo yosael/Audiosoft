@@ -1,0 +1,133 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 20 20">
+	<p:font size="18" style="bold underline">
+		<p:paragraph alignment="center">#{app.report_rtransf_mens}</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="70" headerRows="0" widths="0.6 1 0.6 1" >
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Fecha inicial: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repInventario.fechaInicio}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Fecha final: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph><p:text value="#{repInventario.fechaFin}">
+				<s:convertDateTime pattern="dd/MM/yyyy" />
+			</p:text></p:paragraph>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4" fixedHeight="16">
+			<p:paragraph alignment="center">Solicitado desde: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repInventario.sucursalDest.nombre}" />
+			</p:paragraph>
+		</p:cell>
+		<p:cell horizontalAlignment="center" verticalAlignment="middle"
+			backgroundColor="#E4E4E4"  fixedHeight="16">
+			<p:paragraph alignment="center">Solicitado a: </p:paragraph>
+		</p:cell>
+		<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" fixedHeight="16">
+			<p:paragraph>
+				<p:text value="#{repInventario.sucursal.nombre}" />
+			</p:paragraph>
+		</p:cell>
+	</p:table>
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="8" widthPercentage="100" headerRows="1"  widths="0.7 0.8 0.8 1 1 1 1 1" >
+			<p:font color="black" style="bold" size="11">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">ID</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.transferenciamast_send_date}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.transferenciamast_receipt_date}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="right">#{app.vtaprs_estado}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.transferencialist_col6}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.transferencialist_col1}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.pedidolist_col9}</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4"  paddingBottom="4" minimumHeight="19">
+				<p:paragraph alignment="center">#{app.pedidolist_col8}</p:paragraph>
+			</p:cell>
+			</p:font>
+
+		<ui:repeat var="tre" value="#{repInventario.transferencias}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>TXN#{tre.id}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph><p:text value="#{tre.fecha}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph><p:text value="#{tre.fechaRecibo}">
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph rendered="#{tre.estado=='G'}">#{msn.status_generated}</p:paragraph>
+				<p:paragraph rendered="#{tre.estado=='P'}">#{msn.status_pending}</p:paragraph>
+				<p:paragraph rendered="#{tre.estado=='A'}">#{msn.status_accepted}</p:paragraph>
+				<p:paragraph rendered="#{tre.estado=='D'}">#{msn.status_discarded}</p:paragraph>
+				<p:paragraph rendered="#{tre.estado=='R'}">#{msn.status_rejected}</p:paragraph>
+			</p:cell>		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{tre.sucursalDestino.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{tre.sucursal.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{tre.usuarioGenera.nombreUsuario}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" minimumHeight="16">
+				<p:paragraph>#{tre.items.size()}</p:paragraph>
+			</p:cell>
+			
+		</ui:repeat>
+			
+	</p:table>
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

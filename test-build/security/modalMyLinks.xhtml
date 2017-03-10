@@ -1,0 +1,67 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<!-- Modal para consultar el usuario -->
+	<rich:modalPanel id="myLinks" width="400" moveable="false"
+		autosized="true" top="50px"
+		onbeforeshow="activeModal.setActiveModalPanel('myLinks');"
+		onshow="jQuery('#fLinks\\:s1\\:search').focus();">
+		<f:facet name="header">
+				#{msn.mylin_head}
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+					onclick="#{rich:component('myLinks')}.hide();" />
+			</h:panelGroup>
+		</f:facet>
+		<s:div rendered="#{empty favoriteLinks.menusLinks}">
+			<center><h:graphicImage value="/kubeImg/alertBlue.png" /><br />
+			<p align="justify">#{msn.mylin_nolinks}</p>
+			<p align="center"><s:link view="/security/myInfo.xhtml"
+				propagation="begin" styleClass="linkWeb">
+				Link
+				</s:link></p>
+			</center>
+		</s:div>
+		<h:form id="fLinks">
+			<a:queue name="qLinks" />
+			<s:div id="linksPane"
+				rendered="#{not empty favoriteLinks.menusLinks}">
+				<rich:spacer height="10" />
+				<s:decorate template="/layout/kActions.xhtml" id="s1">
+					<h:inputText value="#{favoriteLinks.filterWord}" size="40"
+						id="search" styleClass="upper">
+						<a:support event="onkeyup" ajaxSingle="true" reRender="linksGrid"
+							action="#{favoriteLinks.filterBy()}" />
+					</h:inputText>
+				</s:decorate>
+				<rich:spacer height="20" />
+				<rich:dataGrid id="linksGrid" var="_menu"
+					value="#{favoriteLinks.menusTemp}"
+					columns="#{favoriteLinks.gridSize}" elements="6">
+					<s:div styleClass="linkDiv">
+						<s:link view="#{_menu.permission.objectPermission.resource}"
+							styleClass="linkWeb linkWebGrow" propagation="begin">
+							<h:graphicImage height="100px;" width="100px;"
+								value="#{_menu.iconDashBoard}"
+								rendered="#{not empty _menu.iconDashBoard}" />
+							<h:graphicImage height="100px;" width="100px;"
+								value="/kubeImg/dash.png"
+								rendered="#{empty _menu.iconDashBoard}" />
+							<br />
+							<h:outputText styleClass="upper"
+								value="#{(_menu.el)?menu[_menu.displayName]:_menu.displayName}" />
+						</s:link>
+					</s:div>
+				</rich:dataGrid>
+			</s:div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

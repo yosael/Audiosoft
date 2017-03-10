@@ -1,0 +1,151 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		
+		<rich:panel>
+			<f:facet name="header">Detalle de productos en transferencias</f:facet>
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+					<center>
+					<h:panelGrid columns="4">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
+							<rich:calendar value="#{repInventario.fechaInicio}"  datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
+							<rich:calendar value="#{repInventario.fechaFin}" datePattern="dd/MM/yyyy">
+								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
+							<ui:define name="label">Enviado desde:</ui:define>
+							<h:selectOneMenu value="#{repInventario.sucursal}" required="false">
+								<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branchd" >
+							<ui:define name="label">Recibido en:</ui:define>
+							<h:selectOneMenu value="#{repInventario.sucursalDest}" required="false">
+								<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Cod. transferencia:</ui:define>
+							<h:inputText value="#{repInventario.valCmb2}" required="false" maxlength="30"  >
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+								</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Cod. producto:</ui:define>
+							<h:inputText value="#{repInventario.valCmb5}" required="false" maxlength="30"  >
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+								</h:inputText>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Num. serie:</ui:define>
+							<h:inputText value="#{repInventario.valCmb3}" required="false" maxlength="30"  >
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" reRender="_table" />
+								</h:inputText>
+						</s:decorate>
+						
+					</h:panelGrid>
+					
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/rep/taller/ensamblajesExcel.xhtml" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" rendered="false">
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" action="#{repInventario.repDetallesTransferencia()}" />
+						</s:button>
+						<a:commandButton oncomplete="showReport('detPrdTransPDF', '#{conversation.id}');"
+							styleClass="pdfBtn" action="#{repInventario.repDetallesTransferencia()}"
+							value="#{msn.button_pdf}" rendered="true">
+						</a:commandButton>
+					</s:decorate>
+					</center>		
+				<rich:dataTable var="res" value="#{repInventario.dtRp['lst']}" id="_table"
+					rows="20" align="center"  rowClasses="tblEven,tblOdd" 
+					onRowMouseOver="this.style.backgroundColor='#A3CAF1'" 
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">					
+					<rich:column filterBy="#{res.movimiento.id}" filterEvent="onkeyup" headerClass="col100">
+						<f:facet name="header">Cod. transferencia</f:facet>
+						<h:outputText value="TXN#{res.movimiento.id}" />
+					</rich:column>
+					<rich:column filterBy="#{res.inventario.producto.referencia}" filterEvent="onkeyup" headerClass="col100">
+						<f:facet name="header">Cod. producto</f:facet>
+						<h:outputText value="#{res.inventario.producto.referencia}" />
+					</rich:column>
+					<rich:column filterBy="#{repInventario.filtrarFecha(res.movimiento.fecha)}" filterEvent="onkeyup" headerClass="col70">
+						<f:facet name="header">Fecha de transferencia</f:facet>
+						<h:outputText value="#{res.movimiento.fecha}">
+							<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					
+					<rich:column filterBy="#{res.sucursalOri.nombre}" filterEvent="onkeyup" headerClass="col120">
+						<f:facet name="header">Enviado desde</f:facet>
+						<h:outputText value="#{res.sucursalOri.nombre}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sucursalDest.nombre}" filterEvent="onkeyup" headerClass="col120">
+						<f:facet name="header">Recibido en</f:facet>
+						<h:outputText value="#{res.sucursalDest.nombre}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.movimiento.usuario.nombreCompleto}" filterEvent="onkeyup" headerClass="col110">
+						<f:facet name="header">Transfirió</f:facet>
+						<h:outputText value="#{res.movimiento.usuario.nombreCompleto}" />
+					</rich:column>
+					<rich:column filterBy="#{res.inventario.producto.nombre}" filterEvent="onkeyup" headerClass="col200">
+						<f:facet name="header">#{app.vtaitm_detalle}</f:facet>
+						<h:outputText value="#{res.inventario.producto.nombre}" />
+					</rich:column>
+					<rich:column headerClass="col100" >
+						<f:facet name="header">Nums. serie</f:facet>
+						<h:outputText value="#{res.codsSerie}" />
+					</rich:column>
+					<rich:column filterBy="#{res.cantidad}" filterEvent="onkeyup" headerClass="col60" style="">
+						<f:facet name="header">Cant.</f:facet>
+						<h:outputText value="#{res.cantidad}" />
+					</rich:column>
+					<rich:column filterBy="#{res.costoUnitario}" filterEvent="onkeyup" headerClass="col70">
+						<f:facet name="header">#{app.parvta_tp_monto}</f:facet>
+						<h:outputText value="#{res.costoUnitario}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			
+			</h:form>
+		</rich:panel>
+	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,147 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<rich:modalPanel id="modalTransAppointment" width="610" height="450" moveable="true" style="overflow-y:scroll"  top="40"
+		onbeforeshow="activeModal.setActiveModalPanel('modalTransAppointment');"  onmaskclick="#{rich:component('modalTransAppointment')}.hide();" >
+		
+		<f:facet name="header">
+				#{app.sched_modal_head2}
+			</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+					onclick="#{rich:component('modalTransAppointment')}.hide();" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="fmTransApp">
+		<s:decorate width="300px" style="display:inline-block;">
+		<s:div style="top:0px; position:relative;" width="300px" height="507px" >
+							<s:decorate template="/layout/kEditSpace.xhtml">
+					<ui:define name="label">#{app.sched_modal_transferir}:</ui:define>
+					<p>#{app.sched_modal_transferir_warn}</p>
+				<s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+							<ui:define name="label">#{app.sched_doctor}:</ui:define>
+							<h:inputText value="#{transferAppointment.doctorSel.nombres} #{transferAppointment.doctorSel.apellidos}" 
+								readonly="true" required="true" style="width:170px;" />
+							<a:commandButton onclick="#{rich:component('selTranDoc')}.show();" ajaxSingle="true"  
+								action="#{doctorDAO.listaDoctores()}" reRender="doc2" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+				<s:decorate template="/layout/kEditSpace.xhtml" style="width:200px;">
+							<ui:define name="label">#{app.sched_date}:</ui:define>
+							<rich:calendar value="#{transferAppointment.dateSel}" required="true"
+								datePattern="dd/MM/yyyy" popup="false">
+								<a:support action="#{transferAppointment.createGridDay()}"
+									reRender="fmTransApp" event="onchanged" />
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch">
+						<ui:define name="label">#{app.compramast_branch}:</ui:define>
+						<h:selectOneMenu
+							value="#{transferAppointment.sucSel}"
+							required="true">
+							<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc"
+								label="#{_suc.nombre}" noSelectionLabel=" " />
+							<s:convertEntity />
+							<a:support reRender="fmTransApp" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+						</h:selectOneMenu>
+					</s:decorate>
+				</s:decorate>
+				<s:div style="height:150px !important;"></s:div>
+			</s:div>
+			</s:decorate>
+	
+				<s:decorate style="display:inline-block;" width="300px">
+				<s:div styleClass="schedCalendar" style="width:300px !important;">
+								<rich:extendedDataTable align="center" width="300px"
+									height="20px"
+									rendered="#{not empty transferAppointment.listAppointments}"
+									rowClasses="tblEven,tblOdd">
+									<f:facet name="header">
+										<h:outputLabel value="#{app.schedlist_header}" styleClass="" />
+									</f:facet>
+								</rich:extendedDataTable>
+								
+								<rich:extendedDataTable
+									value="#{transferAppointment.listAppointments}"
+									rendered="#{not empty transferAppointment.listAppointments}"
+									var="res" id="table" width="300px" height="507px"
+									sortMode="single" selectionMode="multi"
+									selection="#{transferAppointment.selection}" align="center"
+									onRowMouseOver="this.style.backgroundColor='#ffe7b3'"
+									onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+									activeClass="tblActive"	
+									headerClass="tablaHeader" footerClass="tableScroll"
+									enableContextMenu="false">
+									<f:facet name="header">
+										<h:outputText value="#{transferAppointment.dateSel}">
+											<f:convertDateTime type="date" pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</f:facet>
+									<rich:column width="60px">
+										<f:facet name="header">#{app.schedlist_col1}</f:facet>
+										<h:outputText value="#{res.dateTime}"
+											styleClass="timeText #{res.status == 2?'canceled':''}">
+											<s:convertDateTime pattern="HH:mm a" />
+										</h:outputText>
+									</rich:column>
+									<rich:column width="260px" styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
+										<f:facet name="header">#{app.schedlist_col5}</f:facet>
+										<h:outputText value="#{app.sched_reserved}"
+											rendered="#{res.status==5}" styleClass="resBlock" />
+										<h:outputText value="#{app.sched_confirmed}"
+											rendered="#{res.status==4}" />
+										<h:outputText value="#{app.sched_scheduled}"
+											rendered="#{res.status==0}" />
+										<h:outputText value="#{app.sched_served}"
+											rendered="#{res.status==1}" />
+										<h:outputText value="#{app.sched_canceled}"
+											rendered="#{res.status==2}" styleClass="canceled" />
+										<h:outputText value="#{app.sched_absence}"
+											rendered="#{res.status==3}" />
+											<h:outputText style="color:green;" value="Disponible" rendered="#{res.status eq -1}"/>
+									</rich:column>
+									<a:support reRender="fmTransApp" immediate="true"
+										action="#{transferAppointment.takeSelection}"
+										ignoreDupResponses="true" event="onselectionchange" update="growl"
+										ajaxSingle="true"/>
+								</rich:extendedDataTable>
+								<rich:spacer height="10" />						
+				</s:div>
+				</s:decorate>
+			<s:decorate template="/layout/kActions.xhtml" id="m1">
+				<a:commandButton styleClass="cancelBtn" value="#{msn.button_close}"
+					onclick="#{rich:component('modalTransAppointment')}.hide();">
+				</a:commandButton>
+				<a:commandButton action="#{appointmentGrid.transferAppointment()}"
+					ajaxSingle="true" reRender="formA, fmTransApp" styleClass="transferBtn"
+					value="#{app.sched_app_transfer}" 
+					oncomplete="#{rich:component('modalTransAppointment')}.hide();"
+					rendered="#{not empty transferAppointment.selection and transferAppointment.validate()}">
+				</a:commandButton>
+			</s:decorate>
+
+
+		</h:form>
+	</rich:modalPanel>
+	
+		<rich:modalPanel id="selTranDoc" width="800" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('selTranDoc');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selTranDoc')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="doc2" ><ui:include  src="selTranDoc.xhtml" /></s:div>
+		</rich:modalPanel>
+</ui:composition>

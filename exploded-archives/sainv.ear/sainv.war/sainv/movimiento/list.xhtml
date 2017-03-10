@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.movimientolist_head}</f:facet>
+			<s:decorate template="/layout/kActions.xhtml">
+				<s:button view="/sainv/movimiento/master.xhtml" propagation="begin"
+					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+					<f:param name="id" value="" />
+				</s:button>
+			</s:decorate>
+			<h:form id="formA">
+			<rich:spacer height="0" />
+			<span style="font-weight:bold;">Fecha inicial: &nbsp;&nbsp;</span>
+			<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calIniFlt"
+				value="#{movimientoHome.fechaPFlt1}" inputStyle="width:120px; height:12px;">
+				<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{movimientoHome.cargarMovimientos()}" reRender="formA,_calIniFlt,_calFinFlt" />
+			</rich:calendar>
+			<rich:spacer width="34" />
+			<span style="font-weight:bold;">Fecha final: &nbsp;&nbsp;</span>
+			<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calFinFlt"
+				value="#{movimientoHome.fechaPFlt2}" inputStyle="width:120px; height:12px;">
+				<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{movimientoHome.cargarMovimientos()}" reRender="formA,_calIniFlt,_calFinFlt" />
+			</rich:calendar>
+			<b>Por default cargando los movimientos de los últimos 14 días</b>
+			<rich:spacer height="10" />
+			
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<rich:dataTable var="res" value="#{movimientoHome.resultList}"
+					rendered="#{not empty movimientoHome.resultList}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll" id="movimientoslist">
+					<f:facet name="header">#{app.movimientolist_list}</f:facet>
+					<rich:column filterBy="#{res.fecha}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.movimientolist_col1}</f:facet>
+						<h:outputText value="#{res.fecha}" />
+					</rich:column>
+					<rich:column filterValue="#{movimientoHome.tipoMovimiento}" filterExpression="#{movimientoHome.tipoMovimiento=='0'?(res.tipoMovimiento==res.tipoMovimiento):(res.tipoMovimiento==movimientoHome.tipoMovimiento)}">
+						<f:facet name="header">
+		                    <h:panelGroup>
+		                    	#{app.movimientolist_col2}<br/>		                        
+		                        <h:selectOneMenu value="#{movimientoHome.tipoMovimiento}">
+		                        	<f:selectItem itemLabel=" " itemValue="0" />
+		                            <f:selectItem itemLabel="#{app.movimiento_movement_type_e}" itemValue="E"/>
+									<f:selectItem itemLabel="#{app.movimiento_movement_type_s}" itemValue="S"/>																		
+		                            <a:support reRender="formA" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+		                    </h:panelGroup> 
+		                </f:facet>					
+						<h:outputText value="#{app.movimiento_movement_type_e}" rendered="#{res.tipoMovimiento=='E'}"/>
+						<h:outputText value="#{app.movimiento_movement_type_s}" rendered="#{res.tipoMovimiento=='S'}"/>						
+					</rich:column>
+		
+					<rich:column filterValue="#{movimientoHome.razon}" filterExpression="#{movimientoHome.razon=='0'?(res.razon==res.razon):(res.razon==movimientoHome.razon)}">
+						<f:facet name="header"> 
+		                    <h:panelGroup>
+		                    	#{app.movimientolist_col3}<br/>		                        
+		                        <h:selectOneMenu value="#{movimientoHome.razon}">
+		                        	<f:selectItem itemLabel=" " itemValue="0" />
+		                        	<f:selectItem itemLabel="#{app.movimiento_reason_o}" itemValue="O"/>
+		                            <f:selectItem itemLabel="#{app.movimiento_reason_t}" itemValue="T"/>
+		                            <f:selectItem itemLabel="#{app.movimiento_reason_v}" itemValue="V"/>
+									<f:selectItem itemLabel="#{app.movimiento_reason_c}" itemValue="C"/>
+									<f:selectItem itemLabel="#{app.movimiento_reason_p}" itemValue="P"/>									
+		                            <a:support reRender="formA" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+		                    </h:panelGroup> 
+		                </f:facet>
+		                <h:outputText value="#{app.movimiento_reason_o}" rendered="#{res.razon=='O'}"/>
+						<h:outputText value="#{app.movimiento_reason_t}" rendered="#{res.razon=='T'}"/>
+						<h:outputText value="#{app.movimiento_reason_v}" rendered="#{res.razon=='V'}"/>
+						<h:outputText value="#{app.movimiento_reason_c}" rendered="#{res.razon=='C'}"/>
+						<h:outputText value="#{app.movimiento_reason_p}" rendered="#{res.razon=='P'}"/>
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.empresa.nombre}" filterEvent="onkeyup" rendered="#{loginUser.user.sucursal==null}">
+						<f:facet name="header">#{app.movimientolist_col4}</f:facet>
+						<h:outputText value="#{res.sucursal.empresa.nombre}" />
+					</rich:column> 
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup" rendered="#{loginUser.user.sucursal==null}">
+						<f:facet name="header">#{app.movimientolist_col5}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" /> 
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.movimientolist_view}" rendered="true"
+							view="/sainv/movimiento/movementDetails.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/detail16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						<rich:spacer width="10" />
+						<a:commandLink title="#{app.movimientolist_delete}" reRender="m1" eventsQueue="q1"
+							action="#{movimientoHome.select(res)}" ajaxSingle="true"
+							onclick="#{rich:component('confirmation')}.show();">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.movimientolist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.movimientolist_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{movimientoHome.delete()}" reRender="formA"
+						rendered="#{movimientoHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

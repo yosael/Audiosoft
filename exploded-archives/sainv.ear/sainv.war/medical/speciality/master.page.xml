@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	
+	<param name="id" value="#{specialtyDAO.specialtyId}" required="false" />
+	<action execute="#{specialtyDAO.load()}" on-postback="false" />
+	<action execute="#{serviceSearch.search()}" on-postback="false" />
+	
+	<navigation from-action="#{specialtyDAO.save()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/speciality/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{specialtyDAO.modify()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/speciality/list.xhtml" />
+		</rule>
+	</navigation>
+	
+</page>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<param name="id" value="#{cajaChicaHome.cjcId}" required="false" />
+	<action execute="#{sucursalHome.cargarSucursalesAct()}" on-postback="false" />
+	<action execute="#{cajaChicaHome.load()}" on-postback="false" />
+	<navigation from-action="#{cajaChicaHome.guardarMovCaja()}">
+		<rule if-outcome="true">
+			<redirect view-id="/acct/cjachi/master.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{cajaChicaHome.borrarMovCaja()}">
+		<rule if-outcome="true">
+			<redirect view-id="/acct/cjachi/list.xhtml" />
+		</rule>
+	</navigation>
+	
+	<navigation from-action="#{cajaChicaHome.cerrarCajaChica()}">
+		<rule if-outcome="true">
+			<redirect view-id="/acct/cjachi/list.xhtml" />
+		</rule>
+	</navigation>
+</page>

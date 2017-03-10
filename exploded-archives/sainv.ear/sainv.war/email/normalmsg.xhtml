@@ -1,0 +1,31 @@
+<m:message xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:m="http://jboss.com/products/seam/mail" 
+	importance="#{imp_em}"
+	requestReadReceipt="#{req_response}" >
+	
+	<m:subject>#{title_em}</m:subject>
+	<m:header name="X-Composed-By" value="AUDIOSOFT" />
+	<m:from name="AUDIOSOFT" address="audiosoft@audiomed.com.sv" />
+	
+	<ui:repeat var="_rpl" value="#{lst_reply_to}">
+		<m:replyTo address="#{_rpl.email}" />
+	</ui:repeat>
+	
+	<ui:repeat var="_to" value="#{lst_to}">
+		<m:to name="#{_to.name}" address="#{_to.email}" />
+	</ui:repeat>
+	
+	<ui:repeat var="_cp" value="#{lst_copy}">
+		<m:cc name="#{_cp.name}" address="#{_cp.email}" />
+	</ui:repeat>
+	
+	<ui:repeat var="_bc" value="#{lst_bcopy}">
+		<m:bcc name="#{_bc.name}" address="#{_bc.email}" />
+	</ui:repeat>
+	
+	<m:body>
+		<h:outputText value="#{message}" escape="false" />	
+	</m:body>
+</m:message>

@@ -1,0 +1,36 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_product_list_pdf_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="16" style="bold">
+		<p:paragraph alignment="center">#{app.report_product_list_pdf}</p:paragraph>
+	</p:font>
+	<p:html>
+	<br /><br /><br />
+	</p:html>
+		<p:table columns="5" widthPercentage="100" widths="2 2 2 2 2" headerRows="1">
+			<p:cell backgroundColor="gray" >#{app.productolist_col2}</p:cell>
+			<p:cell backgroundColor="gray">#{app.productolist_col6}</p:cell>
+			<p:cell backgroundColor="gray">#{app.productolist_col7}</p:cell>
+			<p:cell backgroundColor="gray">#{app.productolist_col5}</p:cell>
+			<p:cell backgroundColor="gray">#{app.productolist_col4}</p:cell>
+			<ui:repeat var="res" value="#{reporte.inventarios}">
+				<p:cell><p:text value="#{res.producto.nombre}"/></p:cell>				
+				<p:cell>
+					<p:text value="#{res.producto.prcNormal}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text>
+				</p:cell>
+				<p:cell><p:text value="#{res.cantidadActual}"/></p:cell>
+				<p:cell><p:text value="#{res.producto.marca.nombre}"/></p:cell>
+				<p:cell><p:text value="#{res.producto.categoria.nombre}"/></p:cell>
+			</ui:repeat>
+		</p:table>
+	
+</p:document>

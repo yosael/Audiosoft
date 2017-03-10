@@ -1,0 +1,49 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich">
+	<div id="imp_appointment"
+		style="display: none; width: 600px; border: 2px black solid;"><span
+		style="font-size: 1.3em; font-weight: bold;">#{imp.appointment_header}</span>
+	<table border="0">
+		<tr>
+			<td>#{imp.appointment_date}:</td>
+			<td><h:outputText
+				value="#{medicalAppointmentDAO.instance.dateTime}">
+				<s:convertDateTime pattern="yyyy/MM/dd HH:mm a" />
+			</h:outputText></td>
+		</tr>
+		<tr>
+			<td>#{imp.appointment_comment}:</td>
+			<td><h:outputText
+				value="#{medicalAppointmentDAO.instance.comment}" /></td>
+		</tr>
+		<tr>
+			<td>#{imp.appointment_patient}:</td>
+			<td><h:outputText
+				value="#{medicalAppointmentDAO.instance.cliente.fullName}" /></td>
+		</tr>
+		<tr>
+			<td>#{imp.appointment_doctor}:</td>
+			<td><h:outputText
+				value="#{medicalAppointmentDAO.instance.doctor.fullName}" /></td>
+		</tr>
+	</table>
+	<rich:spacer height="10" />
+	<table border="1" cellpadding="1" cellspacing="1" width="600px;">
+		<tr style="font-size: 1.2em; font-weight: bold;">
+			<td>#{imp.appointment_item_col1}</td>
+			<td>#{imp.appointment_item_col2}</td>
+		</tr>
+		<ui:repeat value="#{medicalAppointmentDAO.appointmentItems}" var="res">
+			<tr>
+				<td><h:outputText value="#{res.service.name}" /></td>
+			</tr>
+		</ui:repeat>
+	</table>
+	</div>
+</ui:composition>

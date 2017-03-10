@@ -1,0 +1,94 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{claseProductoHome.managed?sainv_view_messages.get('clsprd_head_edit'):sainv_view_messages.get('clsprd_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formClase">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>#{app.clsprd_legend}</legend> 
+					
+					<h:panelGrid columns="3" style="padding-left:100px;">
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.clsprd_nombre}:</ui:define>
+							<h:inputText value="#{claseProductoHome.instance.nombre}" required="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
+							<ui:define name="label">#{app.sucursalmast_company}:</ui:define>
+							<h:selectOneMenu value="#{claseProductoHome.instance.empresa}">
+								<s:selectItems value="#{empresaList.resultList}" var="_emp" 
+									label="#{_emp.nombre}" noSelectionLabel=" "/>
+								<s:convertEntity />
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">#{app.sucursalmast_company}:</ui:define>
+							<h:inputText value="#{claseProductoHome.instance.empresa.nombre}" disabled="true"/>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.clsprd_description}:</ui:define>
+							<h:inputTextarea value="#{claseProductoHome.instance.descripcion}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.clsprd_gananciaNrm}:</ui:define>
+							<h:inputText value="#{claseProductoHome.instance.gananciaNormal}" 
+								 onkeypress="return restrictNumDigitsDecimals(event, this, 4, 3);"
+								required="true" style="width:210px;" />%
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.clsprd_gananciaMin}:</ui:define>
+							<h:inputText value="#{claseProductoHome.instance.gananciaMinima}" 
+								 onkeypress="return restrictNumDigitsDecimals(event, this, 4, 3);"
+								required="true" style="width:210px;" />%
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.clsprd_gananciaOfe}:</ui:define>
+							<h:inputText value="#{claseProductoHome.instance.gananciaOferta}" 
+								 onkeypress="return restrictNumDigitsDecimals(event, this, 4, 3);"
+								required="true" style="width:210px;" />%
+						</s:decorate>
+					
+				</h:panelGrid> 
+				
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/sainv/claseprd/list.xhtml" propagation="begin"
+						styleClass="listBtn" value="#{msn.button_list}">
+					</s:button>
+					<s:button view="/sainv/claseprd/master.xhtml" propagation="begin"
+						styleClass="newBtn" value="#{msn.button_new}">
+						<f:param name="id" value="" />
+					</s:button>
+					<a:commandButton action="#{claseProductoHome.save()}" reRender="formClase"
+						rendered="#{not claseProductoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+						onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+					<a:commandButton action="#{claseProductoHome.modify()}" reRender="formClase"
+						rendered="#{claseProductoHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
+						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+				</s:decorate>
+				</fieldset>
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

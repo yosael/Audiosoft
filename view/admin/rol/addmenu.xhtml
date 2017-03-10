@@ -1,0 +1,123 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.menu_rol_list_head}</f:facet>
+			<rich:spacer height="20" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/admin/rol/master.xhtml" propagation="join"
+						styleClass="backBtn" value="#{msn.button_back}" rendered="true">
+					</s:button>
+					<a:commandButton action="#{rolHome.guardarAsociacion()}" 
+							rendered="#{not empty rolHome.menusDisponibles}" styleClass="saveBtn"
+							value="#{msn.button_save_changes}"/>
+							
+				</s:decorate><rich:spacer height="10px;"></rich:spacer>
+				
+				<!-- 
+				<h:panelGrid columns="2" style="margin:0 auto;">
+					<s:decorate template="/layout/kActions.xhtml">
+						<ui:define name="label">Nombre</ui:define>
+						<h:inputText value="#{rolHome.nombreMenu}"  >
+							<a:support event="onkeyup" action="#{rolHome.buscarPorNombre()}" reRender="tblMenus"></a:support>
+						</h:inputText>
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<ui:define name="label" >Menu Superior</ui:define>
+						<h:inputText value="#{rolHome.menuSuperior}"  >
+							<a:support event="onkeyup" action="#{rolHome.buscarPorSuperior()}" reRender="tblMenus"></a:support>
+						</h:inputText>
+					</s:decorate>
+				</h:panelGrid>
+				 -->
+				<rich:spacer height="20" />
+				<rich:dataTable var="res" id="tblMenus" value="#{rolHome.menusDisponibles}"
+					rendered="#{not empty rolHome.menusDisponibles}"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll"  sortMode="multi"  >
+					<f:facet name="header">#{app.menulist_list}</f:facet>
+					<rich:column  ><!-- filterBy="#{res.nombreSpanish}" filterEvent="onkeydown" rendered="#{localeSelector.language=='es'}" -->
+						<f:facet name="header">#{app.rollist_col2}</f:facet>
+						<h:outputText value="#{res.nombreSpanish}" />
+					</rich:column>
+					<!-- <rich:column filterBy="#{res.nombreEnglish}" filterEvent="onkeyup" rendered="#{localeSelector.language=='en'}">
+						<f:facet name="header">#{app.rollist_col2}</f:facet>
+						<h:outputText value="#{res.nombreEnglish}" />
+					</rich:column> -->
+					
+					<!-- filterBy="#{res.menuPadre.nombreSpanish}" filterEvent="onkeydown"  rendered="#{localeSelector.language=='es'}" -->
+					
+					<rich:column  filterBy="#{rolHome.menuSuperior}" filterExpression="#{empty rolHome.menuSuperior?(true):(rolHome.menuSuperior==res.menuPadre.nombreSpanish)}" >
+						<f:facet name="header">
+							<h:panelGroup>
+								#{app.menulist_col5}<br/>
+								 <h:selectOneMenu value="#{rolHome.menuSuperior}"  >
+		                        	<s:selectItems value="#{rolHome.listaMenuSup}" var="nombre" label="#{nombre}" noSelectionLabel="" />
+		                        	<a:support reRender="tblMenus" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+							</h:panelGroup>
+						</f:facet>
+						<h:outputText value="#{res.menuPadre.nombreSpanish}" />
+					</rich:column>
+					
+					<!-- <rich:column filterBy="#{res.menuPadre.nombreEnglish}" filterEvent="onkeyup" rendered="#{localeSelector.language=='en'}">
+						<f:facet name="header">#{app.menulist_col5}</f:facet>
+						<h:outputText value="#{res.menuPadre.nombreEnglish}" />
+					</rich:column> -->
+					<rich:column  filterEvent="onkeyup"><!-- filterBy="#{res.sistema.nombre}" -->
+						<f:facet name="header">#{app.menulist_col6}</f:facet>
+						<h:outputText value="#{res.sistema.nombre}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.empresalist_col4}</f:facet>
+						<h:outputText value="Activo" rendered="#{res.estado=='ACT'}"/>
+						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}"/>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.menulist_col3}</f:facet>
+						<h:outputText value="Visible" rendered="#{res.visible}"/>
+						<h:outputText value="No visible" rendered="#{!res.visible}"/>
+					</rich:column>
+					<rich:column style="width:82px;">
+						<f:facet name="header">
+						#{app.menulist_col_link}
+						<!-- <h:selectBooleanCheckbox value="#{rolHome.check}"  >
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true"
+								action="#{rolHome.changeAll()}" reRender="formA" />
+						</h:selectBooleanCheckbox> -->
+						</f:facet>
+						<h:selectBooleanCheckbox value="#{res.asociado}"  id="mnSelected" style="width:80px;height:17px;" >
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true"
+								action="#{rolHome.checkCheque(res)}" reRender="mnSelected" />
+						</h:selectBooleanCheckbox>
+					</rich:column>
+				</rich:dataTable>
+			
+				<rich:spacer height="10"/>
+				
+				<!-- <s:decorate template="/layout/kActions.xhtml">
+					<s:button view="/admin/rol/master.xhtml" propagation="join"
+						styleClass="backBtn" value="#{msn.button_back}" rendered="true">
+					</s:button>
+					<a:commandButton action="#{rolHome.guardarAsociacion()}" 
+							rendered="#{not empty rolHome.menusDisponibles}" styleClass="saveBtn"
+							onclick="upperCaseAllInputs();" value="#{msn.button_save_changes}"/>
+				</s:decorate> -->
+			
+			</h:form>
+		</rich:panel>
+	</ui:define>
+</ui:composition>

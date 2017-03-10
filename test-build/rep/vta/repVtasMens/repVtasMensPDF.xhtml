@@ -1,0 +1,201 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="26 26 26 26">
+	<p:font size="18" style="bold">
+		<p:paragraph alignment="center">Reporte de ventas mensuales</p:paragraph>
+	</p:font>
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="4" widthPercentage="100" headerRows="1"  widths="1 1 1 1" >
+			<p:font color="black" style="bold" size="10">
+			
+			<p:cell horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">Fecha Inicial</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repVenta.fechaInicio}" >
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text>				
+				</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">Fecha Final:</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="#{repVenta.fechaFin}" >
+						<s:convertDateTime pattern="dd/MM/yyyy" />
+					</p:text>				
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle"  paddingBottom="4">
+				<p:paragraph alignment="center">Tipo de Comprobante</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">#{repVenta.valCmb1}</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">Cliente</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">#{repVenta.valCmb2}</p:paragraph>
+			</p:cell>			
+			
+			<p:cell horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">Empresa</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">#{repVenta.valCmb3}</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" backgroundColor="#E4E4E4" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">Estado</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingBottom="4">
+				<p:paragraph alignment="center">
+					<p:text value="Aplicadas" rendered="#{repVenta.valCmb4=='APL'}" />
+					<p:text value="Anuladas" rendered="#{repVenta.valCmb4=='ANU'}" />
+				</p:paragraph>
+			</p:cell>			
+			
+			</p:font>
+		</p:table>
+	</p:font>	
+	
+	<p:html><br /></p:html>
+	
+	<p:font size="9">
+		<p:table columns="9" widthPercentage="100" headerRows="1"  widths="0.7 0.6 0.6 0.6 1 1.3 0.9 0.7 0.6" >
+			<p:font color="black" style="bold" size="10">
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">SERIE</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">CORR.</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">FECHA</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">EMPRESA</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">ESTADO</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">CLIENTE</p:paragraph>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">COMPROBANTE</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">FORMA PAGO</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+			</p:font>
+ 
+		<ui:repeat var="res" value="#{repVenta.dtRp['ventasDoc']}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.serie}" /></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.correlativo}" /></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.fecha}" >
+					<s:convertDateTime pattern="dd/MM/yyyy" />
+				</p:text></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.comprobante.empresaDoc.nombre}" /></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>
+					<p:text rendered="#{res.estado=='APL'}" value="Aplicada" />
+					<p:text rendered="#{res.estado=='ANU'}" value="Anulada" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.cliente.nombre} #{res.cliente.apellido}" /></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph><p:text value="#{res.comprobante.nombre}" /></p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>
+					<p:text value="Efectivo" rendered="#{res.formaPago=='EFE'}" />
+					<p:text value="Tarjeta" rendered="#{res.formaPago=='TRJ'}" />
+					<p:text value="Cheque" rendered="#{res.formaPago=='CHQ'}" />
+					<p:text value="Crédito" rendered="#{res.formaPago=='CRD'}" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="4" >
+				<p:paragraph><p:text value="#{res.total}" >
+					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+						groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+				</p:text>
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" rendered="#{repVenta.flag1 == true}">
+				
+				<p:table columns="3" widthPercentage="100" headerRows="1"  widths="1 1 1" >
+				<p:font color="black" style="bold" size="10">
+					<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Cantidad</p:paragraph>
+					</p:cell>
+					<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Detalle</p:paragraph>
+					</p:cell>
+					<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#E4E4E4" paddingBottom="4">
+						<p:paragraph alignment="center">Precio Unitario</p:paragraph>
+					</p:cell>
+				
+					<ui:repeat var="res" value="#{res.detVentas}">
+						<p:cell verticalAlignment="middle" horizontalAlignment="center">
+							<p:paragraph>
+								<p:text value="#{res.cantidad}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center">
+							<p:paragraph>
+								<p:text value="#{res.detalle}" />
+							</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center">
+							<p:paragraph>
+								<p:text value="#{res.tipo}" />
+							</p:paragraph>
+						</p:cell>
+					</ui:repeat>
+					
+				</p:font>
+				</p:table>
+			
+			</p:cell>
+		</ui:repeat>
+			
+	</p:table>
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clinica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                Pag. <p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

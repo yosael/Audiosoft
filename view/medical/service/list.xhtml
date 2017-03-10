@@ -1,0 +1,132 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{app.servlist_head}</f:facet>
+			<h:form id="formA">
+				<a:queue name="q1" />
+				<center>
+					<h:panelGrid columns="3">
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/medical/service/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_register}"></s:button>
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton value="#{app.bt_rep_serv_cat}" oncomplete="showReport('/sainv/rep/med/catServsPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+					</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button action="#{serviceDAO.exportarExcel()}" ajax="false" propagation="join"
+							styleClass="excBtn" value="#{msn.button_excel}" >
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+						</s:button>
+					</s:decorate>
+					
+					</h:panelGrid>
+				</center>
+				<rich:spacer height="10" />
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<rich:dataTable var="res" value="#{serviceQuery.resultList}"
+					rendered="#{not empty serviceQuery.resultList}" rows="10"
+					id="tbl"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.servlist_list}</f:facet>
+					<rich:column filterBy="#{res.codigo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.servmast_code}</f:facet>
+						<h:outputText value="#{res.codigo}" />
+					</rich:column>
+					<rich:column filterBy="#{res.name}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.servlist_col2}</f:facet>
+						<h:outputText value="#{res.name}" />
+					</rich:column>
+					<rich:column filterBy="#{res.costo}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.servmast_costo}</f:facet>
+						<h:outputText value="#{res.costo}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{app.servmast_tiposerv}</f:facet>
+						<h:outputText value="#{app.servmast_tipos_tll}" rendered="#{res.tipoServicio=='TLL'}" />
+						<h:outputText value="#{app.servmast_tipos_med}" rendered="#{res.tipoServicio=='MED'}" />
+						<h:outputText value="#{app.servmast_tipos_cmb}" rendered="#{res.tipoServicio=='CMB'}" />
+						<h:outputText value="#{app.servmast_tipos_exa}" rendered="#{res.tipoServicio=='EXA'}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{serviceDAO.filterEstado}" filterExpression="#{empty serviceDAO.filterEstado?(true):(serviceDAO.filterEstado==res.estado)}">
+						<f:facet name="header">
+							<h:panelGroup>
+								#{app.vtaprs_estado}<br/>
+								 <h:selectOneMenu value="#{serviceDAO.filterEstado}">
+		                        	<f:selectItem itemLabel=" " itemValue="" />
+		                        	<f:selectItem itemLabel="Activo" itemValue="ACT" />
+		                            <f:selectItem itemLabel="Inactivo" itemValue="INA" />
+		                            <a:support reRender="tbl" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+							</h:panelGroup>
+						</f:facet>
+						<h:outputText value="Activo" rendered="#{res.estado=='ACT'}" />
+						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}" />
+						<h:graphicImage value="/kubeImg/enabled.png" rendered="#{res.estado=='ACT'}" title= "#{app.productomast_activoa}"/>
+						<h:graphicImage value="/kubeImg/disabled.png" rendered="#{res.estado=='INA'}" title= "#{app.productomast_activoi}"/>
+					</rich:column>
+					
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.servlist_edit}"
+							view="/medical/service/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						<rich:spacer width="10" />
+						<a:commandLink title="#{app.servlist_delete}" reRender="m1" eventsQueue="q1"
+							action="#{serviceDAO.select(res)}" ajaxSingle="true"
+							onclick="#{rich:component('confirmation')}.show();">
+							<h:graphicImage value="/kubeImg/table_delete16.png" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+			
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.servlist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.servlist_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{serviceDAO.desactivarServicio()}" reRender="formA"
+						rendered="#{serviceDAO.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

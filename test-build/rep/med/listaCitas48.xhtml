@@ -1,0 +1,33 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+	<rich:panel>
+		<f:facet name="header">
+			<h:outputText value="Reporte de citas de las pr�ximas 48 horas" />
+		</f:facet>
+		<h:form id="formA">
+			<p:growl globalOnly="true" sticky="false" life="3000" />
+			<p:focus />
+			<a:queue name="q1" />
+			<center>
+				
+				<s:decorate template="/layout/kActions.xhtml" id="btnsRep">
+					<a:commandButton oncomplete="showReport('listaCitas48PDF', '#{conversation.id}');" ajaxSingle="true" eventsQueue="q1" 
+						styleClass="pdfBtn" action="#{repMedico.repCitasPrg48()}" ignoreDupResponses="true" 
+						value="Citas de las pr�ximas 48 horas">
+					</a:commandButton>
+				</s:decorate>
+			</center>		
+		</h:form>
+	</rich:panel>
+	</ui:define>
+</ui:composition>

@@ -101,7 +101,7 @@ public class ReparacionExterna implements Serializable{
 		this.fechaModificacion = fechaModificacion;
 	}
 	
-	@Column(name = "estado", nullable = false)
+	@Column(name = "estado", nullable = false, length=15)
 	public String getEstado() {
 		return estado;
 	}

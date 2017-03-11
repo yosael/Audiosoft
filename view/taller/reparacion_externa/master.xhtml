@@ -1,0 +1,342 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{codigoDescuentoCorpHome.managed?sainv_view_messages.get('vtaitm_head_edit'):sainv_view_messages.get('vtaitm_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formD">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>Gestionar codigos descuento</legend>
+
+					<h:panelGrid columns="2" style="padding-left:100px;">
+					
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:250px;">
+							<ui:define name="label">Cliente corporativo:</ui:define>
+							<h:inputText
+								value="#{codigoDescuentoCorpHome.instance.clienteCorp.nombre}"
+								readonly="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selClientCorp')}.show();"
+								ajaxSingle="true" reRender="cli" styleClass="modifyBtn"
+								action="#{clienteCorpHome.getClientesCorp()}"
+								value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:250px;">
+							<ui:define name="label">Codigo:</ui:define>
+							<h:inputText value="#{codigoDescuentoCorpHome.instance.codigo}"
+								 required="true" style="width:200px;">
+							</h:inputText>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:250px;">
+							<ui:define name="label">Fecha Inicio:</ui:define>
+							<!--<h:inputText value="#{codigoDescuentoCorpHome.instance.fechaEmision}"
+								 required="true" style="width:200px;" >
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</h:inputText>-->
+							<rich:calendar
+								value="#{codigoDescuentoCorpHome.instance.fechaEmision}"
+								datePattern="dd/MM/yyyy" required="true"
+								readonly="#{codigoDescuentoCorpHome.managed}"
+								style="width:150px;">
+								<a:support event="oncollapse" ajaxSingle="true"
+									eventsQueue="q1" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:250px;">
+							<ui:define name="label">Fecha Finalizacion:</ui:define>
+							<!--<h:inputText value="#{codigoDescuentoCorpHome.instance.fechaFinalizacion}"
+								 required="true" style="width:200px;">
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</h:inputText>-->
+							<rich:calendar
+								value="#{codigoDescuentoCorpHome.instance.fechaFinalizacion}"
+								datePattern="dd/MM/yyyy" required="true"
+								readonly="#{codigoDescuentoCorpHome.managed}"
+								style="width:150px;">
+								<a:support event="oncollapse" ajaxSingle="true"
+									eventsQueue="q1" />
+							</rich:calendar>
+						</s:decorate>
+
+						<s:decorate template="/layout/kEditSpace.xhtml"
+							style="width:250px;">
+							<ui:define name="label">Estado:</ui:define>
+							<!-- <h:inputText
+								value="#{codigoDescuentoCorpHome.instance.estado}"
+								 required="true" style="width:200px;" /> -->
+							<h:selectOneMenu value="#{codigoDescuentoCorpHome.instance.estado}">
+								<f:selectItem itemLabel="Activo" itemValue="ACT" />
+								<f:selectItem itemLabel="Inactivo" itemValue="INA" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+					</h:panelGrid>
+
+					<!-- 
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton onclick="#{rich:component('selItem')}.show();"
+							ajaxSingle="true"
+							reRender="m1" styleClass="addBtn"
+							value="#{msn.button_add_product}">
+						</a:commandButton>
+					</s:decorate>
+					 -->
+					 
+					<rich:spacer height="20" />
+					
+					<s:decorate template="/layout/kActions.xhtml">
+						
+						
+						<a:commandButton rendered="#{codigoDescuentoCorpHome.managed}" value="Imprimir" oncomplete="showReport('detalleDescuentoPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						
+					
+						<s:button view="/vtas/descuentos_corp/list.xhtml" propagation="begin"
+							styleClass="listBtn" value="#{msn.button_list}">
+						</s:button>
+						<!-- <s:button view="/vtas/descuentos_corp/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_new}">
+							<f:param name="id" value="" />
+						</s:button> -->
+						<a:commandButton action="#{codigoDescuentoCorpHome.save()}"
+							reRender="formD" rendered="#{not codigoDescuentoCorpHome.managed}"
+							styleClass="saveBtn" value="Registar Descuentos" />
+							
+						<a:commandButton action="#{codigoDescuentoCorpHome.modify()}"
+							reRender="formD" rendered="#{codigoDescuentoCorpHome.managed}"
+							styleClass="modifyBtn" value="Actualizar" />
+							
+					</s:decorate>
+					
+					<rich:spacer height="20" />
+					
+					<h:panelGrid columns="2" style="margin: 0 auto;" >
+						<s:decorate template="/layout/kActions.xhtml"><!-- revisar el filtro para los tipos -->
+							<a:commandButton
+								onclick="#{rich:component('lstServs')}.show();"
+								ajaxSingle="true"
+								action="#{serviceDAO.loadServiciosList('EXA', 'MED')}"
+								reRender="srv" styleClass="addBtn"
+								value="Agregar servicio">
+							</a:commandButton>
+						</s:decorate>
+						<s:decorate template="/layout/kActions.xhtml">
+							<a:commandButton onclick="#{rich:component('selItem')}.show();"
+								ajaxSingle="true"
+								reRender="m1" styleClass="addBtn"
+								value="#{msn.button_add_product}">
+							</a:commandButton>
+						</s:decorate>
+					</h:panelGrid>
+					
+					<rich:spacer height="20" />
+
+					<rich:dataTable var="res" value="#{codigoDescuentoCorpHome.listaDetalle}" 
+						id="_table" rendered="#{not empty codigoDescuentoCorpHome.listaDetalle}"
+						align="center" rowClasses="tblEven,tblOdd"
+						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">#{app.vtaitm_listitm}</f:facet>
+						<rich:column>
+							<f:facet name="header">Codigo</f:facet>
+							<h:outputText value="#{res.codigo.codigo}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Producto/Servicio</f:facet>
+							<h:outputText value="#{res.producto.nombre}" rendered="#{res.producto!=null}" />
+							<h:outputText value="#{res.service.name}" rendered="#{res.service!=null}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Precio</f:facet>
+							<h:outputText value="#{res.producto.prcNormal}" rendered="#{res.producto!=null}" >
+								<f:convertNumber currencySymbol="$" type="currency"
+									locale="en-US" groupingUsed="true" integerOnly="true"
+									maxFractionDigits="2" />
+							</h:outputText>
+							<h:outputText value="#{res.service.costo}" rendered="#{res.service!=null}" >
+								<f:convertNumber currencySymbol="$" type="currency"
+									locale="en-US" groupingUsed="true" integerOnly="true"
+									maxFractionDigits="2" />
+							</h:outputText>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Descuento $</f:facet>
+							<h:inputText value="#{res.descuento}"  required="true" >
+							</h:inputText>
+						</rich:column><!-- <f:convertNumber currencySymbol="$" type="currency" locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" /> -->
+						<!-- <rich:column>
+							<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+							<h:inputText value="#{res.cantidad}" size="8"
+								onkeypress="return restrictNumDigits(event, this, 8);">
+								<a:support event="onblur"
+									action="#{codigoDescuentoCorpHome.actualizarSubtotal()}"
+									ajaxSingle="true" eventsQueue="q1" reRender="_table" />
+							</h:inputText>
+						</rich:column>
+					 -->
+					
+						
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<!-- <a:commandLink title="#{msn.button_addcod}" reRender="m2"
+								eventsQueue="q1"
+								rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}"
+								action="#{codigoDescuentoCorpHome.cargarListaCodigos(res)}"
+								ajaxSingle="true"
+								onclick="#{rich:component('lstCodigos')}.show();">
+								<h:graphicImage value="/kubeImg/table_detail2.png" />
+							</a:commandLink>
+							<rich:spacer width="10"
+								rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}" />
+										
+										
+							<a:commandLink title="#{app.vtaapa_arm_apa}" reRender="divAparato"
+								eventsQueue="q1"
+								rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}"
+								action="#{codigoDescuentoCorpHome.ponerSelected(res)}" 
+								ajaxSingle="true"
+								onclick="#{rich:component('armApa')}.show();">
+								<h:graphicImage value="/kubeImg/apa.png" />
+							</a:commandLink>
+							<rich:spacer width="10"
+								rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
+										res.inventario.producto.categoria.tieneNumLote==true}" />
+								 -->		
+										
+							<a:commandLink reRender="formD" eventsQueue="q1"
+								action="#{codigoDescuentoCorpHome.removerItem(res)}" ajaxSingle="true">
+								<h:graphicImage value="/kubeImg/table_delete16.png" />
+							</a:commandLink>
+							
+						</rich:column>
+						<f:facet name="footer">
+							<!-- <h:panelGrid columns="1" style="margin:0 auto;">
+							<h:outputText value="Subtotal: #{codigoDescuentoCorpHome.subTotal}"
+								size="8" id="_clTotal" />
+							</h:panelGrid> -->	
+						</f:facet>
+					</rich:dataTable>
+
+				</fieldset>
+			</h:form>
+
+			<!-- <rich:modalPanel id="selItem" width="900" moveable="false"
+				autosized="true" top="50px"
+				onmaskclick="#{rich:component('selItem')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selItem')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1">
+					<ui:include src="addProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel> -->
+			<!-- <center>
+				<rich:modalPanel id="lstCodigos" width="680" moveable="true"
+					autosized="true" top="50px"
+					onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+					<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('lstCodigos')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="m2">
+						<ui:include src="codsProducts.xhtml" />
+					</s:div>
+				</rich:modalPanel>
+			</center> -->
+			
+			<rich:modalPanel id="selItem" width="900" moveable="false"
+				autosized="true" top="50px"
+				onmaskclick="#{rich:component('selItem')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selItem')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="m1">
+					<ui:include src="addProducts.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="lstServs" width="800" moveable="true"
+				autosized="true" top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('lstServs');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('lstServs')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="srv">
+					<ui:include src="selServicios.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+		
+			<rich:modalPanel id="selClientCorp" width="900" moveable="true"
+				autosized="true" top="50px"
+				onmaskclick="#{rich:component('selClientCorp')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selClientCorp');">
+				<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selClientCorp')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="cli">
+					<ui:include src="selClientCorp.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			<a:status id="stateStatus" startText="#{app.general_espere}"
+				startStyle="background-color: #c0c7d1;
+   			border-style: groove;
+			border-width:15px;
+			border-color: #818fa3 #5a687b #465160 #323a44;
+		   font-weight:bold;
+		   font-size: 12px;
+		   text-align: center;
+		   position:absolute; 
+		   right: 50%; 
+		   top: 1px; 
+		   width: auto;" />
+
+		</rich:panel>
+	</ui:define>
+</ui:composition>

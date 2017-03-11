@@ -5,10 +5,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.ForeignKey;
 
 import com.sa.model.workshop.ReparacionCliente;
 
@@ -23,9 +30,10 @@ public class DetalleReparacionExterna implements Serializable {
 	private ReparacionExterna reparacionExterna;
 	private ReparacionCliente reparacionCliente; //null
 	private Producto aparato;
-	private String numeroSerie; //null
+	private CodProducto codigo; //null
 	private Producto piezaReparacion;//Si la pieza esta vacia significa que se va a reparar el aparato. null
 	private Date fechaRecibido; //null
+	private Date fechaModificacion;
 	private String comentario;
 	private String estado;
 	
@@ -40,7 +48,9 @@ public class DetalleReparacionExterna implements Serializable {
 		this.idDetalleRep = idDetalleRep;
 	}
 	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reparacion_externa", nullable = false)
+	@ForeignKey(name = "fk_detalle_reparacion_reparacion")
 	public ReparacionExterna getReparacionExterna() {
 		return reparacionExterna;
 	}
@@ -48,7 +58,9 @@ public class DetalleReparacionExterna implements Serializable {
 		this.reparacionExterna = reparacionExterna;
 	}
 	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reparacion_cliente", nullable = true)
+	@ForeignKey(name = "fk_detalle_reparacion_reparacion_cliente")
 	public ReparacionCliente getReparacionCliente() {
 		return reparacionCliente;
 	}
@@ -56,7 +68,9 @@ public class DetalleReparacionExterna implements Serializable {
 		this.reparacionCliente = reparacionCliente;
 	}
 	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "aparato", nullable = false)
+	@ForeignKey(name = "fk_detalle_reparacion_aparato")
 	public Producto getAparato() {
 		return aparato;
 	}
@@ -65,14 +79,19 @@ public class DetalleReparacionExterna implements Serializable {
 	}
 	
 	
-	public String getNumeroSerie() {
-		return numeroSerie;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "codigo", nullable = true)
+	@ForeignKey(name = "fk_detalle_reparacion_codigo")
+	public CodProducto getCodigo() {
+		return codigo;
 	}
-	public void setNumeroSerie(String numeroSerie) {
-		this.numeroSerie = numeroSerie;
+	public void setCodigo(CodProducto codigo) {
+		this.codigo = codigo;
 	}
 	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pieza_reparacion", nullable = true)
+	@ForeignKey(name = "fk_detalle_reparacion_pieza")
 	public Producto getPiezaReparacion() {
 		return piezaReparacion;
 	}
@@ -80,7 +99,8 @@ public class DetalleReparacionExterna implements Serializable {
 		this.piezaReparacion = piezaReparacion;
 	}
 	
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_recibido", nullable = true)
 	public Date getFechaRecibido() {
 		return fechaRecibido;
 	}
@@ -89,6 +109,15 @@ public class DetalleReparacionExterna implements Serializable {
 	}
 	
 	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fecha_modificacion", nullable = true)
+	public Date getFechaModificacion() {
+		return fechaModificacion;
+	}
+	public void setFechaModificacion(Date fechaModificacion) {
+		this.fechaModificacion = fechaModificacion;
+	}
+	@Column(name = "comentario", nullable = true, length=80)
 	public String getComentario() {
 		return comentario;
 	}
@@ -96,7 +125,7 @@ public class DetalleReparacionExterna implements Serializable {
 		this.comentario = comentario;
 	}
 	
-	
+	@Column(name = "estado", nullable = false, length=15)
 	public String getEstado() {
 		return estado;
 	}

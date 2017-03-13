@@ -39,6 +39,7 @@ public class ReparacionExterna implements Serializable{
 	private String estado;
 	private List<DetalleReparacionExterna> detalleReparacion;
 	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -122,8 +123,6 @@ public class ReparacionExterna implements Serializable{
 			List<DetalleReparacionExterna> detalleReparacion) {
 		this.detalleReparacion = detalleReparacion;
 	}
-	
-	
-	
+
 
 }

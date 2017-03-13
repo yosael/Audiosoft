@@ -237,8 +237,7 @@
 								action="#{reparacionExternaHome.removerItem(res)}" ajaxSingle="true">
 								<h:graphicImage value="/kubeImg/table_delete16.png" />
 							</a:commandLink>
-							<h:inputHidden value="#{reparacionExternaHome.contadorDetalle}" />
-						</rich:column>
+						</rich:column>#{reparacionExternaHome.aumentarContador()}
 						
 						<f:facet name="footer">
 							<!-- <h:panelGrid columns="1" style="margin:0 auto;">

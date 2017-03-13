@@ -10,34 +10,34 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 
-	<h:form id="frmSelCliCrp">
+	<h:form id="frmSelProve">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
 				
-				<rich:dataTable var="res" value="#{clienteCorpHome.resultList}" id="_table"
-						rendered="#{not empty clienteCorpHome.resultList}" rows="10"
+				<rich:dataTable var="res" value="#{proveedorHome.resultList}" id="_table"
+						rendered="#{not empty proveedorHome.resultList}" rows="10"
 						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 						headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.crm_srch_users}</f:facet>
 					
-					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.razonSocial}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.patimast_firstname1}</f:facet>
-						<h:outputText value="#{res.nombre}" />
+						<h:outputText value="#{res.razonSocial}" />
 					</rich:column>
-					<rich:column filterBy="#{res.contacto}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.nombreContacto}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.patimast_lastname1}</f:facet>
-						<h:outputText value="#{res.contacto}" />
+						<h:outputText value="#{res.nombreContacto}" />
 					</rich:column>
-					<rich:column filterBy="#{res.telefono1}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.telefonos}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.patimast_telephone}</f:facet>
-						<h:outputText value="#{res.telefono1}" />
+						<h:outputText value="#{res.telefonos}" />
 					</rich:column>					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formD"
-							action="#{codigoDescuentoCorpHome.instance.setClienteCorp(res)}" ajaxSingle="true" eventsQueue="q1"
-							onclick="#{rich:component('selClientCorp')}.hide();">
+							action="#{proveedorHome.seleccionarProveedor(res)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('selProveedor')}.hide();">
 						</a:commandLink>
 					</rich:column>
 					<f:facet name="footer">

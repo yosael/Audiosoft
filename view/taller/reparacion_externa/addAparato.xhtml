@@ -54,8 +54,8 @@
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.compramast_select_product}" reRender="formD"
-							action="#{codigoDescuentoCorpHome.agregarProducto(res.producto)}" ajaxSingle="true" eventsQueue="q1"
-							onclick="#{rich:component('selItem')}.hide();">
+							action="#{reparacionExternaHome.agregarAparato(res.producto)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('selAparato')}.hide();">
 						</a:commandLink>
 					</rich:column>
 					<f:facet name="footer">
@@ -63,6 +63,6 @@
 					</f:facet>
 				</rich:dataTable>
 				
-			</h:form>
+			</h:form><!-- nuevo -->
 	
 </ui:composition>

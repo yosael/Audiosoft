@@ -1,5 +1,8 @@
 package com.sa.kubekit.action.inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,6 +20,7 @@ public class ProveedorHome extends KubeDAO<Proveedor>{
 
 	private static final long serialVersionUID = 1L;
 	private Integer proveedorId;
+	private List<Proveedor> resultList;
 	
 	@In
 	private LoginUser loginUser;
@@ -45,6 +49,18 @@ public class ProveedorHome extends KubeDAO<Proveedor>{
 				instance.setEmpresa(loginUser.getUser().getSucursal().getEmpresa());
 			}
 		}
+	}
+	
+	public void cargarProveedores()
+	{
+		resultList = new ArrayList<Proveedor>();
+		
+		resultList = getEntityManager().createQuery("SELECT p FROM Proveedor p").getResultList();
+	}
+	
+	public void seleccionarProveedor(Proveedor proveedor)
+	{
+		setInstance(proveedor);
 	}
 
 	@Override
@@ -104,5 +120,15 @@ public class ProveedorHome extends KubeDAO<Proveedor>{
 	public void setProveedorId(Integer proveedorId) {
 		this.proveedorId = proveedorId;
 	}
+
+	public List<Proveedor> getResultList() {
+		return resultList;
+	}
+
+	public void setResultList(List<Proveedor> resultList) {
+		this.resultList = resultList;
+	}
+	
+	
 	
 }

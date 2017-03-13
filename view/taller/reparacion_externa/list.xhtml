@@ -15,6 +15,7 @@
 			<center><table>
 			<tr>
 				<td>
+					<!-- 
 					<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
 						<ui:define name="label">#{app.compramast_branch}:</ui:define>
 						<h:selectOneMenu value="#{reparacionExternaHome.sucursalFlt}">
@@ -25,10 +26,11 @@
 										ajaxSingle="true" reRender="formA"/>
 						</h:selectOneMenu>
 					</s:decorate>
+					 -->
 				</td>
 				<td>
 					<s:decorate template="/layout/kActions.xhtml" >
-						<s:button view="/vtas/descuentos_corp/master.xhtml" propagation="begin"
+						<s:button view="/taller/reparacion_externa/master.xhtml" propagation="begin"
 							styleClass="newBtn" value="#{msn.button_register}" rendered="true">
 							<f:param name="id" value="" />
 						</s:button>
@@ -59,15 +61,27 @@
 						<h:outputText value="#{res.clienteCorp.nombre}" >
 						</h:outputText>
 					</rich:column>
-					<rich:column filterBy="#{res.fechaEmision}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.proveedor.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">Proveedor</f:facet>
+						<h:outputText value="#{res.proveedor.nombre}" >
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.fechaCreacion}" filterEvent="onkeyup">
 						<f:facet name="header">Fecha Emision</f:facet>
-						<h:outputText value="#{res.fechaEmision}" >
+						<h:outputText value="#{res.fechaCreacion}" >
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>
-					<rich:column filterBy="#{res.fechaFinalizacion}" filterEvent="onkeyup">
-						<f:facet name="header">Fecha Finalizacion</f:facet>
-						<h:outputText value="#{res.fechaFinalizacion}" >
+					<rich:column filterBy="#{res.fechaEnvio}" filterEvent="onkeyup">
+						<f:facet name="header">Fecha Envio</f:facet>
+						<h:outputText value="#{res.fechaEnvio}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					
+					<rich:column filterBy="#{res.fechaModificacion}" filterEvent="onkeyup">
+						<f:facet name="header">Fecha Modificacion</f:facet>
+						<h:outputText value="#{res.fechaModificacion}" >
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>
@@ -81,14 +95,14 @@
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<s:link title="Acciones" rendered="true"
-							view="/vtas/descuentos_corp/master.xhtml" propagation="begin">
+							view="/taller/reparacion_externa/master.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
-							<f:param name="id" value="#{res.id}" />
+							<f:param name="id" value="#{res.idReparacionExterna}" />
 						</s:link>
  						<!-- 
  						<rich:spacer width="10" />
 						<s:link title="Asociar" rendered="true"
-							view="/vtas/descuentos_corp/detalleDescuentoCorp.xhtml" propagation="begin">
+							view="/taller/reparacion_externa/detalleDescuentoCorp.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="id" value="#{res.id}" />
 						</s:link>

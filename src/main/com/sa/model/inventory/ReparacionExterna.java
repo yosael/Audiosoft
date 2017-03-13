@@ -2,7 +2,9 @@ package com.sa.model.inventory;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +37,7 @@ public class ReparacionExterna implements Serializable{
 	private Date fechaEnvio; //null
 	private Date fechaModificacion; //null
 	private String estado;
+	private List<DetalleReparacionExterna> detalleReparacion;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,6 +111,16 @@ public class ReparacionExterna implements Serializable{
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reparacionExterna", cascade = CascadeType.REMOVE)
+	public List<DetalleReparacionExterna> getDetalleReparacion() {
+		return detalleReparacion;
+	}
+
+	public void setDetalleReparacion(
+			List<DetalleReparacionExterna> detalleReparacion) {
+		this.detalleReparacion = detalleReparacion;
 	}
 	
 	

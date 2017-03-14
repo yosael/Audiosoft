@@ -53,7 +53,7 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.compramast_select_product}" reRender="formD"
+						<a:commandLink value="#{app.compramast_select_product}" reRender="formDetalle,_tableDetalle"
 							action="#{reparacionExternaHome.agregarAparato(res.producto)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('selAparato')}.hide();">
 						</a:commandLink>

@@ -31,6 +31,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private int indiceDetalle;
 	private int contadorDetalle=0;
 	private List<CodProducto> listaCodigos;
+	private DetalleReparacionExterna nuevoDetalle;
 
 	@In
 	private LoginUser loginUser;
@@ -68,28 +69,38 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void agregarAparato(Producto aparato)
 	{
 		
-		DetalleReparacionExterna detalle = new DetalleReparacionExterna();
+		/*DetalleReparacionExterna detalle = new DetalleReparacionExterna();
 		
 		detalle.setAparato(aparato);
 		detalle.setReparacionExterna(instance);
 		detalle.setEstado("GEN");
 		detalle.setFechaModificacion(new Date());
 		
-		detalleReparacion.add(detalle);
+		detalleReparacion.add(detalle);*/
+		
+		nuevoDetalle.setAparato(aparato);
+		System.out.println("Asigno el aparato");
 	}
 	
 	public void agregarPieza(Producto pieza)
 	{
 		
-		detalleReparacion.get(indiceDetalle).setPiezaReparacion(pieza);
+		/*detalleReparacion.get(indiceDetalle).setPiezaReparacion(pieza);
 		detalleReparacion.get(indiceDetalle).setFechaModificacion(new Date());
+		
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			
+			if(detalleSelected.equals(det))
+			{
+				det.setPiezaReparacion(pieza);
+				det.setFechaModificacion(new Date());
+			}
+		}*/
+		
+		nuevoDetalle.setPiezaReparacion(pieza);
 	}
 	
-	public void aumentarContador()
-	{
-		contadorDetalle++;
-		System.out.println("Contador"+contadorDetalle);
-	}
 	
 	public void seleccionarProveedor(Proveedor proveedor)
 	{
@@ -97,9 +108,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		instance.setProveedor(proveedor);
 	}
 	
-	public void cargarCodigosProducto(Producto aparato,int numero)
+	public void cargarCodigosProducto(Producto aparato)
 	{
-		setIndiceDetalle(numero);
+		
+		
+		System.out.println("Nombre producto"+aparato.getNombre());
 		listaCodigos = new ArrayList<CodProducto>();
 		
 		//listaCodigos = getEntityManager().createQuery("SELECT c FROM CodProducto c where ")
@@ -122,8 +135,16 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	public void seleccionarCodigo(CodProducto codigo)
 	{
-		detalleReparacion.get(indiceDetalle).setCodigo(codigo);
 		
+		nuevoDetalle.setCodigo(codigo);
+		
+	}
+	
+	public void agregarDetalle()
+	{
+		nuevoDetalle.setFechaModificacion(new Date());
+		nuevoDetalle.setEstado("GEN");
+		detalleReparacion.add(nuevoDetalle);
 	}
 
 	@Override
@@ -140,6 +161,28 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		return true;
 	}
+	
+	public void cargarNuevoDetalle()
+	{
+		nuevoDetalle = new DetalleReparacionExterna();
+	}
+	
+	public void removerDetalle(DetalleReparacionExterna detalle)
+	{
+		if(detalle.getIdDetalleRep()==null)
+		{
+			detalleReparacion.remove(detalle);
+			System.out.println("Elimino de la memoria");
+		}
+		else
+		{
+			detalleReparacion.remove(detalle);
+			getEntityManager().remove(detalle);
+			System.out.println("Elimino de la db");
+		}
+	}
+	
+	
 
 	@Override
 	public boolean preModify() {
@@ -187,6 +230,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	}
 
 	public void setIndiceDetalle(int indiceDetalle) {
+		System.out.println("Indice Actual"+indiceDetalle);
 		this.indiceDetalle = indiceDetalle;
 	}
 
@@ -197,7 +241,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void setContadorDetalle(int contadorDetalle) {
 		this.contadorDetalle = contadorDetalle;
 		this.contadorDetalle++;
-		System.out.println("Contador detalle"+contadorDetalle);
+		System.out.println("Contador detalle"+this.contadorDetalle);
+		
 	}
 
 	public List<ReparacionExterna> getResultList() {
@@ -215,6 +260,25 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void setIdReparacionExterna(int idReparacionExterna) {
 		this.idReparacionExterna = idReparacionExterna;
 	}
+
+	public DetalleReparacionExterna getNuevoDetalle() {
+		return nuevoDetalle;
+	}
+
+	public void setNuevoDetalle(DetalleReparacionExterna nuevoDetalle) {
+		this.nuevoDetalle = nuevoDetalle;
+	}
+
+	public List<CodProducto> getListaCodigos() {
+		return listaCodigos;
+	}
+
+	public void setListaCodigos(List<CodProducto> listaCodigos) {
+		this.listaCodigos = listaCodigos;
+	}
+
+	
+	
 	
 	
 

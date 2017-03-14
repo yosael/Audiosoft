@@ -144,19 +144,13 @@
 					
 					<h:panelGrid columns="2" style="margin: 0 auto;" >
 						<s:decorate template="/layout/kActions.xhtml">
-							<a:commandButton onclick="#{rich:component('selAparato')}.show();"
+							<a:commandButton onclick="#{rich:component('addDetalle')}.show();"
 								ajaxSingle="true"
-								reRender="mApa" styleClass="addBtn"
-								value="Agregar aparato">
+								action="#{reparacionExternaHome.cargarNuevoDetalle()}"
+								reRender="mDetalle" styleClass="addBtn"
+								value="Agregar Detalle">
 							</a:commandButton>
 						</s:decorate>
-						<!-- <s:decorate template="/layout/kActions.xhtml">
-							<a:commandButton onclick="#{rich:component('selAparato')}.show();"
-								ajaxSingle="true"
-								reRender="mApa" styleClass="addBtn"
-								value="#{msn.button_add_product}">
-							</a:commandButton>
-						</s:decorate> -->
 					</h:panelGrid>
 					
 					<rich:spacer height="20" />
@@ -181,30 +175,12 @@
 						
 						<rich:column>
 							<f:facet name="header"># Serie</f:facet>
-							<h:inputText value="#{res.codigo.numSerie}" rendered="#{res.codigo!=null}" readonly="true" />
-							<rich:spacer width="5px;" ></rich:spacer>
-							<a:commandButton onclick="#{rich:component('selCodigo')}.show();"
-								style="width:28px;"
-								action="#{reparacionExternaHome.cargarCodigosProducto(res.aparato,reparacionExternaHome.contadorDetalle++)}"
-								ajaxSingle="true"
-								reRender="mPieza" styleClass="addBtn"
-								value="">
-							</a:commandButton>
+							<h:outputText value="#{res.codigo.numSerie}" rendered="#{res.codigo!=null}" readonly="true" />
 						</rich:column>
 						
 						<rich:column><!-- <rich:spacer width="5px;" ></rich:spacer> -->
 							<f:facet name="header">Pieza reparacion</f:facet>
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:70px;">
-								<h:inputText value="#{res.piezaReparacion.nombre}" readonly="true" />
-								
-								<a:commandButton onclick="#{rich:component('selPieza')}.show();"
-									style="width:28px;"
-									action="#{reparacionExternaHome.setIndiceDetalle(reparacionExternaHome.contadorDetalle++)}"
-									ajaxSingle="true"
-									reRender="mPieza" styleClass="addBtn"
-									value="">
-								</a:commandButton>
-							</s:decorate>
+								<h:outputText value="#{res.piezaReparacion.nombre}" readonly="true"  />
 						</rich:column>
 						
 						<rich:column>
@@ -223,12 +199,15 @@
 						
 						<rich:column>
 							<f:facet name="header">Comentario</f:facet>
-							<h:inputText value="#{res.comentario}"  />
+							<h:outputText value="#{res.comentario}"  />
 						</rich:column>
 						
 						<rich:column>
 							<f:facet name="header">Estado</f:facet>
-							<h:outputText value="#{res.estado}"  />
+							<h:outputText value="Generado" rendered="#{res.estado=='GEN'}"  />
+							<h:outputText value="Enviado" rendered="#{res.estado=='ENV'}"  />
+							<h:outputText value="Recibido" rendered="#{res.estado=='REC'}"  />
+							<h:outputText value="Desechado" rendered="#{res.estado=='DES'}"  />
 						</rich:column>
 											
 						<rich:column>
@@ -237,7 +216,8 @@
 								action="#{reparacionExternaHome.removerItem(res)}" ajaxSingle="true">
 								<h:graphicImage value="/kubeImg/table_delete16.png" />
 							</a:commandLink>
-						</rich:column>#{reparacionExternaHome.aumentarContador()}
+							<!-- <h:inputHidden value="#{reparacionExternaHome.idDetalle(res)}" />-->
+						</rich:column>
 						
 						<f:facet name="footer">
 							<!-- <h:panelGrid columns="1" style="margin:0 auto;">
@@ -250,37 +230,24 @@
 				</fieldset>
 			</h:form>
 			
-			<rich:modalPanel id="selAparato" width="900" moveable="false"
+			
+			
+			<rich:modalPanel id="addDetalle" width="900" moveable="false"
 				autosized="true" top="50px"
-				onmaskclick="#{rich:component('selAparato')}.hide();"
-				onbeforeshow="activeModal.setActiveModalPanel('selAparato');">
+				onmaskclick="#{rich:component('addDetalle')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('addDetalle');">
 				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
 				<f:facet name="controls">
 					<h:panelGroup>
 						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
-							onclick="#{rich:component('selAparato')}.hide();" />
+							onclick="#{rich:component('addDetalle')}.hide();" />
 					</h:panelGroup>
 				</f:facet>
-				<s:div id="mApa">
-					<ui:include src="addAparato.xhtml" />
+				<s:div id="mDetalle">
+					<ui:include src="addDetalle.xhtml" />
 				</s:div>
 			</rich:modalPanel>
 			
-			<rich:modalPanel id="selPieza" width="900" moveable="false"
-				autosized="true" top="50px"
-				onmaskclick="#{rich:component('selPieza')}.hide();"
-				onbeforeshow="activeModal.setActiveModalPanel('selPieza');">
-				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
-				<f:facet name="controls">
-					<h:panelGroup>
-						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
-							onclick="#{rich:component('selPieza')}.hide();" />
-					</h:panelGroup>
-				</f:facet>
-				<s:div id="mPieza">
-					<ui:include src="addPieza.xhtml" />
-				</s:div>
-			</rich:modalPanel>
 		
 			<rich:modalPanel id="selProveedor" width="900" moveable="true"
 				autosized="true" top="50px"

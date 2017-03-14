@@ -8,6 +8,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
@@ -153,6 +155,30 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		System.out.println("Presave");
 		
+		
+		if(instance.getProveedor()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el proveedor");
+			return false;
+		}
+		
+		if(instance.getCustomerNumber()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el numero de cliente");
+			return false;
+		}
+		
+		List<ReparacionExterna> reparacionExistente = new ArrayList<ReparacionExterna>();
+		reparacionExistente = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r Where r.estado='GEN'").getResultList();
+		
+		if(reparacionExistente!=null && reparacionExistente.size()>0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ya existe una reparacion generada");
+			FacesMessages.instance().add(Severity.WARN,"Favor enviar o cambiar estado de la generada");
+			return false;
+		}
+		
+		
 		instance.setFechaCreacion(new Date());
 		instance.setFechaModificacion(new Date());
 		
@@ -201,7 +227,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		// TODO Auto-generated method stub
 				
 		//getEnti
-		
+		System.out.println("Entro a possave");
 	}
 
 	@Override

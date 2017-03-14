@@ -58,12 +58,12 @@
 					</rich:column>
 					<rich:column filterBy="#{res.empresa.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">Empresa</f:facet>
-						<h:outputText value="#{res.clienteCorp.nombre}" >
+						<h:outputText value="#{res.empresa.nombre}" >
 						</h:outputText>
 					</rich:column>
-					<rich:column filterBy="#{res.proveedor.nombre}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.proveedor.razonSocial}" filterEvent="onkeyup">
 						<f:facet name="header">Proveedor</f:facet>
-						<h:outputText value="#{res.proveedor.nombre}" >
+						<h:outputText value="#{res.proveedor.razonSocial}" >
 						</h:outputText>
 					</rich:column>
 					<rich:column filterBy="#{res.fechaCreacion}" filterEvent="onkeyup">

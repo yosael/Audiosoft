@@ -13,7 +13,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{reparacionExternaHome.managed?sainv_view_messages.get('vtaitm_head_edit'):sainv_view_messages.get('vtaitm_head_register')}" />
+					value="Gestionar reparacion externa" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formD">
@@ -21,7 +21,7 @@
 				<p:focus />
 				<a:queue name="q1" />
 				<fieldset>
-					<legend>Gestionar reparacion externa</legend>
+					<legend>Detalle reparacion externa</legend>
 
 					<h:panelGrid columns="2" style="padding-left:100px;">
 					
@@ -29,6 +29,7 @@
 							style="width:250px;">
 							<ui:define name="label">Proveedor:</ui:define>
 							<h:inputText
+								id="txtProveedor"
 								value="#{reparacionExternaHome.instance.proveedor.razonSocial}"
 								readonly="true" style="width:200px;" />
 							<a:commandButton onclick="#{rich:component('selProveedor')}.show();"
@@ -156,12 +157,12 @@
 					<rich:spacer height="20" />
 
 					<rich:dataTable var="res" value="#{reparacionExternaHome.detalleReparacion}" 
-						id="_table" rendered="#{not empty reparacionExternaHome.detalleReparacion}"
+						id="_table" 
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 						headerClass="tablaHeader" footerClass="tableScroll">
-						<f:facet name="header">#{app.vtaitm_listitm}</f:facet>
+						<f:facet name="header">Lista de items para reparacion</f:facet>
 						
 						<rich:column>
 							<f:facet name="header">Reparacion Taller</f:facet>

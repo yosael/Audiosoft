@@ -29,6 +29,7 @@
 							style="width:250px;">
 							<ui:define name="label">Proveedor:</ui:define>
 							<h:inputText
+								id="txtProveedor"
 								value="#{reparacionExternaHome.instance.proveedor.razonSocial}"
 								readonly="true" style="width:200px;" />
 							<a:commandButton onclick="#{rich:component('selProveedor')}.show();"
@@ -156,7 +157,7 @@
 					<rich:spacer height="20" />
 
 					<rich:dataTable var="res" value="#{reparacionExternaHome.detalleReparacion}" 
-						id="_table" rendered="#{not empty reparacionExternaHome.detalleReparacion}"
+						id="_table" 
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"

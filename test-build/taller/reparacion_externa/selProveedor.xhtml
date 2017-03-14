@@ -35,7 +35,7 @@
 					</rich:column>					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formD"
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="txtProveedor"
 							action="#{reparacionExternaHome.seleccionarProveedor(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('selProveedor')}.hide();">
 						</a:commandLink>

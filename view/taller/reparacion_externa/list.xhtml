@@ -58,12 +58,12 @@
 					</rich:column>
 					<rich:column filterBy="#{res.empresa.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">Empresa</f:facet>
-						<h:outputText value="#{res.clienteCorp.nombre}" >
+						<h:outputText value="#{res.empresa.nombre}" >
 						</h:outputText>
 					</rich:column>
-					<rich:column filterBy="#{res.proveedor.nombre}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.proveedor.razonSocial}" filterEvent="onkeyup">
 						<f:facet name="header">Proveedor</f:facet>
-						<h:outputText value="#{res.proveedor.nombre}" >
+						<h:outputText value="#{res.proveedor.razonSocial}" >
 						</h:outputText>
 					</rich:column>
 					<rich:column filterBy="#{res.fechaCreacion}" filterEvent="onkeyup">
@@ -88,7 +88,10 @@
 					
 					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
 						<f:facet name="header">Estado</f:facet>
-						<h:outputText value="Activo" rendered="#{res.estado=='ACT'}" />
+						<h:outputText value="GENERADA" rendered="#{res.estado=='GEN'}" />
+						<h:outputText value="ENVIADA" rendered="#{res.estado=='ENV'}" />
+						<h:outputText value="RECIBIENDO" rendered="#{res.estado=='REB'}" />
+						<h:outputText value="RECIBIDA" rendered="#{res.estado=='REC'}" />
 						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}" />
 					</rich:column>
 					

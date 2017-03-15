@@ -88,8 +88,7 @@
 					
 					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
 						<f:facet name="header">Estado</f:facet>
-						<h:outputText value="Activo" rendered="#{res.estado=='ACT'}" />
-						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}" />
+						<h:outputText value="#{res.estado}"  />
 					</rich:column>
 					
 					<rich:column>

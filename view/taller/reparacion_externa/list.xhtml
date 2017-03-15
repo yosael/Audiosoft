@@ -88,11 +88,7 @@
 					
 					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
 						<f:facet name="header">Estado</f:facet>
-						<h:outputText value="GENERADA" rendered="#{res.estado=='GEN'}" />
-						<h:outputText value="ENVIADA" rendered="#{res.estado=='ENV'}" />
-						<h:outputText value="RECIBIENDO" rendered="#{res.estado=='REB'}" />
-						<h:outputText value="RECIBIDA" rendered="#{res.estado=='REC'}" />
-						<h:outputText value="Inactivo" rendered="#{res.estado=='INA'}" />
+						<h:outputText value="#{res.estado}"  />
 					</rich:column>
 					
 					<rich:column>

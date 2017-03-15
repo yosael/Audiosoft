@@ -33,6 +33,7 @@
 								value="#{reparacionExternaHome.instance.proveedor.razonSocial}"
 								readonly="true" style="width:200px;" />
 							<a:commandButton onclick="#{rich:component('selProveedor')}.show();"
+								rendered="#{reparacionExternaHome.instance.estado=='Generada' or reparacionExternaHome.instance.idReparacionExterna==null}"
 								ajaxSingle="true" reRender="prove" styleClass="modifyBtn"
 								action="#{proveedorHome.cargarProveedores()}"
 								value=" " style="width:30px;">
@@ -100,10 +101,10 @@
 							<!-- <h:inputText
 								value="#{reparacionExternaHome.instance.estado}"
 								 required="true" style="width:200px;" /> -->
-							<h:selectOneMenu value="#{reparacionExternaHome.instance.estado}">
-								<f:selectItem itemLabel="Generada" itemValue="GEN" />
-								<f:selectItem itemLabel="Inactivo" itemValue="INA" />
+							<h:selectOneMenu value="#{reparacionExternaHome.instance.estado}" rendered="#{reparacionExternaHome.instance.idReparacionExterna==null}" >
+								<f:selectItem itemLabel="Generada" itemValue="Generada" />
 							</h:selectOneMenu>
+							<h:outputLabel value="#{reparacionExternaHome.instance.estado}" rendered="#{reparacionExternaHome.instance.idReparacionExterna!=null}" />
 						</s:decorate>
 
 					</h:panelGrid>
@@ -124,20 +125,26 @@
 						
 						<a:commandButton rendered="#{reparacionExternaHome.managed}" value="Imprimir" oncomplete="showReport('detalleReparacionExternaPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
 					
-						<s:button view="/vtas/descuentos_corp/list.xhtml" propagation="begin"
+						<s:button view="/taller/reparacion_externa/list.xhtml" propagation="begin"
 							styleClass="listBtn" value="#{msn.button_list}">
 						</s:button>
-						<!-- <s:button view="/vtas/descuentos_corp/master.xhtml" propagation="begin"
+						<!-- <s:button view="/taller/reparacion_externa/master.xhtml" propagation="begin"
 							styleClass="newBtn" value="#{msn.button_new}">
 							<f:param name="id" value="" />
 						</s:button> -->
 						<a:commandButton action="#{reparacionExternaHome.save()}"
 							reRender="formD" rendered="#{not reparacionExternaHome.managed}"
-							styleClass="saveBtn" value="Registar" />
+							styleClass="saveBtn" value="Guardar" />
 							
 						<a:commandButton action="#{reparacionExternaHome.modify()}"
-							reRender="formD" rendered="#{reparacionExternaHome.managed}"
+							reRender="formD" rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado!='Enviada'}"
 							styleClass="modifyBtn" value="Actualizar" />
+							
+						<a:commandButton action="#{reparacionExternaHome.enviarReparacion()}"
+							reRender="formD" styleClass="upBtn" rendered="#{reparacionExternaHome.instance.estado=='Generada'}"
+							value="Enviar a reparacion" />
+							
+						
 							
 					</s:decorate>
 					
@@ -149,6 +156,7 @@
 								ajaxSingle="true"
 								action="#{reparacionExternaHome.cargarNuevoDetalle()}"
 								reRender="mDetalle" styleClass="addBtn"
+								rendered="#{reparacionExternaHome.instance.estado=='Generada'}"
 								value="Agregar Detalle">
 							</a:commandButton>
 						</s:decorate>
@@ -205,19 +213,32 @@
 						
 						<rich:column>
 							<f:facet name="header">Estado</f:facet>
-							<h:outputText value="Generado" rendered="#{res.estado=='GEN'}"  />
-							<h:outputText value="Enviado" rendered="#{res.estado=='ENV'}"  />
-							<h:outputText value="Recibido" rendered="#{res.estado=='REC'}"  />
-							<h:outputText value="Desechado" rendered="#{res.estado=='DES'}"  />
+							<h:outputText value="#{res.estado}"  />
 						</rich:column>
 											
-						<rich:column>
+						<rich:column rendered="#{reparacionExternaHome.instance.estado=='Generada'}" >
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink reRender="formD" eventsQueue="q1"
 								action="#{reparacionExternaHome.removerItem(res)}" ajaxSingle="true">
 								<h:graphicImage value="/kubeImg/table_delete16.png" />
 							</a:commandLink>
 							<!-- <h:inputHidden value="#{reparacionExternaHome.idDetalle(res)}" />-->
+						</rich:column>
+						
+						<rich:column rendered="#{reparacionExternaHome.instance.estado=='Enviada'}" >
+							<f:facet name="header">Re-ingresar Items </f:facet>
+							<a:commandLink reRender="formD" eventsQueue="q1"
+								action="#{reparacionExternaHome.agregarCompra(res)}" ajaxSingle="true" rendered="#{res.estado=='Enviado'}" >
+								<h:graphicImage value="/kubeImg/add16.png" />
+							</a:commandLink>
+						</rich:column>
+						
+						<rich:column rendered="#{reparacionExternaHome.instance.estado=='Enviada'}" >
+							<f:facet name="header">Desechar</f:facet>
+							<a:commandLink reRender="formD" eventsQueue="q1"
+								action="#{reparacionExternaHome.desecharItem(res)}" ajaxSingle="true" rendered="#{res.estado=='Enviado'}" >
+								<h:graphicImage value="/kubeImg/remove16.png" />
+							</a:commandLink>
 						</rich:column>
 						
 						<f:facet name="footer">
@@ -227,7 +248,6 @@
 							</h:panelGrid> -->	
 						</f:facet>
 					</rich:dataTable>
-
 				</fieldset>
 			</h:form>
 			

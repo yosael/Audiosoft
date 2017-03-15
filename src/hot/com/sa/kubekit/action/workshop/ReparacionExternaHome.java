@@ -7,6 +7,7 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Out;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -38,6 +39,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@In
 	private LoginUser loginUser;
 	
+	@In(required = false, create = true)
+	@Out
+	private DetalleReparacionExternaHome detalleReparacionExternaHome;
+	
 	
 	public void load()
 	{
@@ -48,7 +53,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 					.setParameter("idReparacion", idReparacionExterna).getSingleResult());
 			setDetalleReparacion(instance.getDetalleReparacion());
 			
-			
+			System.out.println("Estado reparacion externa"+instance.getEstado());
 			
 		}catch (Exception e) {
 			
@@ -183,7 +188,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		instance.setFechaModificacion(new Date());
 		
 		
-		instance.setDetalleReparacion(detalleReparacion);
+		//instance.setDetalleReparacion(detalleReparacion);
 		
 		return true;
 	}
@@ -209,11 +214,31 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	}
 	
 	
+	public void enviarReparacion()
+	{
+		instance.setEstado("ENV");
+		System.out.println("Entro a enviar a reparacion");
+		modify();
+	}
+	
+	public void agregarCompra(DetalleReparacionExterna item)
+	{
+		
+	}
+	
+	public void desecharItem(DetalleReparacionExterna item)
+	{
+		item.setEstado("Desechado");
+		
+		detalleReparacionExternaHome.setInstance(item);
+		detalleReparacionExternaHome.modify();
+	}
+	
 
 	@Override
 	public boolean preModify() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -225,14 +250,45 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@Override
 	public void posSave() {
 		// TODO Auto-generated method stub
-				
-		//getEnti
+		
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			det.setReparacionExterna(instance);
+			
+			detalleReparacionExternaHome.setInstance(det);
+			detalleReparacionExternaHome.save();
+
+		}
+		
 		System.out.println("Entro a possave");
 	}
 
 	@Override
 	public void posModify() {
-		// TODO Auto-generated method stub
+		
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			
+			if(det.getIdDetalleRep()==null)//Si el detalle no esta registrado se registra
+			{
+				
+				det.setReparacionExterna(instance);
+				detalleReparacionExternaHome.setInstance(det);
+				detalleReparacionExternaHome.save();
+				System.out.println("Entro a registrar nuevo detalle");
+				
+			}
+			
+			if(instance.getEstado().equals("ENV"))
+			{
+				det.setEstado("Enviado");
+				detalleReparacionExternaHome.modify();
+				System.out.println("Entro a actualizar el detalle a enviado");
+			}
+
+		}
+		
+		System.out.println("Entro a posModify");
 		
 	}
 

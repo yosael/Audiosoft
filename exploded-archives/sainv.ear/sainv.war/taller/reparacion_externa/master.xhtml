@@ -183,6 +183,11 @@
 						</rich:column>
 						
 						<rich:column>
+							<f:facet name="header">Referencia</f:facet>
+							<h:outputText value="#{res.aparato.referencia}"  />
+						</rich:column>
+						
+						<rich:column>
 							<f:facet name="header"># Serie</f:facet>
 							<h:outputText value="#{res.codigo.numSerie}" rendered="#{res.codigo!=null}" readonly="true" />
 						</rich:column>
@@ -190,6 +195,11 @@
 						<rich:column><!-- <rich:spacer width="5px;" ></rich:spacer> -->
 							<f:facet name="header">Pieza reparacion</f:facet>
 								<h:outputText value="#{res.piezaReparacion.nombre}" readonly="true"  />
+						</rich:column>
+						
+						<rich:column>
+							<f:facet name="header">Pieza referencia</f:facet>
+								<h:outputText value="#{res.piezaReparacion.referencia}" readonly="true"  />
 						</rich:column>
 						
 						<rich:column>
@@ -248,6 +258,91 @@
 							</h:panelGrid> -->	
 						</f:facet>
 					</rich:dataTable>
+					
+					<rich:spacer height="50px;" ></rich:spacer>
+					
+					<h:panelGrid columns="2" style="margin:0 auto;">
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty reparacionExternaHome.listaItemsIngreso}" >
+							<ui:define name="label"># Factura/Identificador:</ui:define>
+							<h:inputText value="#{reparacionExternaHome.numFacturaCompra}"  >
+								<a:support event="onchange" ajaxSingle="true" ></a:support>
+							</h:inputText>
+						</s:decorate>
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty reparacionExternaHome.listaItemsIngreso}" >
+							<a:commandButton value="Finalizar Re-ingreso" action="#{reparacionExternaHome.finalizarReingreso()}" reRender="formD" >
+							</a:commandButton>
+						</s:decorate>
+						
+					</h:panelGrid>
+					
+					<rich:spacer height="10px;" ></rich:spacer>
+					
+					<rich:dataTable var="res" value="#{reparacionExternaHome.listaItemsIngreso}"
+							id="_tableIngreso" rendered="#{not empty reparacionExternaHome.listaItemsIngreso}"
+							align="center" rowClasses="tblEven,tblOdd"
+							onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+							onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+							headerClass="tablaHeader" footerClass="tableScroll">
+							
+							<f:facet name="header">Productos para re-ingreso</f:facet>
+							
+							<rich:column>
+								<f:facet name="header">#{app.compra_itemlist_col2}</f:facet>
+								<h:outputText value="#{res.aparato.nombre}" />
+							</rich:column>
+							
+							<rich:column>
+								<f:facet name="header">#{app.compra_itemlist_col1}</f:facet>
+								<h:outputText value="#{res.aparato.referencia}" />
+							</rich:column>
+							
+							<rich:column>
+								<f:facet name="header"># Serie</f:facet>
+								<h:outputText value="#{res.codigo.numSerie}" rendered="#{res.codigo!=null}" readonly="true" />
+							</rich:column>
+						
+							<rich:column><!-- <rich:spacer width="5px;" ></rich:spacer> -->
+								<f:facet name="header">Pieza reparacion</f:facet>
+								<h:outputText value="#{res.piezaReparacion.nombre}" readonly="true"  />
+							</rich:column>
+						
+							<rich:column>
+								<f:facet name="header">Pieza referencia</f:facet>
+									<h:outputText value="#{res.piezaReparacion.referencia}" readonly="true"  />
+							</rich:column>
+							
+							<rich:column>
+								<f:facet name="header">Nuevo # Serie</f:facet>
+									<h:inputText value="#{res.nuevoCodigo.numSerie}"  />
+							</rich:column>
+							
+							<!--<rich:column>
+								<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
+								<h:inputText value="#{res.cantidad}" size="8"
+									onkeypress="return restrictNumDigits(event, this, 8);">
+									<a:support event="onblur"
+										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
+										eventsQueue="q1" reRender="_table" />
+								</h:inputText>
+							</rich:column>-->
+							
+							<!-- <rich:column>
+								<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+								<h:inputText value="#{res.costoUnitario}" size="8"
+									readonly="true">
+									<a:support event="onblur"
+										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
+										eventsQueue="q1" reRender="_table" />
+								</h:inputText>
+							</rich:column> -->
+							
+							<f:facet name="footer">
+							</f:facet>
+							
+						</rich:dataTable>
+					
 				</fieldset>
 			</h:form>
 			

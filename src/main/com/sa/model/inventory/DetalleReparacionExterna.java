@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -36,6 +37,10 @@ public class DetalleReparacionExterna implements Serializable {
 	private Date fechaModificacion;
 	private String comentario;
 	private String estado;
+	
+	//No son parte de la db
+	private CodProducto nuevoCodigo = new CodProducto();
+	private int candidad;
 	
 	
 	@Id
@@ -131,6 +136,22 @@ public class DetalleReparacionExterna implements Serializable {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+	
+	@Transient
+	public CodProducto getNuevoCodigo() {
+		return nuevoCodigo;
+	}
+	public void setNuevoCodigo(CodProducto nuevoCodigo) {
+		this.nuevoCodigo = nuevoCodigo;
+	}
+	
+	@Transient
+	public int getCandidad() {
+		return candidad;
+	}
+	public void setCandidad(int candidad) {
+		this.candidad = candidad;
 	}
 	
 	

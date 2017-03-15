@@ -12,15 +12,20 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import com.sa.kubekit.action.inventory.CompraHome;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.inventory.CodProducto;
+import com.sa.model.inventory.Compra;
 import com.sa.model.inventory.DetalleReparacionExterna;
 import com.sa.model.inventory.Inventario;
+import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.Proveedor;
 import com.sa.model.inventory.ReparacionExterna;
+import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Empresa;
+import com.sa.model.security.Sucursal;
 
 @Name("reparacionExternaHome")
 @Scope(ScopeType.CONVERSATION)
@@ -35,6 +40,9 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private int contadorDetalle=0;
 	private List<CodProducto> listaCodigos;
 	private DetalleReparacionExterna nuevoDetalle;
+	private List<DetalleReparacionExterna> listaItemsIngreso = new ArrayList<DetalleReparacionExterna>();
+	private String numFacturaCompra="";
+	private List<Item> listaItemsCompra = new ArrayList<Item>();
 
 	@In
 	private LoginUser loginUser;
@@ -42,6 +50,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@In(required = false, create = true)
 	@Out
 	private DetalleReparacionExternaHome detalleReparacionExternaHome;
+	
+	@In(required = false, create = true)
+	@Out
+	private CompraHome compraHome;
 	
 	
 	public void load()
@@ -110,8 +122,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	
 	public void seleccionarProveedor(Proveedor proveedor)
-	{
-		
+	{	
 		instance.setProveedor(proveedor);
 	}
 	
@@ -216,14 +227,21 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	public void enviarReparacion()
 	{
-		instance.setEstado("ENV");
+		instance.setEstado("Enviada");
+		instance.setFechaEnvio(new Date());
 		System.out.println("Entro a enviar a reparacion");
 		modify();
 	}
 	
 	public void agregarCompra(DetalleReparacionExterna item)
 	{
+		if(listaItemsIngreso.contains(item))
+		{
+			FacesMessages.instance().add(Severity.WARN,"El item ya fue seleccionado");
+			return;
+		}
 		
+		listaItemsIngreso.add(item);
 	}
 	
 	public void desecharItem(DetalleReparacionExterna item)
@@ -232,6 +250,110 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		detalleReparacionExternaHome.setInstance(item);
 		detalleReparacionExternaHome.modify();
+	}
+	
+	
+	public void finalizarReingreso()
+	{
+		
+		if(numFacturaCompra.equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Especifique identificador para ingreso-compra");
+			return;
+		}
+		
+		
+		//->Llenar la lista tipo items para ingresar compra
+		
+		for(DetalleReparacionExterna item: listaItemsIngreso)
+		{
+			
+			Item itemCompra = new Item();
+			itemCompra.setCantidad(1);
+			itemCompra.setItemId(new ItemId());
+			
+			if(item.getPiezaReparacion()==null)
+			{
+				//->Validar si requiere ingreso de nuevo codigo
+				if(item.getNuevoCodigo()!=null)
+					itemCompra.setCodProducto(item.getNuevoCodigo());
+				else
+					itemCompra.setCodProducto(item.getCodigo());
+			
+				itemCompra.setCostoUnitario(item.getAparato().getCosto());
+				itemCompra.setInventario(cargarInventarioProducto(item.getAparato()));
+				
+				compraHome.cargarListaCodigos(itemCompra);
+			}
+			else
+			{
+				itemCompra.setCostoUnitario(item.getPiezaReparacion().getCosto());
+				itemCompra.setInventario(cargarInventarioProducto(item.getPiezaReparacion()));
+			}
+			
+			
+			
+			
+			
+			listaItemsCompra.add(itemCompra);
+			
+		}
+		
+		compraHome.setInstance(new Compra());
+		compraHome.getInstance().setFecha(new Date());
+		compraHome.getInstance().setNumeroFactura(numFacturaCompra);
+		compraHome.getInstance().setSucursal(obtenerSucursalPrincipal());
+		compraHome.getInstance().setFormaPago("Efectivo");
+		compraHome.getInstance().setTipoMovimiento("E");
+		
+		compraHome.setItemsAgregados(listaItemsCompra);
+		
+		
+		if(!compraHome.save())
+		{
+			System.out.println("No se pudo guardar la compra");
+			return;
+		}
+		else
+		{
+			System.out.println("Se guardo la compra");
+		}
+		
+		
+		
+		for(DetalleReparacionExterna item: listaItemsIngreso)
+		{
+			item.setEstado("Re-ingresado");
+			item.setFechaRecibido(new Date());
+			item.setFechaModificacion(new Date());
+			
+			detalleReparacionExternaHome.setInstance(item);
+			detalleReparacionExternaHome.modify();
+		}
+		
+		//->Ingresar primero la compra
+		
+		//->Registrar los items
+		
+		
+	}
+	
+	public Sucursal obtenerSucursalPrincipal()
+	{
+		
+		return (Sucursal)getEntityManager().createQuery("SELECT s FROM Sucursal s where s.id=103").getSingleResult();
+	}
+	
+	
+	public Inventario cargarInventarioProducto(Producto producto)
+	{
+		Inventario inv = (Inventario) getEntityManager()
+				.createQuery(
+						"SELECT i FROM Inventario i WHERE i.sucursal = :suc AND i.producto = :prd")
+				.setParameter("suc", obtenerSucursalPrincipal())
+				.setParameter("prd", producto).getSingleResult();
+		
+		return inv;
 	}
 	
 
@@ -261,7 +383,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		System.out.println("Entro a possave");
-	}
+	}	
 
 	@Override
 	public void posModify() {
@@ -282,6 +404,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			if(instance.getEstado().equals("ENV"))
 			{
 				det.setEstado("Enviado");
+				det.setFechaModificacion(new Date());
 				detalleReparacionExternaHome.modify();
 				System.out.println("Entro a actualizar el detalle a enviado");
 			}
@@ -357,6 +480,23 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 
 	public void setListaCodigos(List<CodProducto> listaCodigos) {
 		this.listaCodigos = listaCodigos;
+	}
+
+	public String getNumFacturaCompra() {
+		return numFacturaCompra;
+	}
+
+	public void setNumFacturaCompra(String numFacturaCompra) {
+		this.numFacturaCompra = numFacturaCompra;
+	}
+
+	public List<DetalleReparacionExterna> getListaItemsIngreso() {
+		return listaItemsIngreso;
+	}
+
+	public void setListaItemsIngreso(
+			List<DetalleReparacionExterna> listaItemsIngreso) {
+		this.listaItemsIngreso = listaItemsIngreso;
 	}
 
 	

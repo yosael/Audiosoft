@@ -275,7 +275,7 @@ public void cargarCompras() {
 			}
 			
 				
-		}
+		}System.out.println("Llego al final de presave compra");
 		return true;
 	}
 
@@ -314,6 +314,8 @@ public void cargarCompras() {
 
 	@Override
 	public void posSave() {
+		
+		System.out.println("Entro al posave de compra");
 		for(Item item: itemsAgregados){
 			item.getItemId().setMovimientoId(instance.getId());
 			item.setMovimiento(instance);
@@ -343,7 +345,7 @@ public void cargarCompras() {
 		getEntityManager().flush();
 		getEntityManager().refresh(instance);
 		cargarCompras();
-		
+		System.out.println("Llego al final de possave compra");
 	}
 
 	@Override

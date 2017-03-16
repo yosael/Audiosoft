@@ -156,7 +156,7 @@
 								ajaxSingle="true"
 								action="#{reparacionExternaHome.cargarNuevoDetalle()}"
 								reRender="mDetalle" styleClass="addBtn"
-								rendered="#{reparacionExternaHome.instance.estado=='Generada'}"
+								rendered="#{reparacionExternaHome.instance.estado=='Generada' or reparacionExternaHome.instance.id==null}"
 								value="Agregar Detalle">
 							</a:commandButton>
 						</s:decorate>

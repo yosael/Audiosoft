@@ -191,7 +191,7 @@ public class MovimientoHome extends KubeDAO<Movimiento>{
 					item.setCantidad(item.getInventario().getCantidadActual());
 				}
 			}
-			
+			System.out.println("Id ITEM em POSAVE"+item.getItemId());
 			item.getItemId().setMovimientoId(instance.getId());
 			item.setMovimiento(instance);
 			itemHome.setInstance(item);

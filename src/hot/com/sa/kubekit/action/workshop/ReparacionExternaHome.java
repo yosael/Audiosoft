@@ -13,6 +13,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.inventory.CompraHome;
+import com.sa.kubekit.action.inventory.MovimientoHome;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.inventory.CodProducto;
@@ -20,6 +21,7 @@ import com.sa.model.inventory.Compra;
 import com.sa.model.inventory.DetalleReparacionExterna;
 import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
+import com.sa.model.inventory.Movimiento;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.Proveedor;
 import com.sa.model.inventory.ReparacionExterna;
@@ -42,7 +44,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private DetalleReparacionExterna nuevoDetalle;
 	private List<DetalleReparacionExterna> listaItemsIngreso = new ArrayList<DetalleReparacionExterna>();
 	private String numFacturaCompra="";
-	private List<Item> listaItemsCompra = new ArrayList<Item>();
+	private List<Item> listaItemsMovimiento = new ArrayList<Item>();
 
 	@In
 	private LoginUser loginUser;
@@ -55,6 +57,9 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@Out
 	private CompraHome compraHome;
 	
+	@In(required = false, create = true)
+	@Out
+	private MovimientoHome movimientoHome;
 	
 	public void load()
 	{
@@ -66,6 +71,21 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			setDetalleReparacion(instance.getDetalleReparacion());
 			
 			System.out.println("Estado reparacion externa"+instance.getEstado());
+			
+			if(instance.getEstado().equals("Generada"))
+			{
+				for(DetalleReparacionExterna det:instance.getDetalleReparacion())
+				{
+					if(nuevoDetalle.getPiezaReparacion()==null)//El movimiento tomara los productos del inventario donde se este agregando el item.
+					{
+						movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getAparato())); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
+					}
+					else 
+					{
+						movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
+					}
+				}
+			}
 			
 		}catch (Exception e) {
 			
@@ -158,11 +178,20 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 	}
 	
-	public void agregarDetalle()
+	public void agregarDetalle() //NOTA: La validacion que realiza el movimiento es que no se debe repetir el items 2 veeces, es posible que esta validacion no sea requerida para la reparacion
 	{
 		nuevoDetalle.setFechaModificacion(new Date());
-		nuevoDetalle.setEstado("GEN");
+		nuevoDetalle.setEstado("Generada");
 		detalleReparacion.add(nuevoDetalle);
+		
+		if(nuevoDetalle.getPiezaReparacion()==null)//El movimiento tomara los productos del inventario donde se este agregando el item.
+		{
+			movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getAparato())); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
+		}
+		else 
+		{
+			movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
+		}
 	}
 
 	@Override
@@ -185,7 +214,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		List<ReparacionExterna> reparacionExistente = new ArrayList<ReparacionExterna>();
-		reparacionExistente = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r Where r.estado='GEN'").getResultList();
+		reparacionExistente = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r Where r.estado='Generada'").getResultList();
 		
 		if(reparacionExistente!=null && reparacionExistente.size()>0)
 		{
@@ -230,11 +259,33 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		instance.setEstado("Enviada");
 		instance.setFechaEnvio(new Date());
 		System.out.println("Entro a enviar a reparacion");
+		
 		modify();
+		
+		//Crear movimiento de salida y reducir inventarios. 
+		Movimiento movimiento = new Movimiento();
+		
+		movimiento.setObservacion("Envio a reparacion externa");
+		movimiento.setTipoMovimiento("S");
+		movimiento.setRazon("RE");
+		movimiento.setSucursal(loginUser.getUser().getSucursal());
+		movimiento.setFecha(new Date());
+		movimiento.setUsuario(loginUser.getUser());
+		
+		movimientoHome.setInstance(movimiento);
+		movimientoHome.save();
+		
+		salidaCodigo();
+		
+		
+		System.out.println("Finalizo envio");
+		
+		
 	}
 	
 	public void agregarCompra(DetalleReparacionExterna item)
 	{
+		System.out.println("id aparatp"+item.getAparato().getId());
 		if(listaItemsIngreso.contains(item))
 		{
 			FacesMessages.instance().add(Severity.WARN,"El item ya fue seleccionado");
@@ -282,6 +333,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 				itemCompra.setCostoUnitario(item.getAparato().getCosto());
 				itemCompra.setInventario(cargarInventarioProducto(item.getAparato()));
+				itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getAparato()).getId());
+				
 				
 				compraHome.cargarListaCodigos(itemCompra);
 			}
@@ -289,13 +342,14 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			{
 				itemCompra.setCostoUnitario(item.getPiezaReparacion().getCosto());
 				itemCompra.setInventario(cargarInventarioProducto(item.getPiezaReparacion()));
+				itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getPiezaReparacion()).getId());
 			}
 			
 			
 			
 			
 			
-			listaItemsCompra.add(itemCompra);
+			listaItemsMovimiento.add(itemCompra);
 			
 		}
 		
@@ -305,8 +359,9 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		compraHome.getInstance().setSucursal(obtenerSucursalPrincipal());
 		compraHome.getInstance().setFormaPago("Efectivo");
 		compraHome.getInstance().setTipoMovimiento("E");
-		
-		compraHome.setItemsAgregados(listaItemsCompra);
+		compraHome.getInstance().setRazon("C");
+		compraHome.setItemsAgregados(listaItemsMovimiento);
+		compraHome.actualizarSubtotal();
 		
 		
 		if(!compraHome.save())
@@ -331,9 +386,29 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			detalleReparacionExternaHome.modify();
 		}
 		
+		
+		instance.setEstado("Recibiendo");
+		
 		//->Ingresar primero la compra
 		
 		//->Registrar los items
+		
+		
+	}
+	
+	public void salidaCodigo()
+	{
+		
+		for(DetalleReparacionExterna det: instance.getDetalleReparacion())
+		{
+			
+			if(det.getPiezaReparacion()==null)
+			{
+				det.getCodigo().setEstado("INA");
+				getEntityManager().merge(codigo);
+			}
+			
+		}
 		
 		
 	}
@@ -351,6 +426,21 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				.createQuery(
 						"SELECT i FROM Inventario i WHERE i.sucursal = :suc AND i.producto = :prd")
 				.setParameter("suc", obtenerSucursalPrincipal())
+				.setParameter("prd", producto).getSingleResult();
+		
+		return inv;
+	}
+	
+	
+	public Inventario cargarInventarioEnvio(Producto producto) //Al existir la sucursal en el campo del detalle, sera necesario enviar como parametro la sucursal. 
+	{
+		
+		System.out.println("Sucursal Usuario"+loginUser.getUser().getSucursal().getNombre());
+		
+		Inventario inv = (Inventario) getEntityManager()
+				.createQuery(
+						"SELECT i FROM Inventario i WHERE i.sucursal = :suc AND i.producto = :prd")
+				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("prd", producto).getSingleResult();
 		
 		return inv;
@@ -401,7 +491,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				
 			}
 			
-			if(instance.getEstado().equals("ENV"))
+			if(instance.getEstado().equals("Enviada"))//Revisar si peligra q ingrese dos vees
 			{
 				det.setEstado("Enviado");
 				det.setFechaModificacion(new Date());

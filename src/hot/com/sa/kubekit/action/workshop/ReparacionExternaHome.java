@@ -71,23 +71,34 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			setDetalleReparacion(instance.getDetalleReparacion());
 			
 			System.out.println("Estado reparacion externa"+instance.getEstado());
+			System.out.println("Curtomer number"+instance.getCustomerNumber());
 			
-			if(instance.getEstado().equals("Generada"))
+			if(instance.getEstado().equals("Generada") && getDetalleReparacion().size()>0)
 			{
+				System.out.println("Entro a condicion detalle");
 				for(DetalleReparacionExterna det:instance.getDetalleReparacion())
 				{
-					if(nuevoDetalle.getPiezaReparacion()==null)//El movimiento tomara los productos del inventario donde se este agregando el item.
+					System.out.println("Entro al for");
+					if(det.getPiezaReparacion()==null)//El movimiento tomara los productos del inventario donde se este agregando el item.
 					{
-						movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getAparato())); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
+						System.out.println("Entro a la primera condicion");
+						movimientoHome.agregarProducto(cargarInventarioEnvio(det.getAparato())); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
 					}
 					else 
 					{
-						movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
+						System.out.println("Entro a la segunda condicion");
+						movimientoHome.agregarProducto(cargarInventarioEnvio(det.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
 					}
 				}
 			}
 			
+			System.out.println("Curtomer number2"+instance.getCustomerNumber());
+			
 		}catch (Exception e) {
+			
+			System.out.println("Entro a catch load");
+			System.out.println(e.getLocalizedMessage());
+			System.out.println(e.getCause());
 			
 			//clearInstance();
 			setInstance(new ReparacionExterna());
@@ -262,6 +273,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		modify();
 		
+		modificarDetalles();
+		
 		//Crear movimiento de salida y reducir inventarios. 
 		Movimiento movimiento = new Movimiento();
 		
@@ -281,6 +294,34 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		System.out.println("Finalizo envio");
 		
 		
+	}
+	
+	public void modificarDetalles()
+	{
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			
+			if(det.getIdDetalleRep()==null)//Si el detalle no esta registrado se registra
+			{
+				
+				det.setReparacionExterna(instance);
+				detalleReparacionExternaHome.setInstance(det);
+				detalleReparacionExternaHome.save();
+				System.out.println("Entro a registrar nuevo detalle");
+				
+			}
+			
+			if(instance.getEstado().equals("Enviada"))//Revisar si peligra q ingrese dos vees
+			{
+				det.setEstado("Enviado");
+				det.setFechaModificacion(new Date());
+				detalleReparacionExternaHome.modify();
+				System.out.println("Entro a actualizar el detalle a enviado");
+			}
+
+		}
+		
+		System.out.println("Entro a modificar detalles");
 	}
 	
 	public void agregarCompra(DetalleReparacionExterna item)
@@ -325,18 +366,29 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 			if(item.getPiezaReparacion()==null)
 			{
-				//->Validar si requiere ingreso de nuevo codigo
-				if(item.getNuevoCodigo()!=null)
-					itemCompra.setCodProducto(item.getNuevoCodigo());
-				else
-					itemCompra.setCodProducto(item.getCodigo());
-			
+				
 				itemCompra.setCostoUnitario(item.getAparato().getCosto());
 				itemCompra.setInventario(cargarInventarioProducto(item.getAparato()));
 				itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getAparato()).getId());
 				
+				//->Validar si requiere ingreso de nuevo codigo
+				if(item.getNuevoCodigo()!=null)
+				{
+					itemCompra.setCodProducto(item.getNuevoCodigo());
+					System.out.println("Nuevo codigo"+itemCompra.getCodProducto().getNumSerie());
+					
+					compraHome.cargarListaCodigosNuevo(itemCompra,item.getNuevoCodigo());
+				}
+				else
+				{
+					itemCompra.setCodProducto(item.getCodigo());
+					
+					compraHome.cargarListaCodigos(itemCompra);
+					
+				}
+			
+
 				
-				compraHome.cargarListaCodigos(itemCompra);
 			}
 			else
 			{
@@ -375,7 +427,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		
-		
+		int reingresados=0;
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
 			item.setEstado("Re-ingresado");
@@ -384,10 +436,32 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 			detalleReparacionExternaHome.setInstance(item);
 			detalleReparacionExternaHome.modify();
+			reingresados++;
+		}
+		
+		int enviados=0;
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			if(det.getEstado().equals("Enviado"))
+				enviados++;
+			else if(det.getEstado().equals("Re-ingresado"))
+				reingresados++;
+			
+		}
+		
+		if(enviados<reingresados)
+		{
+			instance.setEstado("Recibiendo");
+		}
+		else
+		{
+			instance.setEstado("Recibido");
 		}
 		
 		
-		instance.setEstado("Recibiendo");
+		modify();
+		
+		listaItemsIngreso.clear();
 		
 		//->Ingresar primero la compra
 		
@@ -399,18 +473,20 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void salidaCodigo()
 	{
 		
-		for(DetalleReparacionExterna det: instance.getDetalleReparacion())
+		for(DetalleReparacionExterna det: getDetalleReparacion())
 		{
 			
 			if(det.getPiezaReparacion()==null)
 			{
+				System.out.println("Entro a cambiar codigo*********");
 				det.getCodigo().setEstado("INA");
-				getEntityManager().merge(codigo);
+				getEntityManager().merge(det.getCodigo());
+				getEntityManager().flush();
 			}
 			
 		}
 		
-		
+		System.out.println("Finalizo salida codigo");
 	}
 	
 	public Sucursal obtenerSucursalPrincipal()
@@ -478,28 +554,6 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@Override
 	public void posModify() {
 		
-		for(DetalleReparacionExterna det: detalleReparacion)
-		{
-			
-			if(det.getIdDetalleRep()==null)//Si el detalle no esta registrado se registra
-			{
-				
-				det.setReparacionExterna(instance);
-				detalleReparacionExternaHome.setInstance(det);
-				detalleReparacionExternaHome.save();
-				System.out.println("Entro a registrar nuevo detalle");
-				
-			}
-			
-			if(instance.getEstado().equals("Enviada"))//Revisar si peligra q ingrese dos vees
-			{
-				det.setEstado("Enviado");
-				det.setFechaModificacion(new Date());
-				detalleReparacionExternaHome.modify();
-				System.out.println("Entro a actualizar el detalle a enviado");
-			}
-
-		}
 		
 		System.out.println("Entro a posModify");
 		

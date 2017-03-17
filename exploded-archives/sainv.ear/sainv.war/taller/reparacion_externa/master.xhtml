@@ -156,7 +156,7 @@
 								ajaxSingle="true"
 								action="#{reparacionExternaHome.cargarNuevoDetalle()}"
 								reRender="mDetalle" styleClass="addBtn"
-								rendered="#{reparacionExternaHome.instance.estado=='Generada'}"
+								rendered="#{reparacionExternaHome.instance.estado=='Generada' or reparacionExternaHome.instance.idReparacionExterna==null}"
 								value="Agregar Detalle">
 							</a:commandButton>
 						</s:decorate>
@@ -315,7 +315,7 @@
 							
 							<rich:column>
 								<f:facet name="header">Nuevo # Serie</f:facet>
-									<h:inputText value="#{res.nuevoCodigo.numSerie}"  />
+									<h:inputText value="#{res.nuevoCodigo.numSerie}" rendered="#{res.piezaReparacion==null}" />
 							</rich:column>
 							
 							<!--<rich:column>

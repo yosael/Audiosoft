@@ -167,8 +167,10 @@ public void cargarCompras() {
 					.setParameter("mov", prdItm.getMovimiento())
 					.getResultList();
 			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+			System.out.println("Asigno el valor a la lista codigo");
 		} else {
 			codsProds = lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
+			System.out.println("NOO Asigno el valor a la lista codigo");
 		}
 		
 		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
@@ -177,11 +179,27 @@ public void cargarCompras() {
 			codsProds = new ArrayList<CodProducto>();
 		
 		while(codsProds.size() < prdItm.getCantidad()) {
+			System.out.println("Entro al while");
 			CodProducto codPrd = new CodProducto();
 			codPrd.setEstado("ACT");
 			codPrd.setInventario(prdItm.getInventario());
 			codsProds.add(codPrd);
 		}
+				
+		currCodigos = codsProds;
+		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+	}
+	
+	public void cargarListaCodigosNuevo(Item prdItm,CodProducto c)
+	{
+		selectedItem = prdItm;
+		ArrayList<CodProducto> codsProds = new ArrayList<CodProducto>();
+		
+		CodProducto codPrd = c;
+		codPrd.setEstado("ACT");
+		codPrd.setInventario(prdItm.getInventario());
+		codsProds.add(codPrd);
+		
 				
 		currCodigos = codsProds;
 		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
@@ -228,19 +246,12 @@ public void cargarCompras() {
 				tmpItm.setCodsSerie("");
 				//Verificamos que no vengan vacios los codigos ni repetidos
 				for(CodProducto tmpCod : lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia())) {
-				
+					System.out.println("Num Serie for"+tmpCod.getNumSerie());
 					if(tmpCod.getNumSerie() != null && !tmpCod.getNumSerie().trim().equals("")) 
 						tmpItm.setCodsSerie(tmpItm.getCodsSerie().concat(tmpCod.getNumSerie()+","));
 					
 					if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && 
 							(tmpCod.getNumSerie() == null || tmpCod.getNumSerie().trim().equals(""))) {
-						
-						if(codsStrPrd.contains(tmpCod.getNumSerie())) {
-							FacesMessages.instance().add(Severity.WARN,
-									sainv_messages.get("compra_error_prdcoddupli"));
-							return false;
-						} else
-							codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
 						
 						FacesMessages.instance().add(Severity.WARN,
 								sainv_messages.get("compra_error_prdnoser"));
@@ -254,6 +265,13 @@ public void cargarCompras() {
 						return false;
 					} 
 					
+					if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+						System.out.println("Entro a if raro");
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdcoddupli"));
+						return false;
+					} else
+						codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
 					
 				}
 							

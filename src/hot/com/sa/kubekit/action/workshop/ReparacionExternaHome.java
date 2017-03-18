@@ -45,6 +45,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private List<DetalleReparacionExterna> listaItemsIngreso = new ArrayList<DetalleReparacionExterna>();
 	private String numFacturaCompra="";
 	private List<Item> listaItemsMovimiento = new ArrayList<Item>();
+	private String siguienteEstado="";
 
 	@In
 	private LoginUser loginUser;
@@ -204,6 +205,34 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
 		}
 	}
+	
+	public void modificarDetalleIngresada()///
+	{
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			
+			if(det.getIdDetalleRep()==null)//Si el detalle no esta registrado se registra
+			{
+				
+				det.setReparacionExterna(instance);
+				det.setEstado("Generada");
+				detalleReparacionExternaHome.setInstance(det);
+				detalleReparacionExternaHome.save();
+				System.out.println("Entro a registrar nuevo detalle");
+				
+			}
+			
+			/*if(instance.getEstado().equals("Ingresado"))
+			{
+				det.setEstado("Enviado");
+				det.setFechaModificacion(new Date());
+				detalleReparacionExternaHome.modify();
+				System.out.println("Entro a actualizar el detalle a enviado");
+			}*/
+
+		}
+	}
+	
 
 	@Override
 	public boolean preSave() {
@@ -296,7 +325,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 	}
 	
-	public void modificarDetalles()
+	public void modificarDetalles()//Actualizar el estado de los detalles cuando se envia
 	{
 		for(DetalleReparacionExterna det: detalleReparacion)
 		{
@@ -305,6 +334,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			{
 				
 				det.setReparacionExterna(instance);
+				det.setEstado("Enviado");
 				detalleReparacionExternaHome.setInstance(det);
 				detalleReparacionExternaHome.save();
 				System.out.println("Entro a registrar nuevo detalle");
@@ -427,6 +457,16 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		
+		int enviados=0;
+		for(DetalleReparacionExterna det: detalleReparacion)
+		{
+			if(det.getEstado().equals("Enviado"))
+				enviados++;
+			/*else if(det.getEstado().equals("Re-ingresado"))
+				reingresados++;*/
+			
+		}
+		
 		int reingresados=0;
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
@@ -439,15 +479,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			reingresados++;
 		}
 		
-		int enviados=0;
-		for(DetalleReparacionExterna det: detalleReparacion)
-		{
-			if(det.getEstado().equals("Enviado"))
-				enviados++;
-			else if(det.getEstado().equals("Re-ingresado"))
-				reingresados++;
-			
-		}
+		
+		
+		System.out.println("Tamanio de listaItemsIngreso"+listaItemsIngreso.size());
+		System.out.println("Tamanio lista detalleReparacion"+detalleReparacion.size());
 		
 		if(enviados<reingresados)
 		{
@@ -491,7 +526,6 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	public Sucursal obtenerSucursalPrincipal()
 	{
-		
 		return (Sucursal)getEntityManager().createQuery("SELECT s FROM Sucursal s where s.id=103").getSingleResult();
 	}
 	
@@ -554,6 +588,12 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	@Override
 	public void posModify() {
 		
+		
+		if(instance.getEstado().equals("Generada"))
+		{
+			modificarDetalleIngresada();
+			System.out.println("Entro a modificar detalles");
+		}
 		
 		System.out.println("Entro a posModify");
 		
@@ -641,6 +681,14 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void setListaItemsIngreso(
 			List<DetalleReparacionExterna> listaItemsIngreso) {
 		this.listaItemsIngreso = listaItemsIngreso;
+	}
+
+	public String getSiguienteEstado() {
+		return siguienteEstado;
+	}
+
+	public void setSiguienteEstado(String siguienteEstado) {
+		this.siguienteEstado = siguienteEstado;
 	}
 
 	

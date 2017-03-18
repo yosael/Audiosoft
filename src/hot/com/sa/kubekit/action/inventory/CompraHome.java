@@ -49,8 +49,12 @@ public class CompraHome extends KubeDAO<Compra>{
 	
 	private List<Item> itemsAgregados = new ArrayList<Item>();
 	private List<Inventario> productosAgregados = new ArrayList<Inventario>();
+	private Sucursal sucursalSelected = new Sucursal();
 	
 	private String formaPago="0";
+	
+	@In(required=false,create=true)
+	private InventarioHome inventarioHome;
 	
 	@Override
 	public void create() {
@@ -365,6 +369,115 @@ public void cargarCompras() {
 		cargarCompras();
 		System.out.println("Llego al final de possave compra");
 	}
+	
+	
+	public void cambiarSucursal()
+	{
+		Inventario nuevoInventario;
+		
+		//getEntityManager().getTransaction().begin();
+		int contador=0;
+		for(Item item: itemsAgregados)
+		{
+			
+			nuevoInventario = new Inventario();
+			/*item.getInventario();
+			item.getItemId().getInventarioId();
+			item.getCantidad();*/
+			
+			
+			//Nuevo Inventario
+			//Nuevo idInventario
+			
+			/*try {*/
+				
+				//getEntityManager().getTransaction();
+				nuevoInventario = obtenerInventarioSucursal(item);
+				nuevoInventario.setCantidadActual(nuevoInventario.getCantidadActual()+item.getCantidad());
+				//nuevoInventario=getEntityManager().merge(nuevoInventario);
+				inventarioHome.setInstance(nuevoInventario);
+				inventarioHome.modify();
+				System.out.println("nuevo"+nuevoInventario.getCantidadActual());
+				System.out.println("nuevo id"+nuevoInventario.getId());
+				//getEntityManager().merge(nuevoInventario);
+				
+				/*getEntityManager().createNativeQuery("update inventario set cantidad_actual = cantidad_actual + :cant " +
+						"where id = :id")
+				.setParameter("cant", item.getCantidad())
+				.setParameter("id", nuevoInventario.getId())
+				.executeUpdate();*/
+				
+				//getEntityManager().flush();
+				
+				item.getInventario().setCantidadActual(item.getInventario().getCantidadActual()-item.getCantidad());
+				//item.setInventario(getEntityManager().merge(item.getInventario()));
+				//getEntityManager().merge(item);
+				inventarioHome.setInstance(item.getInventario());
+				inventarioHome.modify();
+				
+				/*getEntityManager().createQuery("update item set inventario_id = :idInventario " +
+						"where inventario_id = :id and movimiento_id=:id2")
+				.setParameter("idInventario", nuevoInventario.getId())
+				.setParameter("id", item.getItemId().getInventarioId())
+				.setParameter("id2", item.getItemId().getMovimientoId())
+				.executeUpdate();*/
+				
+				
+				/*getEntityManager().createNativeQuery("update inventario set cantidad_actual = cantidad_actual - :cant " +
+						"where id = :id")
+				.setParameter("cant", item.getCantidad())
+				.setParameter("id", item.getInventario().getId())
+				.executeUpdate();*/
+				
+			//	getEntityManager().flush();
+				
+				item.setInventario(nuevoInventario);
+				item.getItemId().setInventarioId(nuevoInventario.getId());
+				//item=getEntityManager().merge(item);
+				//getEntityManager().merge(item);
+				
+				itemHome.setInstance(item);
+				itemHome.modify();
+				
+				
+				
+			//	getEntityManager().flush();
+				
+				
+				/*getEntityManager().get
+				getEntityManager().flush();*/
+				
+				
+			/*} catch (Exception e) {
+				
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema, intente de nuevo");
+				System.out.println(e.getCause());
+				return;
+
+			}*/
+			contador++;
+		}
+		
+		instance.setSucursal(sucursalSelected);
+		modify();
+		
+		//getEntityManager().getTransaction().commit();
+		//getEntityManager().close();
+		System.out.println("Contador"+contador);
+		FacesMessages.instance().add(Severity.INFO,"Actualizado con exito");
+		
+	}
+	
+	public Inventario obtenerInventarioSucursal(Item item)
+	{
+		Inventario inv = (Inventario) getEntityManager()
+				.createQuery(
+						"SELECT i FROM Inventario i WHERE i.sucursal = :suc AND i.producto = :prd")
+				.setParameter("suc", sucursalSelected)
+				.setParameter("prd", item.getInventario().getProducto()).getSingleResult();
+		
+		return inv;
+	}
 
 	@Override
 	public void posModify() {
@@ -474,5 +587,15 @@ public void cargarCompras() {
 	public void setResultList(List<Compra> resultList) {
 		this.resultList = resultList;
 	}
+
+	public Sucursal getSucursalSelected() {
+		return sucursalSelected;
+	}
+
+	public void setSucursalSelected(Sucursal sucursalSelected) {
+		this.sucursalSelected = sucursalSelected;
+	}
+	
+	
 
 }

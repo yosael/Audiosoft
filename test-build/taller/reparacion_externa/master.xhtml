@@ -137,11 +137,11 @@
 							styleClass="saveBtn" value="Guardar" />
 							
 						<a:commandButton action="#{reparacionExternaHome.modify()}"
-							reRender="formD" rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado!='Enviada'}"
+							reRender="formD" rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado=='Generada'}"
 							styleClass="modifyBtn" value="Actualizar" />
 							
 						<a:commandButton action="#{reparacionExternaHome.enviarReparacion()}"
-							reRender="formD" styleClass="upBtn" rendered="#{reparacionExternaHome.instance.estado=='Generada'}"
+							reRender="formD" styleClass="upBtn" rendered="#{reparacionExternaHome.instance.estado=='Generada' and not empty reparacionExternaHome.detalleReparacion}"
 							value="Enviar a reparacion" />
 							
 						
@@ -229,7 +229,7 @@
 						<rich:column rendered="#{reparacionExternaHome.instance.estado=='Generada'}" >
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink reRender="formD" eventsQueue="q1"
-								action="#{reparacionExternaHome.removerItem(res)}" ajaxSingle="true">
+								action="#{reparacionExternaHome.removerDetalle(res)}" ajaxSingle="true">
 								<h:graphicImage value="/kubeImg/table_delete16.png" />
 							</a:commandLink>
 							<!-- <h:inputHidden value="#{reparacionExternaHome.idDetalle(res)}" />-->
@@ -350,7 +350,6 @@
 			
 			<rich:modalPanel id="addDetalle" width="900" moveable="false"
 				autosized="true" top="50px"
-				onmaskclick="#{rich:component('addDetalle')}.hide();"
 				onbeforeshow="activeModal.setActiveModalPanel('addDetalle');">
 				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
 				<f:facet name="controls">

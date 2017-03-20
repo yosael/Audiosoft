@@ -402,8 +402,9 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getAparato()).getId());
 				
 				//->Validar si requiere ingreso de nuevo codigo
-				if(item.getNuevoCodigo()!=null)
+				if(item.getNuevoCodigo().getNumSerie()!=null && !item.getNuevoCodigo().getNumSerie().equals("")) 
 				{
+					System.out.println("entro al codigo nuevo");
 					itemCompra.setCodProducto(item.getNuevoCodigo());
 					System.out.println("Nuevo codigo"+itemCompra.getCodProducto().getNumSerie());
 					
@@ -411,9 +412,15 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				}
 				else
 				{
+					System.out.println("Serie actual"+item.getCodigo().getNumSerie());
+					System.out.println("Inventario"+item.getCodigo().getInventario().getId());
+					System.out.println("Movimiento"+item.getCodigo().getMovimiento().getId());
 					itemCompra.setCodProducto(item.getCodigo());
+					//itemCompra.setMovimiento(item.getCodigo().getMovimiento());
 					
-					compraHome.cargarListaCodigos(itemCompra);
+					
+					//compraHome.cargarListaCodigos(itemCompra);
+					compraHome.cargarListaCodigosNuevo(itemCompra, item.getCodigo());
 					
 				}
 			
@@ -457,17 +464,17 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		
-		int enviados=0;
+		/*int enviados=0;
 		for(DetalleReparacionExterna det: detalleReparacion)
 		{
 			if(det.getEstado().equals("Enviado"))
 				enviados++;
-			/*else if(det.getEstado().equals("Re-ingresado"))
-				reingresados++;*/
+			else if(det.getEstado().equals("Re-ingresado"))
+				reingresados++;
 			
 		}
 		
-		int reingresados=0;
+		int reingresados=0;*/
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
 			item.setEstado("Re-ingresado");
@@ -476,25 +483,25 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 			detalleReparacionExternaHome.setInstance(item);
 			detalleReparacionExternaHome.modify();
-			reingresados++;
+			
 		}
 		
+		//modify();
 		
 		
-		System.out.println("Tamanio de listaItemsIngreso"+listaItemsIngreso.size());
-		System.out.println("Tamanio lista detalleReparacion"+detalleReparacion.size());
-		
-		if(enviados<reingresados)
+		/*if(enviados<reingresados)
 		{
 			instance.setEstado("Recibiendo");
 		}
 		else
 		{
 			instance.setEstado("Recibido");
-		}
+		}*/
 		
+		instance.setEstado(verificarEstadoPostEnvio());
 		
 		modify();
+		
 		
 		listaItemsIngreso.clear();
 		
@@ -502,6 +509,32 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		//->Registrar los items
 		
+		
+	}
+	
+	public String verificarEstadoPostEnvio()
+	{
+		
+		boolean enviados=false;
+		boolean recibidos=false;
+		
+		List<DetalleReparacionExterna> detalle=getEntityManager().createQuery("SELECT d FROM DetalleReparacionExterna d where d.reparacionExterna.idReparacionExterna=:idRep").setParameter("idRep", instance.getIdReparacionExterna()).getResultList();
+		for(DetalleReparacionExterna det:detalle)
+		{
+			
+			if(det.getEstado().equals("Enviado"))
+				enviados=true;
+			else if(det.getEstado().equals("Re-ingresado") || det.getEstado().equals("Desechado"))
+				recibidos=true;
+			
+		}
+		
+		
+		if(enviados==false && recibidos==true)
+			return "Recibido";
+		else
+			return "Recibiendo";
+			
 		
 	}
 	

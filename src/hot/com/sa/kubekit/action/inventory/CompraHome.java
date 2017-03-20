@@ -171,14 +171,18 @@ public void cargarCompras() {
 					.setParameter("mov", prdItm.getMovimiento())
 					.getResultList();
 			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+			System.out.println("Referencia prodycto"+prdItm.getInventario().getProducto().getReferencia());
 			System.out.println("Asigno el valor a la lista codigo");
+			System.out.println("Tambn codsProds dentro"+codsProds.size());
 		} else {
 			codsProds = lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
 			System.out.println("NOO Asigno el valor a la lista codigo");
 		}
 		
+		System.out.println("Producto cantidad antes"+prdItm.getCantidad());
 		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
-		
+		System.out.println("Producto cantidad dps"+prdItm.getCantidad());
+		System.out.println("Tamanios Cod fuera"+codsProds.size());
 		if(codsProds == null) 
 			codsProds = new ArrayList<CodProducto>();
 		
@@ -208,9 +212,46 @@ public void cargarCompras() {
 		currCodigos = codsProds;
 		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
 	}
+	
+	public void cargarListaCodigosReingreso(Item prdItm){
+		selectedItem = prdItm;
+		ArrayList<CodProducto> codsProds = null;
+		//Buscamos primero si ya esta la lista en la lista madre
+		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()) == null && prdItm.getItemId() != null) {
+			codsProds = (ArrayList<CodProducto>)getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+					"	WHERE c.inventario = :inv AND c.movimiento = :mov ")
+					.setParameter("inv", prdItm.getInventario())
+					.setParameter("mov", prdItm.getMovimiento())
+					.getResultList();
+			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+			System.out.println("Asigno el valor a la lista codigo");
+		} else {
+			codsProds = lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
+			System.out.println("NOO Asigno el valor a la lista codigo");
+		}
+		
+		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
+		
+		if(codsProds == null) 
+			codsProds = new ArrayList<CodProducto>();
+		
+		while(codsProds.size() < prdItm.getCantidad()) {
+			System.out.println("Entro al while");
+			CodProducto codPrd = new CodProducto();
+			codPrd.setEstado("ACT");
+			codPrd.setInventario(prdItm.getInventario());
+			codsProds.add(codPrd);
+		}
+				
+		currCodigos = codsProds;
+		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+	}
 
 	@Override
 	public boolean preSave() {
+		System.out.println("Tamabio codigos"+lstCodsProductos.size());
+		//System.out.println("Codigo serie en lista"+lstCodsProductos.get(0).get(0).getNumSerie());
+		
 		if(instance.getSucursal()==null){
 			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("compraHome_error_save1"));

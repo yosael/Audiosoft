@@ -18,6 +18,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.sa.model.security.Sucursal;
 import com.sa.model.workshop.ReparacionCliente;
 
 @Entity
@@ -37,6 +38,7 @@ public class DetalleReparacionExterna implements Serializable {
 	private Date fechaModificacion;
 	private String comentario;
 	private String estado;
+	//private Sucursal sucursal;
 	
 	//No son parte de la db
 	private CodProducto nuevoCodigo = new CodProducto();
@@ -137,6 +139,17 @@ public class DetalleReparacionExterna implements Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+	
+	/*@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sucursal", nullable = true)
+	@ForeignKey(name = "fk_detalle_reparacion_sucursal")
+	public Sucursal getSucursal() {
+		return sucursal;
+	}
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
+	}*/
 	
 	@Transient
 	public CodProducto getNuevoCodigo() {

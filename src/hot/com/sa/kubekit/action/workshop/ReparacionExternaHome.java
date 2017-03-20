@@ -28,6 +28,7 @@ import com.sa.model.inventory.ReparacionExterna;
 import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Empresa;
 import com.sa.model.security.Sucursal;
+import com.sa.model.workshop.ReparacionCliente;
 
 @Name("reparacionExternaHome")
 @Scope(ScopeType.CONVERSATION)
@@ -46,6 +47,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private String numFacturaCompra="";
 	private List<Item> listaItemsMovimiento = new ArrayList<Item>();
 	private String siguienteEstado="";
+	private boolean cambioLocal=false;
 
 	@In
 	private LoginUser loginUser;
@@ -589,6 +591,79 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		return inv;
 	}
 	
+	public ReparacionExterna cargarReparacionGenerada()
+	{
+		List<ReparacionExterna> result = new ArrayList<ReparacionExterna>();
+		result = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r where r.estado='Generada'").getResultList();
+		if(result.size()>0 && result!=null)
+			return result.get(0);
+		else
+			return null;
+	}
+	
+	public void cargarReparacionDesdeTaller(ReparacionCliente reparacion)
+	{
+		
+
+		nuevoDetalle = new DetalleReparacionExterna();
+		
+		
+		
+		Producto aparato = cargarAparato(reparacion.getAparatoRep().getIdPrd());
+		CodProducto codigo = cargarCodigo(reparacion.getAparatoRep().getNumSerie());
+		
+		nuevoDetalle.setReparacionCliente(reparacion);
+		nuevoDetalle.setAparato(cargarAparato(reparacion.getAparatoRep().getIdPrd()));
+		nuevoDetalle.setCodigo(codigo);
+		
+				
+		
+	}
+	
+	public void guardarDetalleTaller()
+	{
+		
+		nuevoDetalle.setFechaModificacion(new Date());
+		nuevoDetalle.setEstado("Generada");
+		nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+		
+		
+	}
+	
+	public Producto cargarAparato(int  idProducto)
+	{
+		Producto producto = new Producto();
+		try {
+			
+			producto = (Producto) getEntityManager().createQuery("SELECT p FROM Producto p where p.id=:idProducto").setParameter("idProducto", idProducto).getSingleResult();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Ocurrio un problema");
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema, intente mas tarde");
+			return producto;
+		}
+		
+		return producto;
+	}
+	
+	public CodProducto cargarCodigo(String numero)
+	{
+		CodProducto codigo = new CodProducto();
+		try {
+			
+			codigo = (CodProducto) getEntityManager().createQuery("SELECT p FROM CodProducto p where p.numSerie=:numero").setParameter("numero", numero).getSingleResult();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Ocurrio un problema");
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema, intente mas tarde");
+			return codigo;
+		}
+		
+		return codigo;
+	}
+	
 
 	@Override
 	public boolean preModify() {
@@ -722,6 +797,14 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 
 	public void setSiguienteEstado(String siguienteEstado) {
 		this.siguienteEstado = siguienteEstado;
+	}
+
+	public boolean isCambioLocal() {
+		return cambioLocal;
+	}
+
+	public void setCambioLocal(boolean cambioLocal) {
+		this.cambioLocal = cambioLocal;
 	}
 
 	

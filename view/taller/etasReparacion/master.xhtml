@@ -364,6 +364,10 @@
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación'}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
 						
+					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación'}" styleClass="saveBtn" ignoreDupResponses="true"
+						value="Reparacion Externa"   />
+						
 					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
 						value="No aprobar" />

@@ -1,0 +1,151 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formDetalle">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+					<center>
+						<s:span styleClass="busHead">Nuevo detalle:</s:span>
+					</center>
+					<h:panelGrid columns="1" style="margin:0 auto;">
+						<s:decorate template="/layout/kActions.xhtml">
+							
+
+							<a:commandButton onclick="#{rich:component('addDetalle')}.hide();"
+									action="#{reparacionExternaHome.agregarDetalle()}"
+									ajaxSingle="true"
+									reRender="_table" 
+									value="Finalizar">
+							</a:commandButton>
+							
+						</s:decorate>
+					</h:panelGrid>
+					
+					<rich:spacer height="15px;" ></rich:spacer>
+					
+					<h:panelGrid columns="3" >
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Cambiar localmente?:</ui:define>
+							<h:selectOneRadio value="#{reparacionExternaHome.cambioLocal}">
+								<f:selectItem itemLabel="Si" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+								<a:support reRender="formDetalle" ajaxSingle="true" event="onchange" ></a:support>
+							</h:selectOneRadio>
+						</s:decorate>
+					</h:panelGrid>
+					
+					<h:panelGrid columns="5" >
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Reparacion taller:</ui:define>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.reparacionCliente.proceso.nombre}" />
+						</s:decorate>
+						
+						<!--<s:decorate template="/layout/kEditSpace.xhtml"> Esta opcion estara abilitada en caso que seleccione localmenten -->
+						<!-- 	<a:commandButton onclick="#{rich:component('selAparato')}.show();"
+								ajaxSingle="true"
+								reRender="mApa" styleClass="addBtn"
+								value="Aparato nuevo">
+							</a:commandButton>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.aparato.nombre}" />
+						</s:decorate> -->
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<a:commandButton onclick="#{rich:component('selAparato')}.show();"
+								ajaxSingle="true"
+								reRender="mApa" styleClass="addBtn"
+								value="Agregar aparato">
+							</a:commandButton>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.aparato.nombre}" />
+						</s:decorate>	
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<a:commandButton onclick="#{rich:component('selCode')}.show();"
+								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
+								ajaxSingle="true"
+								reRender="mCode" styleClass="addBtn"
+								value="# Serie" >
+							</a:commandButton>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<a:commandButton onclick="#{rich:component('selPieza')}.show();"
+									ajaxSingle="true"
+									reRender="mPieza" styleClass="addBtn"
+									value="Pieza reparacion">
+							</a:commandButton>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.piezaReparacion.nombre}" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Comentario:</ui:define>
+							<h:inputText value="#{reparacionExternaHome.nuevoDetalle.comentario}" >
+								<a:support event="onchange" ajaxSingle="true" ></a:support>
+							</h:inputText>
+						</s:decorate>
+					
+					</h:panelGrid>
+					
+			
+				
+			</h:form><!-- nuevo -->
+			
+			<rich:modalPanel id="selAparato" width="900" moveable="false"
+				autosized="true" top="50px"
+				onmaskclick="#{rich:component('selAparato')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selAparato');">
+				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selAparato')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mApa">
+					<ui:include src="addAparato.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selPieza" width="900" moveable="false"
+				autosized="true" top="50px"
+				onmaskclick="#{rich:component('selPieza')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selPieza');">
+				<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selPieza')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mPieza">
+					<ui:include src="addPieza.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selCode" width="400" moveable="true"
+				autosized="true" top="40" 
+				onbeforeshow="activeModal.setActiveModalPanel('selCode');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('selCode')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCode">
+					<ui:include src="selCode.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+	
+</ui:composition>

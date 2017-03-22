@@ -361,8 +361,14 @@
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
 					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
-						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación'}" styleClass="saveBtn" ignoreDupResponses="true"
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna!=null and etapaRepCliHome.instance.reparacionCli.estadoRepExterna!='ENV')}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
+						
+					<a:commandButton onclick="#{rich:component('addDetalle')}.show();" 
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1}" styleClass="saveBtn" ignoreDupResponses="true"
+						action="#{reparacionExternaHome.cargarReparacionDesdeTaller(etapaRepCliHome.instance.reparacionCli)}"
+						reRender="mDetalle"
+						value="Reparacion Externa"   />
 						
 					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
@@ -736,6 +742,22 @@
 						<s:div id="modInfoCl1" >
 							<ui:include src="infoClienteMod.xhtml" />
 						</s:div>
+					</s:div>
+				</rich:modalPanel>
+				
+				
+				<rich:modalPanel id="addDetalle" width="900" moveable="false"
+					autosized="true" top="50px"
+					onbeforeshow="activeModal.setActiveModalPanel('addDetalle');">
+					<f:facet name="header">Detalle Reparacion Externa</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('addDetalle')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="mDetalle">
+						<ui:include src="addDetalle.xhtml" />
 					</s:div>
 				</rich:modalPanel>
 				

@@ -962,6 +962,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						apaCli.setNombre(itemCmb.getProducto().getNombre());
 						apaCli.setMarca(itemCmb.getProducto().getMarca().getNombre());
 						apaCli.setModelo(itemCmb.getProducto().getModelo());
+						apaCli.setIdPrd(itemCmb.getProducto().getId());
 						
 						apaCli.setLadoAparato(cotizacion.getLadoAparato());
 						
@@ -1144,6 +1145,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						apaCliBin.setNombre(itemCmb.getProducto().getNombre());
 						apaCliBin.setMarca(itemCmb.getProducto().getMarca().getNombre());
 						apaCliBin.setModelo(itemCmb.getProducto().getModelo());
+						apaCliBin.setIdPrd(itemCmb.getProducto().getId());
 						
 						apaCliBin.setLadoAparato(cotizacion.getHijoBin().get(0).getLadoAparato());
 						
@@ -3636,11 +3638,11 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			mov.setObservacion("Salida por la venta generada automaticamente de un combo de aparato, detalle de la venta:"
 					+ instance.getDetalle());
 
-			System.out.println("Estado cotizacion"+cotizacion.getEstado());
+			/*System.out.println("Estado cotizacion"+cotizacion.getEstado());
 			System.out.println("Id cotizacion"+cotizacion.getId());
 			
 			System.out.println("Estado cotizacion binaural"+cotizacion.getHijoBin().get(0).getEstado());
-			System.out.println("Id cotizacion binaural"+cotizacion.getHijoBin().get(0).getId());
+			System.out.println("Id cotizacion binaural"+cotizacion.getHijoBin().get(0).getId());*/
 			
 			// Generamos el aparato del cliente
 			AparatoCliente apaCli = aparatoClienteHome.getInstance();
@@ -3729,6 +3731,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						apaCli.setNombre(itemCmb.getProducto().getNombre());
 						apaCli.setMarca(itemCmb.getProducto().getMarca().getNombre());
 						apaCli.setModelo(itemCmb.getProducto().getModelo());
+						apaCli.setIdPrd(itemCmb.getProducto().getId());
 						
 						// Guardamos los codigos si es que tienen codigos
 						if ((itemCmb.getProducto().getCategoria().isTieneNumSerie() || itemCmb.getProducto().getCategoria().isTieneNumLote()) && !cotizacion.getEstado().equals("TFN")) {
@@ -3824,6 +3827,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				apaCliBin.setRetroAuricular(apaCli.isRetroAuricular());
 				apaCliBin.setFechaAdquisicion(new Date());
 				apaCliBin.setHechoMedida(false);
+				
 				//apaCliBin.setNombre(comboVtaBin.getNombre());
 
 				
@@ -3874,7 +3878,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						apaCliBin.setNombre(itemCmbBin.getProducto().getNombre());
 						apaCliBin.setMarca(itemCmbBin.getProducto().getMarca().getNombre());
 						apaCliBin.setModelo(itemCmbBin.getProducto().getModelo());
-						
+						apaCliBin.setIdPrd(itemCmbBin.getProducto().getId());
 						/*codCombo2.setEstado("USD");
 						getEntityManager().merge(codCombo2);*///se cambio de lugar el 06/03/2017 comentado nuevamente el 07/03/2017
 						

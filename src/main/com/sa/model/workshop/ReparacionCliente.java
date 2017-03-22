@@ -59,6 +59,7 @@ public class ReparacionCliente implements Serializable {
 	private EtapaRepCliente currEtapa;
 	private String tipoRep;
 	private Integer idCot;
+	private String estadoRepExterna;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -289,6 +290,15 @@ public class ReparacionCliente implements Serializable {
 
 	public void setIdCot(Integer idCot) {
 		this.idCot = idCot;
+	}
+
+	@Column(name="estado_rep_externa",nullable=true,length=3)
+	public String getEstadoRepExterna() {
+		return estadoRepExterna;
+	}
+
+	public void setEstadoRepExterna(String estadoRepExterna) {
+		this.estadoRepExterna = estadoRepExterna;
 	}
 
 	

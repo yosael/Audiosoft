@@ -361,14 +361,22 @@
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
 					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
-						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna!=null and etapaRepCliHome.instance.reparacionCli.estadoRepExterna!='ENV')}" styleClass="saveBtn" ignoreDupResponses="true"
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna==null || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='FIN')}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
 						
 					<a:commandButton onclick="#{rich:component('addDetalle')}.show();" 
-						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1}" styleClass="saveBtn" ignoreDupResponses="true"
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1 and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna==null)}" styleClass="addBtn" ignoreDupResponses="true"
 						action="#{reparacionExternaHome.cargarReparacionDesdeTaller(etapaRepCliHome.instance.reparacionCli)}"
 						reRender="mDetalle"
 						value="Reparacion Externa"   />
+					
+					<a:commandButton onclick="#{rich:component('modReparacionEx')}.show();" 
+						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1 and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='RCA' || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='RCP')}" styleClass="tallerBtn" ignoreDupResponses="true"
+						action="#{reparacionExternaHome.cargarReparacionRecibida(etapaRepCliHome.instance.reparacionCli)}"
+						reRender="modReparacionEx"
+						value="Reparacion recibida"   />
+						
+					<h:outputLabel value="Se envio a reparacion externa" style="color:green;text-size:16;" rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1 and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='ENV') }" />
 						
 					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"

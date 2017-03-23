@@ -538,6 +538,13 @@ body {
 	text-indent: 20px;
 }
 
+.tallerBtn {
+	background-image: url(../kubeImg/taller.png);
+	background-position: 5px 4px;
+	background-repeat: no-repeat;
+	text-indent: 20px;
+}
+
 .removeBtn {
 	background-image: url(../kubeImg/remove16.png);
 	background-position: 5px 4px;

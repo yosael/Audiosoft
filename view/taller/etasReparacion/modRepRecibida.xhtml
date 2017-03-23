@@ -22,10 +22,10 @@
 							
 
 							<a:commandButton onclick="#{rich:component('addDetalle')}.hide();"
-									action="#{reparacionExternaHome.agregarReparacionExternaTaller()}"
+									action="#{reparacionExternaHome.cargarReparacionRecibida()}"
 									ajaxSingle="true"
 									reRender="_table,formreparacioncli" 
-									value="Finalizar">
+									value="Sustituir Pieza">
 							</a:commandButton>
 							
 						</s:decorate>
@@ -33,22 +33,13 @@
 					
 					<rich:spacer height="15px;" ></rich:spacer>
 					
-					<h:panelGrid columns="1" >
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">Cambiar localmente?:</ui:define>
-							<h:selectOneRadio value="#{reparacionExternaHome.cambioLocal}">
-								<f:selectItem itemLabel="Si" itemValue="true" />
-								<f:selectItem itemLabel="No" itemValue="false" />
-								<a:support reRender="formDetalle" ajaxSingle="true" action="#{reparacionExternaHome.mostrarValorRadio()}" event="onchange" ></a:support>
-							</h:selectOneRadio>
-						</s:decorate>
-					</h:panelGrid>
+					
 					
 					<h:panelGrid columns="5" >
 					
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Reparacion taller:</ui:define>
-							<h:inputText readonly="true" value="#{RPR}#{reparacionExternaHome.nuevoDetalle.reparacionCliente.id}" />
+							<h:inputText readonly="true" value="#{RPR}#{reparacionExternaHome.nuevoDetalle.reparacionCliente.id}" readonly="true" />
 						</s:decorate>
 						
 						<!--<s:decorate template="/layout/kEditSpace.xhtml"> Esta opcion estara abilitada en caso que seleccione localmenten -->
@@ -61,46 +52,28 @@
 						</s:decorate> -->
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<a:commandButton onclick="#{rich:component('selAparato')}.show();"
-								ajaxSingle="true"
-								reRender="mApa" styleClass="addBtn"
-								value="Agregar aparato">
-							</a:commandButton>
-							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.aparato.nombre}" />
+							<ui:define name="label">Nombre de aparato</ui:define>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.aparato.nombre}" readonly="true" />
 						</s:decorate>	
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<a:commandButton onclick="#{rich:component('selCode')}.show();"
-								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
-								ajaxSingle="true"
-								reRender="mCode" styleClass="addBtn"
-								value="# Serie" >
-							</a:commandButton>
-							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" />
+							<ui:define name="label"># Serie</ui:define>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" readonly="true" />
 						</s:decorate>
 						
-						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionExternaHome.nuevoDetalle.piezaReparacion==null and reparacionExternaHome.cambioLocal}" >
-							<a:commandButton onclick="#{rich:component('selCodeNuevo')}.show();"
-								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
-								ajaxSingle="true"
-								reRender="mCodeNuevo" styleClass="addBtn"
-								value="Nuevo # Serie" >
-							</a:commandButton>
-							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoCodigo.numSerie}" />
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">Nuevo # Serie</ui:define>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoCodigo.numSerie}" readonly="true" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<a:commandButton onclick="#{rich:component('selPieza')}.show();"
-									ajaxSingle="true"
-									reRender="mPieza" styleClass="addBtn"
-									value="Pieza reparacion">
-							</a:commandButton>
-							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.piezaReparacion.nombre}" />
+							<ui:define name="label">Pieza</ui:define>
+							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.piezaReparacion.nombre}" readonly="true" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Comentario:</ui:define>
-							<h:inputText value="#{reparacionExternaHome.nuevoDetalle.comentario}" >
+							<h:inputText value="#{reparacionExternaHome.nuevoDetalle.comentario}" readonly="true" >
 								<a:support event="onchange" ajaxSingle="true" ></a:support>
 							</h:inputText>
 						</s:decorate>

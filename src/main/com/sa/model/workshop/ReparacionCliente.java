@@ -27,6 +27,7 @@ import org.hibernate.annotations.ForeignKey;
 import org.hibernate.validator.Min;
 
 import com.sa.model.crm.Cliente;
+import com.sa.model.inventory.DetalleReparacionExterna;
 import com.sa.model.security.Sucursal;
 
 @Entity
@@ -60,6 +61,9 @@ public class ReparacionCliente implements Serializable {
 	private String tipoRep;
 	private Integer idCot;
 	private String estadoRepExterna;
+	
+	private List<DetalleReparacionExterna> detallesReparacionExterna = new ArrayList<DetalleReparacionExterna>();
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

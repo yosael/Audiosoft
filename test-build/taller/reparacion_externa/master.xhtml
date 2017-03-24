@@ -174,7 +174,11 @@
 						
 						<rich:column>
 							<f:facet name="header">Reparacion Taller</f:facet>
-							<h:outputText value="#{res.reparacionCliente.proceso.nombre}" rendered="#{res.reparacionCliente!=null}" />
+							<!-- <h:outputText value="#{res.reparacionCliente.proceso.nombre}" rendered="#{res.reparacionCliente!=null}" /> -->
+							<s:link title="#{msn.button_edit}" rendered="true"
+								view="/taller/etasReparacion/master.xhtml" propagation="begin" value="#{'RPR'}#{res.reparacionCliente.id}" >
+								<f:param name="id" value="#{res.reparacionCliente.id}"  />
+							</s:link>
 						</rich:column>
 						
 						<rich:column>

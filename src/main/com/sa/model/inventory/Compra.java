@@ -19,6 +19,7 @@ public class Compra extends Movimiento{
 	private Float subTotal;
 	private String formaPago;
 	private Pedido pedido;
+	private String estado;
 	
 	public Compra(){
 		super.setFecha(new Date());
@@ -59,5 +60,18 @@ public class Compra extends Movimiento{
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
 	}
+
+	
+	@Column(name = "estado_compra", nullable = true,length=15)
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+	
+	
 	
 }

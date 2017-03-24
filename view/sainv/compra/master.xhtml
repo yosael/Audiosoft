@@ -241,14 +241,20 @@
 							<s:button view="/sainv/compra/list.xhtml" propagation="begin"
 								styleClass="listBtn" value="#{msn.button_list}">
 							</s:button>
-							<s:button view="/sainv/compra/master.xhtml" propagation="begin"
+							<!-- <s:button view="/sainv/compra/master.xhtml" propagation="begin"
 								styleClass="newBtn" value="#{msn.button_new}">
 								<f:param name="id" value="" />
-							</s:button>
+							</s:button> -->
 							<a:commandButton action="#{compraHome.save()}"
 								reRender="formcompra" rendered="#{not compraHome.managed}"
 								styleClass="saveBtn" onclick="upperCaseAllInputs();"
 								value="#{msn.button_save}" />
+								
+							<a:commandButton action="#{compraHome.preGuardar()}"
+								reRender="formcompra" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();"
+								value="Pre-Guardar" />
+								
 							<a:commandButton action="#{compraHome.modify()}"
 								reRender="formcompra" rendered="#{compraHome.managed}"
 								styleClass="modifyBtn" onclick="upperCaseAllInputs();"

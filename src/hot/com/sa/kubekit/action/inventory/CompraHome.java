@@ -161,6 +161,7 @@ public void cargarCompras() {
 }
 
 	public void cargarListaCodigos(Item prdItm){
+		//prdItm.getC
 		selectedItem = prdItm;
 		ArrayList<CodProducto> codsProds = null;
 		//Buscamos primero si ya esta la lista en la lista madre
@@ -268,6 +269,10 @@ public void cargarCompras() {
 			return false;
 		}
 		
+		if(instance.getEstado()==null)
+			instance.setEstado("Registrada");
+		
+		
 		//Validamos que hayan ingresado el mismo numero de codigos que de items a comprar
 		for(Item tmpItm : itemsAgregados) {
 			if(lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia()) == null
@@ -301,45 +306,318 @@ public void cargarCompras() {
 						FacesMessages.instance().add(Severity.WARN,
 								sainv_messages.get("compra_error_prdnoser"));
 						return false;
-					} 
+					}
+					else if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() != null || !tmpCod.getNumSerie().trim().equals("")))
+					{
+						
+						if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+							System.out.println("Entro a if raro");
+							FacesMessages.instance().add(Severity.WARN,
+									sainv_messages.get("compra_error_prdcoddupli"));
+							return false;
+						}
+						else
+						{
+							codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
+						}
+						
+					}
 					
 					if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && 
 							(tmpCod.getNumLote() == null || tmpCod.getNumLote().trim().equals(""))) {
 						FacesMessages.instance().add(Severity.WARN,
 								sainv_messages.get("compra_error_prdnolot"));
 						return false;
-					} 
+					}
+					else if (tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && (tmpCod.getNumLote() != null || !tmpCod.getNumLote().trim().equals("")))
+					{
+						if(codsStrPrd.contains(tmpCod.getNumLote())) {
+							System.out.println("Entro a if raro lote");
+							FacesMessages.instance().add(Severity.WARN,
+									sainv_messages.get("compra_error_prdcoddupli"));
+							return false;
+						}
+						else
+						{
+							codsStrPrd.add(tmpCod.getNumLote().toUpperCase());
+						}
+					}
 					
-					if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+					/*if(codsStrPrd.contains(tmpCod.getNumSerie())) {
 						System.out.println("Entro a if raro");
 						FacesMessages.instance().add(Severity.WARN,
 								sainv_messages.get("compra_error_prdcoddupli"));
 						return false;
 					} else
-						codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
+						codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());*/
 					
 				}
 							
 			}
 			if(codsStrPrd != null && codsStrPrd.size() > 0 ) {
-				//Verificamos en la base si no existen otros codigos iguales
-				List coincidencias = getEntityManager().createQuery("SELECT c FROM CodProducto c " +
-							"	WHERE UPPER(c.numSerie) IN (:lstCods) AND c.estado = 'ACT' " +
-							"	AND c.inventario = :inv")
-							.setParameter("lstCods", codsStrPrd)
-							.setParameter("inv", tmpItm.getInventario())
-							.getResultList();
-
-				if(coincidencias != null && coincidencias.size() > 0) {
-					FacesMessages.instance().add(Severity.WARN,
-							sainv_messages.get("compra_error_prdcoddupli"));
-					return false;
+				
+				if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie())
+				{
+					//Verificamos en la base si no existen otros codigos iguales
+					List coincidencias = getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+								"	WHERE UPPER(c.numSerie) IN (:lstCods) AND c.estado = 'ACT' " +
+								"	AND c.inventario = :inv")
+								.setParameter("lstCods", codsStrPrd)
+								.setParameter("inv", tmpItm.getInventario())
+								.getResultList();
+	
+					if(coincidencias != null && coincidencias.size() > 0) {
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdcoddupli"));
+						return false;
+					}
 				}
+				
+				if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote())
+				{
+					//Verificamos en la base si no existen otros codigos iguales
+					List coincidencias = getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+								"	WHERE UPPER(c.numLote) IN (:lstCods) AND c.estado = 'ACT' " +
+								"	AND c.inventario = :inv")
+								.setParameter("lstCods", codsStrPrd)
+								.setParameter("inv", tmpItm.getInventario())
+								.getResultList();
+	
+					if(coincidencias != null && coincidencias.size() > 0) {
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdcoddupli"));
+						return false;
+					}
+				}
+				
 			}
 			
 				
 		}System.out.println("Llego al final de presave compra");
 		return true;
+	}
+	
+	
+	public void preGuardar()
+	{
+		instance.setEstado("Pre-Guardada");
+		
+		save();
+		
+		
+	}
+	
+	
+	public void guardarNuevosItems()
+	{
+		System.out.println("Entro a guardar nuevos items *********");
+		if(!validarPreGuardado())
+			return;
+		
+		
+		System.out.println("PAso de la prevalidacion********");
+		
+		for(Item item: itemsAgregados){
+			
+			if(item.getRegistrado()==null)
+			{
+			
+				item.getItemId().setMovimientoId(instance.getId());
+				item.setMovimiento(instance);
+				item.setRegistrado(true);//Nuevo el 24/03/2017
+				itemHome.setInstance(item);
+				itemHome.modificarCantidadInventario();
+				itemHome.save();
+				int numItemsCods = item.getCantidad();
+				//Guardamos los codigos si es que tienen codigos
+				if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
+						item.getInventario().getProducto().getCategoria().isTieneNumLote()) {
+					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) {
+						if(numItemsCods <= 0)
+							break;
+						
+						tmpCod.setMovimiento(instance);
+						if(tmpCod.getId() != null && tmpCod.getId() > 0) 
+							getEntityManager().merge(tmpCod);
+						else
+							getEntityManager().persist(tmpCod);
+						numItemsCods--;
+					}
+					
+				}
+				
+			}
+		}
+		
+		FacesMessages.instance().add(Severity.WARN,"Items agregados");
+		
+	}
+	
+	public boolean validarPreGuardado()
+	{
+		if(instance.getSucursal()==null){
+			FacesMessages.instance().add(Severity.WARN,
+					sainv_messages.get("compraHome_error_save1"));
+			return false;
+		}
+		if(itemsAgregados.isEmpty()){
+			FacesMessages.instance().add(Severity.WARN,
+					sainv_messages.get("compraHome_error_save2"));
+			return false;
+		}
+		
+		if(instance.getNumeroFactura()==null || instance.getNumeroFactura()==""){
+			FacesMessages.instance().add(Severity.WARN,"Debe agregar numero de factura");
+			return false;
+		}
+		int it=0;System.out.println("Lista Codigos TAM"+lstCodsProductos.size());
+		
+		//Validamos que hayan ingresado el mismo numero de codigos que de items a comprar
+		for(Item tmpItm : itemsAgregados) {
+			
+			if(tmpItm.getRegistrado()==null)
+			{
+				it++;System.out.println("ITERACIONES"+it);
+					if(lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia()) == null
+							&& (tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() ||
+									tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote()) )  {
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdnocods"));
+						return false;
+					} else if( (tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
+									tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote())
+								&& tmpItm.getCantidad() > lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia()).size()) {
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdnocods"));
+						return false;
+					} 
+		
+					Set<String> codsStrPrd = new HashSet<String>();
+					if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
+							tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote()) {
+		
+						tmpItm.setCodsSerie("");
+						//Verificamos que no vengan vacios los codigos ni repetidos
+						for(CodProducto tmpCod : lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia())) {
+							System.out.println("Num Serie for"+tmpCod.getNumSerie());
+							if(tmpCod.getNumSerie() != null && !tmpCod.getNumSerie().trim().equals("")) 
+								tmpItm.setCodsSerie(tmpItm.getCodsSerie().concat(tmpCod.getNumSerie()+","));
+							
+							if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && 
+									(tmpCod.getNumSerie() == null || tmpCod.getNumSerie().trim().equals(""))) {
+								
+								FacesMessages.instance().add(Severity.WARN,
+										sainv_messages.get("compra_error_prdnoser"));
+								return false;
+							}
+							else if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() != null || !tmpCod.getNumSerie().trim().equals("")))
+							{
+								
+								if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+									System.out.println("Entro a if raro");
+									FacesMessages.instance().add(Severity.WARN,
+											sainv_messages.get("compra_error_prdcoddupli"));
+									return false;
+								}
+								else
+								{
+									codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
+								}
+							}
+							
+							if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && 
+									(tmpCod.getNumLote() == null || tmpCod.getNumLote().trim().equals(""))) {
+								FacesMessages.instance().add(Severity.WARN,
+										sainv_messages.get("compra_error_prdnolot"));
+								return false;
+							}
+							else if (tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && (tmpCod.getNumLote() != null || !tmpCod.getNumLote().trim().equals("")))
+							{
+								if(codsStrPrd.contains(tmpCod.getNumLote())) {
+									System.out.println("Entro a if raro lote");
+									FacesMessages.instance().add(Severity.WARN,
+											sainv_messages.get("compra_error_prdcoddupli"));
+									return false;
+								}
+								else
+								{
+									codsStrPrd.add(tmpCod.getNumLote().toUpperCase());
+								}
+							}
+							
+							/*if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+								System.out.println("Entro a if raro");
+								FacesMessages.instance().add(Severity.WARN,
+										sainv_messages.get("compra_error_prdcoddupli"));
+								return false;
+							} *//*else
+								codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());*/
+							
+						}
+									
+					}
+					if(codsStrPrd != null && codsStrPrd.size() > 0 ) {
+						
+						System.out.println("Valores repetidos posiblemente********");
+						
+						if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie())
+						{
+							//Verificamos en la base si no existen otros codigos iguales
+							List coincidencias = getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+										"	WHERE UPPER(c.numSerie) IN (:lstCods) AND c.estado = 'ACT' " +
+										"	AND c.inventario = :inv")
+										.setParameter("lstCods", codsStrPrd)
+										.setParameter("inv", tmpItm.getInventario())
+										.getResultList();
+			
+							if(coincidencias != null && coincidencias.size() > 0) {
+								FacesMessages.instance().add(Severity.WARN,
+										sainv_messages.get("compra_error_prdcoddupli"));
+								return false;
+							}
+						}
+						
+						if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote())
+						{
+							//Verificamos en la base si no existen otros codigos iguales
+							List coincidencias = getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+										"	WHERE UPPER(c.numLote) IN (:lstCods) AND c.estado = 'ACT' " +
+										"	AND c.inventario = :inv")
+										.setParameter("lstCods", codsStrPrd)
+										.setParameter("inv", tmpItm.getInventario())
+										.getResultList();
+			
+							if(coincidencias != null && coincidencias.size() > 0) {
+								FacesMessages.instance().add(Severity.WARN,
+										sainv_messages.get("compra_error_prdcoddupli"));
+								return false;
+							}
+						}
+						
+					}
+			
+		
+			}		
+			
+		}
+		
+		
+		System.out.println("Llego al final de presave compra");
+		return true;
+	}
+	
+	public boolean finalizarPreGuardado()
+	{
+		validarPreGuardado();
+		
+		guardarNuevosItems();
+		
+		instance.setEstado("Registrada");
+		
+		modify();
+		
+		return true;
+		
 	}
 
 	@Override
@@ -378,29 +656,36 @@ public void cargarCompras() {
 	@Override
 	public void posSave() {
 		
+		
+		
+		
 		System.out.println("Entro al posave de compra");
 		for(Item item: itemsAgregados){
-			item.getItemId().setMovimientoId(instance.getId());
-			item.setMovimiento(instance);
-			itemHome.setInstance(item);
-			itemHome.modificarCantidadInventario();
-			itemHome.save();
-			int numItemsCods = item.getCantidad();
-			//Guardamos los codigos si es que tienen codigos
-			if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
-					item.getInventario().getProducto().getCategoria().isTieneNumLote()) {
-				for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) {
-					if(numItemsCods <= 0)
-						break;
+			
+				item.getItemId().setMovimientoId(instance.getId());
+				item.setMovimiento(instance);
+				item.setRegistrado(true);//Nuevo el 24/03/2017
+				itemHome.setInstance(item);
+				itemHome.modificarCantidadInventario();
+				itemHome.save();
+				int numItemsCods = item.getCantidad();
+				//Guardamos los codigos si es que tienen codigos
+				if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
+						item.getInventario().getProducto().getCategoria().isTieneNumLote()) {
+					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) {
+						if(numItemsCods <= 0)
+							break;
+						
+						tmpCod.setMovimiento(instance);
+						if(tmpCod.getId() != null && tmpCod.getId() > 0) 
+							getEntityManager().merge(tmpCod);
+						else
+							getEntityManager().persist(tmpCod);
+						numItemsCods--;
+					}
 					
-					tmpCod.setMovimiento(instance);
-					if(tmpCod.getId() != null && tmpCod.getId() > 0) 
-						getEntityManager().merge(tmpCod);
-					else
-						getEntityManager().persist(tmpCod);
-					numItemsCods--;
 				}
-			}
+				
 		}
 		
 		

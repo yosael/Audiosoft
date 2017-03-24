@@ -44,6 +44,8 @@ public class Item implements Serializable, Cloneable{
 	
 	private Float precioVenta;
 	
+	private Boolean registrado;
+	
 	@EmbeddedId
 	public ItemId getItemId() {
 		return itemId;
@@ -214,6 +216,15 @@ public class Item implements Serializable, Cloneable{
 
 	public void setPrecioVenta(Float precioVenta) {
 		this.precioVenta = precioVenta;
+	}
+
+	@Column(name="registrado",nullable=true)
+	public Boolean getRegistrado() {
+		return registrado;
+	}
+
+	public void setRegistrado(Boolean registrado) {
+		this.registrado = registrado;
 	}
 
 	

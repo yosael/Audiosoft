@@ -79,6 +79,13 @@
 						<h:outputText value="#{app.compra_payment_type_tc}" rendered="#{res.formaPago=='TC'}"/>
 						<h:outputText value="#{app.compra_payment_type_td}" rendered="#{res.formaPago=='TD'}"/>
 					</rich:column>
+					
+					<rich:column >
+						<f:facet name="header">Estado</f:facet>
+						<h:outputText value="Registrada"  rendered="#{res.estado==null || res.estado=='Registrada'}" />
+						<h:outputText value="Pre-Guardada"  rendered="#{res.estado=='Pre-Guardada'}" />
+					</rich:column>
+					
 					<rich:column filterBy="#{res.subTotal}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.compralist_col5}</f:facet>
 						<h:outputText value="#{res.subTotal}" >
@@ -96,8 +103,13 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<s:link title="#{app.compralist_view}" rendered="true"
+						<s:link title="#{app.compralist_view}" rendered="#{res.estado==null || res.estado=='Registrada'}"
 							view="/sainv/compra/buyDetails.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/detail16.png" />
+							<f:param name="id" value="#{res.id}" />
+						</s:link>
+						<s:link title="#{app.compralist_view}" rendered="#{res.estado=='Pre-Guardada'}"
+							view="/sainv/compra/preGuardado.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/detail16.png" />
 							<f:param name="id" value="#{res.id}" />
 						</s:link>

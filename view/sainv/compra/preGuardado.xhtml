@@ -110,6 +110,11 @@
 							<h:inputText value="#{compraHome.instance.sucursal.nombre}"
 								disabled="true" />
 						</s:decorate>
+						
+						<h:commandButton action="#{compraHome.finalizarPreGuardado()}"
+								 rendered="#{compraHome.managed}"
+								styleClass="modifyBtn" onclick="upperCaseAllInputs();"
+								value="Finalizar Registro" />
 						<s:decorate></s:decorate><s:decorate></s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
@@ -186,7 +191,7 @@
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">#{app.productolist_col7}</f:facet>
-								<h:outputText value="#{res.inventario.cantidadActual}">
+								<h:outputText value="#{res.inventario.cantidadActual}" >
 									<f:convertNumber locale="en-US" groupingUsed="true"
 										integerOnly="true" maxFractionDigits="0" />
 								</h:outputText>
@@ -194,6 +199,7 @@
 							<rich:column>
 								<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
 								<h:inputText value="#{res.cantidad}" size="8"
+									readonly="#{res.registrado}"
 									onkeypress="return restrictNumDigits(event, this, 8);">
 									<a:support event="onblur"
 										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
@@ -241,21 +247,7 @@
 							<s:button view="/sainv/compra/list.xhtml" propagation="begin"
 								styleClass="listBtn" value="#{msn.button_list}">
 							</s:button>
-							<!-- <s:button view="/sainv/compra/master.xhtml" propagation="begin"
-								styleClass="newBtn" value="#{msn.button_new}">
-								<f:param name="id" value="" />
-							</s:button> -->
-							<a:commandButton action="#{compraHome.save()}"
-								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();"
-								value="#{msn.button_save}" />
-								
-							<a:commandButton action="#{compraHome.preGuardar()}"
-								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();"
-								value="Pre-Guardar" />
-								
-							<a:commandButton action="#{compraHome.modify()}"
+							<a:commandButton action="#{compraHome.guardarNuevosItems()}"
 								reRender="formcompra" rendered="#{compraHome.managed}"
 								styleClass="modifyBtn" onclick="upperCaseAllInputs();"
 								value="#{msn.button_modify}" />

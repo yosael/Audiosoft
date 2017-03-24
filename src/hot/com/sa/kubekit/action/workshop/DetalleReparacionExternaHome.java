@@ -17,6 +17,8 @@ public class DetalleReparacionExternaHome extends KubeDAO<DetalleReparacionExter
 
 	@Override
 	public boolean preSave() {
+		
+		
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -24,6 +26,16 @@ public class DetalleReparacionExternaHome extends KubeDAO<DetalleReparacionExter
 	@Override
 	public boolean preModify() {
 		// TODO Auto-generated method stub
+		
+		/*if(instance.getEstado().equals("Re-ingresado"))
+		{
+		
+			if(instance.getNuevoCodigo()!=null)
+			{
+				instance.setIdNuevoCodigo(instance.getNuevoCodigo().getId());
+			}
+			
+		}*/
 		return true;
 	}
 

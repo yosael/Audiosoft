@@ -38,6 +38,9 @@ public class DetalleReparacionExterna implements Serializable {
 	private Date fechaModificacion;
 	private String comentario;
 	private String estado;
+	private Integer idNuevoCodigo;
+	private Boolean llevaPieza;
+	
 	//private Sucursal sucursal;
 	
 	//No son parte de la db
@@ -100,6 +103,7 @@ public class DetalleReparacionExterna implements Serializable {
 	@JoinColumn(name = "pieza_reparacion", nullable = true)
 	@ForeignKey(name = "fk_detalle_reparacion_pieza")
 	public Producto getPiezaReparacion() {
+		
 		return piezaReparacion;
 	}
 	public void setPiezaReparacion(Producto piezaReparacion) {
@@ -165,6 +169,24 @@ public class DetalleReparacionExterna implements Serializable {
 	}
 	public void setCandidad(int candidad) {
 		this.candidad = candidad;
+	}
+	
+	
+	@Column(name = "id_nuevo_codigo", nullable = true)
+	public Integer getIdNuevoCodigo() {
+		return idNuevoCodigo;
+	}
+	public void setIdNuevoCodigo(Integer idNuevoCodigo) {
+		this.idNuevoCodigo = idNuevoCodigo;
+	}
+	
+	
+	@Column(name = "lleva_pieza", nullable = true)
+	public Boolean getLlevaPieza() {
+		return llevaPieza;
+	}
+	public void setLlevaPieza(Boolean llevaPieza) {
+		this.llevaPieza = llevaPieza;
 	}
 	
 	

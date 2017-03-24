@@ -51,6 +51,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private String siguienteEstado="";
 	private boolean cambioLocal=false;
 	private CodProducto nuevoCodigo;
+	private CodProducto codigoSelectedEntrega;
 
 	@In
 	private LoginUser loginUser;
@@ -196,6 +197,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void seleccionarCodigoNuevo(CodProducto codigo)
 	{
 		nuevoCodigo=codigo;
+		
 	}
 	
 	public void agregarDetalle() //NOTA: La validacion que realiza el movimiento es que no se debe repetir el items 2 veeces, es posible que esta validacion no sea requerida para la reparacion
@@ -524,6 +526,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			item.setFechaRecibido(new Date());
 			item.setFechaModificacion(new Date());
 			
+			if(item.getNuevoCodigo()!=null)
+			{
+				item.setIdNuevoCodigo(item.getNuevoCodigo().getId());
+			}
+			
 			detalleReparacionExternaHome.setInstance(item);
 			detalleReparacionExternaHome.modify();
 			
@@ -718,9 +725,12 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		apaCli.setCliente(aparato.getCliente());
 		apaCli.setFechaAdquisicion(new Date());
 		apaCli.setLadoAparato(aparato.getLadoAparato());
-		apaCli.setMarca(nuevoDetalle.getAparato().getMarca().getNombre());
-		apaCli.setModelo(nuevoDetalle.getAparato().getModelo());
+		apaCli.setMarca(aparato.getMarca());
+		apaCli.setModelo(aparato.getModelo());
+		apaCli.setNombre(aparato.getNombre());
 		apaCli.setNumSerie(codigo.getNumSerie());
+		apaCli.setActivo(true);
+		apaCli.setEstado("ACT");
 		
 		getEntityManager().persist(apaCli);
 		
@@ -813,29 +823,43 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	}
 	
 	
-	public void cargarReparacionRecibida(ReparacionCliente reparacion)
+	public void cargarReparacionRecibida(DetalleReparacionExterna detalleRep)
 	{
 		//Verificar si es pieza o aparato
 		
-		if(nuevoDetalle.getPiezaReparacion()==null)
+		/*Producto pieza = new Producto();
+		pieza= nuevoDetalle.getPiezaReparacion();
+		*/
+		
+		if(detalleRep.getPiezaReparacion()==null)
 		{
 			
 			//Sustituir aparato y reducir inventario de item y #Serie;
 			
 			//Registrar aparato cliente
 			AparatoCliente aparatoNuevo = new AparatoCliente();
-			aparatoNuevo=registrarNuevoAparato(reparacion.getAparatoRep(),nuevoDetalle.getNuevoCodigo()==null?nuevoDetalle.getCodigo():nuevoDetalle.getNuevoCodigo());
+			CodProducto codigoAparato = new CodProducto();
+			if(detalleRep.getIdNuevoCodigo()==null)
+			{
+				codigoAparato=detalleRep.getCodigo();
+			}
+			else
+			{
+				codigoAparato=buscarCodById(detalleRep.getIdNuevoCodigo());
+			}
+			detalleRep.setPiezaReparacion(null);
+			aparatoNuevo=registrarNuevoAparato(detalleRep.getReparacionCliente().getAparatoRep(),codigoAparato);
 			
 			//Desabilitar aparato viejo
-			desabilitarAparatoCliente(reparacion.getAparatoRep());
+			desabilitarAparatoCliente(detalleRep.getReparacionCliente().getAparatoRep());
 			
 			//Sustituir nuevo aparato en reparacion
-			sustituirAparato(reparacion,aparatoNuevo);
+			sustituirAparato(detalleRep.getReparacionCliente(),aparatoNuevo);
 			
 			//Crear el modivmiento y reducir inventario
-			agregarDetallesMovimiento(nuevoDetalle.getAparato());
+			agregarDetallesMovimiento(detalleRep.getAparato());
 			
-			modificarEstadoReparacionCli(reparacion, "FIN");
+			modificarEstadoReparacionCli(detalleRep.getReparacionCliente(), "FIN");
 			
 			agregarMovimiento("S");
 			
@@ -843,14 +867,19 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		else
 		{
 			//Crear el modivmiento y reducir inventario
-			agregarDetallesMovimiento(nuevoDetalle.getPiezaReparacion());
+			agregarDetallesMovimiento(detalleRep.getPiezaReparacion());
 			
-			modificarEstadoReparacionCli(reparacion, "FIN");
+			modificarEstadoReparacionCli(detalleRep.getReparacionCliente(), "FIN");
 			
 			agregarMovimiento("S");
 			
 			
 		}
+	}
+	
+	public CodProducto buscarCodById(int idCodigo)
+	{
+		return (CodProducto) getEntityManager().createQuery("SELECT c FROM CodProducto c where c.id=:idCodigo").setParameter("idCodigo", idCodigo).getSingleResult();
 	}
 
 	@Override

@@ -306,6 +306,17 @@ public class ReparacionCliente implements Serializable {
 	}
 
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reparacionCliente", cascade = CascadeType.REMOVE)
+	public List<DetalleReparacionExterna> getDetallesReparacionExterna() {
+		return detallesReparacionExterna;
+	}
+
+	public void setDetallesReparacionExterna(
+			List<DetalleReparacionExterna> detallesReparacionExterna) {
+		this.detallesReparacionExterna = detallesReparacionExterna;
+	}
+
+	
 	
 	
 	

@@ -370,10 +370,9 @@
 						reRender="mDetalle"
 						value="Reparacion Externa"   />
 					
-					<a:commandButton onclick="#{rich:component('modReparacionEx')}.show();" 
+					<a:commandButton onclick="#{rich:component('modRepRecibida')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1 and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='RCA' || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='RCP')}" styleClass="tallerBtn" ignoreDupResponses="true"
-						action="#{reparacionExternaHome.cargarReparacionRecibida(etapaRepCliHome.instance.reparacionCli)}"
-						reRender="modReparacionEx"
+						reRender="mRepRecibida"
 						value="Reparacion recibida"   />
 						
 					<h:outputLabel value="Se envio a reparacion externa" style="color:green;text-size:16;" rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and etapaRepCliHome.instance.reparacionCli.proceso.id==1 and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='ENV') }" />
@@ -766,6 +765,21 @@
 					</f:facet>
 					<s:div id="mDetalle">
 						<ui:include src="addDetalle.xhtml" />
+					</s:div>
+				</rich:modalPanel>
+				
+				<rich:modalPanel id="modRepRecibida" width="900" moveable="false"
+					autosized="true" top="50px"
+					onbeforeshow="activeModal.setActiveModalPanel('modRepRecibida');">
+					<f:facet name="header">Detalle Reparacion Externa</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('modRepRecibida')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="mRepRecibida">
+						<ui:include src="modRepRecibida.xhtml" />
 					</s:div>
 				</rich:modalPanel>
 				

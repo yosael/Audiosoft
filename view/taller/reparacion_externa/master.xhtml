@@ -44,6 +44,7 @@
 							style="width:250px;">
 							<ui:define name="label">Id de Cliente:</ui:define>
 							<h:inputText value="#{reparacionExternaHome.instance.customerNumber}"
+								maxlength="10"
 								 required="true" style="width:200px;">
 							</h:inputText>
 						</s:decorate>
@@ -320,6 +321,11 @@
 							<rich:column>
 								<f:facet name="header">Nuevo # Serie</f:facet>
 									<h:inputText value="#{res.nuevoCodigo.numSerie}" rendered="#{res.piezaReparacion==null}" />
+							</rich:column>
+							
+							<rich:column>
+								<f:facet name="header">Tiene garantia?</f:facet>
+									<h:selectBooleanCheckbox value="#{res.tieneGarantia}" />
 							</rich:column>
 							
 							<!--<rich:column>

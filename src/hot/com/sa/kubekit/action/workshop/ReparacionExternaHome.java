@@ -1,5 +1,7 @@
 package com.sa.kubekit.action.workshop;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,11 +28,13 @@ import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.Proveedor;
 import com.sa.model.inventory.ReparacionExterna;
 import com.sa.model.inventory.id.ItemId;
+import com.sa.model.sales.Service;
 import com.sa.model.security.Empresa;
 import com.sa.model.security.Sucursal;
 import com.sa.model.workshop.AparatoCliente;
 import com.sa.model.workshop.PiezaAparatoCliente;
 import com.sa.model.workshop.ReparacionCliente;
+import com.sa.model.workshop.ServicioReparacion;
 
 @Name("reparacionExternaHome")
 @Scope(ScopeType.CONVERSATION)
@@ -417,10 +421,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 		
 		
+		
 		//->Llenar la lista tipo items para ingresar compra
 		
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
+			
+			
 			
 			Item itemCompra = new Item();
 			itemCompra.setCantidad(1);
@@ -458,9 +465,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 				if(item.getReparacionCliente()!=null)
 				{
+					
 					if(item.getReparacionCliente().getEstadoRepExterna().equals("ENV"))
 					{
-						modificarEstadoReparacionCli(item.getReparacionCliente(),"RCA");//El item devuelto en la reparacion sera un aparato
+						modificarEstadoReparacionCli(item,"RCA");//El item devuelto en la reparacion sera un aparato
 					}
 				}
 			}
@@ -470,7 +478,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				{
 					if(item.getReparacionCliente().getEstadoRepExterna().equals("ENV"))
 					{
-						modificarEstadoReparacionCli(item.getReparacionCliente(),"RCP");//El item devuelto en la reparacion sera una pieza
+						modificarEstadoReparacionCli(item,"RCP");//El item devuelto en la reparacion sera una pieza
 					}
 				}
 				
@@ -482,9 +490,15 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 			
 			
+			//Aqui validar antes y agregar
+			//listaItemsMovimiento.add(itemCompra);
+			agregarListaMovimientos(itemCompra);
 			
-			listaItemsMovimiento.add(itemCompra);
-			
+		}
+		
+		for(Item item: listaItemsMovimiento)
+		{
+			System.out.println("Id inventario"+item.getInventario().getId());
 		}
 		
 		compraHome.setInstance(new Compra());
@@ -522,6 +536,12 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		int reingresados=0;*/
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
+			
+			if(item.getTieneGarantia()==null)
+			{
+				item.setTieneGarantia(false);
+			}
+			
 			item.setEstado("Re-ingresado");
 			item.setFechaRecibido(new Date());
 			item.setFechaModificacion(new Date());
@@ -559,6 +579,37 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		//->Registrar los items
 		
+		
+	}
+	
+	public void agregarListaMovimientos(Item item)
+	{
+		
+		boolean existe=false;
+		
+		if(listaItemsMovimiento.size()>0)
+		{
+			System.out.println("Entro al lista movivmientos****");
+			for(Item itemAc: listaItemsMovimiento)
+			{
+				
+				if(itemAc.getInventario()==item.getInventario())
+				{
+					existe=true;
+					//listaItemsMovimiento.remove(itemAc);
+					itemAc.setCantidad(itemAc.getCantidad()+1);
+					//listaItemsMovimiento.add(itemAc);
+					
+				}
+			}
+		}
+			
+		if(!existe)
+		{
+			System.out.println("No existia *********");
+			listaItemsMovimiento.add(item);
+		}
+			
 		
 	}
 	
@@ -659,7 +710,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		CodProducto codigo = cargarCodigo(reparacion.getAparatoRep().getNumSerie());
 		
 		nuevoDetalle.setReparacionCliente(reparacion);
-		nuevoDetalle.setAparato(cargarAparato(reparacion.getAparatoRep().getIdPrd()));
+		nuevoDetalle.setAparato(aparato);
 		nuevoDetalle.setCodigo(codigo);
 		
 				
@@ -678,6 +729,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	public Producto cargarAparato(int  idProducto)
 	{
+		//System.out.println("Id del producto "+idProducto);
 		Producto producto = new Producto();
 		try {
 			
@@ -696,16 +748,51 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public CodProducto cargarCodigo(String numero)
 	{
 		CodProducto codigo = new CodProducto();
+		List<CodProducto>  codigos = new ArrayList<CodProducto>();
 		try {
 			
-			codigo = (CodProducto) getEntityManager().createQuery("SELECT p FROM CodProducto p where p.numSerie=:numero").setParameter("numero", numero).getSingleResult();
+			codigos = getEntityManager().createQuery("SELECT p FROM CodProducto p where p.numSerie=:numero").setParameter("numero", numero).getResultList();
+			
+			if(codigos.size()<=0 || codigos==null)
+			{
+				//codigo = registrarCodigo(numero,idProducto);
+				FacesMessages.instance().add(Severity.WARN,"El codigo del producto no esta registrado");
+				return null;
+			}
+			else
+			{
+				codigo = codigos.get(0);
+			}
 			
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Ocurrio un problema");
-			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema, intente mas tarde");
-			return codigo;
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema cargando el codigo, intente mas tarde");
+			return null;
 		}
+		
+		return codigo;
+	}
+	
+	public CodProducto registrarCodigo(String numero,int idProducto)
+	{
+		
+		CodProducto codigo = new CodProducto();
+		try {
+			
+			
+			codigo.setEstado("USD");
+			codigo.setNumSerie(numero);
+			codigo.setInventario(cargarInventarioEnvio(cargarAparato(idProducto)));//Revisar
+			getEntityManager().persist(codigo);
+			codigo=getEntityManager().merge(codigo);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			FacesMessages.instance().add(Severity.WARN,"Codigo no registrado");
+			return null;
+		}
+		
 		
 		return codigo;
 	}
@@ -730,7 +817,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		apaCli.setNombre(aparato.getNombre());
 		apaCli.setNumSerie(codigo.getNumSerie());
 		apaCli.setActivo(true);
+		apaCli.setIdPrd(aparato.getIdPrd());
+		apaCli.setCostoVenta(aparato.getCostoVenta()!=null?aparato.getCostoVenta():null);
 		apaCli.setEstado("ACT");
+		apaCli.setCustomApa(aparato.isCustomApa());
+		apaCli.setFechaGarRep(aparato.getFechaGarRep());
+		apaCli.setPeriodoGarantia(aparato.getPeriodoGarantia()!=null?aparato.getPeriodoGarantia():null);
+		apaCli.setPeriodoGarantiaRep(aparato.getPeriodoGarantiaRep()!=null?aparato.getPeriodoGarantiaRep():null);
 		
 		getEntityManager().persist(apaCli);
 		
@@ -740,11 +833,118 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		return apaCli;
 	}
 	
+	public boolean verificarGarantiaAparato(ReparacionCliente reparacion) throws ParseException
+	{
+		
+		//if(reparacion.getAparatoRep().isGarantiaVigente() || reparacion.getAparatoRep())
+		boolean garantia=false;
+		
+		if(reparacion.getAparatoRep().getFechaGarRep()==null)
+		{
+			return false;
+		}
+		else
+		{
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date fechaGarantia= reparacion.getAparatoRep().getFechaGarRep();
+			
+			String diaHoyst;
+			String garantiast;
+			
+			//Date diaHoy=dateFormat.parse(dateFormat.format(new Date()).toString());
+			diaHoyst=dateFormat.format(new Date());
+			garantiast=dateFormat.format(fechaGarantia);
+			
+			Date fechaHoy=dateFormat.parse(diaHoyst);
+			
+			Date fechaGarantiaFinal=dateFormat.parse(garantiast);
+			
+			int dias=(int)((fechaHoy.getTime()-fechaGarantiaFinal.getTime())/86400000);
+			
+			
+			
+			
+			System.out.println("Fecha Garantia"+fechaGarantiaFinal);
+			System.out.println("Fecha Hoy"+fechaHoy);
+			System.out.println("Periodo garantia"+reparacion.getAparatoRep().getPeriodoGarantia());
+			System.out.println("Periodo garantia reparacion"+reparacion.getAparatoRep().getPeriodoGarantiaRep());
+			System.out.println("Dias transcurridos"+dias);
+			
+			
+			
+			if(reparacion.getAparatoRep().getPeriodoGarantia()!=null)
+			{
+				
+				if(dias<=reparacion.getAparatoRep().getPeriodoGarantia())
+					garantia=true;
+			}
+			
+			if(reparacion.getAparatoRep().getPeriodoGarantiaRep()!=null)
+			{
+				if(dias<=reparacion.getAparatoRep().getPeriodoGarantiaRep())
+					garantia=true;
+			}
+			
+			
+			
+		}
+		
+		return garantia;
+	}
+	
+	public void agregarServicioRep(ReparacionCliente reparacion) {
+		
+		 
+		ServicioReparacion srvRep = new ServicioReparacion();
+		srvRep.setReparacion(reparacion);
+		srvRep.setServicio(obtenerServicioCobro());
+		getEntityManager().persist(srvRep);
+		srvRep=getEntityManager().merge(srvRep);
+		
+		reparacion.getServiciosRep().add(srvRep);
+		
+	}
+	
+	public Service obtenerServicioCobro()
+	{
+		
+		Service servicio = new Service();
+		servicio = (Service) getEntityManager().createQuery("SELECT s FROM Service s where s.codigo='T054'").getSingleResult();
+		return servicio;
+	}
+	
 	public void agregarReparacionExternaTaller()//NOTA:Agregar nuevo campo en reparacionCliente que indique si se resolvio o no localmente la reparacion del item pendiente
 	{
 		
+		if(nuevoDetalle.getAparato()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe seleccionar el aparato");
+			return;
+		}
+		
+		if(nuevoDetalle.getCodigo()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe agregar el codigo del aparato");
+			FacesMessages.instance().add(Severity.WARN,"Reparacion no registrada");
+			return;
+		}
+		
 		if(cambioLocal)
 		{
+			
+			//Verificar si aparato actual tiene garantia para agregar servicio de 226 o no
+			try {
+				
+				if(!verificarGarantiaAparato(nuevoDetalle.getReparacionCliente()))
+				{
+					//nuevoDetalle.getReparacionCliente().setCosto(226f);
+					agregarServicioRep(nuevoDetalle.getReparacionCliente());
+				}
+			} catch (Exception e) {
+				FacesMessages.instance().add(Severity.WARN,"Problema verificando la garantia");
+			}
+			
 			
 			if(nuevoDetalle.getPiezaReparacion()==null)
 			{
@@ -764,6 +964,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				nuevoDetalle.setFechaModificacion(new Date());
 				nuevoDetalle.setEstado("Generada");
 				nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+				
+				modificarEstadoReparacionCli(nuevoDetalle, "FIN");
 				detalleReparacionExternaHome.setInstance(nuevoDetalle);
 				detalleReparacionExternaHome.save();
 				
@@ -781,6 +983,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				nuevoDetalle.setFechaModificacion(new Date());
 				nuevoDetalle.setEstado("Generada");
 				nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+				modificarEstadoReparacionCli(nuevoDetalle, "FIN");
 				detalleReparacionExternaHome.setInstance(nuevoDetalle);
 				detalleReparacionExternaHome.save();
 			}
@@ -792,7 +995,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			//Dejar estado de reparacion en espera
 			//Registrar detalle de reparacion externa .....Poner try catch
 			
-			modificarEstadoReparacionCli(nuevoDetalle.getReparacionCliente(),"ENV");
+			modificarEstadoReparacionCli(nuevoDetalle,"ENV");
 			
 			nuevoDetalle.setFechaModificacion(new Date());
 			nuevoDetalle.setEstado("Generada");
@@ -810,10 +1013,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		System.out.println("VAlor *****"+cambioLocal);
 	}
 	
-	public void modificarEstadoReparacionCli(ReparacionCliente reparacion,String estado)
+	public void modificarEstadoReparacionCli(DetalleReparacionExterna detalleRep,String estado)
 	{
-		reparacion.setEstadoRepExterna(estado);
-		getEntityManager().merge(reparacion);
+		detalleRep.getReparacionCliente().setEstadoRepExterna(estado);
+		getEntityManager().merge(detalleRep.getReparacionCliente());
 	}
 	
 	public void sustituirAparato(ReparacionCliente reparacion,AparatoCliente aparato)
@@ -830,6 +1033,15 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		/*Producto pieza = new Producto();
 		pieza= nuevoDetalle.getPiezaReparacion();
 		*/
+		
+		
+		//Verificar si trae garantia para cobrar 225 o no
+		
+		if(!detalleRep.getTieneGarantia())
+		{
+			//detalleRep.getReparacionCliente().setCosto(226f);
+			agregarServicioRep(detalleRep.getReparacionCliente());
+		}
 		
 		if(detalleRep.getPiezaReparacion()==null)
 		{
@@ -859,7 +1071,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			//Crear el modivmiento y reducir inventario
 			agregarDetallesMovimiento(detalleRep.getAparato());
 			
-			modificarEstadoReparacionCli(detalleRep.getReparacionCliente(), "FIN");
+			modificarEstadoReparacionCli(detalleRep, "FIN");
 			
 			agregarMovimiento("S");
 			
@@ -869,7 +1081,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			//Crear el modivmiento y reducir inventario
 			agregarDetallesMovimiento(detalleRep.getPiezaReparacion());
 			
-			modificarEstadoReparacionCli(detalleRep.getReparacionCliente(), "FIN");
+			modificarEstadoReparacionCli(detalleRep, "FIN");
 			
 			agregarMovimiento("S");
 			

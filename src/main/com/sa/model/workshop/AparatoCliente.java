@@ -138,7 +138,7 @@ public class AparatoCliente implements Serializable {
 		this.modelo = modelo;
 	}
 
-	@Column(name = "numSerie", nullable = true, length = 80)
+	@Column(name = "numSerie", nullable = true, length = 25)
 	public String getNumSerie() {
 		return numSerie;
 	}
@@ -174,7 +174,7 @@ public class AparatoCliente implements Serializable {
 		this.retroAuricular = retroAuricular;
 	}
 
-	@Column(name = "num_lote", nullable = true, length = 20)
+	@Column(name = "num_lote", nullable = true, length = 25)
 	public String getNumLote() {
 		return numLote;
 	}

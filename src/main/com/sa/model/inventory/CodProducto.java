@@ -69,7 +69,7 @@ public class CodProducto implements Serializable {
 		this.movimiento = movimiento;
 	}
 	
-	@Column(name = "num_serie", nullable = true, length=20)
+	@Column(name = "num_serie", nullable = true, length=25)
 	public String getNumSerie() {
 		return numSerie;
 	}
@@ -77,7 +77,7 @@ public class CodProducto implements Serializable {
 		this.numSerie = numSerie;
 	}
 	
-	@Column(name = "num_lote", nullable = true, length=20)
+	@Column(name = "num_lote", nullable = true, length=25)
 	public String getNumLote() {
 		return numLote;
 	}

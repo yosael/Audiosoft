@@ -204,10 +204,42 @@ public void cargarCompras() {
 		selectedItem = prdItm;
 		ArrayList<CodProducto> codsProds = new ArrayList<CodProducto>();
 		
-		CodProducto codPrd = c;
+		/* nuevo */
+		/*lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+		System.out.println("Asigno el valor a la lista codigo");*/
+		
+		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia())==null)
+		{
+			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), new ArrayList<CodProducto>());
+		}
+		
+		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()).size()>0)
+		{
+			if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()).contains(c))
+			{
+				FacesMessages.instance().add(Severity.WARN,"El codigo ya fue agregado");
+				return; 
+			}	
+			else
+			{
+				System.out.println("Lista de codigos mayor a cero y no repetido, entro al else *******");
+				codsProds=lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
+				
+			}
+		}
+		else
+		{
+			System.out.println("Inventario con cero codigos ******");
+		}
+		
+		c.setInventario(prdItm.getInventario());
+		c.setEstado("ACT");
+		codsProds.add(c);
+		
+		/*CodProducto codPrd = c;
 		codPrd.setEstado("ACT");
 		codPrd.setInventario(prdItm.getInventario());
-		codsProds.add(codPrd);
+		codsProds.add(codPrd);*/
 		
 				
 		currCodigos = codsProds;
@@ -398,12 +430,13 @@ public void cargarCompras() {
 	}
 	
 	
-	public void preGuardar()
+	public boolean preGuardar()
 	{
-		instance.setEstado("Pre-Guardada");
 		
+		instance.setEstado("Pre-Guardada");
 		save();
 		
+		return true;
 		
 	}
 	
@@ -449,7 +482,7 @@ public void cargarCompras() {
 			}
 		}
 		
-		FacesMessages.instance().add(Severity.WARN,"Items agregados");
+		FacesMessages.instance().add(Severity.INFO,"Items agregados");
 		
 	}
 	
@@ -460,6 +493,7 @@ public void cargarCompras() {
 					sainv_messages.get("compraHome_error_save1"));
 			return false;
 		}
+		
 		if(itemsAgregados.isEmpty()){
 			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("compraHome_error_save2"));
@@ -615,6 +649,8 @@ public void cargarCompras() {
 		instance.setEstado("Registrada");
 		
 		modify();
+		
+		FacesMessages.instance().add(Severity.INFO,"Compra registrada");
 		
 		return true;
 		

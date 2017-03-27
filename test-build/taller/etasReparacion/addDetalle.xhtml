@@ -33,7 +33,7 @@
 					
 					<rich:spacer height="15px;" ></rich:spacer>
 					
-					<h:panelGrid columns="1" >
+					<h:panelGrid columns="2" >
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Cambiar localmente?:</ui:define>
 							<h:selectOneRadio value="#{reparacionExternaHome.cambioLocal}">
@@ -48,7 +48,7 @@
 					
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Reparacion taller:</ui:define>
-							<h:inputText readonly="true" value="#{RPR}#{reparacionExternaHome.nuevoDetalle.reparacionCliente.id}" />
+							<h:inputText readonly="true" value="#{'RPR'}#{reparacionExternaHome.nuevoDetalle.reparacionCliente.id}" />
 						</s:decorate>
 						
 						<!--<s:decorate template="/layout/kEditSpace.xhtml"> Esta opcion estara abilitada en caso que seleccione localmenten -->

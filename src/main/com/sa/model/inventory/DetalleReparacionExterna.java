@@ -39,7 +39,8 @@ public class DetalleReparacionExterna implements Serializable {
 	private String comentario;
 	private String estado;
 	private Integer idNuevoCodigo;
-	private Boolean llevaPieza;
+	//private Boolean llevaPieza;
+	private Boolean tieneGarantia;
 	
 	//private Sucursal sucursal;
 	
@@ -181,15 +182,23 @@ public class DetalleReparacionExterna implements Serializable {
 	}
 	
 	
-	@Column(name = "lleva_pieza", nullable = true)
+	
+	/*@Column(name = "lleva_pieza", nullable = true)
 	public Boolean getLlevaPieza() {
 		return llevaPieza;
 	}
 	public void setLlevaPieza(Boolean llevaPieza) {
 		this.llevaPieza = llevaPieza;
+	}*/
+	
+	
+	@Column(name = "tieneGarantia", nullable = true)
+	public Boolean getTieneGarantia() {
+		return tieneGarantia;
 	}
-	
-	
+	public void setTieneGarantia(Boolean tieneGarantia) {
+		this.tieneGarantia = tieneGarantia;
+	}
 	
 
 }

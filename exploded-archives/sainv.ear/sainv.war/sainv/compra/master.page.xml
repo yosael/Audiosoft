@@ -9,6 +9,12 @@
 		</rule>
 	</navigation>
 	
+	<navigation from-action="#{compraHome.preGuardar()}">
+		<rule if-outcome="true">
+			<redirect view-id="/sainv/compra/list.xhtml" />
+		</rule>
+	</navigation>
+	
 	<navigation from-action="#{compraHome.modify()}">
 		<rule if-outcome="true">
 			<redirect view-id="/sainv/compra/list.xhtml" />

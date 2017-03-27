@@ -76,7 +76,7 @@
 						
 						<rich:column>
 							<f:facet name="header">Reparacion Taller</f:facet>
-							<h:outputText value="#{res.reparacionCliente.proceso.nombre}" rendered="#{res.reparacionCliente!=null}" />
+							<h:outputText value="#{'RPR'}#{res.reparacionCliente.id}" rendered="#{res.reparacionCliente!=null}" />
 						</rich:column>
 						
 						<rich:column>
@@ -94,9 +94,10 @@
 							<h:outputText value="#{res.codigo.numSerie}" rendered="#{res.codigo!=null}" readonly="true" />
 						</rich:column>
 						
-						<rich:column rendered="#{res.idNuevoCodigo!=null}">
+						<rich:column >
 							<f:facet name="header">Nuevo # Serie</f:facet>
-							<h:outputText value="#{reparacionExternaHome.buscarCodById(res.idNuevoCodigo).numSerie}" rendered="#{res.idNuevoCodigo!=null}" readonly="true" />
+							<h:outputText value="#{reparacionExternaHome.buscarCodById(res.idNuevoCodigo).numSerie}" rendered="#{res.idNuevoCodigo!=null}"  />
+							<h:outputText value="-----" rendered="#{res.idNuevoCodigo==null}"  />
 						</rich:column>
 						
 						<rich:column><!-- <rich:spacer width="5px;" ></rich:spacer> -->
@@ -131,6 +132,12 @@
 						<rich:column>
 							<f:facet name="header">Estado</f:facet>
 							<h:outputText value="#{res.estado}"  />
+						</rich:column>
+						
+						<rich:column>
+							<f:facet name="header">Garantia</f:facet>
+							<h:outputText value="SI" rendered="#{res.tieneGarantia}"  />
+							<h:outputText value="NO" rendered="#{not res.tieneGarantia}"  />
 						</rich:column>
 											
 						<rich:column>

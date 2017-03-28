@@ -145,8 +145,8 @@
 												<h:outputText styleClass="bigCnt" value="#{val[3]}">
 												</h:outputText>
 											</h:column>
-
-											<a:support event="onselect" reRender="lblSelPat,infoCliBtn"
+											<!-- reRender="lblSelPat,infoCliBtn" cambiado -->
+											<a:support event="onselect" reRender="formreparacioncli"
 												eventsQueue="q1" ajaxSingle="true"
 												action="#{reparacionClienteHome.instance.setCliente(val[4])}"
 												focus="patSearch" />
@@ -166,16 +166,16 @@
 											onclick="#{rich:component('confirmation')}.show();"
 											ajaxSingle="true"
 											action="#{reparacionClienteHome.cargarAparatosCli()}"
-											reRender="m0" disabled="#{reparacionClienteHome.managed}"
+											reRender="m0" disabled="#{reparacionClienteHome.managed || reparacionClienteHome.instance.cliente==null}"
 											styleClass="modifyBtn" value=" " style="width:30px;">
 										</a:commandButton>
 										
-										<h:outputLabel value="Agregar aparato externo " style="font-weight:bold;" />
+										<h:outputLabel value="Registrar nuevo aparato " style="font-weight:bold;" />
 										<a:commandButton
 											onclick="#{rich:component('addExternalMl')}.show();"
 											ajaxSingle="true"
 											action="#{aparatoClienteHome.cargarCliente(reparacionClienteHome.instance.cliente)}"
-											reRender="modEx" disabled="#{reparacionClienteHome.managed}"
+											reRender="modEx" disabled="#{reparacionClienteHome.managed || reparacionClienteHome.instance.cliente==null}"
 											styleClass="modifyBtn" value=" " style="width:30px;">
 										</a:commandButton>
 										<a:commandButton
@@ -652,11 +652,11 @@
 				
 				
 				<!-- Nuevo modal para agregar aparato externo -->
-				<rich:modalPanel id="addExternalMl" width="1000" moveable="true"
+				<rich:modalPanel id="addExternalMl" width="600" moveable="true"
 					autosized="true" top="40"
 					onbeforeshow="activeModal.setActiveModalPanel('addExternalMl');">
 					<f:facet name="header">
-						Agregar aparato externo
+						Registrar nuevo aparato
 					</f:facet>
 					<f:facet name="controls">
 						<h:panelGroup>
@@ -842,6 +842,22 @@
 						</s:decorate>
 
 					</h:form>
+				</rich:modalPanel>
+				
+				<rich:modalPanel id="selItem" width="900" moveable="false"
+					autosized="true" top="50px"
+					onmaskclick="#{rich:component('selItem')}.hide();"
+					onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+					<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('selItem')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="mAddProducto">
+						<ui:include src="addProducts.xhtml" />
+					</s:div>
 				</rich:modalPanel>
 
 				<rich:modalPanel id="confirmationDeliver" width="500"

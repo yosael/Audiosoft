@@ -19,6 +19,7 @@ import com.sa.model.crm.Cliente;
 import com.sa.model.inventory.CodProducto;
 import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
+import com.sa.model.inventory.Producto;
 import com.sa.model.workshop.AparatoCliente;
 import com.sa.model.workshop.PiezaAparatoCliente;
 
@@ -35,6 +36,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	private boolean tieneGarantia;
 	private boolean tieneGarantiaRep;
 	private boolean cerrarModal;
+	private Producto productoAsociado;
 	
 	@Override
 	public void create() {
@@ -103,6 +105,12 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		}
 		
 	}
+	
+	public void agregarProductoAsociado(Producto producto)
+	{
+		setProductoAsociado(producto);
+	}
+	
 	
 	//método que actualiza el Estado de un aparato
 	public void setActivo(AparatoCliente apa){
@@ -424,6 +432,14 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 
 	public void setCerrarModal(boolean cerrarModal) {
 		this.cerrarModal = cerrarModal;
+	}
+
+	public Producto getProductoAsociado() {
+		return productoAsociado;
+	}
+
+	public void setProductoAsociado(Producto productoAsociado) {
+		this.productoAsociado = productoAsociado;
 	}
 	
 	

@@ -81,6 +81,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	private String nombre;
 	private String estado;
 	
+	
 	private String repCliId2="";
 	
 	
@@ -140,6 +141,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			return false;
 		}
 	}
+	
 	
 	public void load(){
 		try{
@@ -1441,6 +1443,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	public void setRepCliId2(String repCliId2) {
 		this.repCliId2 = repCliId2;
 	}
+
+	
 	
 	
 	

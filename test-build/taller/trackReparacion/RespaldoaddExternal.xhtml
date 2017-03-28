@@ -14,25 +14,25 @@
 				<!-- <p:growl globalOnly="true" sticky="false" life="3000" /> -->
 				<p:focus />
 				<a:queue name="q1" />
-				<fieldset><legend>Informacion de aparato nuevo</legend> 
-					
-						<h:panelGrid columns="2" style="margin:0 auto;" >
-						
+				<fieldset><legend>#{app.combapa_legend}</legend> 
+				<center>
+					<table>
+					<tr>
+					<td style="width:40%;">
+					<center>
+						<h:panelGrid columns="3" >
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.repcli_cliente}:</ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.cliente.nombres} #{aparatoClienteHome.instance.cliente.apellidos}" 
 									readonly="true" required="true" disabled="true" style="width:200px;" />
 							</s:decorate>
-							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" >
-								<ui:define name="label">#{app.aparcli_earside}:</ui:define>
-								<h:selectOneMenu value="#{aparatoClienteHome.instance.ladoAparato}" required="true" style="width:180px;">
-									<f:selectItem itemLabel="#{msn.side_left}" itemValue="IZQ" />
-									<f:selectItem itemLabel="#{msn.side_right}" itemValue="DER" />
-									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
-								</h:selectOneMenu>
-							</s:decorate>
 								
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+								<ui:define name="label">#{app.aparcli_detapa}:</ui:define>
+								<h:inputTextarea value="#{aparatoClienteHome.instance.detalleAparato}" style="width:180px;" >
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+								</h:inputTextarea>
+							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
 								<ui:define name="label">#{app.aparcli_earphone}:</ui:define>
@@ -48,6 +48,14 @@
 								</h:selectBooleanCheckbox>
 							</s:decorate>
 							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" >
+								<ui:define name="label">#{app.aparcli_earside}:</ui:define>
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.ladoAparato}" required="true" style="width:180px;">
+									<f:selectItem itemLabel="#{msn.side_left}" itemValue="IZQ" />
+									<f:selectItem itemLabel="#{msn.side_right}" itemValue="DER" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								</h:selectOneMenu>
+							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
 								<ui:define name="label">#{app.aparcli_customapa}:</ui:define>
@@ -74,7 +82,7 @@
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
 								</h:selectOneMenu>
 							</s:decorate>
-							
+														
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_tmGarRep" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}" >
 								<ui:define name="label" >#{app.aparcli_gar_tll_p}:</ui:define>
 								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantiaRep}" style="width:160px;" disabled="true">
@@ -85,7 +93,6 @@
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
 								</h:selectOneMenu>
 							</s:decorate>
-														
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}">
 								<ui:define name="label">#{app.aparcli_gar_tll_d}:</ui:define>
@@ -94,6 +101,13 @@
 								</h:inputText>
 							</s:decorate>
 							
+						</h:panelGrid> 
+						</center>
+					</td>
+					<td style="width:50%;text-align:center;">
+						
+						
+						<h:panelGrid columns="2" id="_fldCustom"  >
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.productomast_name}:</ui:define>
@@ -114,28 +128,22 @@
 								<ui:define name="label">#{app.producto_codser}: <span class="required">*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" style="width:200px;" />
 							</s:decorate>
-							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
-								<ui:define name="label">#{app.aparcli_detapa}:</ui:define>
-								<h:inputTextarea value="#{aparatoClienteHome.instance.detalleAparato}" style="width:180px;" >
-									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
-								</h:inputTextarea>
-							</s:decorate>
 						
-					</h:panelGrid>
-					
-					<rich:spacer height="10px;" ></rich:spacer>
-					
-					<h:panelGrid style="margin:0 auto;">
-						<s:decorate template="/layout/kActions.xhtml">
-								<a:commandButton action="#{aparatoClienteHome.save()}" reRender="formreparacioncli,formapaclidet"
-									rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
-									value="#{msn.button_save}" oncomplete="validar()"  /><!-- onclick="#{rich:component('addExternalMl')}.hide();"  -->
-						</s:decorate>
-					</h:panelGrid>
-																
-				</fieldset>
+						</h:panelGrid>
+						
+						
+					</td>
+					</tr>
+					</table>
 				
+				<s:decorate template="/layout/kActions.xhtml">
+					<a:commandButton action="#{aparatoClienteHome.save()}" reRender="formreparacioncli,formapaclidet"
+						rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+						value="#{msn.button_save}" oncomplete="validar()"  /><!-- onclick="#{rich:component('addExternalMl')}.hide();"  -->
+							
+				</s:decorate>
+				</center>
+				</fieldset>
 				<s:div id="val" >
 						<script type="text/javascript"> 
 						function validar(){						

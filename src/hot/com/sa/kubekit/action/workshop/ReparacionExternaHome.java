@@ -1,5 +1,6 @@
 package com.sa.kubekit.action.workshop;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,6 +120,20 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			empresa = (Empresa) getEntityManager().createQuery("SELECT e FROM Empresa e where e.id=:idEmpresa").setParameter("idEmpresa", 2).getSingleResult();
 			instance.setEmpresa(empresa);
 		}
+	}
+	
+	
+	public String obtenerFormatoFecha(Date date)
+	{
+		String resultado;
+		
+		SimpleDateFormat formatter;
+		
+		formatter = new SimpleDateFormat("EEEE d MMMM yyyy");
+		
+		resultado = formatter.format(date);
+		
+		return resultado;
 	}
 	
 	public void cargarReparaciones()

@@ -1,0 +1,157 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="OUTSIDE WARRANTY RETURN SHEET" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf"  orientation="landscape" ><!-- margins="70 30 30 30" -->
+	<p:font size="16" >
+		<p:paragraph alignment="left">OUTSIDE WARRANTY RETURN SHEET</p:paragraph>
+	</p:font>
+	
+	
+	
+	<p:html><br /></p:html>
+	
+		<p:html>
+			<table style="border:none;">
+				<tr>
+					<td><span style="font-size:10px;font-weight:bold;" >Date: </span><span style="font-size:10px;">#{reparacionExternaHome.obtenerFormatoFecha(reparacionExternaHome.instance.fechaEnvio)}</span></td>
+				</tr>
+				<tr>
+					<td><span style="font-size:10px;font-weight:bold;">Customer Number: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.customerNumber}</span></td>
+				</tr>
+				<tr>
+					<td><span style="font-size:10px;font-weight:bold;">Company: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.empresa.nombre}</span></td>
+				</tr>
+				<tr>
+					<td><span style="font-size:10px;font-weight:bold;">Country: </span><span style="font-size:10px;">El Salvador</span></td>
+				</tr>
+				<tr>
+					<td><span style="font-size:10px;font-weight:bold;">Technician Name</span></td>
+				</tr>
+			</table>
+		</p:html>
+		
+		<p:html><br /></p:html>
+		
+		<p:table columns="10" widthPercentage="100" headerRows="2"  widths="0.3 2 2.2 1.5 1.5 1.2 2 2.2 1.8 1.6"  style="font-size:10px;">
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B" paddingBottom="4">
+				<p:font color="white" style="bold" size="8" >
+					<p:paragraph alignment="center"  >#</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B" paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Hearing aid</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B" paddingBottom="4">
+				<p:font color="white" style="bold" paddingRight="6" size="8" >
+					<p:paragraph alignment="right" >Hearing aid item No</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Serial No</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Oticon invoice date</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Repair date</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Part changed</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Part number</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Comment</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#F56B6B"  paddingBottom="4">
+				<p:font color="white" style="bold" size="8">
+					<p:paragraph alignment="center">Estado</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="dtRep" value="#{reparacionExternaHome.detalleReparacion}">
+			
+				<p:cell verticalAlignment="middle">
+					<p:font size="8">
+						<p:paragraph  >#{dtRep.cont}</p:paragraph>
+					</p:font>	
+				</p:cell>		
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6" size="8">
+					<p:font size="8">
+						<p:paragraph  >#{dtRep.aparato.nombre}</p:paragraph>
+					</p:font>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.aparato.referencia}</p:paragraph>
+					</p:font>	
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.codigo.numSerie}</p:paragraph>
+					</p:font>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>
+							<!-- <p:text value="#{dtRep.fechaRecibido}" >
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</p:text> -->
+						</p:paragraph>
+					</p:font>		
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>
+							<!-- <p:text value="#{dtRep.fechaModificacion}" >
+								<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+							</p:text>-->
+						</p:paragraph> 
+					</p:font>	
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.piezaReparacion.nombre}</p:paragraph>
+					</p:font>
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.piezaReparacion.referencia}</p:paragraph>
+					</p:font>	
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.comentario}</p:paragraph>
+					</p:font>	
+				</p:cell>
+				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6">
+					<p:font size="8">
+						<p:paragraph>#{dtRep.estado}</p:paragraph>
+					</p:font>
+				</p:cell>
+			</ui:repeat>
+						
+		</p:table>
+		
+</p:document>

@@ -37,7 +37,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	private boolean tieneGarantiaRep;
 	private boolean cerrarModal;
 	private Producto productoAsociado;
-	private CodProducto codigo = new CodProducto();
+	
 	
 	@Override
 	public void create() {
@@ -227,18 +227,21 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		
 		if(!instance.isCustomApa() && productoAsociado!=null)
 		{
+			items.clear();
+			
 			System.out.println("Entro a item para pieza");
 			Item item = new Item();
 			item.setCantidad(1);
 			item.setCostoUnitario(productoAsociado.getCosto()!=null?productoAsociado.getCosto():0f);
-			codigo.setNumSerie(instance.getNumSerie()!=null?instance.getNumSerie():null);
-			codigo.setEstado("ACT");
-			codigo.setNumLote(null);
 			
-			System.out.println("Numero de serie"+codigo.getNumSerie());
 			
 			item.setInventario(productoAsociado.getInventarios().get(0));
-			item.setCodProducto(codigo);
+			
+			item.setCodProducto(new CodProducto());
+			item.getCodProducto().setNumSerie(instance.getNumSerie()!=null?instance.getNumSerie():null);
+			item.getCodProducto().setEstado("ACT");
+			item.getCodProducto().setNumLote(null);
+			
 			item.setPrincipal(true);
 			
 			System.out.println("Serie en codigo "+item.getCodProducto().getNumSerie());
@@ -494,13 +497,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		this.productoAsociado = productoAsociado;
 	}
 
-	public CodProducto getCodigo() {
-		return codigo;
-	}
 
-	public void setCodigo(CodProducto codigo) {
-		this.codigo = codigo;
-	}
 	
 	
 	

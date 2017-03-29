@@ -434,10 +434,22 @@ public void cargarCompras() {
 	{
 		
 		instance.setEstado("Pre-Guardada");
-		save();
 		
-		return true;
 		
+		return save();
+		
+	}
+	
+	public void desactualizarItem(Item item)
+	{
+		System.out.println("Cantidad"+item.getCantidad());
+		System.out.println("Nombre"+item.getInventario().getProducto().getNombre());
+		
+		
+		//Solucion
+		
+		//Compara con la categoria del inventario si este requiere serie o lote y cargar la lista de codigos que tiene con el metodo existente
+		//recorrer la lista de codigos y eliminar o desactivar los codigos
 	}
 	
 	

@@ -229,8 +229,9 @@
 								<rich:spacer width="10"
 									rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
 										res.inventario.producto.categoria.tieneNumLote==true}" />
+										
 								<a:commandLink reRender="formcompra" eventsQueue="q1"
-									action="#{compraHome.removerItem(res)}" ajaxSingle="true">
+									action="#{compraHome.desactualizarItem(res)}" ajaxSingle="true"><!-- action="#{compraHome.removerItem(res)}" ajaxSingle="true" -->
 									<h:graphicImage value="/kubeImg/table_delete16.png" />
 								</a:commandLink>
 

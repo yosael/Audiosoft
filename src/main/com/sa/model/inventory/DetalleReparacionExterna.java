@@ -48,6 +48,8 @@ public class DetalleReparacionExterna implements Serializable {
 	private CodProducto nuevoCodigo = new CodProducto();
 	private int candidad;
 	
+	private int cont=0;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -199,6 +201,17 @@ public class DetalleReparacionExterna implements Serializable {
 	public void setTieneGarantia(Boolean tieneGarantia) {
 		this.tieneGarantia = tieneGarantia;
 	}
+	
+	@Transient
+	public int getCont() {
+		this.cont=cont+1;
+		return cont;
+	}
+	public void setCont(int cont) {
+		this.cont = cont;
+	}
+	
+	
 	
 
 }

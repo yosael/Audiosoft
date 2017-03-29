@@ -53,15 +53,17 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.compramast_select_product}" reRender="formreparacioncli"
-							action="#{reparacionClienteHome.agregarProductoAsociado(res.producto)}" ajaxSingle="true" eventsQueue="q1"
+						<a:commandLink value="#{app.compramast_select_product}" reRender="formapaclidet"
+							action="#{aparatoClienteHome.agregarProductoAsociado(res.producto)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('selItem')}.hide();">
 						</a:commandLink>
 					</rich:column>
 					<f:facet name="footer">
-						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						<rich:datascroller id="ds1Prd" renderIfSinglePage="true" />
 					</f:facet>
 				</rich:dataTable>
+				
+				
 				
 			</h:form>
 	

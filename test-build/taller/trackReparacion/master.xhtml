@@ -167,7 +167,7 @@
 											ajaxSingle="true"
 											action="#{reparacionClienteHome.cargarAparatosCli()}"
 											reRender="m0" disabled="#{reparacionClienteHome.managed || reparacionClienteHome.instance.cliente==null}"
-											styleClass="modifyBtn" value=" " style="width:30px;">
+											styleClass="searchBtn" value=" " style="width:30px;">
 										</a:commandButton>
 										
 										<h:outputLabel value="Registrar nuevo aparato " style="font-weight:bold;" />
@@ -176,7 +176,7 @@
 											ajaxSingle="true"
 											action="#{aparatoClienteHome.cargarCliente(reparacionClienteHome.instance.cliente)}"
 											reRender="modEx" disabled="#{reparacionClienteHome.managed || reparacionClienteHome.instance.cliente==null}"
-											styleClass="modifyBtn" value=" " style="width:30px;">
+											styleClass="addBtn" value=" " style="width:30px;">
 										</a:commandButton>
 										<a:commandButton
 											onclick="#{rich:component('verApaCli')}.show();"
@@ -843,7 +843,6 @@
 
 					</h:form>
 				</rich:modalPanel>
-				
 				
 
 				<rich:modalPanel id="confirmationDeliver" width="500"

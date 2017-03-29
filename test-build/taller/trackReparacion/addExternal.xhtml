@@ -50,9 +50,9 @@
 							
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
-								<ui:define name="label">#{app.aparcli_customapa}:</ui:define>
-								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.customApa}" id="checkExterno"   >
-									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+								<ui:define name="label" >#{app.aparcli_customapa}:</ui:define>
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.customApa}" id="checkExterno"  title="Significa que el paciente compro el producto fuera de Audiomed" >
+									<a:support event="onchange" ajaxSingle="true" action="#{aparatoClienteHome.actualizarDesdeCheckExterno()}" eventsQueue="q1" reRender="formapaclidet" />
 								</h:selectBooleanCheckbox>
 							</s:decorate>
 							 
@@ -85,7 +85,22 @@
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
 								</h:selectOneMenu>
 							</s:decorate>
-														
+												
+												
+							<s:decorate template="/layout/kEditSpace.xhtml">
+										<ui:define name="label">Asociar producto(Item):</ui:define>
+										<h:inputText
+											value="#{aparatoClienteHome.productoAsociado.nombre}"
+											readonly="true" disabled="true" style="width:200px;">
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" rendered="#{not aparatoClienteHome.instance.customApa}" />
+										</h:inputText>
+										<a:commandButton
+											onclick="#{rich:component('selItem')}.show();"
+											ajaxSingle="true"
+											reRender="mAddProducto" rendered="#{not aparatoClienteHome.instance.customApa}"
+											styleClass="addBtn" value=" " style="width:30px;">
+										</a:commandButton>
+							</s:decorate>		
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}">
 								<ui:define name="label">#{app.aparcli_gar_tll_d}:</ui:define>
@@ -97,22 +112,30 @@
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.productomast_name}:</ui:define>
-								<h:inputText value="#{aparatoClienteHome.instance.nombre}" style="width:200px;" />
+								<h:inputText value="#{aparatoClienteHome.instance.nombre}" style="width:200px;" >
+									<a:support ajaxSingle="true" event="onblur" ></a:support>
+								</h:inputText>
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.aparcli_brand}: <span class="required">*</span></ui:define>
-								<h:inputText value="#{aparatoClienteHome.instance.marca}"  style="width:200px;" />
+								<h:inputText value="#{aparatoClienteHome.instance.marca}"  style="width:200px;" >
+									<a:support ajaxSingle="true" event="onblur" ></a:support>
+								</h:inputText>
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.aparcli_model}: <span class="required">*</span></ui:define>
-								<h:inputText value="#{aparatoClienteHome.instance.modelo}" style="width:200px;" />
+								<h:inputText value="#{aparatoClienteHome.instance.modelo}" style="width:200px;" >
+									<a:support ajaxSingle="true" event="onblur" ></a:support>
+								</h:inputText>
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
 								<ui:define name="label">#{app.producto_codser}: <span class="required">*</span></ui:define>
-								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" style="width:200px;" />
+								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" style="width:200px;" >
+									<a:support ajaxSingle="true" event="onblur" ></a:support>
+								</h:inputText>
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
@@ -128,13 +151,29 @@
 					
 					<h:panelGrid style="margin:0 auto;">
 						<s:decorate template="/layout/kActions.xhtml">
-								<a:commandButton action="#{aparatoClienteHome.save()}" reRender="formreparacioncli,formapaclidet"
+								<a:commandButton action="#{aparatoClienteHome.registrarNuevoAparato()}" reRender="formreparacioncli,formapaclidet"
 									rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
 									value="#{msn.button_save}" oncomplete="validar()"  /><!-- onclick="#{rich:component('addExternalMl')}.hide();"  -->
 						</s:decorate>
 					</h:panelGrid>
 																
 				</fieldset>
+				
+				<rich:modalPanel id="selItem" width="900" moveable="false"
+					autosized="true" top="50px"
+					onmaskclick="#{rich:component('selItem')}.hide();"
+					onbeforeshow="activeModal.setActiveModalPanel('selItem');">
+					<f:facet name="header">#{app.compralist_add_products_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('selItem')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="mAddProducto">
+						<ui:include src="addProducts.xhtml" />
+					</s:div>
+				</rich:modalPanel>
 				
 				<s:div id="val" >
 						<script type="text/javascript"> 

@@ -37,6 +37,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	private boolean tieneGarantiaRep;
 	private boolean cerrarModal;
 	private Producto productoAsociado;
+	private CodProducto codigo = new CodProducto();
 	
 	@Override
 	public void create() {
@@ -109,6 +110,11 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	public void agregarProductoAsociado(Producto producto)
 	{
 		setProductoAsociado(producto);
+		instance.setNombre(producto.getNombre());
+		instance.setMarca(producto.getMarca().getNombre());
+		instance.setModelo(producto.getModelo());
+		
+		
 	}
 	
 	
@@ -170,14 +176,14 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	public void cargarCliente(Cliente cliente)
 	{
 		instance.setCliente(cliente);
-		instance.setCustomApa(true);
+		instance.setCustomApa(false);
 	}
 
 	@Override
 	public boolean preSave() {
 		cerrarModal=false;
 		// Verificamos que todos los items que tienen numero de serie o lote lo tengan lleno.
-				for (Item item : getItems()) {
+				for (Item item : getItems()) {System.out.println("Posave numero serie"+item.getCodProducto().getNumSerie());
 					if (item.getInventario().getProducto() != null) {
 						System.out.println("Producto: " + item.getInventario().getProducto().getNombre());
 						if (item.getInventario().getProducto().getCategoria()
@@ -188,7 +194,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 										sainv_messages.get("aparcli_error_itmnolot"));
 								return false;
 							}
-						} else if (item.getInventario().getProducto().getCategoria().isTieneNumSerie())		{
+						} else if (item.getInventario().getProducto().getCategoria().isTieneNumSerie()){
 							if (item.getCodProducto().getNumSerie().isEmpty()) {
 								System.out.println("Entré al if, yo debería estar explotando en tu cara NumSerie");
 								FacesMessages.instance().add(
@@ -199,6 +205,52 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 						}
 					}
 		return guardarAparato();
+	}
+	
+	public void actualizarDesdeCheckExterno()
+	{
+		if(instance.isCustomApa())
+			productoAsociado=null;
+			
+	}
+	
+	public void registrarNuevoAparato()
+	{
+		cerrarModal=false;
+		if(!instance.isCustomApa() && productoAsociado==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe asociar un producto/item al aparato");
+			return;
+		}
+		
+		
+		
+		if(!instance.isCustomApa() && productoAsociado!=null)
+		{
+			System.out.println("Entro a item para pieza");
+			Item item = new Item();
+			item.setCantidad(1);
+			item.setCostoUnitario(productoAsociado.getCosto()!=null?productoAsociado.getCosto():0f);
+			codigo.setNumSerie(instance.getNumSerie()!=null?instance.getNumSerie():null);
+			codigo.setEstado("ACT");
+			codigo.setNumLote(null);
+			
+			System.out.println("Numero de serie"+codigo.getNumSerie());
+			
+			item.setInventario(productoAsociado.getInventarios().get(0));
+			item.setCodProducto(codigo);
+			item.setPrincipal(true);
+			
+			System.out.println("Serie en codigo "+item.getCodProducto().getNumSerie());
+			
+			this.items.add(item);
+			
+			instance.setIdPrd(productoAsociado.getId()!=null?productoAsociado.getId():null);
+		}
+		
+		instance.setActivo(true);
+		
+		save();
 	}
 	
 	private boolean guardarAparato() {
@@ -253,7 +305,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			}
 			
 			if(apaPrpal == null) {
-				FacesMessages.instance().add(
+				FacesMessages.instance().add(Severity.WARN,
 						sainv_messages.get("aparcli_error_noprpal"));
 				return false;
 			}
@@ -441,6 +493,15 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	public void setProductoAsociado(Producto productoAsociado) {
 		this.productoAsociado = productoAsociado;
 	}
+
+	public CodProducto getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(CodProducto codigo) {
+		this.codigo = codigo;
+	}
+	
 	
 	
 

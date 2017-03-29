@@ -1081,6 +1081,9 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			getEntityManager().persist(tmpDfc);
 		}
 		
+		
+		FacesMessages.instance().add(Severity.INFO,"Orden de laboratorio registrada");
+		
 	}
 
 	@Override

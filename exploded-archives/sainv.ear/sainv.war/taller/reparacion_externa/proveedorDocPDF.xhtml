@@ -9,32 +9,42 @@
 	pageSize="LETTER" type="pdf"  orientation="landscape" ><!-- margins="70 30 30 30" -->
 	<p:font size="16" >
 		<p:paragraph alignment="left">OUTSIDE WARRANTY RETURN SHEET</p:paragraph>
+		<p:paragraph alignment="right">
+			<p:image value="/kubeImg/direOticon.jpg" width="210" height="70" alignment="right" spacingAfter="0" spacingBefore="0"   />
+		</p:paragraph>
 	</p:font>
-	
 	
 	
 	<p:html><br /></p:html>
 	
+	
+	<s:div style="width:50px;float:left">
 		<p:html>
-			<table style="border:none;">
-				<tr>
-					<td><span style="font-size:10px;font-weight:bold;" >Date: </span><span style="font-size:10px;">#{reparacionExternaHome.obtenerFormatoFecha(reparacionExternaHome.instance.fechaEnvio)}</span></td>
-				</tr>
-				<tr>
-					<td><span style="font-size:10px;font-weight:bold;">Customer Number: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.customerNumber}</span></td>
-				</tr>
-				<tr>
-					<td><span style="font-size:10px;font-weight:bold;">Company: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.empresa.nombre}</span></td>
-				</tr>
-				<tr>
-					<td><span style="font-size:10px;font-weight:bold;">Country: </span><span style="font-size:10px;">El Salvador</span></td>
-				</tr>
-				<tr>
-					<td><span style="font-size:10px;font-weight:bold;">Technician Name</span></td>
-				</tr>
-			</table>
+				<table style="border:none;width:400px;" >
+					<tr>
+						<td><span style="font-size:10px;font-weight:bold;" >Date: </span><span style="font-size:10px;">#{reparacionExternaHome.obtenerFormatoFecha(reparacionExternaHome.instance.fechaEnvio)}</span></td>
+					</tr>
+					<tr>
+						<td><span style="font-size:10px;font-weight:bold;">Customer Number: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.customerNumber}</span></td>
+					</tr>
+					<tr>
+						<td><span style="font-size:10px;font-weight:bold;">Company: </span><span style="font-size:10px;">#{reparacionExternaHome.instance.empresa.nombre}</span></td>
+					</tr>
+					<tr>
+						<td><span style="font-size:10px;font-weight:bold;">Country: </span><span style="font-size:10px;">El Salvador</span></td>
+					</tr>
+					<tr>
+						<td><span style="font-size:10px;font-weight:bold;">Technician Name</span></td>
+					</tr>
+				</table>
 		</p:html>
-		
+	</s:div>
+	<p:html>
+	<!--<s:div style="width:50px;float:right" >
+		  
+		<h:graphicImage value="/kubeImg/direOticon.jpg" />
+	</s:div>-->
+	</p:html>
 		<p:html><br /></p:html>
 		
 		<p:table columns="10" widthPercentage="100" headerRows="2"  widths="0.3 2 2.2 1.5 1.5 1.2 2 2.2 1.8 1.6"  style="font-size:10px;">

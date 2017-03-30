@@ -22,6 +22,7 @@ import com.sa.model.inventory.Compra;
 import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
 import com.sa.model.inventory.ItemPedido;
+import com.sa.model.inventory.Movimiento;
 import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Empresa;
 import com.sa.model.security.Sucursal;
@@ -55,6 +56,9 @@ public class CompraHome extends KubeDAO<Compra>{
 	
 	@In(required=false,create=true)
 	private InventarioHome inventarioHome;
+	
+	@In(required=false,create=true)
+	private MovimientoHome movimientoHome;
 	
 	@Override
 	public void create() {
@@ -130,6 +134,12 @@ public class CompraHome extends KubeDAO<Compra>{
 		lstCodsProductos.remove(item.getInventario().getProducto().getReferencia());
 		actualizarSubtotal();
 	}
+	public void removerItemPreCompra(Item item){
+		itemsAgregados.remove(item);
+		productosAgregados.remove(item.getInventario());
+		getEntityManager().remove(item);
+		actualizarSubtotal();
+	}
 	
 public void cargarListaCodigos(ItemPedido prdItm) {
 		Item itemCompra = new Item();
@@ -139,26 +149,26 @@ public void cargarListaCodigos(ItemPedido prdItm) {
 		cargarListaCodigos(itemCompra);
 	}
 
-public void cargarCompras() {
-	String fltFch = " AND (:fch1 = :fch1 OR :fch2 = :fch2) ";
-	if(getFechaPFlt1() != null && getFechaPFlt2() != null) {
-		setFechaPFlt1(truncDate(getFechaPFlt1(), false));
-		setFechaPFlt2(truncDate(getFechaPFlt2(), true));
-		fltFch = " AND x.fecha BETWEEN :fch1 AND :fch2 ";
+	public void cargarCompras() {
+		String fltFch = " AND (:fch1 = :fch1 OR :fch2 = :fch2) ";
+		if(getFechaPFlt1() != null && getFechaPFlt2() != null) {
+			setFechaPFlt1(truncDate(getFechaPFlt1(), false));
+			setFechaPFlt2(truncDate(getFechaPFlt2(), true));
+			fltFch = " AND x.fecha BETWEEN :fch1 AND :fch2 ";
+		}
+		
+		if(loginUser.getUser().isAccionEspecial())
+			fltFch += " AND (:suc = :suc) ";
+		else
+			fltFch += " AND x.sucursal = :suc ";
+		
+		setResultList(getEntityManager()
+				.createQuery("SELECT x FROM Compra x WHERE 1 = 1 " + fltFch + " ORDER BY x.fecha DESC ")
+					.setParameter("suc", loginUser.getUser().getSucursal())
+					.setParameter("fch1", getFechaPFlt1())
+					.setParameter("fch2", getFechaPFlt2())
+				.getResultList());
 	}
-	
-	if(loginUser.getUser().isAccionEspecial())
-		fltFch += " AND (:suc = :suc) ";
-	else
-		fltFch += " AND x.sucursal = :suc ";
-	
-	setResultList(getEntityManager()
-			.createQuery("SELECT x FROM Compra x WHERE 1 = 1 " + fltFch + " ORDER BY x.fecha DESC ")
-				.setParameter("suc", loginUser.getUser().getSucursal())
-				.setParameter("fch1", getFechaPFlt1())
-				.setParameter("fch2", getFechaPFlt2())
-			.getResultList());
-}
 
 	public void cargarListaCodigos(Item prdItm){
 		//prdItm.getC
@@ -167,7 +177,7 @@ public void cargarCompras() {
 		//Buscamos primero si ya esta la lista en la lista madre
 		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()) == null && prdItm.getItemId() != null) {
 			codsProds = (ArrayList<CodProducto>)getEntityManager().createQuery("SELECT c FROM CodProducto c " +
-					"	WHERE c.inventario = :inv AND c.movimiento = :mov ")
+					"	WHERE c.inventario = :inv AND c.movimiento = :mov AND c.estado='ACT'")
 					.setParameter("inv", prdItm.getInventario())
 					.setParameter("mov", prdItm.getMovimiento())
 					.getResultList();
@@ -442,14 +452,52 @@ public void cargarCompras() {
 	
 	public void desactualizarItem(Item item)
 	{
+		
+		
 		System.out.println("Cantidad"+item.getCantidad());
 		System.out.println("Nombre"+item.getInventario().getProducto().getNombre());
 		
 		
 		//Solucion
-		
 		//Compara con la categoria del inventario si este requiere serie o lote y cargar la lista de codigos que tiene con el metodo existente
-		//recorrer la lista de codigos y eliminar o desactivar los codigos
+		
+		if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+		{
+			
+			//recorrer la lista de codigos y eliminar o desactivar los codigos
+			cargarListaCodigos(item);
+			
+			if(lstCodsProductos.get(item.getInventario().getProducto().getReferencia())!=null && lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).get(0).getId()!=null)
+			{
+				for(CodProducto codigo: lstCodsProductos.get(item.getInventario().getProducto().getReferencia()))
+				{
+					codigo.setEstado("USD");
+					getEntityManager().merge(codigo);
+				}
+				
+			}
+			else
+			{
+				System.out.println("Lista de codigos null");
+			}
+			
+		}
+		
+		Movimiento movimiento = new Movimiento();
+		movimiento.setRazon("O");
+		movimiento.setSucursal(item.getInventario().getSucursal());
+		movimiento.setTipoMovimiento("S");
+		
+		
+		removerItemPreCompra(item);
+		
+		movimientoHome.setInstance(movimiento);
+		movimientoHome.getItemsAgregados().add(item);
+		movimientoHome.save();
+		
+		
+		
+		
 	}
 	
 	
@@ -705,8 +753,6 @@ public void cargarCompras() {
 	public void posSave() {
 		
 		
-		
-		
 		System.out.println("Entro al posave de compra");
 		for(Item item: itemsAgregados){
 			
@@ -735,8 +781,6 @@ public void cargarCompras() {
 				}
 				
 		}
-		
-		
 		
 		getEntityManager().flush();
 		getEntityManager().refresh(instance);

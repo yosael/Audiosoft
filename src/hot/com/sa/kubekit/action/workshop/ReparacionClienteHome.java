@@ -1047,6 +1047,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			getEntityManager().persist(etRepCli);
 		    getEntityManager().flush();
 		}
+		
+		FacesMessages.instance().add(Severity.INFO,"Orden de laboratorio registrada");
 	}
 	
 	private void saveCaracteristicasAparato() {
@@ -1082,7 +1084,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		}
 		
 		
-		FacesMessages.instance().add(Severity.INFO,"Orden de laboratorio registrada");
+		
 		
 	}
 

@@ -2031,8 +2031,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				item.setPrecioVenta(tmpItm.getPrecioCotizado());//??
 				
 				//item.setCodProducto(itemCmb.getCodProducto());
-				if(codCombo1!=null)
-					item.setCodProducto(codCombo1);
+				/*if(codCombo1!=null)
+					item.setCodProducto(codCombo1);*/
 				
 				item.setTipoPrecio(tmpItm.getTipPreCotizado());
 				
@@ -2042,6 +2042,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				if(tmpItm.isPrincipal())
 				{
 					System.out.println("*** Entro a es principal");
+					
+					if(codCombo1!=null)
+						item.setCodProducto(codCombo1);
 					
 					//Si requiere molde o ensamblaje el producto ya fue registrado al cliente pero en estado PNP= pendiente de pago
 					if(tmpItm.getCategoria().getReqMolde()==true || tmpItm.getCategoria().getCategoriaPadre().getReqMolde()==true || 
@@ -2174,7 +2177,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				}
 				
 				//Reduciendo de inventario los productos del combo
-				System.out.println("sucursal"+cotizacion.getSucursal().getNombre());
+				/*System.out.println("sucursal"+cotizacion.getSucursal().getNombre());
 				Inventario inveProd=(Inventario) getEntityManager()
 						.createQuery("Select i From Inventario i where i.producto.id=:productoCom and i.sucursal.id=:sucursalCom")
 						.setParameter("productoCom",tmpItm.getProducto().getId())
@@ -2185,7 +2188,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				System.out.println("sucursal actual "+ cotizacion.getSucursal().getId());
 				
 				inveProd.setCantidadActual(inveProd.getCantidadActual()-1);
-				getEntityManager().merge(inveProd);
+				getEntityManager().merge(inveProd);*/
 				//getEntityManager().flush();//nuevo el 14/02/2017
 				
 				System.out.println("item actual " + tmpItm.getProducto().getNombre());
@@ -2259,7 +2262,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 			System.out.println("Tamanio movimiento"+lstProdsMov.size());
 			
-			for (Integer idPrd : lstProdsMov.keySet()) {
+			/*for (Integer idPrd : lstProdsMov.keySet()) {
 				
 				Item item = new Item();
 				item.setCantidad(lstProdsMov.get(idPrd).getCantidad()
@@ -2282,7 +2285,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				}
 				movimientoHome.getItemsAgregados().add(item);
 			}
-			
+			*/
 			
 			/*DetVentaProdServ detVta = new DetVentaProdServ();
 			detVta.setCantidad(1);
@@ -2326,6 +2329,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			cotizacion.setIdVta(instance);
 			getEntityManager().merge(cotizacion);
 			
+			/*movimientoHome.setInstance(mov);
+			m*/
 			
 		}
 		
@@ -2527,16 +2532,12 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				//getEntityManager().persist(itemBin);//item del movimiento
 				
 				
-				if (!lstProdsMov.containsKey(tmpItm.getProducto()
-						.getId())) {
-					lstProdsMov.put(tmpItm.getProducto().getId(),
-							tmpItm);
+				if (!lstProdsMov.containsKey(tmpItm.getProducto().getId())) {
+					lstProdsMov.put(tmpItm.getProducto().getId(),tmpItm);
 					tmpItm.setCantidad((short) 1);
 				} else {
-					short qty = lstProdsMov.get(
-							tmpItm.getProducto().getId()).getCantidad();
-					lstProdsMov.get(tmpItm.getProducto().getId())
-							.setCantidad(++qty);
+					short qty = lstProdsMov.get(tmpItm.getProducto().getId()).getCantidad();
+					lstProdsMov.get(tmpItm.getProducto().getId()).setCantidad(++qty);
 				}
 	
 			}//Fin for
@@ -2635,8 +2636,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			}
 		}
 		
-		/*movimientoHome.select(mov);
-		movimientoHome.save();*/
+		//movimientoHome.select(mov);
+		movimientoHome.setInstance(mov);
+		movimientoHome.save();
 		
 		getEntityManager().flush();
 		

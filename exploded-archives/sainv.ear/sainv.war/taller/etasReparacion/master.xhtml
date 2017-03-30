@@ -126,6 +126,18 @@
 						</tr>
 						<tr>
 							<td>
+								<s:decorate 
+									rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
+									and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
+									styleClass="radioB">
+									<h:outputLabel style="font-weight:bold;font-size:18px;" value="¿Cobrar aunque exista garantia? " />
+									<h:selectBooleanCheckbox
+										style="width:20px;height:20px;"
+										value="#{reparacionClienteHome.cobrarSiempre}">
+										<a:support eventsQueue="q1" ajaxSingle="true"
+											event="onchange" />
+									</h:selectBooleanCheckbox>
+								</s:decorate>
 							</td>
 							<td>
 								<s:decorate template="/layout/kEditSpace.xhtml"  rendered="#{etapaRepCliHome.instance.etapaRep.nombre=='Informar'}">
@@ -144,7 +156,7 @@
 							
 						<tr>
 							<td>
-								<s:decorate 
+								<!--<s:decorate 
 									rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
 							and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
 									styleClass="radioB">
@@ -155,7 +167,7 @@
 										<a:support eventsQueue="q1" ajaxSingle="true"
 											event="onchange" />
 									</h:selectBooleanCheckbox>
-								</s:decorate>
+								</s:decorate>-->
 							</td>
 						</tr>
 						

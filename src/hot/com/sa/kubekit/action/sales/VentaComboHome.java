@@ -477,6 +477,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 		} catch (Exception e) {
 			clearInstance();
+			aparatoClienteHome.setInstance(new AparatoCliente());
+			aparatoClienteHome.getInstance().setLadoAparato("IZQ");
 			setInstance(new VentaProdServ());
 			
 		}
@@ -1886,7 +1888,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			cotizacion.setCombo(comboVta);
 			if (tieneGarantia)
 				cotizacion.setPeriodoGarantia(comboVta.getPeriodoGarantia());
-		}
+		}System.out.println("Lado aparato ********"+aparatoClienteHome.getInstance().getLadoAparato());
 		cotizacion.setDetalleAparato(instance.getDetalle());
 		cotizacion.setEstado("PEN");
 		cotizacion.setFechaIngreso(new Date());
@@ -3439,6 +3441,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 										//////////////////
 									}
 							}
+								
+					cotizacion.getHijoBin().get(0).setEstado("COT");
 					
 					/*CotizacionComboApa cotiBin=(CotizacionComboApa) getEntityManager().createQuery("Select c From CotizacionComboApa c where c.id=:idCotiBin")
 							.setParameter("idCotiBin", getCotizId()+1).getSingleResult();

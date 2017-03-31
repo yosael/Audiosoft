@@ -183,7 +183,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	public boolean preSave() {
 		cerrarModal=false;
 		// Verificamos que todos los items que tienen numero de serie o lote lo tengan lleno.
-				for (Item item : getItems()) {System.out.println("Posave numero serie"+item.getCodProducto().getNumSerie());
+				for (Item item : getItems()) {
 					if (item.getInventario().getProducto() != null) {
 						System.out.println("Producto: " + item.getInventario().getProducto().getNombre());
 						if (item.getInventario().getProducto().getCategoria()

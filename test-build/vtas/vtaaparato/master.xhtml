@@ -35,7 +35,7 @@
 													<ui:define name="label">#{app.repcli_cliente}:</ui:define><!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') }" -->
 													<h:inputText id="patSearch" styleClass="busProd"
 														rendered="#{empty ventaComboHome.cotizacion}"
-														style="width:200px;"> <a:support ajaxSingle="true" event="onblur"> </a:support></h:inputText>
+														style="width:200px;"> <a:support ajaxSingle="true" event="onblur" reRender="formapacli"> </a:support></h:inputText>
 													<p:watermark for="patSearch"
 														value="#{app.sched_new_searchpat}" id="watermark" />
 													<rich:suggestionbox immediate="true" ajaxSingle="true"
@@ -73,8 +73,8 @@
 															<h:outputText styleClass="bigCnt" value="#{val[3]}">
 															</h:outputText>
 														</h:column>
-
-														<a:support event="onselect" reRender="lblSelPat, lblSelPat1"
+															<!-- reRender="lblSelPat, lblSelPat1" -->
+														<a:support event="onselect" reRender="formapacli,_selLadoNrml"
 															eventsQueue="q1" ajaxSingle="true"
 															action="#{ventaComboHome.instance.setCliente(val[4])}"
 															focus="patSearch" />
@@ -744,7 +744,7 @@
 										reRender="formapacli"
 										rendered="#{not ventaComboHome.managed and empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN'}"
 										styleClass="saveBtn" ignoreDupResponses="false"
-										value="#{app.vt_vtaprs_cotiz}" />
+										value="#{app.vt_vtaprs_cotiz}" ajaxSingle="true" />
 
 									<a:commandButton
 										rendered="#{ventaComboHome.cotizacion.estado == 'PEN' and loginUser.getUser().isAccionEspecial()==true and not ventaComboHome.managed and not empty ventaComboHome.cotizacion}"

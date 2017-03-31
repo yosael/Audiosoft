@@ -12,7 +12,7 @@
 	<ui:define name="body">
 	
 		<rich:panel>
-			<f:facet name="header">#{app.cobro_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.cobro_head}</span></f:facet>
 			<h:form id="formvta">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -51,7 +51,7 @@
 					rendered="#{not empty ventaProdServHome.resultList}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.cobro_list}</f:facet>					
+					<!-- <f:facet name="header">#{app.cobro_list}</f:facet> -->					
 					<rich:column filterBy="#{ventaProdServHome.filtrarFecha(res.fechaVenta)}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.vtaprs_fecha}</f:facet>
 						<h:outputText value="#{res.fechaVenta}">

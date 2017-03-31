@@ -12,7 +12,7 @@
 	<ui:define name="body">
 	
 		<rich:panel>
-			<f:facet name="header">#{app.vtaprs_head}</f:facet>
+			<f:facet name="header"><span class="marginhead">#{app.vtaprs_head}</span></f:facet>
 			<s:decorate template="/layout/kActions.xhtml">
 				<s:button view="/vtas/vtaaparato/master.xhtml" propagation="begin"
 					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
@@ -104,7 +104,7 @@
 					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 					headerClass="tablaHeader" footerClass="tableScroll"
 					id="aparatosList">
-					<f:facet name="header">#{app.cotizcmb_list}</f:facet>
+					<!-- <f:facet name="header">#{app.cotizcmb_list}</f:facet>-->
 					<rich:column filterBy="#{res.id}" filterEvent="onkeyup" width="10%"> 
 						<f:facet name="header">Num. cotizacion</f:facet>
 						<h:outputText value="#{'COT'}#{res.id}" />

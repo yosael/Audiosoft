@@ -242,12 +242,13 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			item.getCodProducto().setEstado("ACT");
 			item.getCodProducto().setNumLote(null);
 			
+			
 			item.setPrincipal(true);
 			
 			System.out.println("Serie en codigo "+item.getCodProducto().getNumSerie());
-			
+			System.out.println("Item del id"+item.getInventario().getProducto().getId());
 			this.items.add(item);
-			
+			System.out.println("id del producto"+productoAsociado.getId());
 			instance.setIdPrd(productoAsociado.getId()!=null?productoAsociado.getId():null);
 		}
 		
@@ -292,7 +293,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		}
 		
 		
-		if(!instance.isCustomApa() && !instance.isHechoMedida()) {
+		if(!instance.isCustomApa() && !instance.isHechoMedida()) { //Si no es externo y no es hecho a la medida.  Si es externo no entra o si es hecho a la medida tampoco
 		
 			if(items == null || items.size() <= 0) {
 				FacesMessages.instance().add(Severity.WARN,

@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.repcli_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.repcli_head}</span></f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -98,7 +98,7 @@
 					onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.repcli_lstReps}</f:facet>
+					<!--<f:facet name="header">#{app.repcli_lstReps}</f:facet>-->
 
 					<rich:column filterBy="#{res.proceso.prcCode}#{res.id}"
 						filterEvent="onkeyup">

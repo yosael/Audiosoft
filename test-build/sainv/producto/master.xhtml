@@ -13,7 +13,7 @@
 		<rich:panel id="bodyP">
 			<f:facet name="header">
 				<h:outputText
-					value="#{productoHome.managed?sainv_view_messages.get('productomast_head_edit'):sainv_view_messages.get('productomast_head_register')}" />
+					value="#{productoHome.managed?sainv_view_messages.get('productomast_head_edit'):sainv_view_messages.get('productomast_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formproducto">
@@ -385,8 +385,8 @@
 								onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 								onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 								headerClass="tablaHeader" footerClass="tableScroll">
-								<f:facet name="header">#{app.ubiprdsuc_list}
-												</f:facet>
+								<!-- <f:facet name="header">#{app.ubiprdsuc_list}
+												</f:facet> -->
 								<rich:column>
 									<f:facet name="header">Bodega</f:facet>
 									<h:outputText value="#{res.sucursal.nombre}" />

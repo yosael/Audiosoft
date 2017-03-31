@@ -17,6 +17,11 @@ input[disabled] label {
 	cursor: pointer;
 }
 
+.marginhead
+{
+	margin-left:200px;
+}
+
 .round {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -66,6 +71,18 @@ a.linkWeb,a.linkWeb:hover,a.linkWeb:visited {
 	overflow-y: auto;
 	overflow-x: auto;
 	padding-bottom: 15px;
+}
+
+/**/
+
+.letra15
+{
+	font-size: 15px;
+}
+
+.letra16
+{
+	font-size: 16px;
 }
 
 /*Crear tablas con divs*/

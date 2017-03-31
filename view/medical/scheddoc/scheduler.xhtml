@@ -23,13 +23,13 @@
 	<ui:define name="body">
 		<rich:panel>
 			<f:facet name="header">#{app.sched_head}</f:facet>
-			<h:panelGrid columns="1">
+			<h:panelGrid columns="1" >
 				<h:form id="formA">
 					<p:growl globalOnly="true" sticky="false" life="3000" />
 					<a:poll id="autoRefreshSched" interval="50000" enabled="true" reRender="formA" action="#{appointmentGrid.createGridDay()}"  />
 					<p:focus />
 					<a:queue name="q1" />
-				 	<table>
+				 	<table class="letra15" style="margin-left:120px;">
 				 		<tr>
 					 		<td>
 						 		<s:decorate template="/layout/kEditSpace.xhtml" style="display:inline; width:200px;">
@@ -49,12 +49,12 @@
 							<td>
 								<!-- <h:commandButton value="Actualizar"  action="#{appointmentGrid.createGridDay()}" /> -->
 								<s:button 
-									styleClass="refreshBtn" value="Actualizar" propagation="begin"  view="/medical/scheddoc/scheduler.xhtml"   rendered="true"  >
+									styleClass="refreshBtn" style="font-size:15px;" value="Actualizar" propagation="begin"  view="/medical/scheddoc/scheduler.xhtml"   rendered="true"  >
 								</s:button>
 							</td>
 						</tr>
 					</table>
-				<s:div styleClass="schedCalendar" style="padding-top:0px; ">
+				<s:div styleClass="schedCalendar" style="padding-top:0px;font-size:15px;">
 					<rich:extendedDataTable
 						value="#{appointmentGrid.listAppointments}" var="res" id="table" height="570px"
 						width="1250px" sortMode="single"
@@ -67,60 +67,60 @@
 						activeClass="selectRow"
 						selectedClass="selectRow"
 						>
-						<f:facet name="header">#{app.schedlist_header}</f:facet>
-						<rich:column width="100px">
-							<f:facet name="header">#{app.schedlist_col1}</f:facet>
+						<f:facet name="header"><span class="letra15" >#{app.schedlist_header}</span></f:facet>
+						<rich:column width="100px" styleClass="letra15">
+							<f:facet name="header" ><span class="letra15" >#{app.schedlist_col1}</span></f:facet>
 							<h:outputText value="#{res.dateTime}"
-								styleClass="timeText #{res.status == 2?'canceled':''}">
+								styleClass="timeText #{res.status == 2?'canceled':''}"  >
 								<s:convertDateTime pattern="HH:mm a" />
 							</h:outputText>
 						</rich:column>
-						<rich:column width="200px">
-							<f:facet name="header">#{app.schedlist_col2}</f:facet>
+						<rich:column width="200px" styleClass="letra15">
+							<f:facet name="header"><span class="letra15" >#{app.schedlist_col2}</span></f:facet>
 							<h:outputText title="#{res.cliente.fullName}" value="#{res.cliente.fullName}"
-								styleClass="#{res.status == 2?'canceled':''}" />
+								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
 						</rich:column>
-						<rich:column width="200px">
-							<f:facet name="header">#{app.schedlist_servs}</f:facet>
+						<rich:column width="200px" styleClass="letra15">
+							<f:facet name="header"><span class="letra15" >#{app.schedlist_servs}</span></f:facet>
 							<a:repeat value="#{res.medicalAppointmentServices}" var="srv">
-							   <h:outputText value="#{srv.service.name}" /><br />
+							   <h:outputText value="#{srv.service.name}"  /><br />
 							</a:repeat>
 						</rich:column>
-						<rich:column>
-								<f:facet name="header">#{app.usuariomast_branch}</f:facet>
-								<h:outputText value="#{res.sucursal.nombre}" />
+						<rich:column styleClass="letra15">
+								<f:facet name="header"><span class="letra15" >#{app.usuariomast_branch}</span></f:facet>
+								<h:outputText value="#{res.sucursal.nombre}" styleClass="letra15" />
 							</rich:column>
-						<rich:column width="220px">
-							<f:facet name="header">#{app.schedlist_col4}</f:facet>
+						<rich:column width="220px" styleClass="letra15">
+							<f:facet name="header"><span class="letra15" >#{app.schedlist_col4}</span></f:facet>
 							<h:outputText value="#{res.comment}" title="#{res.comment}"
-								styleClass="#{res.status == 2?'canceled':''}" />
+								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
 						</rich:column>
-						<rich:column width="340px" >
-							<f:facet name="header">Subsecuencia</f:facet>
+						<rich:column width="340px" styleClass="letra15">
+							<f:facet name="header"><span class="letra15" >Subsecuencia</span></f:facet>
 								<h:outputText value="#{medicalAppointmentDAO.verificarSubsecuentes(res)}" title="#{medicalAppointmentDAO.verificarSubsecuentes(res)}"
-								styleClass="#{res.status == 2?'canceled':''}" />
+								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
 						</rich:column>
-					<rich:column width="110px" styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
-										<f:facet name="header">#{app.schedlist_col5}</f:facet>
+					<rich:column width="110px" style="font-size:15px;" styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
+										<f:facet name="header"><span class="letra15" >#{app.schedlist_col5}</span></f:facet>
 										<h:outputText value="#{app.sched_reserved}"
-											rendered="#{res.status==5}" styleClass="resBlock" />
+											rendered="#{res.status==5}" styleClass="resBlock" style="font-size:15px;" />
 										<h:outputText value="#{app.sched_confirmed}"
-											rendered="#{res.status==4}" />
+											rendered="#{res.status==4}" style="font-size:15px;" />
 										<h:outputText value="#{app.sched_scheduled}"
-											rendered="#{res.status==0}" />
+											rendered="#{res.status==0}" style="font-size:15px;" />
 										<h:outputText value="#{app.sched_served}"
-											rendered="#{res.status==1}" />
+											rendered="#{res.status==1}"  style="font-size:15px;"/>
 										<h:outputText value="#{app.sched_canceled}"
-											rendered="#{res.status==2}" styleClass="canceled" />
+											rendered="#{res.status==2}" styleClass="canceled" style="font-size:15px;" />
 										<h:outputText value="#{app.sched_absence}"
-											rendered="#{res.status==3}" />
+											rendered="#{res.status==3}" style="font-size:15px;" />
 									</rich:column>
 						<a:support reRender="action,renderImp" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
 							event="onselectionchange" ajaxSingle="true" />
 					</rich:extendedDataTable>
 					<rich:spacer height="10" />
-					<s:decorate template="/layout/kActions.xhtml" id="action">
+					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">
 						<!--  ver el modal de detalle de las citas
 						<a:commandButton value="#{app.sched_modal}" reRender="fm1"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1)}"
@@ -133,8 +133,8 @@
 							view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
-							styleClass="detailBtn" value="#{app.sched_detail}">
-							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" />
+							styleClass="detailBtn" value="#{app.sched_detail}" >
+							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" style="font-size:15px;" />
 							<f:param name="historyId"
 								value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
 						</s:button>
@@ -144,7 +144,7 @@
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
 							(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
-							styleClass="detailBtn" value="#{app.sched_attend}">
+							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;" >
 							<f:param name="back" value="#{conversation.viewId}" />
 						</s:button>
 						<!--  cambiar estados-->
@@ -152,7 +152,7 @@
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)}"
 							styleClass="cancelBtn" ajaxSingle="true"
-							oncomplete="#{rich:component('modalState')}.show();" />
+							oncomplete="#{rich:component('modalState')}.show();" style="font-size:15px;" />
 							
 						<!--  crear nueva cita-->
 							
@@ -161,7 +161,7 @@
 								(appointmentGrid.validateDate()) and not empty appointmentGrid.listAppointments}"
 								onclick="#{rich:component('newAppointment')}.show();"
 								ajaxSingle="true" reRender="nApp, formApp," styleClass="newBtn" action="#{medicalAppointmentDAO.clearServices()}"
-								value="#{app.sched_new}" style="width:auto;">
+								value="#{app.sched_new}" style="width:auto;font-size:15px;" >
 							</a:commandButton>
 							
 						<!-- 
@@ -177,7 +177,7 @@
 							<s:button propagation="begin"
 										view="/medical/patient/show.xhtml"
 										rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1)}"
-										styleClass="detailBtn" value="#{app.sched_pat_crm}">
+										styleClass="detailBtn" value="#{app.sched_pat_crm}" style="font-size:15px;">
 										<f:param name="numId"
 											value="#{medicalAppointmentDAO.instance.cliente.id}" />
 							</s:button>
@@ -189,7 +189,7 @@
 					autosized="true" top="100" left="335"
 					onshow="#{sucursalHome.cargarSucursales()}"
 					onbeforeshow="activeModal.setActiveModalPanel('newAppointment');">
-					<f:facet name="header">#{app.sched_new}</f:facet>
+					<f:facet name="header"><span class="letra15" >#{app.sched_new}</span></f:facet>
 					<f:facet name="controls">
 						<h:panelGroup>
 							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"

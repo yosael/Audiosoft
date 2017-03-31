@@ -721,7 +721,15 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 
 		nuevoDetalle = new DetalleReparacionExterna();
 		
+		if(reparacion.getAparatoRep().getIdPrd()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"El aparato no tiene un item Asociado");
+			FacesMessages.instance().add(Severity.WARN,"Favor asociar item del inventario");
+			return;
+		}
+		
 		Producto aparato = cargarAparato(reparacion.getAparatoRep().getIdPrd());
+		
 		CodProducto codigo = cargarCodigo(reparacion.getAparatoRep().getNumSerie());
 		
 		nuevoDetalle.setReparacionCliente(reparacion);

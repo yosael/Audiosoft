@@ -13,7 +13,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{ventaItemHome.managed?sainv_view_messages.get('vtaitm_head_edit'):sainv_view_messages.get('vtaitm_head_register')}" />
+					value="#{ventaItemHome.managed?sainv_view_messages.get('vtaitm_head_edit'):sainv_view_messages.get('vtaitm_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formvtitm">
@@ -92,7 +92,7 @@
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 						headerClass="tablaHeader" footerClass="tableScroll">
-						<f:facet name="header">#{app.vtaitm_listitm}</f:facet>
+						<!-- <f:facet name="header">#{app.vtaitm_listitm}</f:facet>-->
 						<rich:column>
 							<f:facet name="header">#{app.compra_itemlist_col1}</f:facet>
 							<h:outputText value="#{res.inventario.producto.referencia}" />

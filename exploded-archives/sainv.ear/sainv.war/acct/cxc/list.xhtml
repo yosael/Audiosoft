@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.ctxcb_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.ctxcb_head}</span></f:facet>
 			<h:form id="formA">
 			<center>
 				<table>
@@ -99,7 +99,7 @@
 					rendered="#{not empty cuentaCobrarHome.resultList}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.ctxcb_list}</f:facet>
+					<!-- <f:facet name="header">#{app.ctxcb_list}</f:facet>-->
 					<rich:column filterBy="#{res.comprobante}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.ctxcb_comprobante}</f:facet>
 						<h:outputText value="#{res.comprobante}" />

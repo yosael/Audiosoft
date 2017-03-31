@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>
+			<f:facet name="header"><span class="marginhead">#{app.etarepcli_lstEtas}</span></f:facet>
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -36,7 +36,7 @@
 					rendered="#{not empty etapaRepCliHome.etapasRepCli}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>
+					<!-- <f:facet name="header">#{app.etarepcli_lstEtas}</f:facet>-->
 					<rich:column width="20px;" filterBy="#{res[8]}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.repcli_id}</f:facet>
 						<h:outputText value="#{res[7]}#{res[8]}" />

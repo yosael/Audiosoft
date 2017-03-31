@@ -11,7 +11,7 @@
 	<rich:modalPanel id="modalState" width="400" moveable="true" autosized="true"  top="40"
 		onbeforeshow="activeModal.setActiveModalPanel('modalState');">
 		<f:facet name="header">
-				#{app.sched_modal_head2}
+				<span class="letra15" >#{app.sched_modal_head2}</span>
 			</f:facet>
 		<f:facet name="controls">
 			<h:panelGroup>
@@ -21,7 +21,7 @@
 		</f:facet>
 		<h:form id="fm2">
 			<h:panelGrid style="padding-left:50px;" columns="1">
-				<s:decorate template="/layout/kEditSpace.xhtml" style="width:400px;">
+				<s:decorate template="/layout/kEditSpace.xhtml" style="width:400px;font-size:15px;">
 					<ui:define name="label">#{app.sched_status}:</ui:define>
 					<h:selectOneRadio value="#{medicalAppointmentDAO.instance.status}" styleClass="radioB" required="true">
 						<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0" />
@@ -32,7 +32,7 @@
 				</s:decorate>
 				
 				<s:decorate template="/layout/kEditSpace.xhtml">
-					<ui:define name="label">#{app.sched_cancellation_reason}:</ui:define>
+					<ui:define name="label"><span class="letra15" >#{app.sched_cancellation_reason}:</span></ui:define>
 					<h:inputTextarea
 						value="#{medicalAppointmentDAO.comentStatus}"
 						style="width:250px;" />
@@ -52,19 +52,19 @@
 			</h:panelGrid>
 			<s:decorate template="/layout/kActions.xhtml" id="m1">
 				<a:commandButton styleClass="cancelBtn" value="#{msn.button_close}"
-					onclick="#{rich:component('modalState')}.hide();">
+					onclick="#{rich:component('modalState')}.hide();" style="font-size:15px;">
 				</a:commandButton>
 				<a:commandButton action="#{appointmentGrid.modifyAppointment()}"
 					reRender="formA, formB" styleClass="modifyBtn"
 					value="#{msn.button_modify}" 
-					oncomplete="#{rich:component('modalState')}.hide();">
+					oncomplete="#{rich:component('modalState')}.hide();" style="font-size:15px;" >
 				</a:commandButton>
 			</s:decorate>
 		</h:form>
 	</rich:modalPanel>
 	<rich:modalPanel id="selDoc" width="800" moveable="true" autosized="true"  top="40"
 			onbeforeshow="activeModal.setActiveModalPanel('selDoc');">
-			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="header"><span class="letra15" >#{app.usuariolist_modal}</span></f:facet>
 			<f:facet name="controls">
 				<h:panelGroup>
 					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"

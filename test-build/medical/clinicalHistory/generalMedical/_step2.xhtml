@@ -42,7 +42,7 @@
 						
 				</s:div>
 					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab1}" id="toggles21" opened="#{generalMedicalDAO.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
 								<h:inputTextarea
@@ -59,7 +59,7 @@
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
 					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="#{generalMedicalDAO.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_height}:</ui:define>
 								<h:inputText value="#{generalMedicalDAO.instance.height}"
@@ -101,7 +101,7 @@
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
 					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="#{generalMedicalDAO.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px;font-size:12px ">					
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px ">					
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_head}:</ui:define>
 								<h:inputTextarea value="#{generalMedicalDAO.instance.regHead}"

@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.productolist_head}</f:facet>
+			<f:facet name="header"><span class="marginhead">#{app.productolist_head}</span></f:facet>
 			<h:form id="formA">
 			<s:decorate template="/layout/kActions.xhtml">
 				<s:button view="/sainv/producto/master.xhtml" propagation="begin"
@@ -39,7 +39,7 @@
 				<rich:dataTable var="res" value="#{productoList.resultList}" id="_table" 
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.productolist_list}</f:facet>
+					<!-- <f:facet name="header">#{app.productolist_list}</f:facet> -->
 					<rich:column width="55px"
 						filterEvent="onkeyup">
 						<f:facet name="header">#{app.productomast_activo}</f:facet>

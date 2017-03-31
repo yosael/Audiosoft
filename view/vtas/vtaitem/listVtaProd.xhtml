@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml" >
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.vtaitm_head}</f:facet>
+			<f:facet name="header"><span class="marginhead">#{app.vtaitm_head}</span></f:facet>
 			<center><table>
 			<tr>
 				<td><s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
@@ -43,7 +43,7 @@
 					rendered="#{not empty ventaItemHome.resultList}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.vtaitm_list}</f:facet>
+					<!-- <f:facet name="header">#{app.vtaitm_list}</f:facet>-->
 					<rich:column filterBy="#{res.fechaVenta}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.vtaitm_fecha}</f:facet>
 						<h:outputText value="#{res.fechaVenta}" >

@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml" >
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">Reparaciones Externas</f:facet>
+			<f:facet name="header"><span class="marginhead">Lista de reparaciones externas</span></f:facet>
 			<center><table>
 			<tr>
 				<td>
@@ -49,7 +49,7 @@
 					rendered="#{not empty reparacionExternaHome.resultList}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">Lista de solicitudes de reparacion</f:facet>
+					<!-- <f:facet name="header">Lista de solicitudes de reparacion</f:facet> -->
 					
 					<rich:column filterBy="#{res.customerNumber}" filterEvent="onkeyup">
 						<f:facet name="header">Numero Cliente</f:facet>

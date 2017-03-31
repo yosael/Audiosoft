@@ -24,7 +24,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{requisicionEtaHome.managed?sainv_view_messages.get('pedidomast_head_edit'):sainv_view_messages.get('pedidomast_head_register')}" />
+					value="#{requisicionEtaHome.managed?sainv_view_messages.get('pedidomast_head_edit'):sainv_view_messages.get('pedidomast_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formRequisicion">
@@ -78,7 +78,7 @@
 					rendered="#{not empty requisicionEtaHome.itemsAgregados}" 
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.reqeta_sel_items}</f:facet>
+					<!-- <f:facet name="header">#{app.reqeta_sel_items}</f:facet> -->
 					<rich:column>
 						<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>
 						<h:outputText value="#{res.producto.referencia}" />

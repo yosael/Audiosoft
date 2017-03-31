@@ -39,10 +39,6 @@
 						<f:facet name="header">#{app.productolist_col2}</f:facet>
 						<h:outputText value="#{res.producto.nombre}" />
 					</rich:column>
-					<rich:column filterBy="#{res.cantidadActual}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.productolist_col7}</f:facet>
-						<h:outputText value="#{res.cantidadActual}" />
-					</rich:column>
 					<rich:column filterBy="#{res.producto.categoria.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.productolist_col4}</f:facet>
 						<h:outputText value="#{res.producto.categoria.nombre}" />

@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.pedidolist_head}</f:facet>
+			<f:facet name="header"><span class="marginhead">#{app.pedidolist_head}</span></f:facet>
 			
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -21,7 +21,7 @@
 					rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.pedidolist_pending_list}</f:facet>
+					<!-- <f:facet name="header">#{app.pedidolist_pending_list}</f:facet> -->
 					<rich:column filterBy="#{res[7]}#{res[8]}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.repcli_id}</f:facet>
 						<h:outputText value="#{res[7]}#{res[8]}" />

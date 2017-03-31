@@ -13,7 +13,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{app.compradetail_head}" />
+					value="#{app.compradetail_head}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formcompra">
@@ -72,7 +72,7 @@
 					rendered="#{not empty compraHome.itemsAgregados}" 
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.compra_itemlist_list}</f:facet>
+					<!-- <f:facet name="header">#{app.compra_itemlist_list}</f:facet>-->
 					<rich:column>
 						<f:facet name="header">#{app.compra_itemlist_col1}</f:facet>
 						<h:outputText value="#{res.inventario.producto.referencia}" />

@@ -16,8 +16,8 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-					<fieldset style="width:700px;margin:0 auto"><legend>#{app.attend_leg}</legend> 
-						<h:panelGrid columns="2" style="padding-left:100px;margin:0 auto;font-size:14px;" >
+					<fieldset style="width:700px;margin:0 auto"><legend><span class="letra15" >#{app.attend_leg}</span></legend> 
+						<h:panelGrid columns="2" style="padding-left:100px;margin:0 auto;font-size:15px;" >
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.sched_new_date}:</ui:define>
 								<h:outputText value="#{medicalAppointmentDAO.instance.dateTime}">
@@ -49,7 +49,8 @@
 							<ui:define name="label">#{app.sched_new_comment}:</ui:define>
 							<h:outputText value="#{medicalAppointmentDAO.instance.comment}" />
 						</s:decorate>
-					</h:panelGrid> <s:decorate template="/layout/kActions.xhtml" id="render1">
+					</h:panelGrid> 
+					<s:decorate template="/layout/kActions.xhtml" id="render1" styleClass="letra15">
 					
 						<s:button propagation="join" view="#{urlBack.back}"
 							styleClass="backBtn" value="#{msn.button_back}"

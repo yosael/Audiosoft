@@ -13,7 +13,7 @@
 	<ui:define name="body">
 		<rich:panel>
 			<f:facet name="header">
-				<h:outputText value="#{app.etarepcli_legend}" />
+				<h:outputText value="#{app.etarepcli_legend}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<center>
@@ -130,7 +130,7 @@
 									rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
 									and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
 									styleClass="radioB">
-									<h:outputLabel style="font-weight:bold;font-size:18px;" value="¿Cobrar aunque exista garantia? " />
+									<h:outputLabel style="font-weight:bold;font-size:18px;font-variant: small-caps;" value="¿Cobrar aunque exista garantia? " />
 									<h:selectBooleanCheckbox
 										style="width:20px;height:20px;"
 										value="#{reparacionClienteHome.cobrarSiempre}">
@@ -446,7 +446,7 @@
 					</td>
 				</tr>
 				<tr><td style="width:60%;">
-				<rich:dataTable var="res" id="tblRequisiciones" rendered="#{etapaRepCliHome.instance.etapaRep.aceptaReqs and not empty etapaRepCliHome.instance.requisicionesEtapa}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}"
+				<rich:dataTable var="res" id="tblRequisiciones" rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.etarepcli_requi}</f:facet>
@@ -508,7 +508,7 @@
 						<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)}">
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" rendered="#{res.estado==null or res.estado!='CBR'}" 
-								action="#{reparacionClienteHome.delServicioRep(res)}" ajaxSingle="true" reRender="_tblSrvs" >
+								action="#{reparacionClienteHome.delServicioRep(res)}" ajaxSingle="true" reRender="formreparacioncli" ><!-- reRender="_tblSrvs" -->
 								<h:graphicImage value="/kubeImg/table_cancel.png" />
 							</a:commandLink>
 						</rich:column>

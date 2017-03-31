@@ -14,10 +14,10 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{ventaComboHome.managed?sainv_view_messages.get('combapa_head_edit'):sainv_view_messages.get('combapa_head_register')}" />
+					value="#{ventaComboHome.managed?sainv_view_messages.get('combapa_head_edit'):sainv_view_messages.get('combapa_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
-			<rich:tabPanel switchType="ajax" id="tabsCmbAparato">
+			<rich:tabPanel switchType="ajax" id="tabsCmbAparato" width="1000px;" style="margin:0 auto;">
 				<rich:tab name="tab1" label="#{app.tab1_apaaud}"
 					action="#{ventaComboHome.cambiarComboSel(1)}" eventsQueue="q1">
 					<h:form id="formapacli">

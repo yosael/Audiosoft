@@ -4,7 +4,7 @@ html {
 
 body {
 	margin: 0px 0px 0px 0px;
-	color: black;
+	color: #000000;
 	font-size: 12px;
 	font-family: sans-serif;
 	height: 100%;
@@ -51,10 +51,11 @@ body {
 }
 
 .busHead{
-	font-family:sans-serif;
-	font-size: 15px;
-	color:black;	
-	text-shadow: 1px 1px navy;
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 16px;
+	color:#000000;	
+	/*text-shadow: 1px 1px navy;font-weight: bold;font-family:sans-serif;*/
 }
 
 .busProd{
@@ -69,10 +70,10 @@ body {
 	
 .cmbVta-lbl{
 	font-size: 18px;
-	color: 	#131d39;
+	color: #000000;
 	float: left;
 	font-variant: small-caps;
-	text-shadow: 0px 0px 5px #666;
+	/*text-shadow: 0px 0px 5px #666;color: 	#131d39;*/
 }
 	
 .ui-growl{

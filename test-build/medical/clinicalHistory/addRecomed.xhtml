@@ -39,7 +39,7 @@
 									ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" />
 									
 							</h:inputText>-->
-							<h:selectOneRadio value="#{recomendacionMedHome.opcionBusqueda}">
+							<h:selectOneRadio value="#{recomendacionMedHome.opcionBusqueda}" style="font-size:14px" >
 								<f:selectItem itemLabel="Audiologia" itemValue="1" />
 								<f:selectItem itemLabel="Otorrinolaringologia" itemValue="2" />
 								<a:support event="onchange" ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" reRender="#{rich:clientId('_tableRec')}" ></a:support>

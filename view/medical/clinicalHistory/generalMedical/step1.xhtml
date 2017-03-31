@@ -58,8 +58,8 @@
 				<a:queue name="q1"  />
 				<h:panelGroup id="details">
 				
-					<rich:tabPanel switchType="client" width="1000px" style="margin:0 auto;" >
-						<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
+					<rich:tabPanel switchType="client" width="1000px" style="margin:0 auto;font-size:15px;" >
+						<rich:tab name="tabHi_1" label="#{app.general_step1_head}" styleClass="letra15">
 							<rich:spacer width="250px;"></rich:spacer>
 								<s:div>
 								
@@ -92,7 +92,7 @@
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
 							</s:div>	
 						</rich:tab>
-						<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+						<rich:tab name="tabHi_2" label="#{app.general_step2_head}" styleClass="letra15">
 							<s:div>
 							<!-- 
 								<a:commandButton
@@ -126,7 +126,7 @@
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
 							</s:div>
 						</rich:tab>
-						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15">
 							<s:div>
 								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
 							</s:div>
@@ -138,7 +138,7 @@
 					rendered="#{not empty urlBack.back}" /> -->
 					
 				
-				<h:panelGrid columns="3" style="margin:0 auto">	
+				<h:panelGrid columns="3" style="margin:0 auto" styleClass="letra15"> 	
 						
 					<!-- <s:button propagation="begin" value="Historial Medico"
 						styleClass="historyBtn" rendered="#{not generalMedicalDAO.managed}"
@@ -150,7 +150,7 @@
 					<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
 								ajaxSingle="true"
 								reRender="modHst1,frmHistorial"
-								onclick="#{rich:component('verHistorialMod')}.show();">
+								onclick="#{rich:component('verHistorialMod')}.show();" >
 					</a:commandButton>
 					
 					<!-- <s:button propagation="end" onclick="return confirm('Desea cancelar la consulta?')" value="#{app.diagnostic_cancel}"

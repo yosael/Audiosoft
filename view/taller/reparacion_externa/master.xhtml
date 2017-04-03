@@ -125,7 +125,7 @@
 					<s:decorate template="/layout/kActions.xhtml">
 						
 						<!-- <a:commandButton  value="Imprimir" oncomplete="showReport('detalleReparacionExternaPDF', '#{conversation.id}');" styleClass="pdfBtn"   /> -->
-						<a:commandButton rendered="#{reparacionExternaHome.managed}" value="Formato Proveedor" oncomplete="showReport('proveedorDocPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						<a:commandButton rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado!='Generada'}" value="Formato Proveedor" action="#{reparacionExternaHome.setContador(1)}" oncomplete="showReport('proveedorDocPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
 					
 						<s:button view="/taller/reparacion_externa/list.xhtml" propagation="begin"
 							styleClass="listBtn" value="#{msn.button_list}">
@@ -177,9 +177,9 @@
 						<rich:column>
 							<f:facet name="header">Reparacion Taller</f:facet>
 							<!-- <h:outputText value="#{res.reparacionCliente.proceso.nombre}" rendered="#{res.reparacionCliente!=null}" /> -->
-							<s:link title="#{msn.button_edit}" rendered="true"
+							<s:link title="#{msn.button_edit}" rendered="#{res.reparacionCliente!=null}"
 								view="/taller/etasReparacion/master.xhtml" propagation="begin" value="#{'RPR'}#{res.reparacionCliente.id}" >
-								<f:param name="id" value="#{res.reparacionCliente.id}"  />
+								<f:param name="id" value="#{reparacionExternaHome.obtenerEtapaReparacion(res.reparacionCliente)}"  />
 							</s:link>
 						</rich:column>
 						

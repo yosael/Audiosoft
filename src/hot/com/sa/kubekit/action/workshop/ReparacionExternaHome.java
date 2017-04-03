@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -57,6 +59,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private boolean cambioLocal=false;
 	private CodProducto nuevoCodigo;
 	private CodProducto codigoSelectedEntrega;
+	private int contador=1;
 
 	@In
 	private LoginUser loginUser;
@@ -466,9 +469,9 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				}
 				else
 				{
-					System.out.println("Serie actual"+item.getCodigo().getNumSerie());
+					/*System.out.println("Serie actual"+item.getCodigo().getNumSerie());
 					System.out.println("Inventario"+item.getCodigo().getInventario().getId());
-					System.out.println("Movimiento"+item.getCodigo().getMovimiento().getId());
+					System.out.println("Movimiento"+item.getCodigo().getMovimiento().getId());*/
 					itemCompra.setCodProducto(item.getCodigo());
 					//itemCompra.setMovimiento(item.getCodigo().getMovimiento());
 					
@@ -862,7 +865,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		//if(reparacion.getAparatoRep().isGarantiaVigente() || reparacion.getAparatoRep())
 		boolean garantia=false;
 		
-		if(reparacion.getAparatoRep().getFechaGarRep()==null)
+		if(reparacion.getAparatoRep().getPeriodoGarantia()==null)
 		{
 			return false;
 		}
@@ -870,7 +873,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		{
 			
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date fechaGarantia= reparacion.getAparatoRep().getFechaGarRep();
+			Date fechaGarantia= reparacion.getAparatoRep().getFechaAdquisicion();
 			
 			String diaHoyst;
 			String garantiast;
@@ -891,23 +894,18 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			System.out.println("Fecha Garantia"+fechaGarantiaFinal);
 			System.out.println("Fecha Hoy"+fechaHoy);
 			System.out.println("Periodo garantia"+reparacion.getAparatoRep().getPeriodoGarantia());
-			System.out.println("Periodo garantia reparacion"+reparacion.getAparatoRep().getPeriodoGarantiaRep());
 			System.out.println("Dias transcurridos"+dias);
 			
 			
+			if(dias<=reparacion.getAparatoRep().getPeriodoGarantia())
+				garantia=true;
 			
-			if(reparacion.getAparatoRep().getPeriodoGarantia()!=null)
-			{
-				
-				if(dias<=reparacion.getAparatoRep().getPeriodoGarantia())
-					garantia=true;
-			}
 			
-			if(reparacion.getAparatoRep().getPeriodoGarantiaRep()!=null)
+			/*if(reparacion.getAparatoRep().getPeriodoGarantiaRep()!=null)
 			{
 				if(dias<=reparacion.getAparatoRep().getPeriodoGarantiaRep())
 					garantia=true;
-			}
+			}*/
 			
 			
 			
@@ -952,6 +950,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			FacesMessages.instance().add(Severity.WARN,"Reparacion no registrada");
 			return;
 		}
+		
+		if(cargarReparacionGenerada()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor generar una reparacion externa para asociar el item");
+			return;
+		}
+			
 		
 		if(cambioLocal)
 		{
@@ -1116,6 +1121,21 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	{
 		return (CodProducto) getEntityManager().createQuery("SELECT c FROM CodProducto c where c.id=:idCodigo").setParameter("idCodigo", idCodigo).getSingleResult();
 	}
+	
+	public int obtenerEtapaReparacion(ReparacionCliente reparacion)
+	{
+		int idEtapa=0;
+		
+		try {
+			idEtapa=(Integer)getEntityManager().createQuery("SELECT e.id FROM EtapaRepCliente e where e.reparacionCli.id=:idReparacion and e.etapaRep.id=42").setParameter("idReparacion", reparacion.getId()).getSingleResult();
+		} catch (Exception e) {
+				FacesMessages.instance().add(Severity.WARN,"No tiene idReparacion");
+				return 0;
+		}
+		
+		
+		return idEtapa;
+	}
 
 	@Override
 	public boolean preModify() {
@@ -1265,6 +1285,16 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 
 	public void setNuevoCodigo(CodProducto nuevoCodigo) {
 		this.nuevoCodigo = nuevoCodigo;
+	}
+
+
+	public int getContador() {
+		return contador++;
+	}
+
+
+	public void setContador(int contador) {
+		this.contador = contador;
 	}
 
 	

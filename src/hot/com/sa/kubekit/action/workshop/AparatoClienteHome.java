@@ -237,12 +237,16 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			
 			item.setInventario(productoAsociado.getInventarios().get(0));
 			
+			CodProducto codigo = new CodProducto();
+			codigo.setNumSerie(instance.getNumSerie()!=null?instance.getNumSerie():null);
+			codigo.setEstado("USD");
+			codigo.setInventario(item.getInventario());
+			
+			
 			item.setCodProducto(new CodProducto());
 			item.getCodProducto().setNumSerie(instance.getNumSerie()!=null?instance.getNumSerie():null);
 			item.getCodProducto().setEstado("ACT");
 			item.getCodProducto().setNumLote(null);
-			
-			
 			item.setPrincipal(true);
 			
 			System.out.println("Serie en codigo "+item.getCodProducto().getNumSerie());
@@ -250,6 +254,8 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			this.items.add(item);
 			System.out.println("id del producto"+productoAsociado.getId());
 			instance.setIdPrd(productoAsociado.getId()!=null?productoAsociado.getId():null);
+			
+			getEntityManager().persist(codigo);
 		}
 		
 		instance.setActivo(true);

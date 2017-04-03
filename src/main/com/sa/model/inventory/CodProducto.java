@@ -59,7 +59,7 @@ public class CodProducto implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "movimiento_id", nullable = false)
+	@JoinColumn(name = "movimiento_id", nullable = true)
 	@ForeignKey(name = "fk_mov_cod")
 	public Movimiento getMovimiento() {
 		return movimiento;

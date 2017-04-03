@@ -75,7 +75,7 @@
 				</p:font>
 			</p:cell>
 			
-			<ui:repeat var="res" value="#{codigoDescuentoCorpHome.listaDetalle}">
+			<ui:repeat var="res" value="#{codigoDescuentoCorpHome.listaDetalle}"  >
 				<p:cell verticalAlignment="middle"  >
 					<p:paragraph>
 						<p:text value="#{res.producto.nombre}" rendered="#{res.producto!=null}" >

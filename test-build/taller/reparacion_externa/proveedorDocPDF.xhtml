@@ -100,11 +100,11 @@
 				</p:font>
 			</p:cell>
 			
-			<ui:repeat var="dtRep" value="#{reparacionExternaHome.detalleReparacion}">
+			<ui:repeat var="dtRep" value="#{reparacionExternaHome.detalleReparacion}" varStatus="status" >
 			
 				<p:cell verticalAlignment="middle">
 					<p:font size="8">
-						<p:paragraph  >#{dtRep.cont}</p:paragraph>
+						<p:paragraph  >#{reparacionExternaHome.contador}</p:paragraph>
 					</p:font>	
 				</p:cell>		
 				<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingRight="6" size="8">

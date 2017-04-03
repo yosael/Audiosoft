@@ -5,6 +5,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -399,6 +406,49 @@ public class AppointmentGrid {
 		Calendar calSel = Calendar.getInstance();
 		calSel.setTime(dateSel);
 		return calSel.after(calToday);
+	}
+	
+	
+	//Necesario crear correo para enviar las notificaciones
+	public Properties definirPropiedadesCorreo()
+	{
+		Properties props = new Properties();
+		 
+		props.put("mail.smtp.host","mail.lineadecodigo.com");
+		props.put("mail.transport.protocol","smtp");
+		props.put("mail.smtp.auth", "true");
+		props.setProperty("mail.user", "myuser");
+		props.setProperty("mail.password", "mypwd");
+		
+		return props;
+	}
+	
+	public void enviarAgendaCorreo()
+	{
+		//Autent pwd = new Autentificacion();
+		Session emailSession =Session.getInstance(definirPropiedadesCorreo(), null);
+		Message msg = new MimeMessage(emailSession);
+		
+		
+		try {
+			
+			msg.setSubject("Agenda");
+			msg.setFrom(new InternetAddress("web@lineadecodigo.com","Línea de Código"));
+			msg.addRecipients(Message.RecipientType.TO, new InternetAddress[] { new InternetAddress("miamigo@gmail.com") });
+			
+			// Asignamos el contenido HTML, tan grande como nosotros queramos 
+			msg.setContent("<h1>El mensaje de nuestro primer correo HTML</h1>","text/html" );
+			
+			DataHandler dh = new DataHandler("Texto del mensaje","text/plain");
+			msg.setDataHandler(dh);
+			
+			javax.mail.Transport.send(msg);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
 	}
 
 	public Selection getSelection() {

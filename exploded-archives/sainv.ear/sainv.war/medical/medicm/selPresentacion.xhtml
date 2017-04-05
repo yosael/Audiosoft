@@ -17,30 +17,30 @@
 				<table style="width:400px;" >   
 				<tr>
 					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newpres}" />:</td>
-					<td><h:inputText value="#{medicamentoHome.presen.nombre}" style="width:200px;" >
+					<td><h:inputText value="#{medicamentoHome.presen.nombre}" style="width:200px;font-size:14px;" >
 							<a:support event="onkeydown" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
 						</h:inputText></td>
 					<td><a:commandButton action="#{medicamentoHome.addNewPresentacion()}" reRender="_tblPres" id="_btnAdd"
 						disabled="#{empty medicamentoHome.presen.nombre or medicamentoHome.presen.nombre==''}"
 						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						 value="#{msn.button_save}" />
+						 value="#{msn.button_save}" style="font-size:14px;" />
 					</td>
 				</tr>
 				</table>
 				<rich:dataTable var="res" value="#{medicamentoHome.presentacionesSel}" id="_tblPres" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.medicm_presentaciones}</f:facet>
+					<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_presentaciones}</span></f:facet>
 					
 					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.medicm_name}</f:facet>
-						<h:outputText value="#{res.nombre}" />
+						<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_name}</span></f:facet>
+						<h:outputText value="#{res.nombre}" style="font-size:14px;" />
 					</rich:column>					
 					<rich:column>
-						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<f:facet name="header"><span style="font-size:14px;" >#{msn.col_actions}</span></f:facet>
 						<a:commandLink value="#{app.movimientomast_select_product}" reRender="_tblSelPre"
 							action="#{medicamentoHome.addPresentacion(res)}" ajaxSingle="true" eventsQueue="q1"
-							onclick="#{rich:component('selPresentacion')}.hide();">
+							onclick="#{rich:component('selPresentacion')}.hide();" style="font-size:14px;" >
 						</a:commandLink>
 					</rich:column>
 					<f:facet name="footer">

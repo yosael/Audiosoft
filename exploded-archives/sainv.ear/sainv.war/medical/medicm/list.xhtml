@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.medicm_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.medicm_head}</span></f:facet>
 			<s:decorate template="/layout/kActions.xhtml">
 				<s:button view="/medical/medicm/master.xhtml" propagation="begin"
 					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
@@ -32,10 +32,10 @@
 						<f:facet name="header">#{app.medicm_name}</f:facet>
 						<h:outputText value="#{res.nombre}" />
 					</rich:column>
-					<rich:column filterBy="#{res.laboratorio.nombre}" filterEvent="onkeyup">
+					<!-- <rich:column filterBy="#{res.laboratorio.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.medicm_laboratorio}</f:facet>
 						<h:outputText value="#{res.laboratorio.nombre}" />
-					</rich:column>
+					</rich:column> -->
 					<rich:column filterBy="#{res.indiceTer.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.medicm_indice}</f:facet>
 						<h:outputText value="#{res.indiceTer.nombre}" />

@@ -13,7 +13,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{medicamentoHome.managed?sainv_view_messages.get('medicm_head_edit'):sainv_view_messages.get('medicm_head_register')}" />
+					value="#{medicamentoHome.managed?sainv_view_messages.get('medicm_head_edit'):sainv_view_messages.get('medicm_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<center>
@@ -26,34 +26,14 @@
 					
 					<h:panelGrid columns="2">
 						
-						<s:decorate template="/layout/kEditSpace.xhtml">
+						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
 							<ui:define name="label">#{app.medicm_name}:</ui:define>
 							<h:inputText value="#{medicamentoHome.instance.nombre}" required="true" >
 								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" ></a:support>
 							</h:inputText>
 						</s:decorate>
 						
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.medicm_laboratorio}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.laboratorio.nombre}" 
-								readonly="true" required="true" style="width:200px;" />
-							<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
-								action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1" 
-								styleClass="modifyBtn" value=" " style="width:30px;">
-							</a:commandButton>
-						</s:decorate>
-						
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.medicm_indice}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.indiceTer.nombre}" 
-								readonly="true" required="true" style="width:200px;" />
-							<a:commandButton onclick="#{rich:component('selIndiceTer')}.show();" ajaxSingle="true"  
-								action="#{medicamentoHome.cargarListaIndices()}" reRender="idt" eventsQueue="q1" 
-								styleClass="modifyBtn" value=" " style="width:30px;">
-							</a:commandButton>
-						</s:decorate>
-					
-						<s:decorate template="/layout/kEditSpace.xhtml">
+						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
 							<ui:define name="label">#{app.medicm_sustancia}:</ui:define>
 							<h:inputText value="#{medicamentoHome.instance.sustanciaAct.nombre}" 
 								readonly="true" required="true" style="width:200px;" />
@@ -63,9 +43,31 @@
 							</a:commandButton>
 						</s:decorate>
 						
+						<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.medicm_laboratorio}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.laboratorio.nombre}" 
+								readonly="true" required="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
+								action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate> -->
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;">
+							<ui:define name="label">#{app.medicm_indice}:</ui:define>
+							<h:inputText value="#{medicamentoHome.instance.indiceTer.nombre}" 
+								readonly="true" required="true" style="width:200px;" />
+							<a:commandButton onclick="#{rich:component('selIndiceTer')}.show();" ajaxSingle="true"  
+								action="#{medicamentoHome.cargarListaIndices()}" reRender="idt" eventsQueue="q1" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+					
+						
+						
 				</h:panelGrid> 
 				
-				<s:decorate template="/layout/kActions.xhtml">
+				<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
 					<s:button view="/medical/medicm/list.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
@@ -81,62 +83,109 @@
 						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
 				</s:decorate>
 				</fieldset>
+				
 				<table style="width:900px;">
-				<tr><td style="width:50%;">
-					<s:decorate template="/layout/kActions.xhtml">
-						<a:commandButton onclick="#{rich:component('selDosificacion')}.show();" ajaxSingle="true" 
-							action="#{medicamentoHome.cargarListaDosif()}" reRender="dos" eventsQueue="q1"
-							styleClass="addBtn" value="#{app.medicm_btn_add_dosif}">
-						</a:commandButton>
-					</s:decorate>
-					<rich:spacer height="10" />
-					<rich:dataTable var="res" value="#{medicamentoHome.dosificacionesList}" id="_tblSelDos"
-						rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-						headerClass="tablaHeader" footerClass="tableScroll">
-						<f:facet name="header">#{app.dosificaciones_med_list}</f:facet>
-						<rich:column filterBy="#{res.dosificacion.nombre}" filterEvent="onkeyup">
-							<f:facet name="header">#{app.medicm_name}</f:facet>
-							<h:outputText value="#{res.dosificacion.nombre}" />
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">#{msn.col_actions}</f:facet>
-							<a:commandLink reRender="_tblSelDos" eventsQueue="q1"
-							action="#{medicamentoHome.remDosifMedic(res)}" ajaxSingle="true">
-							<h:graphicImage value="/kubeImg/table_delete16.png" />
-						</a:commandLink>
-						</rich:column>
-						<f:facet name="footer">
-							<rich:datascroller id="ds1" renderIfSinglePage="true" />
-						</f:facet>
-					</rich:dataTable></td>
-					<td>
-						<s:decorate template="/layout/kActions.xhtml">
-							<a:commandButton onclick="#{rich:component('selPresentacion')}.show();" ajaxSingle="true" 
-								action="#{medicamentoHome.cargarListaPresen()}" reRender="pre" eventsQueue="q1"
-								styleClass="addBtn" value="#{app.medicm_btn_add_presen}">
-							</a:commandButton>
-						</s:decorate>
-						<rich:spacer height="10" />
-						<rich:dataTable var="res" value="#{medicamentoHome.presentacionesList}" id="_tblSelPre"
-						rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-						headerClass="tablaHeader" footerClass="tableScroll">
-						<f:facet name="header">#{app.presentaciones_med_list}</f:facet>
-						<rich:column filterBy="#{res.presentacion.nombre}" filterEvent="onkeyup">
-							<f:facet name="header">#{app.medicm_name}</f:facet>
-							<h:outputText value="#{res.presentacion.nombre}" />
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">#{msn.col_actions}</f:facet>
-							<a:commandLink reRender="_tblSelPre" eventsQueue="q1" 
-							action="#{medicamentoHome.remPresenMedic(res)}" ajaxSingle="true">
-							<h:graphicImage value="/kubeImg/table_delete16.png" />
-						</a:commandLink>
-						</rich:column>
-						<f:facet name="footer">
-							<rich:datascroller id="ds1" renderIfSinglePage="true" />
-						</f:facet>
-					</rich:dataTable></td>
-				</tr>
+					<tr>
+						<td>
+							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
+								<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
+									action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1"
+									styleClass="addBtn" value="Agregar laboratorio" style="font-size:14px;">
+								</a:commandButton>
+							</s:decorate>
+							
+							<rich:spacer height="10" />
+							
+							<rich:dataTable var="res" value="#{medicamentoHome.listaMedicamentosLabs}" id="_tblSelecLab"
+								rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">Laboratorios seleccionados</f:facet>
+								
+								<rich:column filterBy="#{res.laboratorio.nombre}" filterEvent="onkeyup">
+									<f:facet name="header"  ><span style="font-size:14px;" >Laboratorio</span></f:facet>
+									<h:outputText value="#{res.laboratorio.nombre}" style="font-size:14px;" />
+								</rich:column>
+								
+								<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink reRender="_tblSelPre" eventsQueue="q1" 
+										action="#{medicamentoHome.quitarMedicamentosLab(res)}" ajaxSingle="true" style="font-size:14px;">
+										<h:graphicImage value="/kubeImg/table_delete16.png" />
+									</a:commandLink>
+								</rich:column>
+								
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+								
+							</rich:dataTable>
+						</td>
+					
+						<td style="width:50%;">
+						
+							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
+								<a:commandButton onclick="#{rich:component('selDosificacion')}.show();" ajaxSingle="true" 
+									action="#{medicamentoHome.cargarListaDosif()}" reRender="dos" eventsQueue="q1"
+									styleClass="addBtn" value="#{app.medicm_btn_add_dosif}" style="font-size:14px;">
+								</a:commandButton>
+							</s:decorate>
+							
+							<rich:spacer height="10" />
+							
+							<rich:dataTable var="res" value="#{medicamentoHome.dosificacionesList}" id="_tblSelDos"
+								rows="20" align="center"  rowClasses="tblEven,tblOdd"  onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">#{app.dosificaciones_med_list}</f:facet>
+								<rich:column filterBy="#{res.dosificacion.nombre}" filterEvent="onkeyup">
+									<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_name}</span></f:facet>
+									<h:outputText value="#{res.dosificacion.nombre}" style="font-size:14px;" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink reRender="_tblSelDos" eventsQueue="q1"
+									action="#{medicamentoHome.remDosifMedic(res)}" ajaxSingle="true" style="font-size:14px;" >
+									<h:graphicImage value="/kubeImg/table_delete16.png" />
+								</a:commandLink>
+								</rich:column>
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+							</rich:dataTable>
+						</td>
+						<td>
+							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;">
+								<a:commandButton onclick="#{rich:component('selPresentacion')}.show();" ajaxSingle="true" 
+									action="#{medicamentoHome.cargarListaPresen()}" reRender="pre" eventsQueue="q1"
+									styleClass="addBtn" value="#{app.medicm_btn_add_presen}" style="font-size:14px;">
+								</a:commandButton>
+							</s:decorate>
+							
+							<rich:spacer height="10" />
+							
+							<rich:dataTable var="res" value="#{medicamentoHome.presentacionesList}" id="_tblSelPre"
+								rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">#{app.presentaciones_med_list}</f:facet>
+								
+								<rich:column filterBy="#{res.presentacion.nombre}" filterEvent="onkeyup">
+									<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_name}</span></f:facet>
+									<h:outputText value="#{res.presentacion.nombre}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink reRender="_tblSelPre" eventsQueue="q1" 
+									action="#{medicamentoHome.remPresenMedic(res)}" ajaxSingle="true">
+									<h:graphicImage value="/kubeImg/table_delete16.png" style="font-size:14px;" />
+								</a:commandLink>
+								</rich:column>
+								
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+								
+							</rich:dataTable>
+						</td>
+					</tr>
 				</table>
 			</h:form>
 			</center>

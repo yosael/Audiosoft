@@ -311,6 +311,16 @@
 							<h:outputText value="#{res.medicamento.sustanciaAct.nombre}" style="font-size:14px;" />
 						</rich:column>
 						<rich:column>
+							<f:facet name="header">Laboratorio</f:facet>
+							<h:selectOneMenu value="#{res.selLab}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
+								<s:selectItems value="#{res.medicamento.medicamentosLab}" var="_lab" 
+									label="#{_lab.laboratorio.nombre}" noSelectionLabel=" " style="font-size:14px;"/>
+								<s:convertEntity />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+							</h:selectOneMenu>
+							<h:outputText value="#{res.laboratorio.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;" />
+						</rich:column>
+						<rich:column>
 							<f:facet name="header">#{app.medicm_dosif}</f:facet>
 							<h:selectOneMenu value="#{res.selDosif}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
 								<s:selectItems value="#{res.medicamento.dosificaciones}" var="_dos" 

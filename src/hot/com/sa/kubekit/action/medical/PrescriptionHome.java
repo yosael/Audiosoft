@@ -24,6 +24,7 @@ import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.medical.Medicamento;
 import com.sa.model.medical.MedicamentoConsulta;
+import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.Prescription;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.RecomendacionMed;
@@ -40,6 +41,8 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	private List<RecomendacionConsulta> recomendacionesAgregadas = new ArrayList<RecomendacionConsulta>();
 	private List<DiagnosticoConsulta> diagnosticosAgregados = new ArrayList<DiagnosticoConsulta>();
 	private List<ExamenConsulta> examenesAgregados = new ArrayList<ExamenConsulta>();
+	
+	private List<MedicamentoLaboratorios> medicamentosLaboratorios = new ArrayList<MedicamentoLaboratorios>();
 	
 	private List<Prescription> prescriptionsPendingList = new ArrayList<Prescription>();
 	private Integer prescriptionId;
@@ -139,11 +142,14 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 				return;
 			}
 		
+		//Revisar porque toman el indice cero, siempre estaria agarrando solo el primero de la lista????? 04/04/2017: Solo es para mostrarlo en el select, luego se selecciona
 		MedicamentoConsulta item = new MedicamentoConsulta();
 		item.setCantidad((short) 1);
 		item.setMedicamento(medicm);
 		item.setSelDosif(medicm.getDosificaciones().get(0));
 		item.setSelPresen(medicm.getPresentaciones().get(0));
+		item.setSelLab(medicm.getMedicamentosLab().get(0));
+		
 		itemsAgregados.add(item);
 	}
 	

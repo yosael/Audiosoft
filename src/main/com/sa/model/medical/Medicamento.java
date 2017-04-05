@@ -1,6 +1,7 @@
 package com.sa.model.medical;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -28,9 +29,12 @@ public class Medicamento implements Serializable {
 	private String nombre;
 	private IndiceTerapeutico indiceTer;
 	private SustanciaActiva sustanciaAct;
-	private LaboratorioMed laboratorio;
+	//private LaboratorioMed laboratorio;
 	private List<DosificacionMedicamento> dosificaciones;
 	private List<PresentacionMedicamento> presentaciones;
+	
+	private List<MedicamentoLaboratorios> medicamentosLab = new ArrayList<MedicamentoLaboratorios>();
+	
 	
 	private boolean asociado;
 	
@@ -73,7 +77,7 @@ public class Medicamento implements Serializable {
 		this.sustanciaAct = sustanciaAct;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	/*@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "laboratorio_id", nullable = false)
 	@ForeignKey(name = "fk_lab_med")
 	public LaboratorioMed getLaboratorio() {
@@ -81,7 +85,7 @@ public class Medicamento implements Serializable {
 	}
 	public void setLaboratorio(LaboratorioMed laboratorio) {
 		this.laboratorio = laboratorio;
-	}
+	}*/
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medicamento", cascade = CascadeType.REMOVE)
 	public List<DosificacionMedicamento> getDosificaciones() {
@@ -107,6 +111,14 @@ public class Medicamento implements Serializable {
 		this.asociado = asociado;
 	}
 	
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medicamento", cascade = CascadeType.REMOVE)
+	public List<MedicamentoLaboratorios> getMedicamentosLab() {
+		return medicamentosLab;
+	}
+	public void setMedicamentosLab(List<MedicamentoLaboratorios> medicamentosLab) {
+		this.medicamentosLab = medicamentosLab;
+	}
 	
 	
 	

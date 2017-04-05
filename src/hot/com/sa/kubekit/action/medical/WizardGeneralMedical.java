@@ -20,6 +20,7 @@ import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.GeneralInformation;
 import com.sa.model.medical.GeneralMedical;
 import com.sa.model.medical.MedicalAppointmentService;
+import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.id.MedicalAppointmentServiceId;
 import com.sa.model.sales.DetVentaProdServ;
@@ -283,6 +284,13 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									digCon.setNomDiagnostico(digCon.getDiagnostico().getNombre());
 									entityManager.persist(digCon);
 								}
+								
+								/*for(MedicamentoLaboratorios medLabs : prescriptionHome.getM) {
+									digCon.setConsulta(generalMedicalDAO.getInstance());
+									digCon.setNomDiagnostico(digCon.getDiagnostico().getNombre());
+									entityManager.persist(digCon);
+								}*/
+								
 								
 								//Examenes
 								for(ExamenConsulta exaCon : prescriptionHome.getExamenesAgregados()) {

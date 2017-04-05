@@ -29,6 +29,11 @@ public class MedicamentoConsulta implements Serializable {
 	private DosificacionMedicamento selDosif;
 	private PresentacionMedicamento selPresen;
 	
+	//LabSelected nuevo el 04/04/2017
+	private LaboratorioMed laboratorio;
+	private MedicamentoLaboratorios selLab;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -104,6 +109,31 @@ public class MedicamentoConsulta implements Serializable {
 		this.selPresen = selPresen;
 		setPresentacion(selPresen.getPresentacion());
 	}
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "laboratorio_id", nullable = false)
+	@ForeignKey(name = "fk_medconsulta_lab")
+	public LaboratorioMed getLaboratorio() {
+		return laboratorio;
+	}
+	public void setLaboratorio(LaboratorioMed laboratorio) {
+		this.laboratorio = laboratorio;
+	}
+	
+	@Transient
+	public MedicamentoLaboratorios getSelLab() {
+		return selLab;
+	}
+	public void setSelLab(MedicamentoLaboratorios selLab) {
+		this.selLab = selLab;
+		setLaboratorio(selLab.getLaboratorio());
+	}
+	
+	
+	
+	
+	
 	
 	
 }

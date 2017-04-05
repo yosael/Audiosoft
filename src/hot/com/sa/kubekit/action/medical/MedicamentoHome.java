@@ -15,6 +15,7 @@ import com.sa.model.medical.DosificacionMedicamento;
 import com.sa.model.medical.IndiceTerapeutico;
 import com.sa.model.medical.LaboratorioMed;
 import com.sa.model.medical.Medicamento;
+import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.Presentacion;
 import com.sa.model.medical.PresentacionMedicamento;
 import com.sa.model.medical.SustanciaActiva;
@@ -33,6 +34,11 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	private List<Presentacion> presentacionesSel = new ArrayList<Presentacion>();
 	private List<DosificacionMedicamento> dosificacionesList = new ArrayList<DosificacionMedicamento>();
 	private List<PresentacionMedicamento> presentacionesList = new ArrayList<PresentacionMedicamento>();
+	
+	//Nuevo
+	private List<MedicamentoLaboratorios> listaMedicamentosLabs = new ArrayList<MedicamentoLaboratorios>();
+	
+	
 	private LaboratorioMed labMed;
 	private IndiceTerapeutico indTer;
 	private SustanciaActiva susAct;
@@ -55,6 +61,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			setInstance(getEntityManager().find(Medicamento.class, medmId));
 			dosificacionesList = instance.getDosificaciones();
 			presentacionesList = instance.getPresentaciones();
+			listaMedicamentosLabs = instance.getMedicamentosLab();
 		}catch (Exception e) {
 			clearInstance();
 			setInstance(new Medicamento());
@@ -288,6 +295,8 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			for(DosificacionMedicamento dosMed : instance.getDosificaciones()) 
 				getEntityManager().remove(dosMed);
 		
+		persistirMedicamentosLab();
+		
 		if(instance.getPresentaciones() != null)
 			for(PresentacionMedicamento preMed : instance.getPresentaciones()) 
 				getEntityManager().remove(preMed);
@@ -301,6 +310,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			getEntityManager().persist(newDos);
 		}	
 		
+		
 		for(PresentacionMedicamento preMed : presentacionesList) {
 			PresentacionMedicamento newPre = new PresentacionMedicamento();  
 			newPre.setMedicamento(instance);
@@ -308,11 +318,52 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			getEntityManager().persist(newPre);
 		}	
 	}
+	
+	
+	//Nuevo el 04/04/2017
+	public void agregarLaboratorio(LaboratorioMed laboratorio)
+	{
+		MedicamentoLaboratorios medicamentosLab = new MedicamentoLaboratorios();
+		medicamentosLab.setLaboratorio(laboratorio);
+		listaMedicamentosLabs.add(medicamentosLab);
+		
+	}
+	
+	public void persistirMedicamentosLab()
+	{
+		for(MedicamentoLaboratorios medLabs: listaMedicamentosLabs)
+		{
+			
+			medLabs.setMedicamento(instance);
+			
+			if(medLabs.getId()!=null)
+			{System.out.println("Guardo el medicamento lab");
+				getEntityManager().persist(medLabs);
+				
+			}
+		}
+	}
+	
+	public void quitarMedicamentosLab(MedicamentoLaboratorios medLabs)
+	{
+		if(medLabs.getId()!=null)
+		{
+			listaMedicamentosLabs.remove(medLabs);
+			getEntityManager().remove(medLabs);
+		}
+		else
+		{
+			listaMedicamentosLabs.remove(medLabs);
+		}
+	}
 
 	@Override
 	public void posModify() {
+		
+		System.out.println("Entro al possave");
 		saveDetailMed();
 		
+		System.out.println("Paso del metodo");
 	}
 
 	@Override
@@ -441,6 +492,15 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 
 	public void setNomCoinci(String nomCoinci) {
 		this.nomCoinci = nomCoinci;
+	}
+
+	public List<MedicamentoLaboratorios> getListaMedicamentosLabs() {
+		return listaMedicamentosLabs;
+	}
+
+	public void setListaMedicamentosLabs(
+			List<MedicamentoLaboratorios> listaMedicamentosLabs) {
+		this.listaMedicamentosLabs = listaMedicamentosLabs;
 	}
 	
 	

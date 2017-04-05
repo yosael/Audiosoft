@@ -125,7 +125,7 @@
 					<s:decorate template="/layout/kActions.xhtml">
 						
 						<!-- <a:commandButton  value="Imprimir" oncomplete="showReport('detalleReparacionExternaPDF', '#{conversation.id}');" styleClass="pdfBtn"   /> -->
-						<a:commandButton rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado!='Generada'}" value="Formato Proveedor" action="#{reparacionExternaHome.setContador(0)}" oncomplete="showReport('proveedorDocPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						<a:commandButton rendered="#{reparacionExternaHome.managed and reparacionExternaHome.instance.estado!='Generada'}" value="Formato Proveedor" action="#{reparacionExternaHome.setContador(1)}" oncomplete="showReport('proveedorDocPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
 					
 						<s:button view="/taller/reparacion_externa/list.xhtml" propagation="begin"
 							styleClass="listBtn" value="#{msn.button_list}">

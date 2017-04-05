@@ -223,16 +223,20 @@
 											
 											<rich:spacer width="10px;"></rich:spacer>
 											
-												<s:label rendered="#{(ventaComboHome.requiereMolde) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" id="lblReqMolde" >Requiere molde</s:label>
-												<s:label rendered="#{(ventaComboHome.requiereEnsamble) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" id="lblReqEnsam" >Requiere ensamblaje</s:label> 
-												<!--<h:selectBooleanCheckbox value="#{ventaComboHome.crearOrden}" style="width:20px;height:20px;" id="crearOrden" rendered="#{ventaComboHome.crearOrden}"   />-->
-												<h:inputTextarea value="#{ventaComboHome.comentarioOrdenLab}"  id="comentOrden" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" />
-												<rich:spacer width="5px" ></rich:spacer> 
-												<h:commandButton action="#{ventaComboHome.preVenta()}" value="Preventa" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" >
-													<a:support event="onclick" ajaxSingle="true" reRender="formapacli" ></a:support>
-												</h:commandButton>
-												<s:label rendered="#{ventaComboHome.cotizacion.estado=='PRE'}" id="lblProceso" >Trabajo de taller en proceso</s:label>
-												<s:label rendered="#{ventaComboHome.cotizacion.estado=='TFN'}" id="lblProcesoFin" >Trabajo de taller finalizado</s:label>
+												
+												
+													<s:label rendered="#{(ventaComboHome.requiereMolde) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" id="lblReqMolde" >Requiere molde</s:label>
+													<s:label rendered="#{(ventaComboHome.requiereEnsamble) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" id="lblReqEnsam" >Requiere ensamblaje</s:label> 
+													<!--<h:selectBooleanCheckbox value="#{ventaComboHome.crearOrden}" style="width:20px;height:20px;" id="crearOrden" rendered="#{ventaComboHome.crearOrden}"   />-->
+													<rich:spacer width="12px" ></rich:spacer>
+													<h:inputTextarea value="#{ventaComboHome.comentarioOrdenLab}"  id="comentOrden" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" />
+													<rich:spacer width="12px" ></rich:spacer> 
+													<h:commandButton style="padding" action="#{ventaComboHome.preVenta()}" value="Preventa" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" >
+														<a:support event="onclick" ajaxSingle="true" reRender="formapacli" ></a:support>
+													</h:commandButton>
+													<s:label rendered="#{ventaComboHome.cotizacion.estado=='PRE'}" id="lblProceso" >Trabajo de taller en proceso</s:label>
+													<s:label rendered="#{ventaComboHome.cotizacion.estado=='TFN'}" id="lblProcesoFin" >Trabajo de taller finalizado</s:label>
+												
 											</h3> 
 											<rich:dataGrid value="#{ventaComboHome.selCmbsList}"
 												var="combo" columns="1" elements="9" width="600px"
@@ -883,8 +887,9 @@
 											<s:label rendered="#{(ventaComboHome.requiereMoldeBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" id="lblReqMoldeBin" >El aparato requiere molde</s:label>
 											<s:label rendered="#{ventaComboHome.requiereEnsambleBin and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" id="lblReqEnsamBin" >El aparato requiere ensamblaje</s:label> 
 											<!-- <h:selectBooleanCheckbox value="#{ventaComboHome.crearOrdenBin}" style="width:20px;height:20px;" id="crearOrdenBin" rendered="#{ventaComboHome.crearOrdenBin}"   /> -->
+											<rich:spacer width="12px" ></rich:spacer>
 											<h:inputTextarea value="#{ventaComboHome.comentarioOrdenLabBin}"  id="comentOrdenBin" rendered="#{(ventaComboHome.crearOrdenBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" />
-											<rich:spacer width="5px" ></rich:spacer>
+											<rich:spacer width="12px" ></rich:spacer>
 											<h:commandButton action="#{ventaComboHome.preVentaBin()}" value="Preventa" rendered="#{(ventaComboHome.crearOrdenBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" >
 												<a:support event="onclick" ajaxSingle="true" reRender="formapacli2" ></a:support>
 											</h:commandButton>

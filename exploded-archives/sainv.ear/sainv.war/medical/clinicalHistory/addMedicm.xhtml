@@ -40,17 +40,17 @@
 						<f:facet name="header">#{app.medicm_name}</f:facet>
 						<h:outputText value="#{res.nombre}" />
 					</rich:column>
-					<rich:column style="font-size:13px;" >
-						<f:facet name="header">#{app.medicm_laboratorio}</f:facet>
-						<h:outputText value="#{res.laboratorio.nombre}" />
-					</rich:column >
-					<rich:column style="font-size:13px;">
-						<f:facet name="header">#{app.medicm_indice}</f:facet>
-						<h:outputText value="#{res.indiceTer.nombre}" />
-					</rich:column>
 					<rich:column style="font-size:13px;">
 						<f:facet name="header">#{app.medicm_sustancia}</f:facet>
 						<h:outputText value="#{res.sustanciaAct.nombre}" />
+					</rich:column>
+					<!-- <rich:column style="font-size:13px;" >
+						<f:facet name="header">#{app.medicm_laboratorio}</f:facet>
+						<h:outputText value="#{res.laboratorio.nombre}" />
+					</rich:column > -->
+					<rich:column style="font-size:13px;">
+						<f:facet name="header">#{app.medicm_indice}</f:facet>
+						<h:outputText value="#{res.indiceTer.nombre}" />
 					</rich:column>
 					
 					<rich:column style="width:170px;">

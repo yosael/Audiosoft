@@ -22,7 +22,7 @@ public class LaboratorioMed implements Serializable {
 	private Integer id;
 	private String nombre;
 	private String descripcion;
-	private List<Medicamento> medicamentos;
+	//private List<Medicamento> medicamentos;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,13 +50,13 @@ public class LaboratorioMed implements Serializable {
 		this.descripcion = descripcion;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "laboratorio", cascade = CascadeType.REMOVE)
+	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "laboratorio", cascade = CascadeType.REMOVE)
 	public List<Medicamento> getMedicamentos() {
 		return medicamentos;
 	}
 	public void setMedicamentos(List<Medicamento> medicamentos) {
 		this.medicamentos = medicamentos;
-	}
+	}*/
 	
 	
 }

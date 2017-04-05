@@ -175,6 +175,21 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	}
 	
 	
+	public void loadPatientById(int idPaciente)
+	{
+		//try{
+			Cliente cliente = (Cliente) getEntityManager().createQuery(
+					"select c from Cliente c where c.id = :numId")
+					.setParameter("numId", idPaciente)
+					.getSingleResult();		
+			setInstance(cliente);
+			loadOcupaciones();
+		/*}
+		catch (Exception e) {
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema cargando el paciente");
+			return;
+		}*/
+	}
 	
 	
 	public void loadHistory(boolean detail) {
@@ -705,6 +720,8 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	
 	@Override
 	public boolean preModify() {
+		
+		valtel = false;
 		if(instance.getFechaCreacion() == null)
 			instance.setFechaCreacion(new Date());
 		if(instance.getMedioReferido() != null && 
@@ -782,7 +799,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			}
 		}
 		
-		
+	
 		return true;
 	}
 
@@ -859,6 +876,12 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		getEntityManager().refresh(instance);
 		return true;
 	}
+	
+	public void modificarClientesNuevos()
+	{
+		modify();
+		valtel=true;
+	}
 
 	@Override
 	public void posSave() {
@@ -866,6 +889,9 @@ public class ClienteHome extends KubeDAO<Cliente>{
 
 	@Override
 	public void posModify() {
+		System.out.println("Entro al posModify");
+		valtel=true;
+		
 	}
 
 	@Override

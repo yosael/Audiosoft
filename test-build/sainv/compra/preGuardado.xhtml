@@ -111,9 +111,10 @@
 								disabled="true" />
 						</s:decorate>
 						
-						<h:commandButton action="#{compraHome.finalizarPreGuardado()}"
-								 rendered="#{compraHome.managed}"
-								styleClass="modifyBtn" onclick="upperCaseAllInputs();"
+						<a:commandButton 
+								reRender="fmPresave"	
+								rendered="#{compraHome.managed}"
+								styleClass="modifyBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
 								value="Finalizar Registro" />
 						<s:decorate></s:decorate><s:decorate></s:decorate>
 
@@ -292,6 +293,35 @@
 				<s:div id="m2">
 					<ui:include src="codsProducts.xhtml" />
 				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="confirmPreSave" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmPreSave');">
+				<f:facet name="header">
+					Confirmación para pre-compra
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmPreSave')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmPresave">
+					<p>DESEA FINALIZAR Y GUARDAR LA COMPRA?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m5">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmPreSave')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{compraHome.finalizarPreGuardado()}"
+								reRender="formcompra" 
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.hide();"
+								value="Finalizar"  >
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
 			</rich:modalPanel>
 			
 		</rich:panel>

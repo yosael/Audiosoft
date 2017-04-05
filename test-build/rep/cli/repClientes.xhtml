@@ -12,14 +12,14 @@
 	<ui:define name="body">
 		
 		<rich:panel>
-			<f:facet name="header">Clientes nuevos</f:facet>
+			<f:facet name="header"><span class="marginhead" >Clientes nuevos</span></f:facet>
 			<rich:spacer height="20" />
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
 				<fieldset>					
-					<legend>Reporte de clientes nuevos</legend>
+					<legend>Informacion de clientes nuevos</legend>
 					<center>
 					<h:panelGrid columns="3">
 						
@@ -104,11 +104,12 @@
 					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<s:link title="#{app.patilist_edit}"
+						<!-- <s:link title="#{app.patilist_edit}"
 							view="/medical/patient/master.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="numId" value="#{res.id}" />
-						</s:link>
+						</s:link> -->
+						<a:commandButton action="#{clienteHome.loadPatientById(res.id)}" value="Editar" reRender="editCli" onclick="#{rich:component('editClient')}.show();" />
 					</rich:column>
 					
 					<f:facet name="footer">
@@ -129,6 +130,21 @@
 			
 			</h:form>
 		</rich:panel>
+	
+		<rich:modalPanel id="editClient" width="700" moveable="true"
+			 top="40"  height="600" style="overflow-y:scroll"
+			onbeforeshow="activeModal.setActiveModalPanel('editClient');">
+			<f:facet name="header">#{app.patimast_head_register}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('editClient')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="editCli">
+				<ui:include src="addClient.xhtml" />
+			</s:div>
+		</rich:modalPanel>
 	
 	</ui:define>
 </ui:composition>

@@ -64,6 +64,8 @@ public class ReparacionCliente implements Serializable {
 	
 	private List<DetalleReparacionExterna> detallesReparacionExterna = new ArrayList<DetalleReparacionExterna>();
 	
+	
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -315,6 +317,8 @@ public class ReparacionCliente implements Serializable {
 			List<DetalleReparacionExterna> detallesReparacionExterna) {
 		this.detallesReparacionExterna = detallesReparacionExterna;
 	}
+
+	
 
 	
 	

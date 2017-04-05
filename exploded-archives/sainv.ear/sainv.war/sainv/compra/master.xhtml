@@ -245,15 +245,15 @@
 								styleClass="newBtn" value="#{msn.button_new}">
 								<f:param name="id" value="" />
 							</s:button> -->
-							<a:commandButton action="#{compraHome.save()}"
-								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();"
+							<a:commandButton 
+								reRender="fmSave" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmSave')}.show();"
 								value="#{msn.button_save}" />
 								
-							<a:commandButton action="#{compraHome.preGuardar()}"
-								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();"
-								value="Pre-Guardar" />
+							<a:commandButton 
+								reRender="fmPresave" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
+								value="Pre-Guardar"  />
 								
 							<a:commandButton action="#{compraHome.modify()}"
 								reRender="formcompra" rendered="#{compraHome.managed}"
@@ -281,6 +281,63 @@
 				</s:div>
 			</rich:modalPanel>
 			
+			<rich:modalPanel id="confirmSave" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmAprob');">
+				<f:facet name="header">
+					Confirmación para compra
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmSave')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmSave">
+					<p>DESEA GUARDAR Y FINALIZAR LA COMPRA?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m5">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmSave')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{compraHome.save()}"
+								reRender="formcompra" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmSave')}.hide();"
+								value="#{msn.button_save}" >
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="confirmPreSave" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmPreSave');">
+				<f:facet name="header">
+					Confirmación para pre-compra
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmPreSave')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmPresave">
+					<p>DESEA PRE-GUARDAR LA COMPRA?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m5">
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('confirmPreSave')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{compraHome.preGuardar()}"
+								reRender="formcompra" rendered="#{not compraHome.managed}"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.hide();"
+								value="Pre-Guardar"  >
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
 			
 			
 			<rich:modalPanel id="lstCodigos" width="900" moveable="true" autosized="true"  top="40"

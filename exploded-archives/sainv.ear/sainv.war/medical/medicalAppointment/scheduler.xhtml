@@ -28,7 +28,7 @@
 			reRender="table" action="#{appointmentGrid.createGridDay()}"
 			ajaxSingle="true" eventsQueue="q1" update="growl" />  -->
 		<rich:panel>
-			<f:facet name="header">#{app.sched_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.sched_head}</span></f:facet>
 			<p:focus />
 			<a:queue name="q1" ignoreDupResponses="false"/> <!-- se agrego esto: ignoreDupResponses="false" el 21/12/2016 -->
 			<h:form id="formA">

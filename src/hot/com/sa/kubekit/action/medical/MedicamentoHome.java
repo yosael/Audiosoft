@@ -193,6 +193,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	}
 	
 	public void addLaboratorio() {
+		
 		if(labMed != null && labMed.getNombre() != null && !labMed.getNombre().trim().equals("")) {
 			//VErificamos que no exista ese nombre de laboratorio
 			List<LaboratorioMed> coincidencias = getEntityManager()
@@ -331,30 +332,50 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	
 	public void persistirMedicamentosLab()
 	{
+		System.out.println("Entro a persistir");
+		System.out.println("Tamabio lista medicamentos "+listaMedicamentosLabs.size());
 		for(MedicamentoLaboratorios medLabs: listaMedicamentosLabs)
 		{
 			
 			medLabs.setMedicamento(instance);
 			
-			if(medLabs.getId()!=null)
+			if(medLabs.getId()==null)
 			{System.out.println("Guardo el medicamento lab");
 				getEntityManager().persist(medLabs);
 				
+			}
+			else
+			{
+				System.out.println("No entro a guardar el medicamentos");
 			}
 		}
 	}
 	
 	public void quitarMedicamentosLab(MedicamentoLaboratorios medLabs)
 	{
-		if(medLabs.getId()!=null)
-		{
-			listaMedicamentosLabs.remove(medLabs);
-			getEntityManager().remove(medLabs);
-		}
-		else
-		{
-			listaMedicamentosLabs.remove(medLabs);
-		}
+		
+		System.out.println("Id medicamentos"+medLabs.getId());
+		System.out.println("Nombre laboratorio"+medLabs.getLaboratorio().getNombre());
+		System.out.println("Nombre medicamentos"+medLabs.getMedicamento().getNombre());
+		/*try
+		{*/
+			if(medLabs.getId()!=null)
+			{
+				System.out.println("Entro a remover desde la base");
+				listaMedicamentosLabs.remove(medLabs);
+				getEntityManager().remove(medLabs);
+			}
+			else
+			{
+				System.out.println("Entro a remover en memoria");
+				listaMedicamentosLabs.remove(medLabs);
+			}
+			
+		/*}
+		catch (Exception e) {
+			FacesMessages.instance().add(Severity.WARN,"El el laboratorio no pudo ser eliminado");
+			return;
+		}*/
 	}
 
 	@Override

@@ -606,23 +606,22 @@
 			</center>
 			
 			<center>
-			<rich:modalPanel id="verApaCli" width="800" moveable="true"
-					autosized="true" top="40"
-					onbeforeshow="activeModal.setActiveModalPanel('verApaCli');">
-					<f:facet name="header">
-					#{app.usuariolist_modal}
-				</f:facet>
-					<f:facet name="controls">
-						<h:panelGroup>
-							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
-								onclick="#{rich:component('verApaCli')}.hide();" />
-						</h:panelGroup>
+				<rich:modalPanel id="verApaCli" width="800" moveable="true"
+						autosized="true" top="40"
+						onbeforeshow="activeModal.setActiveModalPanel('verApaCli');">
+						<f:facet name="header">
+						#{app.usuariolist_modal}
 					</f:facet>
+						<f:facet name="controls">
+							<h:panelGroup>
+								<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+									onclick="#{rich:component('verApaCli')}.hide();" />
+							</h:panelGroup>
+						</f:facet>
 						<s:div id="modApa">
 							<ui:include src="verApaCli.xhtml" />
 						</s:div>
-					</rich:modalPanel>
-						
+				</rich:modalPanel>
 			</center>
 			<center>
 				<rich:modalPanel id="confirmation" width="800" moveable="true"

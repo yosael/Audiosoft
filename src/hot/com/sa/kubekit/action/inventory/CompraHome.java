@@ -51,6 +51,7 @@ public class CompraHome extends KubeDAO<Compra>{
 	private List<Item> itemsAgregados = new ArrayList<Item>();
 	private List<Inventario> productosAgregados = new ArrayList<Inventario>();
 	private Sucursal sucursalSelected = new Sucursal();
+	private Item itemDesactualizar;
 	
 	private String formaPago="0";
 	
@@ -453,56 +454,67 @@ public void cargarListaCodigos(ItemPedido prdItm) {
 		
 	}
 	
-	public void desactualizarItem(Item item)
+	
+	public void prepararDesactualizar(Item item)
+	{
+		itemDesactualizar=item;
+	}
+	
+	public void cancelarDesactualizar()
+	{
+		itemDesactualizar=null;
+	}
+	
+	public void desactualizarItem()
 	{
 		
 		
-			System.out.println("Cantidad"+item.getCantidad());
-			System.out.println("Nombre"+item.getInventario().getProducto().getNombre());
+			System.out.println("Cantidad"+itemDesactualizar.getCantidad());
+			System.out.println("Nombre"+itemDesactualizar.getInventario().getProducto().getNombre());
 			
-		if(item.getItemId().getMovimientoId()!=null && item.getItemId().getInventarioId()!=null)
+		if(itemDesactualizar.getItemId().getMovimientoId()!=null && itemDesactualizar.getItemId().getInventarioId()!=null)
 		{
 			//Solucion
 			//Compara con la categoria del inventario si este requiere serie o lote y cargar la lista de codigos que tiene con el metodo existente
 			
-			if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+			if(itemDesactualizar.getInventario().getProducto().getCategoria().isTieneNumLote() || itemDesactualizar.getInventario().getProducto().getCategoria().isTieneNumSerie())
 			{
 				
 				//recorrer la lista de codigos y eliminar o desactivar los codigos
-				cargarListaCodigos(item);
+				cargarListaCodigos(itemDesactualizar);
 				
-				if(lstCodsProductos.get(item.getInventario().getProducto().getReferencia())!=null && lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).get(0).getId()!=null)
+				if(lstCodsProductos.get(itemDesactualizar.getInventario().getProducto().getReferencia())!=null && lstCodsProductos.get(itemDesactualizar.getInventario().getProducto().getReferencia()).get(0).getId()!=null)
 				{
-					for(CodProducto codigo: lstCodsProductos.get(item.getInventario().getProducto().getReferencia()))
+					for(CodProducto codigo: lstCodsProductos.get(itemDesactualizar.getInventario().getProducto().getReferencia()))
 					{
 						codigo.setEstado("USD");
 						getEntityManager().merge(codigo);
 					}
-					
 				}
 				else
 				{
 					System.out.println("Lista de codigos null");
 				}
 				
+				lstCodsProductos.get(itemDesactualizar.getInventario().getProducto().getReferencia()).clear();
 			}
 			
 			Movimiento movimiento = new Movimiento();
 			movimiento.setRazon("O");
-			movimiento.setSucursal(item.getInventario().getSucursal());
+			movimiento.setSucursal(itemDesactualizar.getInventario().getSucursal());
 			movimiento.setTipoMovimiento("S");
 			
 			
-			removerItemPreCompra(item);
+			removerItemPreCompra(itemDesactualizar);
 			
 			movimientoHome.getItemsAgregados().clear();
 			movimientoHome.setInstance(movimiento);
-			movimientoHome.getItemsAgregados().add(item);
+			movimientoHome.getItemsAgregados().add(itemDesactualizar);
 			movimientoHome.save();
 		}
 		else
 		{
-			removerItemPreCompra(item);
+			removerItemPreCompra(itemDesactualizar);
 		}
 		
 		

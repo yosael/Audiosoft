@@ -301,11 +301,12 @@
 					</rich:column>
 					<rich:column rendered="false">
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+						<!-- <s:link title="#{app.vtaprs_verdet}" rendered="true"
 							view="/vtas/cobro/master.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="id" value="#{res.id}" />
-						</s:link>						
+						</s:link> -->
+						<!-- <a:commandButton value="Editar" reRender="modEx" onclick="#{rich:component('addExternalMl')}.show()" action="#{aparatoClienteHome.cargarAparatoPorId(res.id)}" /> -->						
 					</rich:column>
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
@@ -427,6 +428,28 @@
 		</rich:tab>
 		<ui:insert name="moreTabs" />
 	</rich:tabPanel>
+	
+	<!-- Nuevo modal para agregar aparato externo -->
+				<rich:modalPanel id="addExternalMl" width="600" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('addExternalMl');">
+					<f:facet name="header">
+						Registrar nuevo aparato
+					</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('addExternalMl')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+
+					<s:div id="modEx">
+
+						<s:div id="modEx1" >
+							<ui:include src="addExternal.xhtml" />
+						</s:div>
+					</s:div>
+				</rich:modalPanel>
 
 	<ui:include src="/medical/medicalAppointment/_modalDetail.xhtml" />
 	<s:div id="renderImp">

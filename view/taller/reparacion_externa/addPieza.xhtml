@@ -15,7 +15,7 @@
 				<p:focus />
 				<a:queue name="q1" />
 					<center>
-						<s:span styleClass="busHead">#{app.compramast_buscar_product}:</s:span>
+						<s:span styleClass="busHead">Buscar pieza de reparacion:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 						<h:inputText styleClass="busProd" autocomplete="off" value="#{productoHome.nomCoinci}"
 							 id="_nomCoinci">
@@ -39,11 +39,6 @@
 					<rich:column filterBy="#{res.producto.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.productolist_col2}</f:facet>
 						<h:outputText value="#{res.producto.nombre}" />
-					</rich:column>
-					
-					<rich:column filterBy="#{res.cantidadActual}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.productolist_col7}</f:facet>
-						<h:outputText value="#{res.cantidadActual}" />
 					</rich:column>
 					
 					<rich:column filterBy="#{res.producto.categoria.nombre}" filterEvent="onkeyup">

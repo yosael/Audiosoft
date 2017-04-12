@@ -107,6 +107,21 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		
 	}
 	
+	public void cargarAparatoPorId(int id)
+	{
+		
+		try {
+			
+			setInstance(getEntityManager().find(AparatoCliente.class, id));
+			
+		} catch (Exception e) {
+
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al cargar el aparato "+e.getCause());
+			return;	
+		}
+		
+	}
+	
 	public void agregarProductoAsociado(Producto producto)
 	{
 		setProductoAsociado(producto);

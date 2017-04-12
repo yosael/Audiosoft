@@ -21,10 +21,11 @@
 						<s:decorate template="/layout/kActions.xhtml">
 							
 
-							<a:commandButton onclick="#{rich:component('addDetalle')}.hide();"
+							<a:commandButton 
+									oncomplete="validarCierre()"
 									action="#{reparacionExternaHome.agregarDetalle()}"
 									ajaxSingle="true"
-									reRender="_table" 
+									reRender="formDetalle,_table" 
 									value="Finalizar">
 							</a:commandButton>
 							
@@ -75,7 +76,17 @@
 					
 					</h:panelGrid>
 					
-			
+			<script type="text/javascript">
+				
+				function validarCierre()
+				{
+					if(#{reparacionExternaHome.cerrar})
+					{
+						#{rich:component('addDetalle')}.hide();		
+					}
+				
+				}
+			</script>
 				
 			</h:form><!-- nuevo -->
 			

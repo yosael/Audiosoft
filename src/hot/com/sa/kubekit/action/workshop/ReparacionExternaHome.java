@@ -60,6 +60,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private CodProducto nuevoCodigo;
 	private CodProducto codigoSelectedEntrega;
 	private int contador=1;
+	
+	private boolean cerrar;
 
 	@In
 	private LoginUser loginUser;
@@ -222,8 +224,25 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 	}
 	
+	
 	public void agregarDetalle() //NOTA: La validacion que realiza el movimiento es que no se debe repetir el items 2 veeces, es posible que esta validacion no sea requerida para la reparacion
 	{
+		
+		cerrar=false;
+		
+		if(nuevoDetalle.getAparato()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor seleccionar aparato");
+			return;
+			
+		}
+		
+		if(nuevoDetalle.getCodigo()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor agregar numero de serie");
+			return;
+		}
+		
 		nuevoDetalle.setFechaModificacion(new Date());
 		nuevoDetalle.setEstado("Generada");
 		detalleReparacion.add(nuevoDetalle);
@@ -236,6 +255,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		{
 			movimientoHome.agregarProducto(cargarInventarioEnvio(nuevoDetalle.getPiezaReparacion())); // Si la pieza no es null entonces lo que se va a reparar es la pieza.
 		}*/
+		
+		cerrar=true;
 	}
 	
 	public void modificarDetalleIngresada()///
@@ -444,9 +465,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		for(DetalleReparacionExterna item: listaItemsIngreso)
 		{
-			
-			
-			
+
 			Item itemCompra = new Item();
 			itemCompra.setCantidad(1);
 			itemCompra.setItemId(new ItemId());
@@ -1136,6 +1155,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		return idEtapa;
 	}
+	
+	public void crearCodProducto(String codigo)
+	{
+		
+	}
 
 	@Override
 	public boolean preModify() {
@@ -1295,6 +1319,16 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 
 	public void setContador(int contador) {
 		this.contador = contador;
+	}
+
+
+	public boolean isCerrar() {
+		return cerrar;
+	}
+
+
+	public void setCerrar(boolean cerrar) {
+		this.cerrar = cerrar;
 	}
 
 	

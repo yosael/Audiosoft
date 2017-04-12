@@ -111,11 +111,19 @@
 								disabled="true" />
 						</s:decorate>
 						
+						<h:panelGrid columns="3" >
 						<a:commandButton 
 								reRender="fmPresave"	
 								rendered="#{compraHome.managed}"
-								styleClass="modifyBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
 								value="Finalizar Registro" />
+								<rich:spacer width="15px;" ></rich:spacer>
+							<a:commandButton action="#{compraHome.guardarNuevosItems()}"
+								reRender="formcompra" rendered="#{compraHome.managed}"
+								styleClass="addBtn" onclick="upperCaseAllInputs();"
+								value="#{msn.button_modify}" />
+						</h:panelGrid>		
+								
 						<s:decorate></s:decorate><s:decorate></s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
@@ -206,6 +214,7 @@
 										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
 										eventsQueue="q1" reRender="_table" />
 								</h:inputText>
+								<h:graphicImage value="/kubeImg/DB_ok16.png" rendered="#{res.registrado}"  />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
@@ -231,8 +240,8 @@
 									rendered="#{res.inventario.producto.categoria.tieneNumSerie==true or 
 										res.inventario.producto.categoria.tieneNumLote==true}" />
 										
-								<a:commandLink reRender="formcompra" eventsQueue="q1"
-									action="#{compraHome.desactualizarItem(res)}" ajaxSingle="true"><!-- action="#{compraHome.removerItem(res)}" ajaxSingle="true" -->
+								<a:commandLink reRender="fmDesactualizar" eventsQueue="q1"
+									action="#{compraHome.prepararDesactualizar(res)}" ajaxSingle="true" onclick="#{rich:component('confirmDesactualizar')}.show();" ><!-- action="#{compraHome.removerItem(res)}" ajaxSingle="true" -->
 									<h:graphicImage value="/kubeImg/table_delete16.png" />
 								</a:commandLink>
 
@@ -249,10 +258,6 @@
 							<s:button view="/sainv/compra/list.xhtml" propagation="begin"
 								styleClass="listBtn" value="#{msn.button_list}">
 							</s:button>
-							<a:commandButton action="#{compraHome.guardarNuevosItems()}"
-								reRender="formcompra" rendered="#{compraHome.managed}"
-								styleClass="modifyBtn" onclick="upperCaseAllInputs();"
-								value="#{msn.button_modify}" />
 						</s:decorate>
 				</fieldset>
 			</h:form>
@@ -318,6 +323,37 @@
 						<a:commandButton action="#{compraHome.finalizarPreGuardado()}"
 								reRender="formcompra" 
 								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.hide();"
+								value="Finalizar"  >
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="confirmDesactualizar" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmDesactualizar');">
+				<f:facet name="header">
+					Confirmación para pre-compra
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('confirmDesactualizar')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmDesactualizar">
+					<p>DESEA ELIMINAR EL ITEM DE LA COMPRA?. LOS ITEM SERAN BORRAROS DEL INVENTARIO</p>
+					<s:decorate template="/layout/kActions.xhtml" id="m6">
+						<a:commandButton styleClass="cancelBtn"
+							action="#{compraHome.cancelarDesactualizar()}"
+							value="#{msn.button_cancel}"
+							reRender="formcompra"
+							onclick="#{rich:component('confirmDesactualizar')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{compraHome.desactualizarItem()}"
+								reRender="formcompra" 
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmDesactualizar')}.hide();"
 								value="Finalizar"  >
 						</a:commandButton>
 					</s:decorate>

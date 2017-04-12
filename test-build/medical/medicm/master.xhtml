@@ -108,8 +108,8 @@
 								
 								<rich:column>
 									<f:facet name="header">#{msn.col_actions}</f:facet>
-									<a:commandLink reRender="_tblSelPre" eventsQueue="q1" 
-										action="#{medicamentoHome.quitarMedicamentosLab(res)}" ajaxSingle="true" style="font-size:14px;">
+									<a:commandLink reRender="formmedicm" eventsQueue="q1" 
+										action="#{medicamentoHome.quitarMedicamentosLab(res)}"  ajaxSingle="true" style="font-size:14px;">
 										<h:graphicImage value="/kubeImg/table_delete16.png" />
 									</a:commandLink>
 								</rich:column>

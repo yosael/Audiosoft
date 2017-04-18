@@ -69,7 +69,6 @@
 									itemValue="TD" />
 								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
 							</h:selectOneMenu>
-
 						</s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
@@ -117,10 +116,10 @@
 								rendered="#{compraHome.managed}"
 								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
 								value="Finalizar Registro" />
-								<rich:spacer width="15px;" ></rich:spacer>
+							<rich:spacer width="15px;" ></rich:spacer>
 							<a:commandButton action="#{compraHome.guardarNuevosItems()}"
 								reRender="formcompra" rendered="#{compraHome.managed}"
-								styleClass="addBtn" onclick="upperCaseAllInputs();"
+								styleClass="addBtn" onclick="upperCaseAllInputs();" eventsQueue="q1" ajaxSingle="true"
 								value="#{msn.button_modify}" />
 						</h:panelGrid>		
 								
@@ -354,7 +353,7 @@
 						<a:commandButton action="#{compraHome.desactualizarItem()}"
 								reRender="formcompra" 
 								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmDesactualizar')}.hide();"
-								value="Finalizar"  >
+								value="Aceptar"  >
 						</a:commandButton>
 					</s:decorate>
 				</h:form>

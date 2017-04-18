@@ -112,7 +112,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 									+ " FROM cliente cli, sucursal suc,"
 									+ " reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, "
 									+ " etapa_rep_cliente etc "
-									+ " WHERE rpc.repcli_id = cli.cliente_id AND CONCAT(UPPER(TRIM(cli.nombres)),' ',UPPER(TRIM(cli.apellidos))) LIKE :nom" // AND rpc.aprobada = true
+									+ " WHERE rpc.repcli_id = cli.cliente_id AND UPPER(cli.nombres || ' ' || cli.apellidos) LIKE :nom" // AND rpc.aprobada = true WHERE rpc.repcli_id = cli.cliente_id AND CONCAT(UPPER(TRIM(cli.nombres)),' ',UPPER(TRIM(cli.apellidos))) LIKE :nom
 									+ " and rpc.repcli_id = etc.repcli_id "
 									+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 									+ " and suc.id = rpc.sucursal_id " 
@@ -291,8 +291,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						
 						System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
 						
-					
-					
+						
 			}
 			
 		} 

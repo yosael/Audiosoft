@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header" style="font-size:14px;">#{app.attend_head}</f:facet>
+			<f:facet name="header" style="font-size:14px;"><span class="marginhead" >#{app.attend_head}</span></f:facet>
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -19,36 +19,36 @@
 					<fieldset style="width:700px;margin:0 auto"><legend><span class="letra15" >#{app.attend_leg}</span></legend> 
 						<h:panelGrid columns="2" style="padding-left:100px;margin:0 auto;font-size:15px;" >
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.sched_new_date}:</ui:define>
-								<h:outputText value="#{medicalAppointmentDAO.instance.dateTime}">
-									<s:convertDateTime pattern="yyyy/MM/dd HH:mm a" />
-								</h:outputText>
-						</s:decorate>
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.sched_new_patient}:</ui:define>
-							<s:div style="padding-left:10px;">
-								<h:outputText
-									value="#{medicalAppointmentDAO.instance.cliente.fullName}" />
-								<br />
-								<h:outputText
-									value="#{medicalAppointmentDAO.instance.cliente.tipoDoc} : #{medicalAppointmentDAO.instance.cliente.docId}" />
-								<br />
-							</s:div>
-						</s:decorate>
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.sched_new_services}:</ui:define>
-							<s:div
-								style="padding-left: 10px;max-height: 50px;overflow: auto;">
-								<rich:dataList value="#{medicalAppointmentDAO.appointmentItems}"
-									var="item">
-									<h:outputText value="#{item.service.name}" />
-								</rich:dataList>
-							</s:div>
-						</s:decorate>
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.sched_new_comment}:</ui:define>
-							<h:outputText value="#{medicalAppointmentDAO.instance.comment}" />
-						</s:decorate>
+									<ui:define name="label">#{app.sched_new_date}:</ui:define>
+									<h:outputText value="#{medicalAppointmentDAO.instance.dateTime}">
+										<s:convertDateTime pattern="yyyy/MM/dd HH:mm a" />
+									</h:outputText>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.sched_new_patient}:</ui:define>
+								<s:div style="padding-left:10px;">
+									<h:outputText
+										value="#{medicalAppointmentDAO.instance.cliente.fullName}" />
+									<br />
+									<h:outputText
+										value="#{medicalAppointmentDAO.instance.cliente.tipoDoc} : #{medicalAppointmentDAO.instance.cliente.docId}" />
+									<br />
+								</s:div>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.sched_new_services}:</ui:define>
+								<s:div
+									style="padding-left: 10px;max-height: 50px;overflow: auto;">
+									<rich:dataList value="#{medicalAppointmentDAO.appointmentItems}"
+										var="item">
+										<h:outputText value="#{item.service.name}" />
+									</rich:dataList>
+								</s:div>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.sched_new_comment}:</ui:define>
+								<h:outputText value="#{medicalAppointmentDAO.instance.comment}" />
+							</s:decorate>
 					</h:panelGrid> 
 					<s:decorate template="/layout/kActions.xhtml" id="render1" styleClass="letra15">
 					
@@ -56,11 +56,11 @@
 							styleClass="backBtn" value="#{msn.button_back}"
 							rendered="#{not empty urlBack.back}" />
 							
-						<!-- <s:button propagation="begin" value="Historial Medico"
-							styleClass="historyBtn" rendered="#{not generalMedicalDAO.managed}"
-							view="/medical/patient/master.xhtml">
-							<f:param name="tabId" value="tab3" />
-						</s:button>  -->
+							<!-- <s:button propagation="begin" value="Historial Medico"
+								styleClass="historyBtn" rendered="#{not generalMedicalDAO.managed}"
+								view="/medical/patient/master.xhtml">
+								<f:param name="tabId" value="tab3" />
+							</s:button>  -->
 						
 						<s:button propagation="begin"
 							view="/medical/clinicalHistory/generalMedical/step1.xhtml"
@@ -87,7 +87,8 @@
 																	
 						
 						
-					</s:decorate></fieldset>
+					</s:decorate>
+				</fieldset>
 			</h:form>
 		</rich:panel>
 	</ui:define>

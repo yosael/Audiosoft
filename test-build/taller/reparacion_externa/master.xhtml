@@ -24,7 +24,6 @@
 					<legend>Detalle reparacion externa</legend>
 
 					<h:panelGrid columns="2" style="padding-left:100px;">
-					
 						<s:decorate template="/layout/kEditSpace.xhtml"
 							style="width:250px;">
 							<ui:define name="label">Proveedor:</ui:define>
@@ -49,7 +48,7 @@
 							</h:inputText>
 						</s:decorate>
 
-						<!-- <s:decorate template="/layout/kEditSpace.xhtml"
+					<!-- <s:decorate template="/layout/kEditSpace.xhtml"
 							style="width:250px;">
 							<ui:define name="label">Fecha Inicio:</ui:define> -->
 							<!--<h:inputText value="#{reparacionExternaHome.instance.fechaEmision}"
@@ -145,9 +144,7 @@
 						<a:commandButton action="#{reparacionExternaHome.enviarReparacion()}"
 							reRender="formD" styleClass="upBtn" rendered="#{reparacionExternaHome.instance.estado=='Generada' and not empty reparacionExternaHome.detalleReparacion}"
 							value="Enviar a reparacion" />
-							
-						
-							
+								
 					</s:decorate>
 					
 					<rich:spacer height="20" />

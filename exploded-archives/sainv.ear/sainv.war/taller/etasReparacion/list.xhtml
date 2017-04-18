@@ -16,7 +16,7 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-				<!-- <center>
+				<!--<center>
 					<s:span styleClass="busHead">#{app.repcli_bus_head}</s:span>
 					<rich:spacer width="0" />
 					<s:decorate></s:decorate>
@@ -30,9 +30,9 @@
 							action="#{etapaRepCliHome.repsPendientes()}" />
 						
 					</h:inputText>
-				</center> --> 
+				</center> -->  <rich:spacer height="30px" ></rich:spacer>
 				<rich:dataTable id="repsPendientes" 
-				var="res" value="#{etapaRepCliHome.etapasRepCli}"
+					var="res" value="#{etapaRepCliHome.etapasRepCli}"
 					rendered="#{not empty etapaRepCliHome.etapasRepCli}" rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
@@ -56,19 +56,19 @@
 					<rich:column filterBy="#{res[1]}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.etarepcli_etapa}</f:facet>
 						<h:panelGroup>
-						<h:outputText value="#{res[1]}" />
-						<div style="display:inline-block;">
-			            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
-												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'g'}" />
-							<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
-												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'o'}" />
-							<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
-												rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'r'}" />
-							<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
-												rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'y'}" />		
-							<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
-												rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'na'}" />
-						</div>
+							<h:outputText value="#{res[1]}" />
+							<div style="display:inline-block;">
+				            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+													rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'g'}" />
+								<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+													rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'o'}" />
+								<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+													rendered="#{etapaRepCliHome.calcTiempoRespuesta(res[6]) eq 'r'}" />
+								<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+													rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'y'}" />		
+								<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+													rendered="#{etapaCliHome.calcTiempoRespuesta(res[6]) eq 'na'}" />
+							</div>
 						</h:panelGroup>
 					</rich:column>
 					<rich:column width="25px;" sortBy="#{res[4]}"  >
@@ -88,7 +88,6 @@
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="id" value="#{res[6]}" />
 						</s:link>
-						
 					</rich:column>
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />

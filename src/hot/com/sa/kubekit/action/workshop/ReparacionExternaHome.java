@@ -191,6 +191,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void cargarCodigosProducto(Producto aparato)
 	{
 		
+		if(aparato==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar el aparato");
+			return;
+		}
 		
 		System.out.println("Nombre producto"+aparato.getNombre());
 		listaCodigos = new ArrayList<CodProducto>();
@@ -206,7 +211,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		listaCodigos = (ArrayList<CodProducto>) getEntityManager()
 				.createQuery(
 						"SELECT c FROM CodProducto c "
-								+ "	WHERE c.inventario.producto = :prd AND c.inventario = :inv AND c.estado = 'ACT' ")
+								+ "	WHERE c.inventario.producto = :prd AND c.inventario = :inv AND c.estado = 'USD' ")
 				.setParameter("prd", aparato)
 				.setParameter("inv", inv).getResultList();
 		

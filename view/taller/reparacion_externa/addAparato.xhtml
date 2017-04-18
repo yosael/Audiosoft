@@ -10,7 +10,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 	
-	<h:form id="formAdd">
+	<h:form id="formAdd" >
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
@@ -19,11 +19,11 @@
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 						<h:inputText styleClass="busProd" autocomplete="off" value="#{productoHome.nomCoinci}"
 							 id="_nomCoinci">
-						<a:support  event="onkeydown" reRender="#{rich:clientId('_tableP')}"
-							ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
-						<a:support event="onkeyup" reRender="#{rich:clientId('_tableP')}"
-							ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
-					</h:inputText>
+							<a:support  event="onkeydown" reRender="#{rich:clientId('_tableP')}"
+								ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
+							<a:support event="onkeyup" reRender="#{rich:clientId('_tableP')}"
+								ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
+						</h:inputText>
 					</center>
 				<rich:dataTable var="res" value="#{productoHome.productos}" id="_tableP"
 					 rows="10"
@@ -35,6 +35,7 @@
 						<f:facet name="header">#{app.productomast_ref}</f:facet>
 						<h:outputText value="#{res.producto.referencia}" />
 					</rich:column>
+					
 					<rich:column filterBy="#{res.producto.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.productolist_col2}</f:facet>
 						<h:outputText value="#{res.producto.nombre}" />

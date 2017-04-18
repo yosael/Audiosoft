@@ -163,9 +163,14 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 				.setParameter("rec", instance.getCodigo())
 				.getResultList();
 		
-		if(coinList2 != null && coinList2.size() > 0) {
-			FacesMessages.instance().add(Severity.WARN,"El codigo ya existe");
-			return false;
+		
+		if(recmId!=null && recmId!=instance.getId())
+		{
+			if(coinList2 != null && coinList2.size() > 0) {
+				FacesMessages.instance().add(Severity.WARN,"El codigo ya existe");
+				return false;
+			}
+			
 		}
 		
 		return true;

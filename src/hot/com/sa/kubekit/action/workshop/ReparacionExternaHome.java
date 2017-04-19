@@ -144,7 +144,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	public void cargarReparaciones()
 	{
 		resultList = new ArrayList<ReparacionExterna>();
-		resultList = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r").getResultList();
+		resultList = getEntityManager().createQuery("SELECT r FROM ReparacionExterna r order by r.fechaCreacion desc").getResultList();
 	}
 	
 	public void agregarAparato(Producto aparato)

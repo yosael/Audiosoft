@@ -10,7 +10,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 
-	<h:form id="formapaclidet">
+	<h:form id="formapaclidet" >
 				<!-- <p:growl globalOnly="true" sticky="false" life="3000" /> -->
 				<p:focus />
 				<a:queue name="q1" />
@@ -44,7 +44,7 @@
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
 								<ui:define name="label">#{app.aparcli_amedida}:</ui:define>
 								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.hechoMedida}" disabled="#{aparatoClienteHome.managed}" >
-									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" />
+									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formapaclidet" />
 								</h:selectBooleanCheckbox>
 							</s:decorate>
 							
@@ -97,7 +97,7 @@
 										<a:commandButton
 											onclick="#{rich:component('selItem')}.show();"
 											ajaxSingle="true"
-											reRender="mAddProducto" rendered="#{not aparatoClienteHome.instance.customApa}"
+											reRender="mAddProducto" rendered="#{aparatoClienteHome.instance.customApa!=true and aparatoClienteHome.instance.hechoMedida!=true}"
 											styleClass="addBtn" value=" " style="width:30px;">
 										</a:commandButton>
 							</s:decorate>		
@@ -110,28 +110,28 @@
 							</s:decorate>
 							
 							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true}" >
 								<ui:define name="label">#{app.productomast_name}:</ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.nombre}" style="width:200px;" >
 									<a:support ajaxSingle="true" event="onblur" ></a:support>
 								</h:inputText>
 							</s:decorate>
 							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true}" >
 								<ui:define name="label">#{app.aparcli_brand}: <span class="required">*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.marca}"  style="width:200px;" >
 									<a:support ajaxSingle="true" event="onblur" ></a:support>
 								</h:inputText>
 							</s:decorate>
 							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true}" >
 								<ui:define name="label">#{app.aparcli_model}: <span class="required">*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.modelo}" style="width:200px;" >
 									<a:support ajaxSingle="true" event="onblur" ></a:support>
 								</h:inputText>
 							</s:decorate>
 							
-							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true}" >
 								<ui:define name="label">#{app.producto_codser}: <span class="required">*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" style="width:200px;" >
 									<a:support ajaxSingle="true" event="onblur" ></a:support>
@@ -149,11 +149,57 @@
 					
 					<rich:spacer height="10px;" ></rich:spacer>
 					
+					<rich:dataTable var="res" value="#{aparatoClienteHome.items}" id="_tblItemsCmb" rows="10"
+							rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}"
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header">#{app.aparcli_listitms}</f:facet>
+							<rich:column>
+								<f:facet name="header">#{app.productomast_name}</f:facet>
+								<h:outputText value="#{res.inventario.producto.nombre}" rendered="#{res.inventario.producto!=null}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">#{app.combapa_apaprpal}</f:facet>
+								<center>
+								<h:selectBooleanCheckbox value="#{res.principal}" >
+									<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" reRender="_tblItemsCmb" action="#{aparatoClienteHome.setApaPrpal(res)}" />
+								</h:selectBooleanCheckbox>
+								</center>
+							</rich:column>
+							<rich:column style="width:140px;" >
+								<f:facet name="header">#{app.producto_codlot}</f:facet>
+								<h:inputText value="#{res.codProducto.numLote}" 
+									required="false" rendered="#{res.inventario.producto.categoria.tieneNumLote==true}" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" update="growl" />		
+									</h:inputText>
+							</rich:column>
+							<rich:column style="width:140px;" >
+								<f:facet name="header">#{app.producto_codser}</f:facet>
+								<h:inputText value="#{res.codProducto.numSerie}" 
+									required="false" rendered="#{res.inventario.producto.categoria.tieneNumSerie==true}" >
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" update="growl" />		
+									</h:inputText>
+							</rich:column>
+							<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+								<a:commandLink reRender="formapaclidet" eventsQueue="q1"
+									action="#{aparatoClienteHome.removerItem(res)}" ajaxSingle="true">
+									<h:graphicImage value="/kubeImg/table_delete16.png" />
+								</a:commandLink>
+							</rich:column>
+							<f:facet name="footer">
+							</f:facet>
+						</rich:dataTable>
+					
 					<h:panelGrid style="margin:0 auto;">
 						<s:decorate template="/layout/kActions.xhtml">
-								<a:commandButton action="#{aparatoClienteHome.registrarNuevoAparato()}" reRender="formreparacioncli,formapaclidet"
+								<!-- <a:commandButton action="#{aparatoClienteHome.registrarNuevoAparato()}" reRender="formreparacioncli,formapaclidet"
 									rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
-									value="#{msn.button_save}" oncomplete="validar()"  /><!-- onclick="#{rich:component('addExternalMl')}.hide();"  -->
+									value="#{msn.button_save}" oncomplete="validar()"  /> --><!-- onclick="#{rich:component('addExternalMl')}.hide();"  -->
+									
+							<a:commandButton action="#{aparatoClienteHome.save()}" reRender="formreparacioncli,formapaclidet"
+									rendered="#{not aparatoClienteHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+									value="#{msn.button_save}" oncomplete="validar()"  />	
 						</s:decorate>
 					</h:panelGrid>
 																

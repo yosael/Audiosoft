@@ -49,8 +49,12 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.compramast_select_product}" reRender="formapaclidet"
+						<!-- <a:commandLink value="#{app.compramast_select_product}" reRender="formapaclidet"
 							action="#{aparatoClienteHome.agregarProductoAsociado(res.producto)}" ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('selItem')}.hide();">
+						</a:commandLink> -->
+						<a:commandLink value="#{app.compramast_select_product}" reRender="formapaclidet"
+							action="#{aparatoClienteHome.agregarItem(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('selItem')}.hide();">
 						</a:commandLink>
 					</rich:column>

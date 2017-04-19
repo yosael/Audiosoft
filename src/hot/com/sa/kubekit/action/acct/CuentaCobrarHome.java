@@ -1032,6 +1032,16 @@ public void getCuentasCobrarListPagadas(){
 					totalCxcCorp += tmpCxc.getRemanente();
 			}
 	}
+	
+	public String obtenerSucursalComprobante(Sucursal sucursal)
+	{
+		if(sucursal.getSucursalSuperior()!=null)
+		{
+			return sucursal.getSucursalSuperior().getNombre();
+		}
+		else
+			return sucursal.getNombre();
+	}
 
 	@Override
 	public boolean preDelete() {

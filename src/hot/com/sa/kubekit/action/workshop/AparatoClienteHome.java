@@ -278,6 +278,14 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		save();
 	}
 	
+	public void crearCodigoAparatoNuevo(Item item)
+	{
+		CodProducto codigo = new CodProducto();
+		codigo.setNumSerie(item.getCodProducto().getNumSerie());//LineaNueva
+		codigo.setEstado("USD");
+		codigo.setInventario(item.getInventario());
+	}
+	
 	private boolean guardarAparato() {
 		Item apaPrpal = null;
 		//Validamos que hayan seleccionado el cliente y el combo
@@ -289,7 +297,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		}
 		
 		//nuevo
-		if(instance.getMarca()==null || instance.getMarca()=="")
+		/*if(instance.getMarca()==null || instance.getMarca()=="")
 		{System.out.println("marca vacia");
 			FacesMessages.instance().add(Severity.WARN,"Favor ingresar la marca");
 			return false;
@@ -298,7 +306,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		{System.out.println("modelo vacio");
 			FacesMessages.instance().add(Severity.WARN,"Favor ingresar el modelo");
 			return false;
-		}
+		}*/
 		
 		/*if(instance.getNumSerie()==null || instance.getNumSerie()=="")
 		{System.out.println("num serie vacia");
@@ -308,14 +316,18 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		
 		
 		System.out.println("No entrp a los validaciones");
-		if(instance.getNombre()==null || instance.getNombre()=="")
+		/*if(instance.getNombre()==null || instance.getNombre()=="")
 		{
 			instance.setNombre(instance.getModelo()+" "+instance.getMarca());
-		}
+		}*/
 		
-		
+		System.out.println("ISCUSTOMAPA"+instance.isCustomApa());
+		System.out.println("ISHECHOMEDIDA"+instance.isHechoMedida());
 		if(!instance.isCustomApa() && !instance.isHechoMedida()) { //Si no es externo y no es hecho a la medida.  Si es externo no entra o si es hecho a la medida tampoco
 		
+			System.out.println("Entro al if. No es a la medida ni es externo");
+			
+			
 			if(items == null || items.size() <= 0) {
 				FacesMessages.instance().add(Severity.WARN,
 						sainv_messages.get("aparcli_error_noitm"));
@@ -347,6 +359,31 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			instance.setModelo(apaPrpal.getInventario().getProducto().getModelo());
 			instance.setNombre(apaPrpal.getInventario().getProducto().getNombre());
 		} else {
+			
+			if(instance.getMarca()==null || instance.getMarca()=="")
+			{System.out.println("marca vacia");
+				FacesMessages.instance().add(Severity.WARN,"Favor ingresar la marca");
+				return false;
+			}
+			if(instance.getModelo()==null || instance.getModelo()=="")
+			{System.out.println("modelo vacio");
+				FacesMessages.instance().add(Severity.WARN,"Favor ingresar el modelo");
+				return false;
+			
+			}
+			
+			if(instance.getNombre()==null || instance.getNombre()=="")
+			{
+				instance.setNombre(instance.getModelo()+" "+instance.getMarca());
+			}
+			
+			if(instance.getNumSerie()==null || instance.getNumSerie()=="")
+			{System.out.println("num serie vacia");
+				FacesMessages.instance().add(Severity.WARN,"Favor ingresar numero de serie");
+				return false;
+			}
+			
+			
 			instance.setIdPrd(null);
 		}
 		
@@ -408,6 +445,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				}
 			}
 		}
+		getItems().clear();
 		getEntityManager().flush();
 	}
 

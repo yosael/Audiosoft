@@ -122,18 +122,18 @@
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
-								<ui:define name="label">#{app.aparcli_brand}:</ui:define>
+								<ui:define name="label">#{app.aparcli_brand}:<span class="required" >*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.marca}" required="false" style="width:200px;" />
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
-								<ui:define name="label">#{app.aparcli_model}:</ui:define>
+								<ui:define name="label">#{app.aparcli_model}:<span class="required" >*</span></ui:define>
 								<h:inputText value="#{aparatoClienteHome.instance.modelo}" required="false" style="width:200px;" />
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;">
-								<ui:define name="label">#{app.producto_codser}:</ui:define>
-								<h:inputText value="#{aparatoClienteHome.instance.numSerie}" required="true" style="width:200px;" />
+								<ui:define name="label">#{app.producto_codser}:<span class="required" >*</span></ui:define>
+								<h:inputText value="#{aparatoClienteHome.instance.numSerie}"  style="width:200px;" />
 							</s:decorate>
 						
 						</h:panelGrid>

@@ -7,72 +7,81 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	title="Comprobante cuenta por cobrar" creator="Soluciones Aplicativas"
 	pageSize="LETTER" type="pdf" margins="70 30 30 30">
-	<p:font size="18" style="bold">
-		<p:paragraph alignment="center">Comprobante de cuenta por cobrar / pagos</p:paragraph>
+	<p:paragraph alignment="center">
+			<p:image value="/kubeImg/logoCli.png" width="100" height="35" alignment="left" spacingAfter="0" spacingBefore="0"   />
+	</p:paragraph>
+	<p:font size="14" >
+		<p:paragraph alignment="center">COMPROBANTE DE CUENTA POR COBRAR / PAGOS </p:paragraph>
 	</p:font>
 	<p:html><br /></p:html>
-	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 3 2 2" >			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 3 2 2" >
+				
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" paddingTop="6" paddingBottom="6" verticalAlignment="middle">
 				<p:font color="white" style="bold" >
-					<p:paragraph >#{app.repcli_cliente}:</p:paragraph>
+					<p:paragraph >#{app.repcli_cliente}</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell  verticalAlignment="middle">
+			<p:cell  verticalAlignment="middle" paddingLeft="5">
 					<p:paragraph >#{cuentaCobrarHome.instance.cliente.nombres} #{cuentaCobrarHome.instance.cliente.apellidos}</p:paragraph>
 			</p:cell>
 			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
 				<p:font color="white" style="bold" >
-					<p:paragraph >Fecha registro:</p:paragraph>
+					<p:paragraph >Fecha registro</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell verticalAlignment="middle">	
-				<p:paragraph><p:text value="#{cuentaCobrarHome.instance.fechaIngreso}" >
-					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-				</p:text></p:paragraph>
+			<p:cell verticalAlignment="middle" paddingLeft="5">	
+				<p:paragraph>
+					<p:text value="#{cuentaCobrarHome.instance.fechaIngreso}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+					</p:text>
+				</p:paragraph>
 			</p:cell>
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" paddingTop="6" paddingBottom="6" verticalAlignment="middle">
 				<p:font color="white" style="bold" >
-					<p:paragraph ># Comprobante:</p:paragraph>
+					<p:paragraph >Id Comprobante</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell  verticalAlignment="middle">
+			<p:cell  verticalAlignment="middle" paddingLeft="5">
 				<p:paragraph>
 					<p:text value="#{cuentaCobrarHome.instance.comprobante}"  /><!-- rendered="#{cuentaCobrarHome.instance.diasPlazo}" -->
 				</p:paragraph>
 			</p:cell>
 			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
-				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}:</p:paragraph></p:font>
+				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_sucursal}</p:paragraph></p:font>
 			</p:cell>
-			<p:cell verticalAlignment="middle">
-				<p:paragraph>#{cuentaCobrarHome.instance.sucursal.nombre}</p:paragraph>
+			<p:cell verticalAlignment="middle" paddingLeft="5" >
+				<p:paragraph>#{cuentaCobrarHome.obtenerSucursalComprobante(cuentaCobrarHome.instance.sucursal)}</p:paragraph>
 			</p:cell>
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
-				<p:font color="white" style="bold" ><p:paragraph>#{app.vtaitm_detalle}:</p:paragraph></p:font>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="6" paddingBottom="7" >
+				<p:font color="white" style="bold" >
+					<p:paragraph>#{app.vtaitm_detalle}</p:paragraph>
+				</p:font>
 			</p:cell>
-			<p:cell colspan="3" verticalAlignment="middle">
+			<p:cell colspan="3" verticalAlignment="middle" paddingLeft="5">
 				<p:paragraph>#{cuentaCobrarHome.instance.comentario}</p:paragraph>
 			</p:cell>
+			
 		</p:table>
 		
 		<p:html><br /></p:html>
 		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1" >
 			<p:cell colspan="4" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
 				horizontalAlignment="center" verticalAlignment="middle">
-				<p:font color="white" style="bold" size="16" >
-					<p:paragraph alignment="center">Detalle de los pagos</p:paragraph>
+				<p:font color="white" style="bold" size="12" >
+					<p:paragraph alignment="center">DETALLE DE LOS PAGOS</p:paragraph>
 				</p:font>
 			</p:cell>
 			
-			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4" > 
 				<p:font color="white" style="bold">
 					<p:paragraph alignment="center">#{app.parvta_description}</p:paragraph>
 				</p:font>
 			</p:cell>
 			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
 				<p:font color="white" style="bold">
-					<p:paragraph alignment="center">Condicion de pago</p:paragraph>
+					<p:paragraph alignment="center">Condicion</p:paragraph>
 				</p:font>
 			</p:cell>
 			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
@@ -87,7 +96,7 @@
 			</p:cell>
 			
 			<ui:repeat var="dtPagos" value="#{cuentaCobrarHome.instance.pagosCxc}">
-				<p:cell verticalAlignment="middle">
+				<p:cell verticalAlignment="middle" paddingLeft="5" >
 					<p:paragraph>#{dtPagos.comentario}</p:paragraph>
 				</p:cell>		
 				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
@@ -96,7 +105,7 @@
 				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
 					<p:paragraph>
 						<p:text value="#{dtPagos.fechaIngreso}" >
-							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" /> 
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" /> <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</p:text>
 					</p:paragraph>
 				</p:cell>

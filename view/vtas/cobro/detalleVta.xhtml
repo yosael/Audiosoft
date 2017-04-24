@@ -90,19 +90,19 @@
 			</p:cell>
 			
 			<ui:repeat var="dtvt" value="#{ventaProdServHome.instance.detVenta}">
-				<p:cell verticalAlignment="middle">
+				<p:cell verticalAlignment="middle" paddingLeft="5" paddingTop="4" paddingBottom="3" >
 					<p:paragraph>#{dtvt.detalle}</p:paragraph>
 				</p:cell>		
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6"  paddingTop="4" paddingBottom="3">
 					<p:paragraph>#{dtvt.cantidad}</p:paragraph>
 				</p:cell>
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6" paddingTop="4" paddingBottom="3" >
 					<p:paragraph><p:text value="#{dtvt.monto}">
 					<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
                             	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
 					</p:text></p:paragraph>
 				</p:cell>
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6" paddingTop="4" paddingBottom="3" >
 					<p:paragraph><p:text value="#{dtvt.monto*dtvt.cantidad}">
 						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
                             	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />

@@ -7,43 +7,46 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	title="Descuentos" creator="Soluciones Aplicativas"
 	pageSize="LETTER" type="pdf" margins="70 30 30 30">
-	<p:font size="18" style="bold">
-		<p:paragraph alignment="center">Catalogo descuentos</p:paragraph>
+	<p:paragraph alignment="center">
+			<p:image value="/kubeImg/logoCli.png" width="100" height="35" alignment="left" spacingAfter="0" spacingBefore="0"   />
+	</p:paragraph>
+	<p:font size="16" >
+		<p:paragraph alignment="center">CATALOGO DESCUENTOS</p:paragraph>
 	</p:font>
 	<p:html><br /></p:html>
 	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 2 2 2" >	
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="5" paddingBottom="5" >
 				<p:font color="white" style="bold" >
 					<p:paragraph >Codigo:</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell  verticalAlignment="middle">
+			<p:cell  verticalAlignment="middle" paddingLeft="6" >
 					<p:paragraph >#{codigoDescuentoCorpHome.instance.codigo}</p:paragraph>
 			</p:cell>
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="5" paddingBottom="5" >
 				<p:font color="white" style="bold" ><p:paragraph>Cliente Corporativo:</p:paragraph></p:font>
 			</p:cell>
-			<p:cell colspan="3" verticalAlignment="middle">
+			<p:cell colspan="3" verticalAlignment="middle" paddingLeft="6" >
 				<p:paragraph>#{codigoDescuentoCorpHome.instance.clienteCorp.nombre}</p:paragraph>
 			</p:cell>
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="5" paddingBottom="5" >
 				<p:font color="white" style="bold" >
 					<p:paragraph >Fecha emision:</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell verticalAlignment="middle">	
+			<p:cell verticalAlignment="middle" paddingLeft="6" > 	
 				<p:paragraph><p:text value="#{codigoDescuentoCorpHome.instance.fechaEmision}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 				</p:text></p:paragraph>
 			</p:cell>
 			
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="5" paddingBottom="5" >
 				<p:font color="white" style="bold" ><p:paragraph>Fecha finalizacion:</p:paragraph></p:font>
 			</p:cell>
-			<p:cell verticalAlignment="middle">	
+			<p:cell verticalAlignment="middle" paddingLeft="6" > 	
 				<p:paragraph><p:text value="#{codigoDescuentoCorpHome.instance.fechaFinalizacion}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 				</p:text></p:paragraph>
@@ -54,7 +57,7 @@
 		<p:html><br /></p:html>
 		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="2 1 1 1" >
 			
-			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4" paddingLeft="7">
 				<p:font color="white" style="bold">
 					<p:paragraph alignment="center">Producto/Servicio</p:paragraph>
 				</p:font>
@@ -76,7 +79,7 @@
 			</p:cell>
 			
 			<ui:repeat var="res" value="#{codigoDescuentoCorpHome.listaDetalle}">
-				<p:cell verticalAlignment="middle"  >
+				<p:cell verticalAlignment="middle"  paddingLeft="7"  paddingTop="3" paddingBottom="3" >
 					<p:paragraph>
 						<p:text value="#{res.producto.nombre}" rendered="#{res.producto!=null}" >
 						</p:text>
@@ -84,7 +87,7 @@
 						</p:text>
 					</p:paragraph>
 				</p:cell>		
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6" paddingLeft="4" paddingTop="3" paddingBottom="3" >
 					<p:paragraph>
 						<p:text value="#{res.producto.prcNormal}" rendered="#{res.producto!=null}" >
 							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
@@ -96,14 +99,14 @@
 						</p:text>
 					</p:paragraph>
 				</p:cell>
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6" paddingTop="3" paddingBottom="3" >
 					<p:paragraph><p:text value="#{res.descuento}">
 						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
                             	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
                     </p:text></p:paragraph>
 				</p:cell>
 				
-				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6">
+				<p:cell verticalAlignment="middle" horizontalAlignment="right" paddingRight="6" paddingTop="3" paddingBottom="3" >
 					<p:paragraph>
 						<p:text value="#{res.producto.prcNormal-res.descuento}" rendered="#{res.producto!=null}" >
 							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"

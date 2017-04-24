@@ -218,6 +218,36 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 	}
 	
+	public void cargarCodigosProductoNoUsados(Producto aparato)
+	{
+		
+		if(aparato==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar el aparato");
+			return;
+		}
+		
+		System.out.println("Nombre producto"+aparato.getNombre());
+		listaCodigos = new ArrayList<CodProducto>();
+		
+		//listaCodigos = getEntityManager().createQuery("SELECT c FROM CodProducto c where ")
+		Inventario inv = (Inventario) getEntityManager()
+				.createQuery(
+						"SELECT i FROM Inventario i WHERE i.sucursal = :suc AND i.producto = :prd")
+				.setParameter("suc", loginUser.getUser().getSucursal())
+				.setParameter("prd", aparato).getSingleResult();
+
+		// Sacamos el inventario del producto
+		listaCodigos = (ArrayList<CodProducto>) getEntityManager()
+				.createQuery(
+						"SELECT c FROM CodProducto c "
+								+ "	WHERE c.inventario.producto = :prd AND c.inventario = :inv AND c.estado = 'ACT' ")
+				.setParameter("prd", aparato)
+				.setParameter("inv", inv).getResultList();
+		
+		
+	}
+	
 	public void seleccionarCodigo(CodProducto codigo)
 	{
 		nuevoDetalle.setCodigo(codigo);
@@ -757,7 +787,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		Producto aparato = cargarAparato(reparacion.getAparatoRep().getIdPrd());
 		
-		CodProducto codigo = cargarCodigo(reparacion.getAparatoRep().getNumSerie());
+		CodProducto codigo = cargarCodigo(reparacion.getAparatoRep().getNumSerie(),reparacion.getAparatoRep());
 		
 		nuevoDetalle.setReparacionCliente(reparacion);
 		nuevoDetalle.setAparato(aparato);
@@ -795,7 +825,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		return producto;
 	}
 	
-	public CodProducto cargarCodigo(String numero)
+	public CodProducto cargarCodigo(String numero,AparatoCliente aparato)
 	{
 		CodProducto codigo = new CodProducto();
 		List<CodProducto>  codigos = new ArrayList<CodProducto>();
@@ -806,8 +836,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			if(codigos.size()<=0 || codigos==null)
 			{
 				//codigo = registrarCodigo(numero,idProducto);
-				FacesMessages.instance().add(Severity.WARN,"El codigo del producto no esta registrado");
-				return null;
+				/*FacesMessages.instance().add(Severity.WARN,"El codigo del producto no esta registrado");
+				return null;*/
+				
+				codigo = registrarCodigo(numero, aparato.getIdPrd());
 			}
 			else
 			{
@@ -940,14 +972,37 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	
 	public void agregarServicioRep(ReparacionCliente reparacion) {
 		
-		 
-		ServicioReparacion srvRep = new ServicioReparacion();
-		srvRep.setReparacion(reparacion);
-		srvRep.setServicio(obtenerServicioCobro());
-		getEntityManager().persist(srvRep);
-		srvRep=getEntityManager().merge(srvRep);
-		
-		reparacion.getServiciosRep().add(srvRep);
+		 if(reparacion.getServiciosRep().size()<=0)
+		 {
+			 
+			ServicioReparacion srvRep = new ServicioReparacion();
+			srvRep.setReparacion(reparacion);
+			srvRep.setServicio(obtenerServicioCobro());
+			getEntityManager().persist(srvRep);
+			srvRep=getEntityManager().merge(srvRep);
+			reparacion.getServiciosRep().add(srvRep);
+			
+		 }
+		 else
+		 {
+			 boolean registrar=true;
+			 for(ServicioReparacion servicio:reparacion.getServiciosRep())
+			 {
+				 if(servicio.getServicio().getCodigo().equals("T054"))
+					 registrar=false;
+					 
+			 }
+			 
+			 if(registrar)
+			 {
+				ServicioReparacion srvRep = new ServicioReparacion();
+				srvRep.setReparacion(reparacion);
+				srvRep.setServicio(obtenerServicioCobro());
+				getEntityManager().persist(srvRep);
+				srvRep=getEntityManager().merge(srvRep);
+				reparacion.getServiciosRep().add(srvRep);
+			 }
+		 }
 		
 	}
 	
@@ -1088,12 +1143,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		
 		//Verificar si trae garantia para cobrar 225 o no
-		
-		if(!detalleRep.getTieneGarantia())
+		/*if(!detalleRep.getTieneGarantia())
 		{
 			//detalleRep.getReparacionCliente().setCosto(226f);
 			agregarServicioRep(detalleRep.getReparacionCliente());
-		}
+		}*/
 		
 		if(detalleRep.getPiezaReparacion()==null)
 		{
@@ -1103,6 +1157,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			//Registrar aparato cliente
 			AparatoCliente aparatoNuevo = new AparatoCliente();
 			CodProducto codigoAparato = new CodProducto();
+			
 			if(detalleRep.getIdNuevoCodigo()==null)
 			{
 				codigoAparato=detalleRep.getCodigo();
@@ -1111,6 +1166,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			{
 				codigoAparato=buscarCodById(detalleRep.getIdNuevoCodigo());
 			}
+			
 			detalleRep.setPiezaReparacion(null);
 			aparatoNuevo=registrarNuevoAparato(detalleRep.getReparacionCliente().getAparatoRep(),codigoAparato);
 			
@@ -1125,6 +1181,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			
 			modificarEstadoReparacionCli(detalleRep, "FIN");
 			
+			//Se movio de lugar
+			if(!detalleRep.getTieneGarantia())
+			{
+				//detalleRep.getReparacionCliente().setCosto(226f);
+				agregarServicioRep(detalleRep.getReparacionCliente());
+			}
+			
 			agregarMovimiento("S");
 			
 		}
@@ -1134,6 +1197,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			agregarDetallesMovimiento(detalleRep.getPiezaReparacion());
 			
 			modificarEstadoReparacionCli(detalleRep, "FIN");
+			
+			//Se movio de lugar
+			if(!detalleRep.getTieneGarantia())
+			{
+				//detalleRep.getReparacionCliente().setCosto(226f);
+				agregarServicioRep(detalleRep.getReparacionCliente());
+			}
 			
 			agregarMovimiento("S");
 			

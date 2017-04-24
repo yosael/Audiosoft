@@ -61,27 +61,29 @@
 						</s:decorate> -->
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Aparato:</ui:define>
 							<a:commandButton onclick="#{rich:component('selAparato')}.show();"
 								ajaxSingle="true"
 								reRender="mApa" styleClass="addBtn"
-								value="Agregar aparato">
+								value="Agregar aparato" rendered="false" ><!--  -->
 							</a:commandButton>
 							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.aparato.nombre}" />
 						</s:decorate>	
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label"># Serie:</ui:define>
 							<a:commandButton onclick="#{rich:component('selCode')}.show();"
 								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
 								ajaxSingle="true"
 								reRender="mCode" styleClass="addBtn"
-								value="# Serie" >
+								value="# Serie" rendered="false" >
 							</a:commandButton>
 							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionExternaHome.nuevoDetalle.piezaReparacion==null and reparacionExternaHome.cambioLocal}" >
 							<a:commandButton onclick="#{rich:component('selCodeNuevo')}.show();"
-								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
+								action="#{reparacionExternaHome.cargarCodigosProductoNoUsados(reparacionExternaHome.nuevoDetalle.aparato)}"
 								ajaxSingle="true"
 								reRender="mCodeNuevo" styleClass="addBtn"
 								value="Nuevo # Serie" >

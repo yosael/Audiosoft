@@ -65,6 +65,8 @@
 											<f:param name="idDoctor" value="#{appointmentGrid.doctorSel.id}"	/>
 										</s:button>
 										
+										<a:commandButton value="Enviar correo" action="#{medicalAppointmentDAO.enviarCorreo()}" ajaxSingle="true" eventsQueue="q1" styleClass="upBtn"  reRender="formA" />
+										
 										
 										<!--
 										<a:commandButton value="Actualizar" rendered="#{not empty appointmentGrid.listAppointments}" styleClass="refreshBtn" action="#{appointmentGrid.loadDoctorSched2(appointmentGrid.doctorSel)}" ajaxSingle="true"  reRender="table" >

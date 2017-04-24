@@ -154,6 +154,29 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		servicios.remove(serv);
 	}
 	
+	public void enviarCorreo()
+	{
+		
+		String contenido="<h1>PRUEBA</h1></br>" +
+				"<table>" +
+				"<tr>" +
+				"	<td>columna1</td> " +
+				"	<td>columna2</td> " +
+				"	<td>columna3</td> " +
+				"	<td>columna4</td> " +
+				"</tr>" +
+				"<tr>" +
+				"	<td>contenido1</td>" +
+				"	<td>contenido2</td>" +
+				"	<td>contenido3</td>" +
+				"	<td>contenido4</td>" +
+				"</tr>";
+		
+		CorreoAgenda correo= new CorreoAgenda("yosael.gutierrez@gmail.com", "Asunto prueba simple", contenido);
+		correo.enviarCorreoSimple();
+	}
+	
+	
 	//public void addServicioEdit
 
 	@Override

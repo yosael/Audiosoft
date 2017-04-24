@@ -420,7 +420,6 @@
 							value="#{app.button_rpc_reccli}" />
 						
 				</s:decorate>
-				</fieldset>
 				<br />
 				<h:panelGroup id="pnlRequisiciones" ><!-- rendered="#{etapaRepCliHome.instance.etapaRep.aceptaReqs}" -->
 				<table style="width:1100px;">
@@ -520,6 +519,7 @@
 				</tr>
 				</table>
 				</h:panelGroup>
+				</fieldset>
 			</h:form>
 			</center>
 			<rich:modalPanel id="confirmAprob" width="400" moveable="false"
@@ -737,7 +737,6 @@
 									onclick="#{rich:component('confirmationDeliver')}.hide();">
 								</a:commandButton>
 							</s:decorate>
-
 						</h:form>
 					</center>
 				</rich:modalPanel>
@@ -780,7 +779,7 @@
 					</s:div>
 				</rich:modalPanel>
 				
-				<rich:modalPanel id="modRepRecibida" width="900" moveable="false"
+				<rich:modalPanel id="modRepRecibida" width="1000" moveable="false"
 					autosized="true" top="50px"
 					onbeforeshow="activeModal.setActiveModalPanel('modRepRecibida');">
 					<f:facet name="header">Detalle Reparacion Externa</f:facet>

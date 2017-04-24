@@ -389,6 +389,8 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		ocupacionLst.add(cj);
 		cj = new ClienteJob("Militar");
 		ocupacionLst.add(cj);
+		cj = new ClienteJob("Jubilado");
+		ocupacionLst.add(cj);
 		cj = new ClienteJob("Otro");
 		ocupacionLst.add(cj);
 	}
@@ -730,11 +732,11 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			instance.setMedioReferido(otroMedioRef);
 		
 		
-		if(instance.getDocId()==null)
+		/*if(instance.getDocId()==null)
 		{
 			FacesMessages.instance().add(Severity.WARN,"Debe ingresar el numero de identificacion");
 			return false;
-		}
+		}*/
 		
 		if(instance.getNombres()==null || instance.getApellidos()==null)
 		{
@@ -775,6 +777,20 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		if(instance.getPais()==null)
 		{
 			FacesMessages.instance().add(Severity.WARN,"Ingrese el pais");
+			return false;
+		}
+		
+		
+		if(instance.getDepto()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
+			return false;
+		}
+		
+		
+		if(instance.getMunicipio()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
 			return false;
 		}
 		

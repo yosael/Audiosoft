@@ -2,7 +2,9 @@ package com.sa.kubekit.action.medical;
 
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -33,22 +35,38 @@ public class CorreoAgenda {
 	
 	public void enviarCorreoSimple()
 	{
-		
+		System.out.println("Entro a enviar correo");
 		try {
-			
+			System.out.println("Entro al try");
 			//properties.setProperty("mail.smtp.host", this.host);
 			//properties.setProperty("mail.smtp.socketFactory.port","465");
 			
 			properties.put("mail.smtp.host", "smtp.gmail.com");
-			properties.put("mail.smtp.starttls.enable", "true");
-			properties.put("mail.smtp.port","587");
-			properties.put("mail.smtp.mail.sender","2511962013@mail.utec.edu.sv");//webmasteraudiomed@gmail.com
+			properties.put("mail.smtp.port","587");//587  465
+			properties.put("mail.smtp.mail.sender","incidenciasUtec@gmail.com");//webmasteraudiomed@gmail.com
 			//properties.put("mail.smtp.user", "usuario");
 			properties.put("mail.smtp.auth", "true");
-			properties.setProperty("mail.debug", "true");
+			//properties.setProperty("mail.debug", "true");
+			properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+			properties.put("mail.smtp.user", "incidenciasUtec@gmail.com");
+			properties.put("mail.smtp.starttls.enable", "true");
+			/*properties.put("mail.smtp.ssl.checkserveridentity", "false");
+			properties.put("mail.smtp.ssl.trust", "*");
+			properties.put("mail.smtp.ssl.enable", "false");*/
 			
+			//properties.setProperty("mail.smtp.socketFactory.port","587");
 			
-			session = Session.getDefaultInstance(this.properties);
+			//properties.setProperty("mail.user", "incidenciasUtec@gmail.com"); properties.setProperty("mail.password", "incidenciasUtec20161");
+			
+			Authenticator authenticator = new Authenticator () {
+                public PasswordAuthentication getPasswordAuthentication(){
+                    return new PasswordAuthentication("incidenciasUtec@gmail.com","incidenciasUtec20161");//userid and password for "from" email address 
+                }
+            };
+			
+			session = Session.getDefaultInstance(this.properties,authenticator);
+			//Session session = Session.getDefaultInstance(properties, new A("xxxxx@gmail.com", "xxxxx"));
+			
 			mensaje = new MimeMessage(session);
 			//Desde
 			mensaje.setFrom(new InternetAddress((String)properties.get("mail.smtp.mail.sender")));
@@ -68,15 +86,17 @@ public class CorreoAgenda {
 			//Enviar correo
 			//Transport.send(mensaje);
 			
-			Transport t = session.getTransport("smtp");
-			t.connect((String)properties.get("mail.smtp.user"), "blessUtec1402!");//Audiomed01!
-			t.sendMessage(mensaje, mensaje.getAllRecipients());
-			t.close();
+			//Transport t = session.getTransport("smtp");
+			//t.connect((String)properties.get("mail.smtp.user"), "incidenciasUtec20161");//Audiomed01!
+			//t.sendMessage(mensaje, mensaje.getAllRecipients());
+			Transport.send(mensaje);
+			//t.close();
 			
 			System.out.println("Mensaje enviado");
 			
 			
 		} catch (Exception e) {
+			System.out.println("Entro al catch");
 			e.printStackTrace();	
 		}
 		

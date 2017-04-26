@@ -31,6 +31,9 @@ import org.jboss.seam.annotations.Scope;
 import com.sa.model.crm.Cliente;
 import com.sa.model.crm.MedioDifusion;
 import com.sa.model.medical.DoctorExterno;
+import com.sa.model.medical.MedicalAppointment;
+import com.sa.model.medical.MedicalAppointmentService;
+import com.sa.model.sales.Service;
 import com.sa.model.security.Usuario;
 
 
@@ -41,13 +44,15 @@ public class RepReferencias extends MasterRep implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	List<Object[]> referenciasDoctoresLs = new ArrayList<Object[]>();
-	List<Object[]> referenciasDoctores = new ArrayList<Object[]>();
-	List<Cliente> listaClientes=new ArrayList<Cliente>();
-	List<DoctorExterno> listaDoctores= new ArrayList<DoctorExterno>();
-	List<MedioDifusion> listaMedios=new ArrayList<MedioDifusion>();
-	List<Object[]> referenciasMedios=new ArrayList<Object[]>();
-	List<Object[]> referenciasNulas=new ArrayList<Object[]>();
+	private List<Object[]> referenciasDoctoresLs = new ArrayList<Object[]>();
+	private List<Object[]> referenciasDoctores = new ArrayList<Object[]>();
+	private List<Cliente> listaClientes=new ArrayList<Cliente>();
+	private List<DoctorExterno> listaDoctores= new ArrayList<DoctorExterno>();
+	private List<MedioDifusion> listaMedios=new ArrayList<MedioDifusion>();
+	private List<Object[]> referenciasMedios=new ArrayList<Object[]>();
+	private List<Object[]> referenciasNulas=new ArrayList<Object[]>();
+	private List<Object[]> listaServiciosReferidos = new ArrayList<Object[]>(); 
+	private int idDoctorSelected=0;
 	
 	
 	@In
@@ -117,11 +122,116 @@ public class RepReferencias extends MasterRep implements Serializable {
 	}
 	
 	
+	
+	public void obtenerDetalleServiciosRef()
+	{
+		System.out.println("Entro al detalle Servicios Ref");
+		
+		listaServiciosReferidos.clear();
+		//Obtener lista de servicios medicos
+		List<Service> listaServicios= entityManager.createQuery("SELECT s FROM Service s where s.tipoServicio='MED' or s.tipoServicio='EXA' ").getResultList();
+		
+	  //Recorrer servicios y por cada servicio extraer la suma o cantidad de servicios que ha referido el doctor
+		for(Service service: listaServicios)
+		{
+			Object[] servicioReferido= new Object[3];
+			
+			servicioReferido[0]=service.getCodigo();
+			
+			servicioReferido[1]=service;
+			
+			servicioReferido[2]=cantidadServiciosRef(service);//Select sum from medicalAppointServr where service=service and medicalAppointment.cliente
+			
+			//servicioReferido[2]=
+			listaServiciosReferidos.add(servicioReferido);
+		}
+				
+	}
+	
+	public String obtenerNombreDoctor()
+	{
+		DoctorExterno doctor=(DoctorExterno) entityManager.createQuery("SELECT d FROM DoctorExterno d where d.id=:idDoctor ").setParameter("idDoctor", idDoctorSelected).getSingleResult();
+		
+		return doctor.getNombres()+" "+doctor.getApellidos();
+		
+	}
+	
+	public int cantidadServiciosRef(Service service)
+	{
+		
+		int cantidadServicios=0;
+		String filtFecha="";
+		
+		if(fechaInicio != null && fechaFin == null) 
+			filtFecha = " AND c.fechaCreacion >= :f1 AND :f2 IS NULL ";
+		else if(fechaInicio == null && fechaFin != null)
+			filtFecha = " AND c.fechaCreacion <= :f2 AND :f1 IS NULL ";
+		else if(fechaInicio != null && fechaFin != null)
+			filtFecha = " AND c.fechaCreacion BETWEEN :f1 AND :f2 ";
+		else {
+			filtFecha = "  AND c.fechaCreacion BETWEEN :f1 AND :f2 ";
+			Calendar calTmp = new GregorianCalendar();
+			calTmp.set(Calendar.DATE, 1);
+			setFechaInicio(resetTimeDate(calTmp.getTime(), 1));
+			calTmp = new GregorianCalendar();
+			calTmp.set(Calendar.DATE, 1);
+			calTmp.set(Calendar.MONTH, calTmp.get(Calendar.MONTH) + 1);
+			calTmp.set(Calendar.DAY_OF_YEAR, calTmp.get(Calendar.DAY_OF_YEAR) - 1);
+			setFechaFin(resetTimeDate(calTmp.getTime(), 2));
+		}
+		
+		System.out.println("Fecha inicio: "+ fechaInicio);
+		System.out.println("Fecha fin: "+fechaFin);
+		//Consultar en medicalAppointmentService Parametros: Service, MedicalAppointment-> Cliente-> Medico;
+		
+		listaClientes=entityManager.createQuery("SELECT c FROM Cliente c where c.doctorRef.id="+idDoctorSelected+" "+filtFecha+" ").setParameter("f1", fechaInicio).setParameter("f2", fechaFin).getResultList();
+		
+		List<MedicalAppointment> listaCitas = new ArrayList<MedicalAppointment>();
+		
+		System.out.println("Numero de clientes referidos: "+listaClientes.size());
+		
+		
+		for(Cliente c:listaClientes)
+		{
+			//sumaIngreso+=obtenerIngresoConsulta(c);
+			//MedicalAppointment medicalAppointment = new MedicalAppointment();
+			List<MedicalAppointment> listaMed = new ArrayList<MedicalAppointment>();
+			//listaCitas = entityManager.createQuery("SELECT m FROM MedicalAppointment m where m.cliete.doctorRef=:doctorRefiere and ").getResultList();				
+			listaMed = (List<MedicalAppointment>) entityManager.createQuery("SELECT m FROM MedicalAppointment m where  m.id=(SELECT MIN(me.id) FROM MedicalAppointment me where me.cliente.id=:idCliente )")
+					.setParameter("idCliente", c.getId())
+					.getResultList();
+			
+			System.out.println("Tamanio de citas medicas seleccionadas: "+ listaMed.size());
+			
+			//listaCitas.add(medicalAppointment);
+			if(listaMed.size()>0)
+			{
+				if(listaMed.get(0).getMedicalAppointmentServices().size()>0)
+				{
+					for(MedicalAppointmentService mediService:listaMed.get(0).getMedicalAppointmentServices())
+					{
+						if(mediService.getService().getId()==service.getId())
+						{
+							cantidadServicios++;
+						}
+					}
+				}
+			}
+			
+		}
+		
+		//Cargar la lista de medicalAppointment que ha referido el doctor;
+		
+				//.setParameter("doctorRefiere", doctorSelected)
+				//.getResultList();
+		
+		return cantidadServicios;
+	}
+	
+	
 	//Monto ingresado por la consulta que se dio el dia que se registro el paciente. Tuvo que generarse una venta esa fecha, a cargo de ese paciente.La fecha que se registro, tambien se genero una venta
 	public Double obtenerIngresoConsulta(Cliente c)
 	{
-		
-		
 		
 		Double sumaIngreso=0d;
 
@@ -483,8 +593,7 @@ public class RepReferencias extends MasterRep implements Serializable {
 				
 				
 				listaClientes=entityManager.createQuery("SELECT c FROM Cliente c where c.mdif=null and c.doctorRef=null and c.referidoPor=null "+filtFecha+" ").setParameter("f1", fechaInicio).setParameter("f2", fechaFin).getResultList();
-		
-		
+
 	}
 	
 	
@@ -684,7 +793,33 @@ public class RepReferencias extends MasterRep implements Serializable {
 	public void setListaClientes(List<Cliente> listaClientes) {
 		this.listaClientes = listaClientes;
 	}
-	
+
+
+
+	public int getIdDoctorSelected() {
+		return idDoctorSelected;
+	}
+
+
+
+	public void setIdDoctorSelected(int idDoctorSelected) {
+		this.idDoctorSelected = idDoctorSelected;
+	}
+
+
+
+	public List<Object[]> getListaServiciosReferidos() {
+		return listaServiciosReferidos;
+	}
+
+
+
+	public void setListaServiciosReferidos(List<Object[]> listaServiciosReferidos) {
+		this.listaServiciosReferidos = listaServiciosReferidos;
+	}
+
+
+
 	
 	
 	

@@ -27,6 +27,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.model.inventory.Categoria;
 import com.sa.model.sales.ComboAparato;
@@ -297,9 +299,6 @@ public class RepCotizacion extends MasterRep implements Serializable {
 			
 		
 		
-		
-		
-		
 		if(estado==null || estado.equals("PEN"))
 		{
 			System.out.println("Entro a estado pendiente o nulo");
@@ -387,18 +386,25 @@ public class RepCotizacion extends MasterRep implements Serializable {
 		
 		jpql+=condiciones;
 		
-		
-		cotizaciones = entityManager.createQuery(jpql)
-				.setParameter("f1", fechaInicio)
-				.setParameter("f2", fechaFin)
-				.getResultList();
+		try {
+			
+			cotizaciones = entityManager.createQuery(jpql)
+					.setParameter("f1", fechaInicio)
+					.setParameter("f2", fechaFin)
+					.getResultList();	
+			
+		} catch (Exception e) {
+
+			FacesMessages.instance().add(Severity.WARN,"Problema al cargar los datos");
+			e.printStackTrace();
+			return;
+		}
 		
 		/*cotizacionListDetalle = entityManager.createQuery(jpql)
 				.setParameter("f1", fechaInicio)
 				.setParameter("f2", fechaFin)
 				.getResultList();*/
 				//.setParameter("suc", sucursalFlt).getResultList();
-
 	}
 	
 	public String esBinaural(CotizacionComboApa coti)

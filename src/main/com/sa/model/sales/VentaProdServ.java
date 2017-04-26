@@ -291,7 +291,7 @@ public class VentaProdServ implements Serializable {
 		this.codComprobante = codComprobante;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "idcotizacion", nullable = true)
 	@ForeignKey(name = "fk_coti_vtps")
 	public CotizacionComboApa getCotizacion() {

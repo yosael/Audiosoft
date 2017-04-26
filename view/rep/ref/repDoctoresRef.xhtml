@@ -12,7 +12,7 @@
 	<ui:define name="body">
 		
 		<rich:panel>
-			<f:facet name="header">Reporte de medicos que refieren</f:facet>
+			<f:facet name="header"><span class="marginhead" >Reporte de medicos que refieren</span></f:facet>
 			<rich:spacer height="20" />
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -79,8 +79,7 @@
 				</fieldset>
 				<rich:dataTable var="res" value="#{repReferencias.referenciasDoctores}" id="_table"
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">Doctores que refieren</f:facet>
+					headerClass="tablaHeader" footerClass="tableScroll"><!-- <f:facet name="header">Doctores que refieren</f:facet> -->
 					<rich:column filterBy="#{res[1]}" filterEvent="onkeyup">
 						<f:facet name="header">Nombre Doctor</f:facet>
 						<h:outputText value="#{res[1]}" />
@@ -96,6 +95,13 @@
 							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
 									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
 						</h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header" >Detalle</f:facet>
+						<s:link title="Detalle" rendered="true" value="Ver detalle"
+							view="/rep/ref/detalleRefDoc.xhtml" propagation="join">
+							<f:param name="id" value="#{res[0]}"  />
+						</s:link>
 					</rich:column>
 					<!--<rich:column >
 					

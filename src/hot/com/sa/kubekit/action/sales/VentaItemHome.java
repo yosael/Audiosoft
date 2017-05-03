@@ -570,10 +570,13 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 			getEntityManager().persist(detVta);
 		}
 		
-		crearSolicitudImpresion();
+		
+		//crearSolicitudImpresion(); comentado el 02/05/2016
 
 		getEntityManager().flush();
 		getEntityManager().refresh(instance);
+		
+		itemsAgregados.clear();
 	}
 
 	@Override

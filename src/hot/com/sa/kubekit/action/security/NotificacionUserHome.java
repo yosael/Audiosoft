@@ -107,7 +107,7 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 				}
 				
 			}
-			else if(idArea==1)
+			/*else if(idArea==1)
 			{//System.out.println("Entro a audiologia");
 				try {
 					
@@ -153,7 +153,7 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 				}
 				
 				
-			}
+			}*/
 		}
 	}
 	

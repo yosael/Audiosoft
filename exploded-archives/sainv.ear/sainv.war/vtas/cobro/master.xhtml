@@ -13,7 +13,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{ventaProdServHome.managed?sainv_view_messages.get('vtaprs_head_edit'):sainv_view_messages.get('vtaprs_head_register')}" />
+					value="Detalle de la venta" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formvta">
@@ -23,7 +23,8 @@
 				
 				<fieldset>
 					<legend>#{app.vtaprs_legend}</legend> 
-					<table style="width:980px;">
+					 
+					<table style="width:980px;margin:0 auto;">
 					<tr>	
 						<td style="width:25%;">
 							<s:decorate template="/layout/kEditSpace.xhtml">

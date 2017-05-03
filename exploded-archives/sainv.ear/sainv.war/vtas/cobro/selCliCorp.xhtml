@@ -19,7 +19,7 @@
 						rendered="#{not empty clienteCorpHome.resultList}" rows="10"
 						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 						headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">#{app.crm_srch_users}</f:facet>
+					<f:facet name="header">Listado de clientes coorporativos</f:facet>
 					
 					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.patimast_firstname1}</f:facet>

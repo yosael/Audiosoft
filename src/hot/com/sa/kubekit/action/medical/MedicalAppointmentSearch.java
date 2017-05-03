@@ -1,8 +1,11 @@
 package com.sa.kubekit.action.medical;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
@@ -123,6 +126,77 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 					sainv_messages.get("sched_search_msg1"));
 		}
 
+	}
+	
+	public void buscarCitasProgramadas()
+	{
+		System.out.println("DATE 1 ANTES: "+date1);
+		System.out.println("DATE 2 antes: "+date2);
+		
+		//Calendar calTmp = new GregorianCalendar();
+		//calTmp.set(Calendar.DATE, 1);
+		setDate1(resetTimeDate(date1, 1));
+		//calTmp = new GregorianCalendar();
+		//calTmp.set(Calendar.DATE, 1);
+		//calTmp.set(Calendar.MONTH, calTmp.get(Calendar.MONTH) + 1);
+		//calTmp.set(Calendar.DAY_OF_YEAR, calTmp.get(Calendar.DAY_OF_YEAR) - 1);
+		setDate2(resetTimeDate(date2, 2));
+		
+		List<MedicalAppointment> listaConsultas = new ArrayList<MedicalAppointment>();
+		String jpql="SELECT c FROM MedicalAppointment c where 1=1 ";
+		
+		jpql += "  AND c.dateTime BETWEEN :date1 AND :date2 ";
+		
+		if(doctor!=null)
+		{
+			jpql+=" AND c.doctor.id="+doctor.getId()+"";
+		}
+		
+		if(status!=null)
+		{
+			jpql +=" AND c.status = " + status + " ";
+		}
+		
+		System.out.println("FECHA 1: "+date1);
+		System.out.println("Fecha 2: "+date2);
+		
+		setResultList(entityManager.createQuery(jpql).setParameter(
+					"date1", date1).setParameter("date2",
+					date2).getResultList());
+	}
+	
+	public void load()
+	{
+		
+		Calendar calTmp = new GregorianCalendar();
+		calTmp.set(Calendar.DATE, 1);
+		setDate1(resetTimeDate(calTmp.getTime(), 1));
+		calTmp = new GregorianCalendar();
+		calTmp.set(Calendar.DATE, 1);
+		calTmp.set(Calendar.MONTH, calTmp.get(Calendar.MONTH) + 1);
+		calTmp.set(Calendar.DAY_OF_YEAR, calTmp.get(Calendar.DAY_OF_YEAR) - 1);
+		setDate2(resetTimeDate(calTmp.getTime(), 2));
+		
+		//status=0;
+		
+	}
+	
+	public Date resetTimeDate(Date fecha, int tipoReset) {
+		Calendar cal = new GregorianCalendar();
+		cal.setTime(fecha);
+		if(tipoReset == 1) { //Ponerlo a 00:01
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+		} else { //Ponerlo a 23:59
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MILLISECOND, 0);
+		}
+		
+		return cal.getTime();
 	}
 
 	@Override

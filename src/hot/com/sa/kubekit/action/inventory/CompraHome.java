@@ -121,7 +121,7 @@ public class CompraHome extends KubeDAO<Compra>{
 		actualizarSubtotal();
 	}
 	
-	public void actualizarSubtotal(){
+	public void actualizarSubtotal(){//Colocar un try
 		Float subtotal = new Float(0);
 		for(Item item : itemsAgregados){
 			subtotal = subtotal + (item.getCantidad() * item.getCostoUnitario());

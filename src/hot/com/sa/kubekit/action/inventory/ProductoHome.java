@@ -940,8 +940,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 	}
 
 	public void actualizarMontos() {
-		if ((instance.getCosto() != null) && (instance.getMoneda() != null)
-				&& (instance.getClaseProducto() != null)) {
+		if ((instance.getCosto() != null) && (instance.getMoneda() != null) && (instance.getClaseProducto() != null)) 
+		{
 			Float tmpTotal = Float.valueOf(instance.getCosto().floatValue());
 			tmpTotal = Float
 					.valueOf(tmpTotal.floatValue()

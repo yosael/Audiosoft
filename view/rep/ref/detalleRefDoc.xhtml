@@ -85,18 +85,17 @@
 				<rich:dataTable var="res" value="#{repReferencias.listaServiciosReferidos}" id="_table"
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">Ingreso por servicios</f:facet>
 					<rich:column filterBy="#{res[0]}" filterEvent="onkeyup">
 						<f:facet name="header">Codigo</f:facet>
 						<h:outputText value="#{res[0]}" />
 					</rich:column>
 					<rich:column sortBy="#{res[1]}" >
-						<f:facet name="header">Tipo servicio</f:facet>
+						<f:facet name="header">Servicio</f:facet>
 						<h:outputText value="#{res[1].name}" >
 						</h:outputText>
 					</rich:column>
 					<rich:column sortBy="#{res[1]}" >
-						<f:facet name="header">Tipo </f:facet>
+						<f:facet name="header">Tipo servicio</f:facet>
 						<h:outputText value="Medico"  rendered="#{res[1].tipoServicio=='MED'}" >
 						</h:outputText>
 						<h:outputText value="Examen" rendered="#{res[1].tipoServicio=='EXA'}" >

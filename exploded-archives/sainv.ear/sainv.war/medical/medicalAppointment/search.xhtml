@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">#{app.sched_search_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >#{app.sched_search_head}</span></f:facet>
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -21,12 +21,16 @@
 					<s:decorate template="/layout/kEditSpace.xhtml">
 						<ui:define name="label">#{app.sched_search_date1}:</ui:define>
 						<rich:calendar value="#{medicalAppointmentSearch.date1}"
-							datePattern="dd/MM/yyyy" />
+							datePattern="dd/MM/yyyy"  >
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
+						</rich:calendar>
 					</s:decorate>
 					<s:decorate template="/layout/kEditSpace.xhtml">
 						<ui:define name="label">#{app.sched_search_date2}:</ui:define>
 						<rich:calendar value="#{medicalAppointmentSearch.date2}"
-							datePattern="dd/MM/yyyy" />
+							datePattern="dd/MM/yyyy" >
+							<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
+						</rich:calendar>
 					</s:decorate>
 					<s:decorate template="/layout/kEditSpace.xhtml"
 						rendered="#{not identity.hasRole('doctor')}">
@@ -36,60 +40,65 @@
 							<s:selectItems var="res" value="#{doctorQuery.resultList}"
 								label="#{res.fullName}" noSelectionLabel=" " />
 							<s:convertEntity />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
 						</h:selectOneMenu>
 					</s:decorate>
 					<s:decorate template="/layout/kEditSpace.xhtml">
 						<ui:define name="label">#{app.sched_search_status}:</ui:define>
 						<h:selectOneRadio value="#{medicalAppointmentSearch.status}" styleClass="radioB">
-							<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0" />
+							<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0"  />
 							<f:selectItem itemLabel="#{app.sched_served}" itemValue="1" />
 							<f:selectItem itemLabel="#{app.sched_canceled}" itemValue="2" />
 							<f:selectItem itemLabel="#{app.sched_absence}" itemValue="3" />
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
 						</h:selectOneRadio>
 					</s:decorate>
 				</h:panelGrid> <s:decorate template="/layout/kActions.xhtml">
-					<s:button propagation="begin" view="#{conversation.viewId}"
-						styleClass="newBtn" value="#{msn.button_new}" />
-					<a:commandButton action="#{medicalAppointmentSearch.search()}"
+					<!-- <s:button propagation="begin" view="#{conversation.viewId}"
+						styleClass="newBtn" value="#{msn.button_new}" /> -->
+					<!--<a:commandButton action="#{medicalAppointmentSearch.search()}"
 						reRender="formA" styleClass="searchBtn"
-						value="#{msn.button_search}">
+						value="#{msn.button_search}"  eventsQueue="q1" ajaxSingle="true" >
 						<s:defaultAction />
-					</a:commandButton>
+					</a:commandButton>-->
+					<!-- <a:commandButton action="#{medicalAppointmentSearch.buscarCitasProgramadas()}"
+						reRender="table" styleClass="searchBtn"
+						value="#{msn.button_search}"  eventsQueue="q1" ajaxSingle="true" >
+					</a:commandButton> --><!-- <s:defaultAction /> comentado el 03/05/2017 -->
 				</s:decorate></fieldset>
-				<rich:spacer height="20" />
+				<rich:spacer height="20" /><!-- rendered="#{not empty medicalAppointmentSearch.resultList}" -->
 				<rich:extendedDataTable style="margin:0 auto;"
 					value="#{medicalAppointmentSearch.resultList}"
-					rendered="#{not empty medicalAppointmentSearch.resultList}"
-					var="res" id="table" width="600px" height="300px" sortMode="single"
+					var="res" id="table" width="900px" height="300px" sortMode="single"
 					selectionMode="single"
 					selection="#{medicalAppointmentSearch.selection}" align="center"
 					 rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  headerClass="tablaHeader"
 					footerClass="tableScroll" enableContextMenu="false"
 					activeClass="selectRow" selectedClass="selectRow">
 					<f:facet name="header">#{app.schedlist_header}</f:facet>
-					<rich:column>
+					<rich:column width="175" >
 						<f:facet name="header">#{app.schedlist_col1}</f:facet>
 						<h:outputText value="#{res.dateTime}"
 							styleClass="timeText #{res.status == 2?'canceled':''}">
 							<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
 						</h:outputText>
 					</rich:column>
-					<rich:column>
+					<rich:column width="235" >
 						<f:facet name="header">#{app.schedlist_col2}</f:facet>
 						<h:outputText value="#{res.cliente.fullName}"
 							styleClass="#{res.status == 2?'canceled':''}" />
 					</rich:column>
-					<rich:column>
+					<rich:column width="128" >
 						<f:facet name="header">#{app.schedlist_col3}</f:facet>
 						<h:outputText value="#{res.cliente.telefono1}"
 							styleClass="#{res.status == 2?'canceled':''}" />
 					</rich:column>
-					<rich:column>
+					<rich:column width="223" > 
 						<f:facet name="header">#{app.schedlist_col4}</f:facet>
 						<h:outputText value="#{res.comment}"
 							styleClass="#{res.status == 2?'canceled':''}" />
 					</rich:column>
-					<rich:column>
+					<rich:column width="95" >
 						<f:facet name="header">#{app.schedlist_col5}</f:facet>
 						<h:outputText value="#{app.sched_scheduled}"
 							rendered="#{res.status==0}" />
@@ -104,6 +113,7 @@
 						action="#{medicalAppointmentSearch.takeSelection()}"
 						event="onselectionchange" ajaxSingle="true" />
 				</rich:extendedDataTable>
+				<h:outputLabel value="No se encontraron resultados..." rendered="#{empty medicalAppointmentSearch.resultList}" />
 				<rich:spacer height="10" />
 				<s:decorate template="/layout/kActions.xhtml" id="action">
 					<!--  ver el modal de detalle de las citas-->

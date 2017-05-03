@@ -468,7 +468,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 				}
 			}
 			
-			
+			System.out.println("Entro a SaveClear");
 			save();
 			valtel = true;
 			medicalAppointmentDAO.getInstance().setCliente(instance);

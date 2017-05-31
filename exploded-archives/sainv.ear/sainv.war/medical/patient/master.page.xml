@@ -4,8 +4,8 @@
 	<param name="numId" value="#{clienteHome.numId}" required="false" />
 	<param name="tabId" value="#{clienteHome.tab}" required="false" />
 	<action execute="#{clienteHome.load(true)}" on-postback="false" />
-	
-	<navigation from-action="#{clienteHome.save()}">
+	<!-- #{clienteHome.save()} -->
+	<navigation from-action="#{clienteHome.guardarDesdeCrm()}">
 		<rule if-outcome="true">
 			<redirect view-id="/medical/patient/list.xhtml" />
 		</rule>

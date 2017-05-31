@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header"><span class="marginhead" >#{app.sched_search_head}</span></f:facet>
+			<f:facet name="header"><span class="marginhead" >Resumen de citas programadas</span></f:facet>
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -75,7 +75,7 @@
 					 rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  headerClass="tablaHeader"
 					footerClass="tableScroll" enableContextMenu="false"
 					activeClass="selectRow" selectedClass="selectRow">
-					<f:facet name="header">#{app.schedlist_header}</f:facet>
+					<f:facet name="header">Resumen de citas</f:facet>
 					<rich:column width="175" >
 						<f:facet name="header">#{app.schedlist_col1}</f:facet>
 						<h:outputText value="#{res.dateTime}"

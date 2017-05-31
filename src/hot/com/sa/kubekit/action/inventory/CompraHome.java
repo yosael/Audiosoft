@@ -23,6 +23,7 @@ import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
 import com.sa.model.inventory.ItemPedido;
 import com.sa.model.inventory.Movimiento;
+import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Empresa;
 import com.sa.model.security.Sucursal;
@@ -145,7 +146,8 @@ public class CompraHome extends KubeDAO<Compra>{
 		actualizarSubtotal();
 	}
 	
-public void cargarListaCodigos(ItemPedido prdItm) {
+	
+	public void cargarListaCodigos(ItemPedido prdItm) {
 		Item itemCompra = new Item();
 		itemCompra.setCantidad(prdItm.getCantidad());
 		itemCompra.setCostoUnitario(prdItm.getCostoUnitario());
@@ -449,7 +451,6 @@ public void cargarListaCodigos(ItemPedido prdItm) {
 		
 		instance.setEstado("Pre-Guardada");
 		
-		
 		return save();
 		
 	}
@@ -520,6 +521,43 @@ public void cargarListaCodigos(ItemPedido prdItm) {
 		
 	}
 	
+	public void desactualizarItemCodigo(Item item)
+	{
+		
+		//Verificar si el item ya esta registrado, ya que puede ser uno agregado en el momento. El mismo proceso con los codigos
+		if(item.getItemId().getMovimientoId()!=null && item.getItemId().getInventarioId()!=null)
+		{
+			
+			
+		}
+		else
+		{
+			if(item.getCantidad()>1)
+			{
+				
+				Movimiento movimiento = new Movimiento();
+				movimiento.setRazon("O");
+				movimiento.setSucursal(item.getInventario().getSucursal());
+				movimiento.setTipoMovimiento("S");
+				
+				
+				removerItemPreCompra(item);
+				
+				movimientoHome.getItemsAgregados().clear();
+				movimientoHome.setInstance(movimiento);
+				movimientoHome.getItemsAgregados().add(item);
+				movimientoHome.save();
+				
+			}
+			else //Si el item es solo 1 se quita de la lista 
+			{
+				itemsAgregados.remove(item);
+			}
+		}
+		
+		
+	}
+	
 	
 	public void guardarNuevosItems()
 	{
@@ -563,6 +601,57 @@ public void cargarListaCodigos(ItemPedido prdItm) {
 		}
 		
 		FacesMessages.instance().add(Severity.INFO,"Items agregados");
+		
+	}
+	
+	public void quitarCodigoPreGuardado(CodProducto codProducto,Item item)
+	{
+		
+		List<CodProducto> codigos = new ArrayList<CodProducto>();
+		codigos = lstCodsProductos.get(item.getInventario().getProducto().getReferencia());
+		//int indiceLista = lstCodsProductos.
+		
+		for(CodProducto cod:codigos)
+		{
+			
+			if(item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+			{
+				
+				if(cod.getNumSerie().equals(codProducto.getNumSerie()))
+				{
+					
+					//Remover item del hashmap
+					lstCodsProductos.remove(codigos);
+					
+					
+					//Quitar de la lista y de la db
+					
+					//Remover de la lista
+					codigos.remove(cod);
+					
+					//Actualizar estado en la db
+					cod.setEstado("USD");
+					getEntityManager().merge(cod);
+					
+					
+					//Rehacer la lista de codigos con los nuevos
+					lstCodsProductos.put(item.getInventario().getProducto().getReferencia(), (ArrayList<CodProducto>) codigos);
+					
+					
+					//Actualizar cantidad items desde inventario y lista
+					
+					
+					
+				}
+			}
+			else if(item.getInventario().getProducto().getCategoria().isTieneNumLote())
+			{
+				
+				
+				
+			}
+			
+		}
 		
 	}
 	

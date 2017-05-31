@@ -35,15 +35,15 @@
 						
 						<fieldset>
 							<legend>#{app.patimast_legend}</legend>
-							<h:panelGrid columns="2" style="padding-left:100px;">
+							<h:panelGrid columns="2" style="padding-left:100px;"><!-- padding-left:100px; -->
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.patimast_num_id}:</ui:define>
 									<h:inputText value="#{clienteHome.instance.docId}" id="txtId"
 										required="#{clienteHome.esInfante==false}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
-									<h:graphicImage value="/kubeImg/accept16.png"
-										rendered="#{clienteHome.instance.docId!= null and clientehome.instance.docId!=''}" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png"
+										rendered="#{clienteHome.instance.docId!= null and clientehome.instance.docId!=''}" /> -->
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.patimast_type_id}:</ui:define>
@@ -56,29 +56,27 @@
 											itemLabel="#{app.patimast_doc_3}" />
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:selectOneMenu>
-									<h:graphicImage value="/kubeImg/accept16.png"
-										rendered="#{not empty clienteHome.instance.tipoDoc}" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png"
+										rendered="#{not empty clienteHome.instance.tipoDoc}" /> -->
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_firstname1}:</ui:define>
-									<h:inputText value="#{clienteHome.instance.nombres}"
-										required="true">
+									<ui:define name="label">#{app.patimast_firstname1}: <span class="required" >*</span></ui:define>
+									<h:inputText value="#{clienteHome.instance.nombres}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
-									<h:graphicImage value="/kubeImg/accept16.png"
-										rendered="#{not empty clienteHome.instance.nombres}" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png"
+										rendered="#{not empty clienteHome.instance.nombres}" /> -->
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">	
-									<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
-									<h:inputText value="#{clienteHome.instance.apellidos}"
-										required="true">
+									<ui:define name="label">#{app.patimast_lastname1}: <span class="required" >*</span></ui:define>
+									<h:inputText value="#{clienteHome.instance.apellidos}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
-									<h:graphicImage value="/kubeImg/accept16.png"
-										rendered="#{not empty clienteHome.instance.apellidos}" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png"
+										rendered="#{not empty clienteHome.instance.apellidos}" /> -->
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Ocupacion:</ui:define>
+									<ui:define name="label">Ocupacion: <span class="required" >*</span></ui:define>
 									<a:commandButton
 										onclick="#{rich:component('addOcupacion')}.show();"
 										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
@@ -97,8 +95,7 @@
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.patimast_bg}:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
-										required="true">
+									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}">
 										<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
 										<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
 										<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
@@ -113,27 +110,26 @@
 										rendered="#{not empty clienteHome.instance.grupoSanguineo}" />
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_dob}:</ui:define>
-									<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
-										required="true" datePattern="dd/MM/yyyy">
+									<ui:define name="label">#{app.patimast_dob}: <span class="required" >*</span></ui:define>
+									<rich:calendar value="#{clienteHome.instance.fechaNacimiento}" datePattern="dd/MM/yyyy">
 										<a:support event="oncollapse" ajaxSingle="true"
 											eventsQueue="q1" reRender="formA" />
 									</rich:calendar>
-									<h:graphicImage value="/kubeImg/accept16.png" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png" />-->
 									<s:div rendered="#{not empty clienteHome.instance.fechaNacimiento}">
-										<h:outputLabel value="Edad:" /> <h:inputText value="#{clienteHome.calcularEdad()}" disabled="true" />
+										<h:outputLabel value="Edad:" /><h:inputText value="#{clienteHome.calcularEdad()}" disabled="true" />
 										</s:div>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_gender}:</ui:define>
+									<ui:define name="label">#{app.patimast_gender}: <span class="required" >*</span></ui:define>
 									<h:selectOneRadio value="#{clienteHome.instance.genero}"
 										required="true" styleClass="radioB">
 										<f:selectItem itemLabel="#{app.patimast_sex_1}" itemValue="1" />
 										<f:selectItem itemLabel="#{app.patimast_sex_2}" itemValue="0" />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true" />
 									</h:selectOneRadio>
-									<h:graphicImage value="/kubeImg/accept16.png"
-										rendered="#{not empty clienteHome.instance.genero}" />
+									<!-- <h:graphicImage value="/kubeImg/accept16.png"
+										rendered="#{not empty clienteHome.instance.genero}" /> -->
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
@@ -174,7 +170,7 @@
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_telephone}:</ui:define>
+									<ui:define name="label">#{app.patimast_telephone}: <span class="required" >*</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.telefono1}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
@@ -186,14 +182,14 @@
 									</h:inputText>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_address}:</ui:define>
+									<ui:define name="label">#{app.patimast_address}: <span class="required" >*</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.direccion}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_pais}:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.pais}" required="true" >									
+									<ui:define name="label">#{app.patimast_pais}: <span class="required" >*</span></ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.pais}"  >									
 									<s:selectItems value="#{paisHome.resultList}" var="_pais"
 											label="#{_pais.nombreEsp}" />
 										<s:convertEntity />
@@ -203,34 +199,43 @@
 								</s:decorate>						
 								
 								<s:decorate rendered="#{clienteHome.instance.pais.id eq 68}" template="/layout/kEditSpace.xhtml"> 
-								<ui:define name="label">#{app.patimast_dept}:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.depto}" required="true">
+								<ui:define name="label">#{app.patimast_dept}: <span class="required" >*</span></ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.depto}">
 										<s:selectItems value="#{deptoHome.resultList}" var="_depto"
 											label="#{_depto.nombre}" noSelectionLabel="Seleccione departamento" />
 										<s:convertEntity />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
 											reRender="formA" action="#{clienteHome.updateMunicipios()}"/>
 									</h:selectOneMenu>
+									
 									<rich:spacer width="2" />
-									<h:selectOneMenu  value="#{clienteHome.instance.municipio}" required="true">
+									
+									<h:selectOneMenu  value="#{clienteHome.instance.municipio}" >
 										<s:selectItems value="#{clienteHome.municipios}" var="_munpio"
 											label="#{_munpio.nombre}" noSelectionLabel="Seleccione municipio" />
 										<s:convertEntity />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
 											reRender="formA"/>
 									</h:selectOneMenu>
+									
+									<a:commandButton
+										onclick="#{rich:component('selMunicipio')}.show();"
+										ajaxSingle="true" action="#{clienteHome.loadMunicipios()}"
+										reRender="mMunipicio" styleClass="addBtn" value=" "
+										style="width:27px; height:23px">
+									</a:commandButton>
+									
 								</s:decorate>
 
 								
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_medioref}:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.mdif}"
-										required="true">
+									<ui:define name="label">#{app.patimast_medioref}: <span class="required" >*</span></ui:define>
+									<h:selectOneMenu value="#{clienteHome.instance.mdif}">
 										<s:selectItems value="#{mDifList.resultList}" var="_mDif"
 											label="#{_mDif.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
-											reRender="formA" />
+											reRender="formA" action="#{clienteHome.validarReferencias()}" />
 									</h:selectOneMenu>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml"
@@ -283,8 +288,8 @@
 									propagation="begin" styleClass="newBtn"
 									value="#{msn.button_new}" rendered="#{not (loginUser.user.areaUsuario.id eq 1)}">
 									<f:param name="numId" value="-1"/>
-								</s:button>
-								<a:commandButton  ajaxSingle="true" action="#{clienteHome.save()}" reRender="formA"
+								</s:button><!-- action="#{clienteHome.save()}" -->
+								<a:commandButton  ajaxSingle="true" action="#{clienteHome.guardarDesdeCrm()}" reRender="formA"
 									rendered="#{clienteHome.numId==-1}" styleClass="saveBtn"
 									value="#{msn.button_save}"></a:commandButton>
 								<!-- 
@@ -406,6 +411,23 @@
 							<ui:include src="/medical/patient/selDoctor.xhtml" />
 						</s:div>
 					</rich:modalPanel>
+					
+					<!-- Nuevo para seleccionar el municipio y departamento -->
+					<rich:modalPanel id="selMunicipio" width="800" moveable="true"
+						autosized="true" top="40"
+						onbeforeshow="activeModal.setActiveModalPanel('selMunicipio');">
+						<f:facet name="header">Buscar Municipio</f:facet>
+						<f:facet name="controls">
+							<h:panelGroup>
+								<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+									onclick="#{rich:component('selMunicipio')}.hide();" />
+							</h:panelGroup>
+						</f:facet>
+						<s:div id="mMunipicio">
+							<ui:include src="/medical/patient/selMunicipio.xhtml" />
+						</s:div>
+					</rich:modalPanel>
+					
 					<rich:modalPanel id="addOcupacion" width="400" moveable="true" autosized="true"  top="40"
 						onbeforeshow="activeModal.setActiveModalPanel('addOcupacion');">
 						<f:facet name="header">Ocupaciones</f:facet>

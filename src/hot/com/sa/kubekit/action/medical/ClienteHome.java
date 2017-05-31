@@ -253,14 +253,21 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	public void sumarVentascliente()
 	{
 		sumaVentasCliente=0f;
-		for(VentaProdServ vta: ventasEfectuadas)
+		
+		if(ventasEfectuadas.size()>0)
 		{
-			sumaVentasCliente+=vta.getMonto();
+			for(VentaProdServ vta: ventasEfectuadas)
+			{
+				sumaVentasCliente+=vta.getMonto();
+			}
 		}
 	}
 	
 	public void buscarRangoVentas()
 	{
+		
+		ventasEfectuadas.clear();
+		
 		String fltFch="";
 		fltFch = " AND v.fechaVenta BETWEEN :fch1 AND :fch2 ";
 		
@@ -270,13 +277,21 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		System.out.println("fecha1 "+ getFechaVtasUs1());
 		System.out.println("fecha2" + getFechaVtasUs2());
 		
-		ventasEfectuadas = getEntityManager()
-				.createQuery("SELECT v FROM VentaProdServ v WHERE v.cliente = :cli"
-						+ fltFch + " ORDER BY v.fechaVenta DESC ")
-				.setParameter("cli", instance)
-				.setParameter("fch1", getFechaVtasUs1())
-				.setParameter("fch2", getFechaVtasUs2())
-				.getResultList();	
+		try {
+			
+			ventasEfectuadas = getEntityManager()
+					.createQuery("SELECT v FROM VentaProdServ v WHERE v.cliente = :cli"
+							+ fltFch + " ORDER BY v.fechaVenta DESC ")
+					.setParameter("cli", instance)
+					.setParameter("fch1", getFechaVtasUs1())
+					.setParameter("fch2", getFechaVtasUs2())
+					.getResultList();	
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();	
+		}
+		
 		
 		sumarVentascliente();
 		//sumaVentasCliente=0f;
@@ -419,24 +434,21 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			valtel = false;
 			if(instance.getNombres() == null){
 				
-				FacesMessages.instance().add(
-						sainv_messages.get("error_nom"));
+				FacesMessages.instance().add(Severity.WARN,sainv_messages.get("error_nom"));
 				return;
 			}
 			
 			if(instance.getApellidos() == null){
 				
 				
-				FacesMessages.instance().add(
-						sainv_messages.get("error_ap"));
+				FacesMessages.instance().add(Severity.WARN,sainv_messages.get("error_ap"));
 				return;
 			} 
 			
 			if(instance.getTelefono1() == null){
 				
 
-				FacesMessages.instance().add(
-						sainv_messages.get("error_tel"));
+				FacesMessages.instance().add(Severity.WARN,sainv_messages.get("error_tel"));
 				return;
 			}
 			
@@ -718,6 +730,119 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			instance.setMedioReferido(otroMedioRef);
 			instance.setUsuarioRegistro(loginUser.getUser().getId());System.out.println("usuario login: "+loginUser.getUser().getNombreUsuario());
 		return true;
+	}
+	
+	
+	public boolean guardarDesdeCrm()
+	{
+		
+		
+		if(instance.getNombres()==null || instance.getApellidos()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor ingresar el nombre y apellido");
+			return false;
+		}
+		
+		if(instance.getOcupacion()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor ingresar la ocupacion del paciente");
+			return false;
+		}
+		
+		if(instance.getFechaNacimiento()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor ingresar la fecha de nacimiento del paciente");
+			return false;
+		}
+		
+		if(instance.getTelefono1()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor ingresar al menos un telefono");
+			return false;
+		}
+		
+		if(instance.getDireccion()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese la direccion del paciente");
+			return false;
+		}
+		
+		if(esInfante==true && (instance.getNombresEncargado()==null || instance.getApellidosEncargado()==null))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el nombre y apellidos del encargado");
+			return false;
+		}
+		
+		if(instance.getPais()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el pais");
+			return false;
+		}
+		
+		if(instance.getDepto()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
+			return false;
+		}
+		
+		if(instance.getMunicipio()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
+			return false;
+		}
+		
+		if(instance.getMdif()==null && instance.getDoctorRef()==null && instance.getReferidoPor()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe ingresar un medio de referencia");
+			return false;
+		}
+		
+		if(instance.getMdif()!=null)
+		{
+			if(instance.getMdif().getNombre().equals("Referido por doctor") && instance.getDoctorRef()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Especifique el doctor que refiere");
+				return false;
+			}
+			
+			if(instance.getMdif().getNombre().equals("Referido por paciente") && instance.getReferidoPor()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Especifique el paciente que refiere");
+				return false;
+			}
+		}
+		
+		if(!esInfante)
+		{
+			if(instance.getDocId()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Debe ingresar el numero de identificacion");
+				return false;
+			}
+			
+		}
+		
+		
+		
+		
+		return save();
+		
+		
+	}
+	
+	public void validarReferencias()
+	{
+		
+		if(instance.getMdif().getId()!=3 && instance.getDoctorRef()!=null)
+		{
+			instance.setDoctorRef(null);
+		}
+		
+		if(instance.getMdif().getId()!=7 && instance.getReferidoPor()!=null)
+		{
+			instance.setReferidoPor(null);
+		}
+		
 	}
 	
 	@Override

@@ -656,12 +656,33 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		 
 		 //System.out.println("busqueda cliente " + o.toString().toUpperCase().trim());
 		 //Se mejoro la busqueda del cliente por nombre y/o apellido desde un solo campo de texto
+		 
+		 /*return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+					" OR UPPER(c.docId) LIKE :dui")
+					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+					.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+					.setMaxResults(30).getResultList();*/
+		 
+		 // CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos)))
+		 /*return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) IN (:nom) " +
+					" OR UPPER(c.docId) like :dui")
+					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+					.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+					.setMaxResults(30).getResultList();*/
+		 
+		 /*return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE :nom MEMBER OF CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos)))"+
+					" OR UPPER(c.docId) LIKE :dui")
+					.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+					.setMaxResults(30).getResultList();*/
+		 
 		 return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
 					" OR UPPER(c.docId) LIKE :dui")
 					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
 					.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
 					.setMaxResults(30).getResultList();
 		 
+		 //.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
 		 
 		//.setParameter("ape", "%"+o.toString().toUpperCase()+"%")
 	 }

@@ -70,8 +70,18 @@ public class DoctorExternoHome extends KubeDAO<DoctorExterno>{
 			FacesMessages.instance().add(Severity.WARN,"Ingrese el nombre");
 			return false;
 		}
+		else if(instance.getNombres().equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el nombre");
+			return false;
+		}
 		
 		if(instance.getApellidos()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el apellido");
+			return false;
+		}
+		else if(instance.getApellidos().equals(""))
 		{
 			FacesMessages.instance().add(Severity.WARN,"Ingrese el apellido");
 			return false;

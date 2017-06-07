@@ -59,6 +59,7 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 	private List<CodProducto> currCodigos = new ArrayList<CodProducto>();
 	private Item selectedItem = new Item();
 	private String nomCoinci="";
+	private String estadoFilter;
 	
 	private List<Transferencia> resultListGen;
 	
@@ -1082,6 +1083,16 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 	public void setResultListGen(List<Transferencia> resultListGen) {
 		this.resultListGen = resultListGen;
 	}
+
+	public String getEstadoFilter() {
+		return estadoFilter;
+	}
+
+	public void setEstadoFilter(String estadoFilter) {
+		this.estadoFilter = estadoFilter;
+	}
+	
+	
 	
 	
 }

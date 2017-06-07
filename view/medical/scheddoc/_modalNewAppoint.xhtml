@@ -48,8 +48,8 @@
 							action="#{clienteCRMHome.cargarListaClientes()}" reRender="cli"
 							styleClass="modifyBtn" value="#{app.general_vertodos}"
 							style="width:auto; height:23px;">
-						</a:commandButton>
-						<a:commandLink value="#{app.patimast_add}" action="#{clienteHome.newPatient(true,-1)}" 
+						</a:commandButton><!-- action="#{clienteHome.newPatient(true,-1)}" -->
+						<a:commandLink value="#{app.patimast_add}" action="#{clienteHome.loadNewPatientRecep()}" 
 							onclick="#{rich:component('addClient')}.show();"
 							ajaxSingle="true">
 						</a:commandLink>
@@ -207,7 +207,7 @@
 				</s:decorate>
 
 				<s:decorate template="/layout/kActions.xhtml" id="m1">
-					<a:commandButton action="#{appointmentGrid.revertirCambios()}" styleClass="backBtn" value="#{msn.button_back}"
+					<a:commandButton action="#{appointmentGrid.revertirCambios()}" styleClass="leftBtn" value="#{msn.button_back}"
 						reRender="formApp,renderImp,formA,table" 
 						onclick="#{rich:component('newAppointment')}.hide();" >
 					</a:commandButton> 
@@ -276,8 +276,8 @@
 			</s:div>
 		</rich:modalPanel>
 
-		<rich:modalPanel id="addClient" width="800" moveable="true"
-			autosized="true" top="40"
+		<rich:modalPanel id="addClient" width="700" moveable="true"
+			top="40"  height="600" style="overflow-y:scroll"
 			onbeforeshow="activeModal.setActiveModalPanel('addClient');">
 			<f:facet name="header">#{app.patimast_head_register}</f:facet>
 			<f:facet name="controls">
@@ -292,8 +292,8 @@
 		</rich:modalPanel>
 
 		
-		<rich:modalPanel id="lstServs" width="800" moveable="true"
-			autosized="true" top="40"
+		<rich:modalPanel id="lstServs" width="700" moveable="true"
+			top="40"  height="600" style="overflow-y:scroll"
 			onbeforeshow="activeModal.setActiveModalPanel('lstServs');">
 			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
 			<f:facet name="controls">

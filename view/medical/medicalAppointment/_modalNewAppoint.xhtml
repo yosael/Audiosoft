@@ -257,7 +257,7 @@
 				</s:decorate>
 
 				<s:decorate template="/layout/kActions.xhtml" id="m1">
-					<a:commandButton action="#{appointmentGrid.revertirCambios()}" styleClass="backBtn" value="#{msn.button_back}"
+					<a:commandButton action="#{appointmentGrid.revertirCambios()}" styleClass="leftBtn" value="#{msn.button_back}"
 						reRender="formApp,renderImp,formA,table" 
 						onclick="#{rich:component('newAppointment')}.hide();" rendered="#{not medicalAppointmentDAO.managed}" >
 					</a:commandButton> 

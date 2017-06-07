@@ -940,17 +940,17 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 			fltFch = " AND v.fechaVenta BETWEEN :fch1 AND :fch2 ";
 		}
 
-		resultListDesc = getEntityManager()
+		resultListDesc = getEntityManager()//(v.sucursal = :suc or v.sucursal IN (:subSuc) ) se quito de la consulta el 07/06/2017
 				.createQuery(
-						"SELECT v FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado = 'PDS' "
+						"SELECT v FROM VentaProdServ v WHERE  v.estado = 'PDS' "
 								+ fltFch + " ORDER BY v.fechaVenta DESC ")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
 				.setParameter("fch2", getFechaPFlt2())
-				.setParameter(
-						"subSuc",
-						subSucFlt == null ? new ArrayList<Sucursal>()
-								: subSucFlt).getResultList();
+				.getResultList();//.setParameter(
+		/*"subSuc",
+		subSucFlt == null ? new ArrayList<Sucursal>()
+				: subSucFlt)*/
 	}
 
 	public void fltVtasRep() {

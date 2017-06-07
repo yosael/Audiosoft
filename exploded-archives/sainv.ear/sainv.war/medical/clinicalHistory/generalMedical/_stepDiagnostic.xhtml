@@ -271,7 +271,6 @@
 						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 						headerClass="tablaHeader" footerClass="tableScroll">
 						<f:facet name="header"><span style="font-size:14px;" >#{app.serv_list_selmed}</span></f:facet>
-						
 						<rich:column>
 							<f:facet name="header">#{app.medicm_name}</f:facet>
 							<h:outputText value="#{res.service.name}" />
@@ -279,8 +278,8 @@
 						<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink reRender="_tblServ" rendered="#{res.medicalAppointmentServiceId==null}"
-								action="#{prescriptionHome.removerServicio(res)}" ajaxSingle="true">
-								<h:graphicImage value="/kubeImg/table_delete16.png"  />
+								action="#{prescriptionHome.removerServicioS(res)}" ajaxSingle="true">
+								<h:graphicImage value="/kubeImg/table_delete16.png"  /><!-- rendered="#{res.medicalAppointmentServiceId==null}" -->
 							</a:commandLink>
 						</rich:column>	
 					</rich:dataTable>

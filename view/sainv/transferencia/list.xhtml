@@ -42,8 +42,22 @@
 						<f:facet name="header">#{app.transferencialist_col1}</f:facet>
 						<h:outputText value="#{res.sucursal.nombre}" />
 					</rich:column>
-					<rich:column filterBy="#{res.estado}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.transferencialist_col2}</f:facet>
+					<rich:column filterBy="#{transferenciaHome.estadoFilter}" filterEvent="onkeyup" filterExpression="#{empty transferenciaHome.estadoFilter?(true):(transferenciaHome.estadoFilter==res.estado)}" >
+						<f:facet name="header">#{app.transferencialist_col2}
+							<h:panelGroup>
+								#{app.vtaprs_estado}<br/>
+								 <h:selectOneMenu value="#{transferenciaHome.estadoFilter}">
+		                        	<f:selectItem itemLabel=" " itemValue="" />
+		                        	<f:selectItem itemLabel="Generada" itemValue="G" />
+		                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
+									<f:selectItem itemLabel="Aceptada" itemValue="A" />
+									<f:selectItem itemLabel="Descartada" itemValue="D" />
+									<f:selectItem itemLabel="Rechazado" itemValue="R" />
+									<f:selectItem itemLabel="Enviada" itemValue="S" />
+		                            <a:support reRender="_table" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+							</h:panelGroup>
+						</f:facet>
 						<h:outputText value="#{msn.status_generated}" rendered="#{res.estado=='G'}"/>
 						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='P'}"/>
 						<h:outputText value="#{msn.status_finished}" rendered="#{res.estado=='A'}"/>
@@ -55,13 +69,13 @@
 						<f:facet name="header">#{app.transferencialist_col3}</f:facet>
 						<h:outputText value="#{res.items.size()}"/>
 					</rich:column>
-					<rich:column filterBy="#{transferenciasGeneradasList.filtrarFecha(res.fecha)}" filterEvent="onkeyup">
+					<rich:column >
 						<f:facet name="header">#{app.transferencialist_col4}</f:facet>
 						<h:outputText value="#{res.fecha}">
 							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</rich:column>
-					<rich:column filterBy="#{transferenciasGeneradasList.filtrarFecha(res.fechaRecibo)}" filterEvent="onkeyup">
+					<rich:column >
 						<f:facet name="header">#{app.transferencialist_col5}</f:facet>
 						<h:outputText value="#{res.fechaRecibo}">
 							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />

@@ -26,43 +26,43 @@
 					<h:panelGrid columns="3" style="padding-left:100px;">
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.docext_name}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.nombres}" required="true" maxlength="40" />
+							<ui:define name="label">#{app.docext_name}:<span class="required" >*</span></ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.nombres}" maxlength="40" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.docext_apellidos}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.apellidos}" required="true" maxlength="40" />
+							<ui:define name="label">#{app.docext_apellidos}:<span  class="required" >*</span></ui:define>
+							<h:inputText value="#{doctorExternoHome.instance.apellidos}" maxlength="40" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_titulo}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.titulo}" required="true" maxlength="30" style="width:50px;" />
+							<h:inputText value="#{doctorExternoHome.instance.titulo}"   maxlength="30" style="width:50px;" />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_email}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.email}" required="true" maxlength="60"  />
+							<h:inputText value="#{doctorExternoHome.instance.email}"  maxlength="60"  />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_telefono1}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.telefono1}" required="true" maxlength="20"  />
+							<h:inputText value="#{doctorExternoHome.instance.telefono1}" maxlength="20"  />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_extension1}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.extension1}" required="true" maxlength="6" style="width:50px;"  />
+							<h:inputText value="#{doctorExternoHome.instance.extension1}"  maxlength="6" style="width:50px;"  />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_institucion}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.institucion}" required="true" maxlength="80"  />
+							<h:inputText value="#{doctorExternoHome.instance.institucion}" maxlength="80"  />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_cargo}:</ui:define>
-							<h:inputText value="#{doctorExternoHome.instance.cargo}" required="false" maxlength="80"  />
+							<h:inputText value="#{doctorExternoHome.instance.cargo}"  maxlength="80"  />
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
@@ -70,7 +70,7 @@
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.docext_comentario}:</ui:define>
-							<h:inputTextarea value="#{doctorExternoHome.instance.comentario}" required="false" style="width:560px;"  />
+							<h:inputTextarea value="#{doctorExternoHome.instance.comentario}"  style="width:560px;"  />
 						</s:decorate>
 						
 				</h:panelGrid> 

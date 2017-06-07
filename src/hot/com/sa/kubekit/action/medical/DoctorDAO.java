@@ -194,6 +194,8 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 		}
 		
 		
+		loadSpecialties();
+		
 	}
 	
 	

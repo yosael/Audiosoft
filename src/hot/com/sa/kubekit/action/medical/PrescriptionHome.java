@@ -259,12 +259,40 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	}
 	
 	public void removerExamen(ExamenConsulta exc) {
-		examenesAgregados.remove(exc);
+		
+		if(exc.getId()!=null)
+		{
+			getEntityManager().remove(exc);
+			examenesAgregados.remove(exc);
+		}
+		else
+		{
+			examenesAgregados.remove(exc);
+		}
+		
 	}
 	
 	public void removerServicioExam(Service srv)
 	{
 		examenesAgregados.remove(srv);
+	}
+	
+	public void removerServicioS(MedicalAppointmentService srv)//Nuevo, agregado el 07/06/2017
+	{
+		if(srv.getMedicalAppointmentServiceId()!=null)
+		{
+			//getEntityManager().getTransaction().begin();
+			
+			getEntityManager().remove(srv);
+			serviciosAgregados.remove(srv);
+			//getEntityManager().getTransaction().commit();
+			//getEntityManager().close();
+			
+		}
+		else
+		{
+			serviciosAgregados.remove(srv);
+		}
 	}
 	
 	public void removerServicioConsul(Service srv)

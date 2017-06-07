@@ -795,7 +795,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	}
 	
 	public void cargarAparatosCli() {
-		aparatosCli = getEntityManager().createQuery("select a from AparatoCliente a where a.cliente = :cli AND a.estado = 'ACT' ")
+		aparatosCli = getEntityManager().createQuery("select a from AparatoCliente a where a.cliente = :cli AND a.estado = 'ACT' AND a.activo=true ")
 				.setParameter("cli", instance.getCliente())
 				.getResultList();
 		tipoLista = false;

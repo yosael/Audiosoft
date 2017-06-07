@@ -157,6 +157,45 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 		
 	}
 	
+	public void searchDocBySucSlFromDoc()
+	{
+		if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)
+			setSearchSucOb(loginUser.getUser().getSucursal().getSucursalSuperior());
+		else
+			setSearchSucOb(loginUser.getUser().getSucursal());
+		
+		
+		try {
+			
+			if(getSearchSucOb().getNombre().equals("MIRAMONTE"))
+			{
+				resultList = getEntityManager()
+						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal.sucursalSuperior = :searchSucOb  order by e.nombres")
+						.setParameter("searchSucOb",searchSucOb)
+						.getResultList();
+			}
+			else
+			{
+				
+				resultList = getEntityManager()
+						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal = :searchSucOb  order by e.nombres")
+						.setParameter("searchSucOb",searchSucOb)
+						.getResultList();
+				
+			}
+			
+		} catch (Exception e) {
+			
+			resultList = getEntityManager()
+					.createQuery("select e from Doctor e order by e.nombres")
+					.getResultList();
+			
+			
+		}
+		
+		
+	}
+	
 	
 	//Busca los doctores por especialidad
 	public void searchDocBySpecial()

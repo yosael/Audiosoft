@@ -137,8 +137,9 @@ public class CompraHome extends KubeDAO<Compra>{
 		actualizarSubtotal();
 	}
 	public void removerItemPreCompra(Item item){
+		
 		itemsAgregados.remove(item);
-		productosAgregados.remove(item.getInventario());
+		productosAgregados.remove(item.getInventario()); 
 		
 		if(item.getItemId().getMovimientoId()!=null && item.getItemId().getInventarioId()!=null)
 			getEntityManager().remove(item);
@@ -469,7 +470,6 @@ public class CompraHome extends KubeDAO<Compra>{
 	public void desactualizarItem()
 	{
 		
-		
 			System.out.println("Cantidad"+itemDesactualizar.getCantidad());
 			System.out.println("Nombre"+itemDesactualizar.getInventario().getProducto().getNombre());
 			
@@ -509,6 +509,7 @@ public class CompraHome extends KubeDAO<Compra>{
 			removerItemPreCompra(itemDesactualizar);
 			
 			movimientoHome.getItemsAgregados().clear();
+			movimientoHome.clearInstance();
 			movimientoHome.setInstance(movimiento);
 			movimientoHome.getItemsAgregados().add(itemDesactualizar);
 			movimientoHome.save();
@@ -521,38 +522,100 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 	}
 	
+	
+	//Nuevo el 31/05/2017
 	public void desactualizarItemCodigo(Item item)
 	{
+		int indicep=itemsAgregados.indexOf(item);
+		System.out.println("CANTIDAD EN LISTA: "+itemsAgregados.get(indicep).getCantidad());
+		System.out.println("CANTIDAD EN ITEM ACTUAL "+item.getCantidad());
+		
+		int cantidadActualItem=item.getCantidad();
+		
 		
 		//Verificar si el item ya esta registrado, ya que puede ser uno agregado en el momento. El mismo proceso con los codigos
-		if(item.getItemId().getMovimientoId()!=null && item.getItemId().getInventarioId()!=null)
+		if(item.getItemId().getMovimientoId()==null || item.getItemId().getInventarioId()==null)
 		{
 			
 			
-		}
-		else
-		{
+			
+			
 			if(item.getCantidad()>1)
 			{
 				
-				Movimiento movimiento = new Movimiento();
-				movimiento.setRazon("O");
-				movimiento.setSucursal(item.getInventario().getSucursal());
-				movimiento.setTipoMovimiento("S");
+				int indice=itemsAgregados.indexOf(item);
+				System.out.println("Indice "+indice);
+				
+				//itemsAgregados.remove(item);
+				//item.setCantidad(item.getCantidad()-1);
+				
+				itemsAgregados.get(indice).setCantidad(cantidadActualItem-1);
+				//itemsAgregados.add(item);
+				
+				System.out.println("NO ESTA REGISTRADO");
+				System.out.println("REDUJO LA CANTIDAD");
+				
+			}
+			else
+			{
+				System.out.println("NO ESTA REGISTRADO");
+				System.out.println("QUITO EL ITEM DE LA LISTA YA QUE ERA IGUAL A 1");
+				itemsAgregados.remove(item);
+				productosAgregados.remove(item.getInventario());
 				
 				
-				removerItemPreCompra(item);
+			}
+			
+			
+			actualizarSubtotal();
+		}
+		else 
+		{
+			int indice = itemsAgregados.indexOf(item);
+			
+			Movimiento movimiento = new Movimiento();
+			movimiento.setRazon("O");
+			movimiento.setSucursal(item.getInventario().getSucursal());
+			movimiento.setTipoMovimiento("S");
+			
+			item.setCantidad(1);//Cantidad que va a reducir
+			
+			movimientoHome.getItemsAgregados().clear();
+			movimientoHome.setInstance(movimiento);
+			movimientoHome.getItemsAgregados().add(item);
+			movimientoHome.save();
+			
+			if(cantidadActualItem>1)
+			{
+			
 				
-				movimientoHome.getItemsAgregados().clear();
-				movimientoHome.setInstance(movimiento);
-				movimientoHome.getItemsAgregados().add(item);
-				movimientoHome.save();
+				//itemsAgregados.remove(item);
+				//item.setCantidad(item.getCantidad()-1);
+				//itemsAgregados.add(item);
+				itemsAgregados.get(indice).setCantidad(cantidadActualItem-1);
+				
+				System.out.println("ESTA REGISTRADO");
+				System.out.println("REMOVIO EL ITEM DE LA DB Y REDUJO LA CANTIDAD DEL ITEM EN LA LISTA");
 				
 			}
 			else //Si el item es solo 1 se quita de la lista 
 			{
 				itemsAgregados.remove(item);
+				productosAgregados.remove(item.getInventario());
+				
+				System.out.println("ESTA REGISTRADO");
+				System.out.println("REMOVIO EL ITEM DE LA DB Y LISTA YA QUE ERA IGUAL A 1");
 			}
+			
+			//System.out.println("Cantidad ITEM MOV "+itemMov.getCantidad());
+			//item.setCantidad(1);//Cantidad de items que tiene que remover
+			//item.setCantidad(item.getCantidad()+1);
+			
+			
+			
+			
+			
+			actualizarSubtotal();
 		}
 		
 		
@@ -604,54 +667,61 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 	}
 	
-	public void quitarCodigoPreGuardado(CodProducto codProducto,Item item)
+	public void quitarCodigoPreGuardado(CodProducto codProducto)
 	{
 		
-		List<CodProducto> codigos = new ArrayList<CodProducto>();
-		codigos = lstCodsProductos.get(item.getInventario().getProducto().getReferencia());
+		//List<CodProducto> codigos = new ArrayList<CodProducto>();
+		//codigos = lstCodsProductos.get(selectedItem.getInventario().getProducto().getReferencia());
+		
 		//int indiceLista = lstCodsProductos.
 		
-		for(CodProducto cod:codigos)
-		{
+		/*for(CodProducto cod:currCodigos)
+		{*/
+		
 			
-			if(item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+			
+			if(selectedItem.getInventario().getProducto().getCategoria().isTieneNumSerie())
 			{
 				
-				if(cod.getNumSerie().equals(codProducto.getNumSerie()))
-				{
+				
 					
 					//Remover item del hashmap
-					lstCodsProductos.remove(codigos);
+					//lstCodsProductos.remove(codigos);
+					//currCodigos.remove(cod);
 					
 					
 					//Quitar de la lista y de la db
 					
 					//Remover de la lista
-					codigos.remove(cod);
+					//codigos.remove(cod);
+					currCodigos.remove(codProducto);
 					
-					//Actualizar estado en la db
-					cod.setEstado("USD");
-					getEntityManager().merge(cod);
+					if(codProducto.getId()!=null)
+					{
+						//Actualizar estado en la db
+						codProducto.setEstado("USD");
+						getEntityManager().merge(codProducto);
+					}
 					
 					
 					//Rehacer la lista de codigos con los nuevos
-					lstCodsProductos.put(item.getInventario().getProducto().getReferencia(), (ArrayList<CodProducto>) codigos);
+					//lstCodsProductos.put(selectedItem.getInventario().getProducto().getReferencia(), (ArrayList<CodProducto>) codigos);
 					
 					
 					//Actualizar cantidad items desde inventario y lista
+					desactualizarItemCodigo(selectedItem);
 					
 					
-					
-				}
+				
 			}
-			else if(item.getInventario().getProducto().getCategoria().isTieneNumLote())
+			else if(selectedItem.getInventario().getProducto().getCategoria().isTieneNumLote())
 			{
 				
 				
 				
 			}
 			
-		}
+		//}
 		
 	}
 	

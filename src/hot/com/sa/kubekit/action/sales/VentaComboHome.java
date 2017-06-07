@@ -988,7 +988,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									repCli.setDescripcion(comentarioOrdenLab!=""?comentarioOrdenLab:"Elaboracion de molde apartir de venta de aparato");
 									
 									//Obteniendo sucursal
-									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null) //Se quito el 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 										repCli.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 									else
 										repCli.setSucursal(loginUser.getUser().getSucursal());
@@ -1174,7 +1174,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									repCliBin.setDescripcion(comentarioOrdenLab!=""?comentarioOrdenLab:"Elaboracion de molde apartir de venta de aparato");
 									
 									//Obteniendo sucursal
-									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)//Se quito el 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 										repCliBin.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 									else
 										repCliBin.setSucursal(loginUser.getUser().getSucursal());
@@ -1237,7 +1237,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									
 									
 									//Obteniendo sucursal
-									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+									if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)// se quito el 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 										repCliBin.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 									else
 										repCliBin.setSucursal(loginUser.getUser().getSucursal());
@@ -3089,7 +3089,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								repCli.setTipoRep("CRE");
 								
 								//Obteniendo sucursal
-								if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+								if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)// Se quito->El 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 									repCli.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 								else
 									repCli.setSucursal(loginUser.getUser().getSucursal());
@@ -3153,7 +3153,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								repCli.setIdCot(getCotizId());
 								
 								//Obteniendo sucursal
-								if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+								if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)//Se quito: el 06/07/2017 : || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 									repCli.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 								else
 									repCli.setSucursal(loginUser.getUser().getSucursal());
@@ -3304,7 +3304,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 													repCli.setTipoRep("CRE");
 													
 													//Obteniendo sucursal
-													if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+													if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)// Se quito el 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 														repCli.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 													else
 														repCli.setSucursal(loginUser.getUser().getSucursal());
@@ -3379,7 +3379,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 													repCli.setTipoRep("CRE");
 													
 													//Obteniendo sucursal
-													if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null || !loginUser.getUser().getSucursal().getSucursalSuperior().equals(""))
+													if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)// se quito el 06/06/2017  || !loginUser.getUser().getSucursal().getSucursalSuperior().equals("")
 														repCli.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 													else
 														repCli.setSucursal(loginUser.getUser().getSucursal());

@@ -86,8 +86,7 @@
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">Grupo sanguineo:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
-										required="true">
+									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}" >
 										<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
 										<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
 										<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
@@ -278,13 +277,15 @@
 								
 							</h:panelGrid>
 							<s:decorate template="/layout/kActions.xhtml" id="action">
+							<!-- 
 								<a:commandButton ajaxSingle="true" action="#{clienteHome.saveClear(false)}" reRender="formAC"
 									styleClass="backBtn" value="#{msn.button_back}"									
 									onclick="#{rich:component('addClient')}.hide();" >
-								</a:commandButton> 
+								</a:commandButton>
+								 
 								<s:button view="/medical/patient/list.xhtml" propagation="begin"
 									styleClass="listBtn" value="#{msn.button_list}">
-								</s:button>
+								</s:button> -->
 								<!-- 
 								<s:button view="/medical/patient/master.xhtml"
 									propagation="begin" styleClass="newBtn" 
@@ -292,15 +293,23 @@
 									<f:param name="numId" value="-1"/>
 								</s:button>
 								-->
-								<a:commandButton  ajaxSingle="true" action="#{clienteHome.saveClear(false)}" reRender="formAC"
+								<!-- <a:commandButton  ajaxSingle="true" action="#{clienteHome.saveClear(false)}" reRender="formAC"
 									rendered="#{clienteHome.numId==-1}" styleClass="newBtn"
+									value="#{msn.button_new}">
+								</a:commandButton> -->
+								<a:commandButton ajaxSingle="true"  reRender="formAC"
+									styleClass="leftBtn" value="#{msn.button_back}"									
+									onclick="#{rich:component('addClient')}.hide();" >
+								</a:commandButton>
+								<a:commandButton  ajaxSingle="true" action="#{clienteHome.loadNewPatientRecep()}" reRender="formAC"
+									rendered="#{clienteHome.numId==-1}" styleClass="refreshBtn"
 									value="#{msn.button_new}">
 								</a:commandButton>
 								<a:commandLink  ajaxSingle="true" action="#{clienteHome.saveClear(true)}" reRender="formAC,val,lblSelPat"
-									rendered="#{clienteHome.numId==-1}" styleClass="saveBtnLnk" oncomplete="validar()"
+									 styleClass="saveBtnLnk" oncomplete="validar()"
 									value="#{msn.button_save}">
 									<s:conversationPropagation type="join"></s:conversationPropagation>
-								</a:commandLink>
+								</a:commandLink><!-- rendered="#{clienteHome.numId==-1}" -->
 								<s:div id="val" >
 						<script type="text/javascript"> 
 						function validar(){

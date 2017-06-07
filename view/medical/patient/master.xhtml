@@ -118,7 +118,7 @@
 									<!-- <h:graphicImage value="/kubeImg/accept16.png" />-->
 									<s:div rendered="#{not empty clienteHome.instance.fechaNacimiento}">
 										<h:outputLabel value="Edad:" /><h:inputText value="#{clienteHome.calcularEdad()}" disabled="true" />
-										</s:div>
+									</s:div>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.patimast_gender}: <span class="required" >*</span></ui:define>

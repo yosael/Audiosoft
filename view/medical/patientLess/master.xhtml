@@ -113,15 +113,19 @@
 										rendered="#{not empty clienteHome.instance.grupoSanguineo}" />
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_dob}:</ui:define>
-									<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
+									<ui:define name="label">Fecha de nacimiento: (dd/MM/yyyy)</ui:define>
+									<h:inputText value="#{clienteHome.instance.fechaNacimiento}"  >
+										<a:support event="onblur" ajaxSingle="true"
+											eventsQueue="q1" reRender="calEdad" />
+									</h:inputText>
+									<!-- <rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
 										required="true" datePattern="dd/MM/yyyy">
 										<a:support event="oncollapse" ajaxSingle="true"
 											eventsQueue="q1" reRender="formA" />
-									</rich:calendar>
-									<h:graphicImage value="/kubeImg/accept16.png" />
-									<s:div rendered="#{not empty clienteHome.instance.fechaNacimiento}">
-										<h:outputLabel value="Edad:" /> <h:inputText value="#{clienteHome.calcularEdad()}" disabled="true" />
+									</rich:calendar> 
+									<h:graphicImage value="/kubeImg/accept16.png" />-->
+									<s:div ><!-- rendered="#{not empty clienteHome.instance.fechaNacimiento}" -->
+										<h:outputLabel value="Edad:" /> <h:inputText  id="calEdad" value="#{clienteHome.calcularEdad()}" disabled="true" />
 										</s:div>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
@@ -229,7 +233,7 @@
 										<s:selectItems value="#{mDifList.resultList}" var="_mDif"
 											label="#{_mDif.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
-										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
+										<a:support event="onchange" eventsQueue="q1" action="#{clienteHome.validarReferencias()}" ajaxSingle="true"
 											reRender="formA" />
 									</h:selectOneMenu>
 								</s:decorate>
@@ -277,9 +281,9 @@
 								
 							</h:panelGrid>
 							<s:decorate template="/layout/kActions.xhtml" id="action">
-								<s:button view="/medical/patient/list.xhtml" propagation="begin"
+								<s:button view="/medical/patientLess/list.xhtml" propagation="begin"
 									styleClass="listBtn" value="#{msn.button_list}"></s:button>
-								<s:button view="/medical/patient/master.xhtml"
+								<s:button view="/medical/patientLess/master.xhtml"
 									propagation="begin" styleClass="newBtn"
 									value="#{msn.button_new}" rendered="#{not (loginUser.user.areaUsuario.id eq 1)}">
 									<f:param name="numId" value="-1"/>

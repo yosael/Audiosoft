@@ -31,6 +31,7 @@ import com.sa.model.medical.ClinicalHistory;
 import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.sales.VentaProdServ;
+import com.sa.model.workshop.AparatoCliente;
 import com.sa.model.workshop.ReparacionCliente;
 
 @Name("clienteHome")
@@ -74,6 +75,8 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	private float sumaVentasCliente;
 	private Date fechaVtasUs1;
 	private Date fechaVtasUs2;
+	
+	private List<AparatoCliente> listaAparatosCliente;
 	
 	@In(required=false, create=true)
 	MedicalAppointmentDAO medicalAppointmentDAO;
@@ -128,7 +131,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			
 			sumarVentascliente();
 			
-			
+			cargarAparatosCliente(cliente);//Nuevo el 02/06/2017
 			
 			// cargamos historiales y citas medicas y los servicios
 			System.out.println("Entrando en load: " + detail);
@@ -172,6 +175,17 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		System.out.println("Entro al nuevo load");
 		System.out.println("idPais instancia"+instance.getPais().getId());
 		//updateMunicipios();
+	}
+	
+	public void cargarAparatosCliente(Cliente cliente)
+	{
+		listaAparatosCliente = new ArrayList<AparatoCliente>();
+		try {
+			listaAparatosCliente = getEntityManager().createQuery("select a from AparatoCliente a where activo=true").getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
@@ -481,7 +495,12 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			}
 			
 			System.out.println("Entro a SaveClear");
-			save();
+			if(!save())
+			{
+				System.out.println("Ocurrio una validacion al guardar");
+				return;
+			}
+			
 			valtel = true;
 			medicalAppointmentDAO.getInstance().setCliente(instance);
 			//setInstance(new Cliente()); // cuando se puso esto??
@@ -720,6 +739,25 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			}
 		}*/
 		
+		
+		if(instance.getFechaNacimiento()!=null)
+		{
+			
+				int edad=0;
+				edad=calcularEdad();
+				System.out.println("EDAD ENCONTRADA: "+edad);
+				
+				if(edad==0)
+				{
+					FacesMessages.instance().add(Severity.WARN,"Formato de fecha incorrecto");
+					return false;
+				}
+			
+		}
+		else
+		{	
+			System.out.println("Fecha ingresada: "+instance.getFechaNacimiento());
+		}
 		
 		
 		instance.setFechaCreacion(new Date());
@@ -1275,6 +1313,14 @@ public class ClienteHome extends KubeDAO<Cliente>{
 
 	public void setFechaVtasUs2(Date fechaVtasUs2) {
 		this.fechaVtasUs2 = fechaVtasUs2;
+	}
+
+	public List<AparatoCliente> getListaAparatosCliente() {
+		return listaAparatosCliente;
+	}
+
+	public void setListaAparatosCliente(List<AparatoCliente> listaAparatosCliente) {
+		this.listaAparatosCliente = listaAparatosCliente;
 	}
 	
 	

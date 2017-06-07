@@ -79,8 +79,8 @@
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_tmGar" >
-								<ui:define name="label" >#{app.combapa_time_gar}:</ui:define>
-								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantia}" style="width:160px;" disabled="#{aparatoClienteHome.managed}" rendered="#{aparatoClienteHome.tieneGarantia==true}">
+								<ui:define name="label" >#{app.combapa_time_gar}:</ui:define><!-- disabled="#{aparatoClienteHome.managed}" -->
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantia}" style="width:160px;"  rendered="#{aparatoClienteHome.tieneGarantia==true}">
 									<f:selectItem itemLabel="#{app.combapa_gar_30d}" itemValue="30" />
 									<f:selectItem itemLabel="#{app.combapa_gar_60d}" itemValue="60" />
 									<f:selectItem itemLabel="#{app.combapa_gar_183d}" itemValue="183" />

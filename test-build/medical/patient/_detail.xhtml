@@ -285,6 +285,10 @@
 						<f:facet name="header">#{app.aparcli_model}</f:facet>
 						<h:outputText value="#{res.modelo}" />
 					</rich:column>
+					<rich:column filterBy="#{res.detalleAparato}" filterEvent="onkeyup" >
+						<f:facet name="header">Detalle Aparato</f:facet>
+						<h:outputText value="#{res.detalleAparato}" />
+					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{app.aparcli_earphone}</f:facet>
 						<h:outputText value="#{msn.button_yes}" rendered="#{res.retroAuricular==true}" />

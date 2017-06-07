@@ -190,6 +190,8 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	
 	public void cargarCliente(Cliente cliente)
 	{
+		clearInstance();
+		setInstance(new AparatoCliente());
 		instance.setCliente(cliente);
 		instance.setCustomApa(false);
 	}
@@ -205,14 +207,14 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 								.isTieneNumLote()) {
 							if (item.getCodProducto().getNumLote().isEmpty()) {
 								System.out.println("Entré al if, yo debería estar explotando en tu cara NumLote");
-								FacesMessages.instance().add(
+								FacesMessages.instance().add(Severity.WARN,
 										sainv_messages.get("aparcli_error_itmnolot"));
 								return false;
 							}
 						} else if (item.getInventario().getProducto().getCategoria().isTieneNumSerie()){
 							if (item.getCodProducto().getNumSerie().isEmpty()) {
 								System.out.println("Entré al if, yo debería estar explotando en tu cara NumSerie");
-								FacesMessages.instance().add(
+								FacesMessages.instance().add(Severity.WARN,
 										sainv_messages.get("aparcli_error_itmnoser"));
 								return false;
 							}
@@ -273,7 +275,6 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			getEntityManager().persist(codigo);
 		}
 		
-		instance.setActivo(true);
 		
 		save();
 	}
@@ -383,6 +384,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				return false;
 			}
 			
+			instance.setActivo(true);
 			
 			instance.setIdPrd(null);
 		}
@@ -391,6 +393,8 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		instance.setEstado("ACT");
 		if(!instance.isCustomApa())
 			instance.setCustomApa(false);
+		
+		instance.setActivo(true);
 		
 		cerrarModal=true;
 		
@@ -424,6 +428,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 
 	@Override
 	public void posSave() {
+		System.out.println("Activo "+instance.isActivo());
 		getEntityManager().refresh(instance);
 		if(!instance.isCustomApa() && !instance.isHechoMedida()) {
 			//Guardamos los demas accesorios del combo y el detalle de los costos en un solo texto
@@ -445,6 +450,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				}
 			}
 		}
+		System.out.println("Activo2 "+instance.isActivo());
 		getItems().clear();
 		getEntityManager().flush();
 	}

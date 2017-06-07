@@ -26,11 +26,11 @@
 						<h:outputText value="#{res.nombre}" />
 					</rich:column>
 					<rich:column filterBy="#{res.marca}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.productolist_col2}</f:facet>
+						<f:facet name="header">Marca</f:facet>
 						<h:outputText value="#{res.marca}" />
 					</rich:column>
 					<rich:column filterBy="#{res.modelo}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.productolist_col2}</f:facet>
+						<f:facet name="header">Modelo</f:facet>
 						<h:outputText value="#{res.modelo}" />
 					</rich:column>
 					<rich:column>
@@ -42,6 +42,10 @@
 						<f:facet name="header">#{app.aparcli_earside}</f:facet>
 						<h:outputText value="#{msn.side_left}" rendered="#{res.ladoAparato=='IZQ'}" />
 						<h:outputText value="#{msn.side_right}" rendered="#{res.ladoAparato=='DER'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Detalle aparato</f:facet>
+						<h:outputText value="#{res.detalleAparato}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{app.producto_codser}</f:facet>

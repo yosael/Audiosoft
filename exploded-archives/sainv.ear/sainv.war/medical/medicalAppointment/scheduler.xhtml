@@ -43,10 +43,10 @@
 									value="#{appointmentGrid.doctorSel.nombres} #{appointmentGrid.doctorSel.apellidos}"
 									readonly="true" required="true" style="width:170px;" />
 								<a:commandButton onclick="#{rich:component('selDoc')}.show();"
-									ajaxSingle="true" action="#{doctorDAO.listaDoctores()}"
+									ajaxSingle="true" action="#{doctorDAO.searchDocBySucSlFromDoc()}"
 									reRender="doc" styleClass="modifyBtn" value=" "
 									eventsQueue="q1"
-									style="width:30px;">
+									style="width:30px;"><!-- listaDoctores() -->
 								</a:commandButton>
 							</s:decorate>
 						</td>

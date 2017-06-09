@@ -198,7 +198,7 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Notas</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.personalPathologies}"
+									value="#{clienteHome2.instance.generalInformation.get(0).personalPathologies}"
 									cols="75" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
@@ -217,28 +217,28 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_alcholism}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.nopatAlcoholism}"
+									value="#{clienteHome2.instance.generalInformation.get(0).nopatAlcoholism}"
 									cols="30" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_smoking}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.nopatSmoking}"
+									value="#{clienteHome2.instance.generalInformation.get(0).nopatSmoking}"
 									cols="30" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_addiction}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.nopatAddiction}"
+									value="#{clienteHome2.instance.generalInformation.get(0).nopatAddiction}"
 									cols="30" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_allergies}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.nopatAllergies}"
+									value="#{clienteHome2.instance.generalInformation.get(0).nopatAllergies}"
 									cols="30" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
@@ -249,61 +249,61 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenarche}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femMenarche}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_development}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femSexualDevelopment}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femSexualDevelopment}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_rhythm}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenstrualRhythm}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femMenstrualRhythm}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_last_menstruation}:</ui:define>
 								<rich:calendar
-									value="#{clienteHome2.instance.generalInformation.femLastMenstruation}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femLastMenstruation}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_life}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femSexualLife}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femSexualLife}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_cesarean}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femCesarean}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femCesarean}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_birth}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femBirth}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femBirth}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_abortions}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femAbortions}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femAbortions}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_contraceptive_method}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femContraceptiveMethod}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femContraceptiveMethod}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menopause}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenopause}"
+									value="#{clienteHome2.instance.generalInformation.get(0).femMenopause}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>

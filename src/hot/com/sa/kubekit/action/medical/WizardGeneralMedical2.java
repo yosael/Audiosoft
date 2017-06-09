@@ -184,6 +184,8 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 		// configuraciones iniciales
 		if (clienteHome2.getInstance().getGeneralInformation() == null) {
 			GeneralInformation gi = new GeneralInformation(clienteHome2.getInstance());
+			/*List<GeneralInformation> giLis = new ArrayList<GeneralInformation>();
+			giLis.add(gi);*/
 			entityManager.persist(gi);
 			clienteHome2.getInstance().setGeneralInformation(gi);
 			

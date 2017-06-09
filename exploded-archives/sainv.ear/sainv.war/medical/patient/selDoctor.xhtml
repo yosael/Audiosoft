@@ -79,8 +79,8 @@
 					<s:button view="/medical/docext/master.xhtml" propagation="begin"
 						styleClass="newBtn" value="#{msn.button_new}">
 						<f:param name="id" value="" />
-					</s:button>
-					<a:commandButton action="#{doctorExternoHome.save()}" onclick="#{rich:component('addDocsModal')}.hide();"  reRender="formdiagnos,formAC,formA"
+					</s:button><!-- formdiagnos,formAC,formA -->
+					<a:commandButton action="#{doctorExternoHome.save()}" onclick="#{rich:component('addDocsModal')}.hide();"  reRender="formAC,formdiagnos"
 						rendered="#{not doctorExternoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
 						value="#{msn.button_save}"/>
 					<a:commandButton action="#{doctorExternoHome.modify()}" onclick="#{rich:component('addDocsModal')}.hide();" reRender="formdiagnos"

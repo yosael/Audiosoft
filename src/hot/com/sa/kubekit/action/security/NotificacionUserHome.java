@@ -86,8 +86,8 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 										+ " etapa_rep_cliente etc"
 										+ " WHERE rpc.cli_id = cli.cliente_id "
 										+ " and rpc.repcli_id = etc.repcli_id "
-										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
-										+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
+										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
+										+ " and suc.id = rpc.sucursal_id " 
 										+ " and etc.estado = 'PEN' "
 										+ " ORDER BY rpc.fecha_ingreso ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())

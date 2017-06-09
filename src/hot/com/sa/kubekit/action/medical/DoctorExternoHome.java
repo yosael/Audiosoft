@@ -46,6 +46,11 @@ public class DoctorExternoHome extends KubeDAO<DoctorExterno>{
 			}
 	}
 	
+	public void iniciarNuevoDoctor()
+	{
+		setInstance(new DoctorExterno());
+	}
+	
 	public void getDoctores() {
 		resultList = getEntityManager().createQuery("SELECT d FROM DoctorExterno d ").getResultList();
 	}

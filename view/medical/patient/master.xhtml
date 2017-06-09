@@ -247,7 +247,7 @@
 									</h:inputText>
 								</s:decorate>
 	
-								<s:decorate template="/layout/kEditSpace.xhtml" >
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==7}" >
 									<ui:define name="label">Paciente que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"
@@ -262,7 +262,7 @@
 
 								</s:decorate>
 
-								<s:decorate template="/layout/kEditSpace.xhtml">
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==3}" >
 									<ui:define name="label">Doctor que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"

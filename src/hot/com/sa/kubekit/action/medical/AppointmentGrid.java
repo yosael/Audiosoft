@@ -33,7 +33,8 @@ import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.security.Sucursal;
 
 @Name("appointmentGrid")
-@Scope(ScopeType.CONVERSATION)
+//@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.SESSION)
 public class AppointmentGrid {
 	private Doctor doctorSel;
 	private Date dateSel;

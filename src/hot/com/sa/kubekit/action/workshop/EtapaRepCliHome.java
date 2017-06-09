@@ -137,11 +137,11 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 											+ " FROM cliente cli, sucursal suc,"
 											+ " reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, "
 											+ " etapa_rep_cliente etc "
-											+ " WHERE rpc.repcli_id = cli.cliente_id and (CONCAT(UPPER(TRIM(cli.nombres)),' ',UPPER(TRIM(cli.apellidos))) LIKE :nom)" // AND rpc.aprobada = true
+											+ " WHERE (rpc.repcli_id = cli.cliente_id and (CONCAT(UPPER(TRIM(cli.nombres)),' ',UPPER(TRIM(cli.apellidos))) LIKE :nom)" // AND rpc.aprobada = true
 											+ " and rpc.repcli_id = etc.repcli_id "
 											+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 											+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
-											+ " and etc.estado = 'PEN' "
+											+ " and etc.estado = 'PEN') || etc.etarep_id=102 "
 											/*+ " 	and etr.orden = (select MIN(tetr.orden) from etapa_reparacion tetr, etapa_rep_cliente tetc "
 											+ "   where tetr.etarep_id = tetc.etarep_id and rpc.repcli_id = tetc.repcli_id "
 											+ "	and tetr.areneg_id = ? and tetc.estado = 'PEN') " */
@@ -161,6 +161,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					System.out.println("id de proceso taller "+instance.getReparacionCli().getProceso().getId());
 					if(instance.getReparacionCli().getProceso().getId().equals(3))
 					{*/
+					//Integer num=102;
 						etapasRepCli = getEntityManager().createNativeQuery(
 								"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
 										+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
@@ -171,11 +172,12 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										+ " etapa_rep_cliente etc"
 										+ " WHERE rpc.cli_id = cli.cliente_id "
 										+ " and rpc.repcli_id = etc.repcli_id "
-										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
-										+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
-										+ " and etc.estado = 'PEN' "
+										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
+										+ " and suc.id = rpc.sucursal_id "  
+										+ " and etc.estado = 'PEN'"
 										+ " ORDER BY rpc.fecha_ingreso ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
+						
 						
 						// Al setear la variable del area de negocio como se aprecia abajo da error (desde que se agregó filtro de busqueda por nombre de cliente)
 						//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )  
@@ -208,7 +210,23 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						
 						System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
 						
-					
+						/*List<Object[]> etapasEsperandoAprobacion = getEntityManager().createNativeQuery(
+								"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
+										+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
+										+ "	rpc.fecha_ingreso fechaEstFin, etc.fecha_real_fin fechaReaFin, etc.etarepcli_id id,"
+										+ "	prt.codigo codProceso, rpc.repcli_id idRep, suc.nombre nomSucursal" 
+										+ " FROM  cliente cli, sucursal suc,"
+										+ " reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, "
+										+ " etapa_rep_cliente etc"
+										+ " WHERE rpc.cli_id = cli.cliente_id "
+										+ " and rpc.repcli_id = etc.repcli_id "
+										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = 102 "
+										+ " and etc.estado = 'PEN'"
+										+ " ORDER BY rpc.fecha_ingreso ASC ")
+						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
+						.getResultList();
+						*/
+					//System.out.println("ETAPAS ESPERANDO APROBACION TAM: "+etapasEsperandoAprobacion.size());
 					
 			}// para audiologa
 			else if (loginUser.getUser().getAreaUsuario().getId() == 1 && getNomCoinci()==null)
@@ -293,6 +311,30 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						
 						
 			}
+			/*else if (loginUser.getUser().getAreaUsuario().getId() == 2 && getNomCoinci()==null)
+			{	
+					
+				System.out.println("**** Entro al if numero 2 audiologa");
+				etapasRepCli = getEntityManager().createNativeQuery(
+								"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
+										+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
+										+ "	rpc.fecha_ingreso fechaEstFin, etc.fecha_real_fin fechaReaFin, etc.etarepcli_id id,"
+										+ "	prt.codigo codProceso, rpc.repcli_id idRep, suc.nombre nomSucursal" 
+										+ " FROM  cliente cli, sucursal suc,"
+										+ " reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, "
+										+ " etapa_rep_cliente etc"
+										+ " WHERE rpc.cli_id = cli.cliente_id "
+										+ " and rpc.repcli_id = etc.repcli_id "
+										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
+										+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
+										+ " and etc.estado = 'PEN' and rpc.sucursal_id=:sucUser"
+										+ " ORDER BY rpc.fecha_ingreso ASC ")
+						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
+						.setParameter("sucUser",sucursalUser.getId())
+						.getResultList();
+						
+						//System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
+			}*/
 			
 		} 
 		catch (Exception e){

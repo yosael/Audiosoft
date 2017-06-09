@@ -28,7 +28,8 @@ import com.sa.model.sales.Service;
 import com.sa.model.sales.VentaProdServ;
 
 @Name("wizardGeneralMedical")
-@Scope(ScopeType.CONVERSATION)
+//@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.SESSION)
 public class WizardGeneralMedical extends WizardClinicalHistory {
 	@In(create = true)
 	protected MedicalAppointmentDAO medicalAppointmentDAO;
@@ -185,8 +186,11 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		// configuraciones iniciales
 		if (clienteHome.getInstance().getGeneralInformation() == null) {
 			GeneralInformation gi = new GeneralInformation(clienteHome.getInstance());
+			/*List<GeneralInformation> giLis = new ArrayList<GeneralInformation>();
+			giLis.add(gi);*/
 			entityManager.persist(gi);
 			clienteHome.getInstance().setGeneralInformation(gi);
+			System.out.println("REgistro el GeneralInformation *********");
 			
 		}
 		generalMedicalDAO.getInstance().setCliente(
@@ -194,6 +198,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		generalMedicalDAO.getInstance().setMedicalAppointment(
 				medicalAppointmentDAO.getInstance());
 		
+		
+		System.out.println("ENTRO al INIT WizardGeneralMedical *******");
 		//Nuevo
 		//generalMedicalDAO.getInstance().getMedicalAppointment().set
 	}

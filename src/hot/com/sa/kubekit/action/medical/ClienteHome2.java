@@ -311,10 +311,10 @@ public class ClienteHome2 extends KubeDAO<Cliente>{
 	}
 	
 	public void addAntecedente(Antecendente2 ant){		
-		if(instance.getGeneralInformation().getFamilyHeritage()==null || instance.getGeneralInformation().getFamilyHeritage()==""){
+		if(instance.getGeneralInformation().getFamilyHeritage()==null || instance.getGeneralInformation().getFamilyHeritage().equals("")){
 			cadena= ant.getNombre();	
 		}else{
-			cadena= instance.getGeneralInformation().getFamilyHeritage() + ", " +ant.getNombre()  ;
+			cadena= instance.getGeneralInformation().getFamilyHeritage()+ ", " +ant.getNombre()  ;
 		}		
 		instance.getGeneralInformation().setFamilyHeritage(cadena);		
 		System.out.println("*** Entro a metodo agregar antecedente");

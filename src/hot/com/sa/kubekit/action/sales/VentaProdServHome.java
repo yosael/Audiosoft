@@ -944,13 +944,13 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 				.createQuery(
 						"SELECT v FROM VentaProdServ v WHERE  v.estado = 'PDS' "
 								+ fltFch + " ORDER BY v.fechaVenta DESC ")
-				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
 				.setParameter("fch2", getFechaPFlt2())
 				.getResultList();//.setParameter(
 		/*"subSuc",
 		subSucFlt == null ? new ArrayList<Sucursal>()
 				: subSucFlt)*/
+		//.setParameter("suc", loginUser.getUser().getSucursal())
 	}
 
 	public void fltVtasRep() {

@@ -502,6 +502,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			System.out.println("IDS de las etapas: "+ tmpEta.getEtapaRep().getId());
 				// SI la etapa es "Esperando Aprobación"
 			if (tmpEta.getEtapaRep().getId().equals(102)) {
+				tmpEta.setUsuario(loginUser.getUser());//Nuevo el 08/06/2017
 				tmpEta.setFechaRealFin(new Date());
 				tmpEta.setEstado("APR");
 			}

@@ -686,6 +686,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		 
 		//.setParameter("ape", "%"+o.toString().toUpperCase()+"%")
 	 }
+	 
 	@Override
 	public boolean preSave() {
 		FacesMessages.instance().clear();

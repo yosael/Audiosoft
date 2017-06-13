@@ -1,5 +1,7 @@
 package com.sa.kubekit.action.inventory;
 
+import java.util.ArrayList;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
@@ -22,11 +24,19 @@ public class ProductoList extends KubeQuery<Producto>{
 	public void init() {
 		if(loginUser.getUser().getSucursal()==null){
 			setJpql("select p from Producto p where (UPPER(p.nombre) like "+ "UPPER('%" + getNomCoinci() + "%')" +
-					" OR UPPER(p.referencia) like " + "UPPER('%" + this.getNomCoinci() + "%')) order by p.nombre" );
+					" OR UPPER(p.categoria.codigo) like UPPER('%" + this.getNomCoinci() + "%')   OR UPPER(p.referencia) like " + "UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.modelo) like UPPER('%" + this.getNomCoinci() + "%') ) order by p.referencia,p.categoria.codigo,p.nombre" );
 		}else{
 			setJpql("select p from Producto p where (p.empresa.id = " + loginUser.getUser().getSucursal().getEmpresa().getId() + 
-					") AND (UPPER(p.nombre) like UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.referencia) like UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.categoria.codigo) like UPPER('%" + this.getNomCoinci() + "%')) order by p.nombre");
+					") AND (UPPER(p.nombre) like UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.referencia) like UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.modelo) like UPPER('%" + this.getNomCoinci() + "%') OR UPPER(p.categoria.codigo) like UPPER('%" + this.getNomCoinci() + "%')) order by p.referencia,p.categoria.codigo,p.nombre ");
 		}
+		
+	}
+	
+	public void recargar()
+	{
+		nomCoinci="";
+		
+		setResultList(new ArrayList<Producto>());
 		
 	}
 

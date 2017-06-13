@@ -1,5 +1,6 @@
 package com.sa.model.medical;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -187,7 +188,7 @@ public class ServiceClinicalHistory {
 		this.clinicalHistory = clinicalHistory;
 	}
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumns( {
 			@JoinColumn(name = "medical_appointment_id", referencedColumnName = "medical_appointment_id", nullable = true),
 			@JoinColumn(name = "medical_service_id", referencedColumnName = "service_id", nullable = true) })

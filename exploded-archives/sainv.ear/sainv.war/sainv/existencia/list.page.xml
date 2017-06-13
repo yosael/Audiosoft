@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
 	<!-- <action execute="#{sucursalHome.cargarSucursales()}" on-postback="false" /> -->  
 	<!-- <action execute="#{productoHome.cargarSucursales()}" on-postback="false" /> -->
-	<action execute="#{sucursalHome.cargarBodegas()}" on-postback="false" />
+	<action execute="#{sucursalHome.cargarNombresBodegas()}" on-postback="false" />
 	<action execute="#{productoHome.getProductosExisLst()}" on-postback="false" />
 	<!--  <action execute="#{productoHome.cargarExcel()}" on-postback="false" />-->
 	<!-- <begin-conversation join="true" /> -->

@@ -12,6 +12,7 @@
 	
 	<action execute="#{appointmentGrid.loadDoctorSchedIdDoc()}" on-postback="false" if="#{appointmentGrid.idDoctor!=null}" />
 	
-	<begin-conversation join="true"/>	
+	<begin-conversation join="true"   />
+	
 	<param name="back" value="#{urlBack.back}" required="false" />	
 </page>

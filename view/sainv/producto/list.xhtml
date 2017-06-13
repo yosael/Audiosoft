@@ -13,12 +13,21 @@
 		<rich:panel>
 			<f:facet name="header"><span class="marginhead">#{app.productolist_head}</span></f:facet>
 			<h:form id="formA">
-			<s:decorate template="/layout/kActions.xhtml">
-				<s:button view="/sainv/producto/master.xhtml" propagation="begin"
-					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
-					<f:param name="id" value="" />
-				</s:button>
-			</s:decorate>
+				
+				<h:panelGrid columns="2" style="margin:0 auto;" >
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/sainv/producto/list.xhtml" propagation="begin"
+							styleClass="refreshBtn" value="Actualizar" rendered="true"  action="#{productoList.recargar()}" >
+							
+						</s:button>
+					</s:decorate>
+				<s:decorate template="/layout/kActions.xhtml">
+						<s:button view="/sainv/producto/master.xhtml" propagation="begin"
+							styleClass="newBtn" value="#{msn.button_register}" rendered="true">
+							<f:param name="id" value="" />
+						</s:button>
+					</s:decorate>
+				</h:panelGrid>
 			<rich:spacer height="10" />
 						
 					<h:panelGroup id="panel">
@@ -30,11 +39,9 @@
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 						<h:inputText styleClass="busProd" value="#{productoList.nomCoinci}"
 							 id="_nomCoinci">
-						<a:support event="onkeydown" reRender="#{rich:clientId('_table')}"
-							ajaxSingle="true" action="#{productoList.init()}" />
 						<a:support event="onkeyup" reRender="#{rich:clientId('_table')}"
 							ajaxSingle="true" action="#{productoList.init()}" />
-					</h:inputText>
+					</h:inputText><!-- <a:support event="onkeydown" reRender="#{rich:clientId('_table')}" ajaxSingle="true" action="#{productoList.init()}" /> -->
 					</center>
 				<rich:dataTable var="res" value="#{productoList.resultList}" id="_table" 
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 

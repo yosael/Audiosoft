@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
+import javax.annotation.PostConstruct;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -33,8 +34,7 @@ import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.security.Sucursal;
 
 @Name("appointmentGrid")
-//@Scope(ScopeType.CONVERSATION)
-@Scope(ScopeType.SESSION)
+@Scope(ScopeType.CONVERSATION)//@Scope(ScopeType.SESSION)
 public class AppointmentGrid {
 	private Doctor doctorSel;
 	private Date dateSel;
@@ -67,14 +67,29 @@ public class AppointmentGrid {
 
 	@In
 	private EntityManager entityManager;
+	
+	
+	
+	
+	/*@PostConstruct
+	public void initialize()
+	{
+		conversation.setTimeout(1200000);
+		System.out.println("TIMEOUT DENTRO DE INIT2 "+Conversation.instance().getTimeout());	
+		System.out.println("TIMEOUT ELEMENTO CREADO "+this.conversation.getTimeout());
+	}*/
 
 	@Create
 	@Begin(join=true)
 	public void init() {
 		System.out.println("Entro a init");
-		dateSel = new Date();
+		dateSel = new Date();	
 		initialHour = 8;
 		finalHour = 20;
+		
+		//System.out.println("TIMEOUT DE CONVERSATION: "+Conversation.instance().getTimeout());
+		
+		
 		//doctorSel = loginUser.getUser().getDoctorReg();
 		/*
 		if (Identity.instance().hasRole("doctor")) {

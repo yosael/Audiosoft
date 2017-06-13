@@ -77,7 +77,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 	private Inventario selectedInv = new Inventario();
 	private Empresa empresaSeleccionada;
 	private Sucursal sucursalSeleccionada;
-	private Sucursal sucursalFlt ;
+	private Sucursal sucursalFlt = new Sucursal() ;
 	private List<Sucursal> sucList;
 	private Integer totalInventario;
 	private String codCatProd;
@@ -85,6 +85,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 	private boolean imgSize = true;
 	private List<Inventario> lsInventarios;
 	private String tipoProducto="";
+	private String nombreSucursalSelec="";
 	
 
 	public void create() {
@@ -130,7 +131,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 		getEntityManager().clear();
 		prdsExistencias = getEntityManager()
 				.createQuery(
-						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(p.nombre) like UPPER(:ref) or UPPER(p.categoria.codigo) like UPPER(:ref)) order by p.referencia ")
+						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(p.nombre) like UPPER(:ref) or UPPER(p.categoria.codigo) like UPPER(:ref) or UPPER(p.modelo) like UPPER(:ref)) order by p.referencia,p.categoria.codigo,p.nombre ")
 				.setParameter("ref", "%" + this.getNomCoinci() + "%")
 				.getResultList();
 
@@ -419,9 +420,9 @@ public class ProductoHome extends KubeDAO<Producto> {
 		for (Producto tmpPrd : prdsExistencias) {
 			Integer conteo = 0;
 			for (Inventario tmpInv : tmpPrd.getInventarios()) {
-				if (sucursalFlt != null) {
-					if (tmpInv.getSucursal().getId()
-							.equals(sucursalFlt.getId())) {
+				if (!nombreSucursalSelec.equals("")) {
+					if (tmpInv.getSucursal().getNombre()
+							.equals(nombreSucursalSelec)) {
 						conteo += tmpInv.getCantidadActual();
 						break;
 					}
@@ -455,9 +456,12 @@ public class ProductoHome extends KubeDAO<Producto> {
 		System.out.println("tam "+lsInventarios.size());
 	}
 	
-	public void sucursalSelec()
+	public void verificarSucursal()
 	{
-		System.out.println("suc selected");
+		if(nombreSucursalSelec==null)
+			setNombreSucursalSelec("");
+		
+		System.out.println("suc selected *****"+nombreSucursalSelec);
 	}
 	
 	public void cargarExcel()
@@ -832,13 +836,13 @@ public class ProductoHome extends KubeDAO<Producto> {
 		String hql = "SELECT s FROM Sucursal s WHERE 	1=1 ";
 		
 		System.out.println("entro al metodo");
-		if (sucursalFlt != null)
+		if (!nombreSucursalSelec.equals(""))
 		{
-			hql += " AND s.id = :suc ";
-			System.out.println("sucursal seleccionada"+sucursalFlt.getId());
+			hql += " AND s.nombre = :suc ";
+			System.out.println("sucursal seleccionada"+nombreSucursalSelec);
 			
 			sucList = getEntityManager().createQuery(hql)
-					.setParameter("suc", sucursalFlt.getId()).getResultList();
+					.setParameter("suc", nombreSucursalSelec).getResultList();
 		}
 		else
 		{
@@ -1247,6 +1251,16 @@ public class ProductoHome extends KubeDAO<Producto> {
 		this.tipoProducto = tipoProducto;
 	}
 
+	public String getNombreSucursalSelec() {
+		return nombreSucursalSelec;
+	}
+
+	public void setNombreSucursalSelec(String nombreSucursalSelec) {
+		this.nombreSucursalSelec = nombreSucursalSelec;
+	}
+
+	
+	
 	
 	
 	

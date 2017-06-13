@@ -28,8 +28,8 @@ import com.sa.model.sales.Service;
 import com.sa.model.sales.VentaProdServ;
 
 @Name("wizardGeneralMedical")
-//@Scope(ScopeType.CONVERSATION)
-@Scope(ScopeType.SESSION)
+@Scope(ScopeType.CONVERSATION)
+//@Scope(ScopeType.SESSION)
 public class WizardGeneralMedical extends WizardClinicalHistory {
 	@In(create = true)
 	protected MedicalAppointmentDAO medicalAppointmentDAO;
@@ -182,7 +182,11 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	}
 
 	public void init() {
+		
+		
 		super.init();
+		
+		
 		// configuraciones iniciales
 		if (clienteHome.getInstance().getGeneralInformation() == null) {
 			GeneralInformation gi = new GeneralInformation(clienteHome.getInstance());
@@ -297,14 +301,17 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									entityManager.persist(digCon);
 								}*/
 								
-								
+								System.out.println("TAMANIO EXAMENES AGREGADOS: "+prescriptionHome.getExamenesAgregados().size());
 								//Examenes
 								for(ExamenConsulta exaCon : prescriptionHome.getExamenesAgregados()) {
+									
 									exaCon.setConsulta(generalMedicalDAO.getInstance());
 									exaCon.setNomExamen(exaCon.getExamen().getName());
 									entityManager.persist(exaCon);
+									System.out.println("PERSISTIO NUEVO EXAMEN ******");
 								}
 								
+								System.out.println("TAMANIO SERVICIOS AGREGADOS: "+prescriptionHome.getServiciosAgregados().size());
 								for(MedicalAppointmentService srv : prescriptionHome.getServiciosAgregados()) {
 									if(medicalAppointmentDAO.getAppointmentItems().contains(srv)) 
 										medicalAppointmentDAO.getAppointmentItems().remove(srv);
@@ -320,7 +327,28 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									}
 								}
 								
+								
+								//Nuevo agregado el 09/06/2017
+								//prescriptionHome.verificarServiciosExamenesEliminados();
+								/*if(prescriptionHome.getServiciosYexamenesEliminados().size()>0)
+								{
+									//medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().removeAll(prescriptionHome.getServiciosYexamenesEliminados());
+									
+									
+									for(MedicalAppointmentService srv:prescriptionHome.getServiciosYexamenesEliminados())
+									{
+										System.out.println("SERVICIO A ELIMINAR: "+srv.getService().getName());
+										medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
+										entityManager.remove(srv);
+									}
+									entityManager.flush();
+									System.out.println("ELIMINO LOS SERVICIOS DESDE EL WIZARD **********");
+								}
+								*/
+								
 								saveDiagnostics();
+								
+								
 								prescriptionHome.getInstance().setMedicalAppointment(generalMedicalDAO.getInstance().getMedicalAppointment());
 								prescriptionHome.save();
 								FacesMessages.instance().add(sainv_messages
@@ -351,7 +379,11 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								entityManager.refresh(medicalAppointmentDAO.getInstance());
 								entityManager.refresh(generalMedicalDAO.getInstance());
 								List<Service> serviciosCobrados = new ArrayList<Service>();
+								
 								for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) {
+									
+									System.out.println("Nombre Servicio: "+tmpSrv.getService().getName());
+									
 									serviciosCobrados.add(tmpSrv.getService());
 									DetVentaProdServ dtVta = new DetVentaProdServ();
 									dtVta.setCantidad(1);
@@ -369,6 +401,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								}
 								//Y los examenes tambien se adjuntan al cobro
 								for(ExamenConsulta tmpSrv: generalMedicalDAO.getInstance().getExamenes()) {
+									System.out.println("Nombre examen "+tmpSrv.getExamen().getName());
 									if(!serviciosCobrados.contains(tmpSrv.getExamen())) {
 										DetVentaProdServ dtVta = new DetVentaProdServ();
 										dtVta.setCantidad(1);

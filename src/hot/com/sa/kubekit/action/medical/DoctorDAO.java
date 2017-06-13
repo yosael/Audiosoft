@@ -9,6 +9,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 
 import com.sa.kubekit.action.security.LoginUser;
@@ -49,6 +50,8 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 				.get("doctorDAO_updated")));
 		setDeletedMessage(createValueExpression(sainv_messages
 				.get("doctorDAO_deleted")));
+		
+		System.out.println("ENTRO AL METODO CREATE DEL DOCTOR: TIMEOUT: "+Conversation.instance().getTimeout());
 	}
 	
 	public Doctor doctorInSession() {

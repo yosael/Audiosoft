@@ -142,7 +142,7 @@ public abstract class WizardClinicalHistory {
 			prescriptionHome.setRecomendacionesAgregadas(medicalAppointmentDAO.getInstance().getClinicalHistory().getRecomendaciones());
 			prescriptionHome.setItemsAgregados(medicalAppointmentDAO.getInstance().getClinicalHistory().getMedicamentos());
 			prescriptionHome.setDiagnosticosAgregados(medicalAppointmentDAO.getInstance().getClinicalHistory().getDiagnosticos());*/
-			
+			System.out.println("ENTRO HA WizardClinicalHistory--->loadMedicalAppointment if != null ");
 		} 
 		
 		//Cargamos los servicios y separamos los que son examenes de los que no son examenes

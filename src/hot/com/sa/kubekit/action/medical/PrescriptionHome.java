@@ -47,6 +47,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	private List<Prescription> prescriptionsPendingList = new ArrayList<Prescription>();
 	private Integer prescriptionId;
 	private boolean diagnSordera;
+	private List<MedicalAppointmentService> serviciosYexamenesEliminados = new ArrayList<MedicalAppointmentService>();
 	
 	@In(required=false, create=true)
 	private ClienteHome clienteHome;
@@ -260,16 +261,59 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	public void removerExamen(ExamenConsulta exc) {
 		
-		if(exc.getId()!=null)
+		
+		List<MedicalAppointmentService> mService = new ArrayList<MedicalAppointmentService>();
+		mService = getEntityManager().createQuery("SELECT s FROM MedicalAppointmentService s where s.medicalAppointmentServiceId.medicalAppointmentId="+medicalAppointmentDAO.getInstance().getId()+" and s.medicalAppointmentServiceId.serviceId="+exc.getExamen().getId()+" ").getResultList();
+		
+		//if(exc.getExamen().getId()!=null)
+		if(mService.size()>0)
 		{
-			getEntityManager().remove(exc);
+			System.out.println("SERVICIO DE EXAMEN DIFERENTE DE NULL");
+			
+			//Remover de la lista
+			
 			examenesAgregados.remove(exc);
+			//serviciosAgregados.re
+			
+			//remover de la db el MedicalAppointmentService que se ha registrador
+			
+			//List<MedicalAppointmentService> paraRemover = medicalAppointmentDAO.getInstance().getMedicalAppointmentServices(); 
+		
+			//medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().
+			
+			/*for(MedicalAppointmentService mService:paraRemover)
+			{
+				if(mService.getService().equals(exc.getExamen()))
+				{*/
+					//getEntityManager().remove(mService.getServiceClinicalHistory());
+					System.out.println("ENTRO AL IF DENTRO DEL FOR PARA REMOVER DESDE LA DB");
+					medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(mService.get(0));
+					//serviciosYexamenesEliminados.add(mService);
+					serviciosAgregados.remove(mService.get(0));
+					getEntityManager().remove(mService.get(0));
+					getEntityManager().flush();
+					
+			/*	}
+			}*/
+			
+			
 		}
 		else
 		{
+			System.out.println("NO entro a eliminar a la db");
 			examenesAgregados.remove(exc);
 		}
 		
+	}
+	
+	public void verificarServiciosExamenesEliminados()
+	{
+		
+		if(serviciosYexamenesEliminados.size()>0)
+		{
+			medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().removeAll(serviciosYexamenesEliminados);
+			System.out.println("Elimino servicios y/o examenes");
+		}
 	}
 	
 	public void removerServicioExam(Service srv)
@@ -283,8 +327,11 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		{
 			//getEntityManager().getTransaction().begin();
 			
+			medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
+			//serviciosYexamenesEliminados.add(srv);
 			getEntityManager().remove(srv);
 			serviciosAgregados.remove(srv);
+			getEntityManager().flush();
 			//getEntityManager().getTransaction().commit();
 			//getEntityManager().close();
 			
@@ -447,4 +494,15 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		this.diagnSordera = diagnSordera;
 	}
 
+	public List<MedicalAppointmentService> getServiciosYexamenesEliminados() {
+		return serviciosYexamenesEliminados;
+	}
+
+	public void setServiciosYexamenesEliminados(
+			List<MedicalAppointmentService> serviciosYexamenesEliminados) {
+		this.serviciosYexamenesEliminados = serviciosYexamenesEliminados;
+	}
+
+	
+	
 }

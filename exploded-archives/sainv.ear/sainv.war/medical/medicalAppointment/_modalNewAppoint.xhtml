@@ -262,15 +262,14 @@
 						onclick="#{rich:component('newAppointment')}.hide();" rendered="#{not medicalAppointmentDAO.managed}" >
 					</a:commandButton> 
 					
-					<!-- Se cambiaron los accions  #{appointmentGrid.registerNew()}-->
-					<a:commandButton action="#{appointmentGrid.rediRect()}"
-						 
-						reRender="renderImp,formApp,table,val" styleClass="saveBtn"
+					<!-- Se cambiaron los accions  #{appointmentGrid.registerNew()}--> <!--  action="#{appointmentGrid.rediRect()}"   comentado el 12/06/2017 -->
+					<!-- renderImp,formApp,table,val para refrescar: comentado el 12/06/2017 -->
+					<a:commandButton 
+						reRender="formApp,formA" styleClass="saveBtn"
 						 value="#{msn.button_save}" oncomplete="validar()"
 						 eventsQueue="q1"
-						rendered="#{not medicalAppointmentDAO.managed}" actionListener="#{appointmentGrid.registerNew()}" >
-						<f:setPropertyActionListener value="#{appointmentGrid.doctorSel.id}" target="#{appointmentGrid.idDoctor}" />
-					</a:commandButton>
+						rendered="#{not medicalAppointmentDAO.managed}" action="#{appointmentGrid.registerNew()}" >
+					</a:commandButton><!-- <f:setPropertyActionListener value="#{appointmentGrid.doctorSel.id}" target="#{appointmentGrid.idDoctor}" /> comentado el 12/06/2017 -->
 					 
 					<!-- propagation="begin" 
 					<s:button 

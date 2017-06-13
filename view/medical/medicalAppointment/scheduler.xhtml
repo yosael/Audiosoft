@@ -32,7 +32,7 @@
 			<p:focus />
 			<a:queue name="q1" ignoreDupResponses="false"/> <!-- se agrego esto: ignoreDupResponses="false" el 21/12/2016 -->
 			<h:form id="formA">
-				<!-- <a:poll id="autoRefreshSched" interval="50000" enabled="true" reRender="formA" action="#{appointmentGrid.createGridDay()}"  /> -->
+				<a:poll id="autoRefreshSched" interval="50000" enabled="true" reRender="formA" action="#{appointmentGrid.createGridDay()}"  />
 				<table style="width: 100%;">
 					<tr>
 						<td style="width: 200px;">

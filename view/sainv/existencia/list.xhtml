@@ -17,15 +17,14 @@
 				<p:focus />
 				<a:queue name="q1" />
 				<center>
-					<h:panelGrid columns="5">
+					<h:panelGrid columns="4">
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.compramast_branch}:</ui:define>
 							<!-- <h:selectOneMenu value="#{productoHome.sucursalFlt}" id="_sucls" > -->
 							<!-- <s:selectItems value="#{productoHome.listaSucursales}" var="_suc" label="#{_suc.nombre}" noSelectionLabel="" /> -->
-							<h:selectOneMenu value="#{productoHome.sucursalFlt}"  id="sucursl"  >
-								<s:selectItems value="#{sucursalHome.resultList}" var="suc" label="#{suc.nombre}"    noSelectionLabel="" /> 
-								<s:convertEntity />
-								<a:support event="onchange" action="#{productoHome.sucursalSelec()}" ajaxSingle="true"     />
+							<h:selectOneMenu value="#{productoHome.nombreSucursalSelec}"  id="sucursl"  >
+								<s:selectItems value="#{sucursalHome.nombresBodegasList}" var="suc" label="#{suc}"  noSelectionLabel="" /> 
+								<a:support event="onchange" action="#{productoHome.verificarSucursal()}" ajaxSingle="true"   reRender="_table" eventsQueue="q1"  />
 							</h:selectOneMenu>
 						</s:decorate>
 						<!-- <h:selectOneMenu value="#{productoHome.sucursalFlt}" id="sucSls"  >
@@ -41,11 +40,11 @@
 							<a:commandButton value="#{app.bt_rep_exis_prd}" action="#{productoHome.loadConsolidadoExis()}"
 								oncomplete="showReport('listadoExistencias', '#{conversation.id}');" styleClass="pdfBtn"   />
 						</s:decorate>
-							
+							<!-- 
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<a:commandButton value="Inexistencias" action="#{productoHome.loadConsolidadoInexis()}"
 								oncomplete="showReport('listaInexistencias', '#{conversation.id}');" styleClass="pdfBtn"   />
-						</s:decorate>
+						</s:decorate> -->
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<a:commandButton value="#{app.bt_rep_exis_suc}" action="#{productoHome.loadSucursalesRep()}"
 								oncomplete="showReport('listadoExistenciasSuc', '#{conversation.id}');" styleClass="pdfBtn"  />
@@ -58,15 +57,17 @@
 							</s:button>
 						</s:decorate>
 						
-						<h:selectOneMenu value="#{productoHome.tipoProducto}">
-							<f:selectItem itemValue="" itemLabel="" />
-								<f:selectItem itemValue="A" itemLabel="A" />
-								<f:selectItem itemValue="B" itemLabel="B" />
-								<f:selectItem itemValue="C" itemLabel="C" />
-								<f:selectItem itemValue="D" itemLabel="D" />
-								<a:support event="onchange" reRender="formA" ajaxSingle="true" action="#{productoHome.findByType()}" eventsQueue="q1" ></a:support>
-						</h:selectOneMenu>
-							
+						<s:decorate template="/layout/kActions.xhtml">
+							<ui:define name="label">Buscar por tipo:</ui:define>
+							<h:selectOneMenu value="#{productoHome.tipoProducto}">
+								<f:selectItem itemValue="" itemLabel="" />
+									<f:selectItem itemValue="A" itemLabel="A" />
+									<f:selectItem itemValue="B" itemLabel="B" />
+									<f:selectItem itemValue="C" itemLabel="C" />
+									<f:selectItem itemValue="D" itemLabel="D" />
+									<a:support event="onchange" reRender="formA" ajaxSingle="true" action="#{productoHome.findByType()}" eventsQueue="q1" ></a:support>
+							</h:selectOneMenu>
+						</s:decorate>
 					</h:panelGrid>
 				</center>
 
@@ -76,12 +77,9 @@
 					<s:decorate></s:decorate>
 					<h:inputText styleClass="busProd" value="#{productoHome.nomCoinci}"
 						id="_nomCoinci" autocomplete="off" >
-						<a:support event="onkeydown" reRender="panel" eventsQueue="q1"
-							ajaxSingle="true" action="#{productoHome.getProductosExisLst()}" />
-
 						<a:support event="onkeyup" reRender="panel" eventsQueue="q1"
 							ajaxSingle="true" action="#{productoHome.getProductosExisLst()}" />
-					</h:inputText>
+					</h:inputText><!-- <a:support event="onkeydown" reRender="panel" eventsQueue="q1" ajaxSingle="true" action="#{productoHome.getProductosExisLst()}" /> -->
 				</center>
 				<h:panelGroup id="panel">
 					<rich:spacer height="10" />
@@ -104,6 +102,10 @@
 							<rich:column >
 								<f:facet name="header">#{app.productolist_col5}</f:facet>
 								<h:outputText value="#{res.marca.nombre}" />
+							</rich:column>
+							<rich:column >
+								<f:facet name="header">#{app.productolist_col5}</f:facet>
+								<h:outputText value="#{res.modelo}" />
 							</rich:column>
 							<rich:column >
 								<f:facet name="header">#{app.producto_prc1}</f:facet>

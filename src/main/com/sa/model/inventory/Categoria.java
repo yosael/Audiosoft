@@ -55,7 +55,7 @@ public class Categoria implements Serializable{
 		this.id = id;
 	}
 	
-	@Column(name = "codigo", nullable = false, length = 10)
+	@Column(name = "codigo", nullable = false, length = 11)
 	public String getCodigo() {
 		return codigo;
 	}

@@ -28,6 +28,7 @@ public class SucursalHome extends KubeDAO<Sucursal>{
 	private List<Sucursal> sucursalesSup = new ArrayList<Sucursal>();
 	private UbicacionPrd selUbicacion;
 	private List<Sucursal> notBodegasSuc = new ArrayList<Sucursal>();
+	private List<String> nombresBodegasList = new ArrayList<String>();
 	
 	
 	
@@ -98,6 +99,13 @@ public class SucursalHome extends KubeDAO<Sucursal>{
 	{
 		resultList = getEntityManager()
 				.createQuery("SELECT s FROM Sucursal s where s.bodega=TRUE ORDER BY s.codigo ASC")
+				.getResultList();
+	}
+	
+	public void cargarNombresBodegas()
+	{
+		nombresBodegasList = getEntityManager()
+				.createQuery("SELECT s.nombre FROM Sucursal s where s.bodega=TRUE ORDER BY s.codigo ASC")
 				.getResultList();
 	}
 	
@@ -261,5 +269,15 @@ public class SucursalHome extends KubeDAO<Sucursal>{
 	public void setNotBodegasSuc(List<Sucursal> notBodegasSuc) {
 		this.notBodegasSuc = notBodegasSuc;
 	}
+
+	public List<String> getNombresBodegasList() {
+		return nombresBodegasList;
+	}
+
+	public void setNombresBodegasList(List<String> nombresBodegasList) {
+		this.nombresBodegasList = nombresBodegasList;
+	}
+	
+	
 	
 }

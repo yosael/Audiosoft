@@ -687,6 +687,33 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		//.setParameter("ape", "%"+o.toString().toUpperCase()+"%")
 	 }
 	 
+	 
+	 public String busquedaSplit(Object o)
+	 {
+
+		 //if(cadena)
+		 
+		 if(o.toString().contains(" "))
+		 {
+			 String[] cadenas = cadena.split(" ");
+			 
+			 if(cadenas.length==2)
+			 {
+				 
+				 
+				 
+				  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						  	" OR ( (UPPER(c.nombres) like :array0) OR (UPPER(c.apellidos)) OR ) " +
+							" OR UPPER(c.docId) LIKE :dui")
+							.setParameter("array0","%"+o.toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+o.toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+			 }
+		 }
+		 
+		 return "";
+	 }
+	 
 	@Override
 	public boolean preSave() {
 		FacesMessages.instance().clear();

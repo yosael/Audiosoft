@@ -413,29 +413,36 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	public void loadConsolidadoExis() {
 		List<Producto> prdElim = new ArrayList<Producto>();
-		String hql = "SELECT p FROM Producto p  WHERE 1=1 ORDER BY p.tipo ASC ";
+		String hql = "SELECT p FROM Producto p  WHERE 1=1 ORDER BY p.tipo ASC,p.referencia,p.nombre ";
 		prdsExistencias = getEntityManager().createQuery(hql).getResultList();
 		// Calculamos el total en base a todos los inventarios
 		totalInventario = 0;
 		for (Producto tmpPrd : prdsExistencias) {
 			Integer conteo = 0;
-			for (Inventario tmpInv : tmpPrd.getInventarios()) {
-				if (!nombreSucursalSelec.equals("")) {
-					if (tmpInv.getSucursal().getNombre()
-							.equals(nombreSucursalSelec)) {
+			for (Inventario tmpInv : tmpPrd.getInventarios()) 
+			{
+				
+				if(nombreSucursalSelec!=null && !nombreSucursalSelec.equals("")) 
+				{
+					if (tmpInv.getSucursal().getNombre().equals(nombreSucursalSelec)) 
+					{
 						conteo += tmpInv.getCantidadActual();
 						break;
 					}
 				} else {
 					conteo += tmpInv.getCantidadActual();
 				}
+				
 			}
-			if (conteo > 0) {
+			if (conteo > 0) 
+			{
 				tmpPrd.setTotalPrds(conteo);
 				totalInventario += conteo;
+				
 			} else {
 				prdElim.add(tmpPrd);
 			}
+			
 		}
 		prdsExistencias.removeAll(prdElim);
 		System.out.println("Entro a liad exis");
@@ -552,7 +559,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 	public void loadConsolidadoExisExcel() throws IOException
 	{
 		
-		cargarExcel();
+		//cargarExcel();
 		
 		loadConsolidadoExis();
 		
@@ -699,7 +706,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 					
 					System.out.println("size "+prdsExistenciasExl.size());
 					int total=0;
-					for(Producto prod: prdsExistenciasExl)
+					 //prdsExistenciasExl
+					for(Producto prod: prdsExistencias)
 					{
 						System.out.println("for");
 						fila = hoja.createRow(contFila);

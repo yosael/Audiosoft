@@ -15,11 +15,14 @@ import com.sa.model.inventory.Categoria;
 public class CategoriaList extends KubeQuery<Categoria>{
 
 	
+	private String busqueda; 
+	
 	@In
 	private LoginUser loginUser;
 	
 	@Create
 	public void init() {
+		
 		System.out.println("Listo las categorias");
 		if(loginUser.getUser().getSucursal()==null){
 			setJpql("select e from Categoria e order by e.activo DESC,e.codigo ASC ");
@@ -29,4 +32,26 @@ public class CategoriaList extends KubeQuery<Categoria>{
 		}		
 		
 	}
+	
+	
+	public void buscarCategoria()
+	{
+		//Result
+		setJpql("select c from Categoria c where UPPER(c.nombre) like '%"+busqueda.toUpperCase()+"%' or c.codigo like '%"+busqueda.toUpperCase()+"%' order by c.activo DESC,c.codigo ASC ");
+
+		
+	}
+
+
+	public String getBusqueda() {
+		return busqueda;
+	}
+
+
+	public void setBusqueda(String busqueda) {
+		this.busqueda = busqueda;
+	}
+	
+	
+	
 }

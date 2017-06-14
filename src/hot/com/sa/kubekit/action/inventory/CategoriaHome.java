@@ -60,7 +60,7 @@ public class CategoriaHome extends KubeDAO<Categoria>{
 	{
 		System.out.println("Entro a categorias metodo");
 		resultList = getEntityManager().createQuery("select DISTINCT(e.categoriaPadre) from Categoria e" +
-				"	WHERE 1=1 order by e.categoriaPadre.nombre ")
+				"	WHERE 1=1 order by e.categoriaPadre.codigo,e.categoriaPadre.nombre ")
 				.getResultList();
 		
 		System.out.println("Categorias "+resultList.size());
@@ -70,7 +70,7 @@ public class CategoriaHome extends KubeDAO<Categoria>{
 	public void buscadorCategorias(){
 		System.out.println("Valor nomCoinci "+ nomCoinci);
 		resultList = getEntityManager().createQuery("select e from Categoria e " +
-				"	WHERE (UPPER(e.nombre) LIKE UPPER(:nom) OR UPPER(e.codigo) LIKE UPPER(:cod)) and e.activo=true order by e.nombre ")
+				"	WHERE (UPPER(e.nombre) LIKE UPPER(:nom) OR UPPER(e.codigo) LIKE UPPER(:cod)) and e.activo=true order by e.codigo,e.nombre ")
 				.setParameter("cod","%"+nomCoinci+"%" )
 				.setParameter("nom","%"+nomCoinci+"%")
 				.getResultList();	
@@ -81,12 +81,12 @@ public class CategoriaHome extends KubeDAO<Categoria>{
 	public void loadCatPadreList(Categoria cat) {
 		if(cat != null)
 		resultList = getEntityManager().createQuery("select e from Categoria e " +
-				"	WHERE 1=1 AND e <> :cat order by e.nombre ")
+				"	WHERE 1=1 AND e <> :cat order by e.codigo,e.nombre ")
 				.setParameter("cat", cat)
 				.getResultList();
 		else
 			resultList = getEntityManager().createQuery("select e from Categoria e " +
-					"	WHERE 1=1 order by e.nombre ")
+					"	WHERE 1=1 order by e.codigo,e.nombre ")
 					.getResultList();
 	}
 	

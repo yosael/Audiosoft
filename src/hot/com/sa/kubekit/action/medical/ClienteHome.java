@@ -676,11 +676,84 @@ public class ClienteHome extends KubeDAO<Cliente>{
 					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
 					.setMaxResults(30).getResultList();*/
 		 
-		 return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+		 /*return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
 					" OR UPPER(c.docId) LIKE :dui")
 					.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
 					.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
-					.setMaxResults(30).getResultList();
+					.setMaxResults(30).getResultList();*/
+		 
+		 if(o.toString().contains(" "))
+		 {
+			 
+			 System.out.println("Cadena contiene espacios");
+			 
+			 String[] cadenas = o.toString().split(" ");
+			 
+			 if(cadenas.length==2)
+			 {
+				 
+				String nombre=cadenas[0]+" "+cadenas[1];
+				 				 
+				return  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						  	" OR ( ((UPPER(c.nombres) like :array0) and (UPPER(c.apellidos) like :array1)) OR ((UPPER(c.apellidos) like :array0) and (UPPER(c.nombres) like :array1))  ) ")
+						  	.setParameter("nom","%"+nombre.toUpperCase().trim()+"%")
+							.setParameter("array0","%"+cadenas[0].toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+cadenas[1].toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+			 }
+			 else if(cadenas.length==3)
+			 {
+				 
+				 String nombre=cadenas[0]+" "+cadenas[1]+" "+cadenas[2];
+				 
+				 String array0=cadenas[0]+" "+cadenas[1];
+				 
+				return getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+							" OR ( ((UPPER(c.nombres) like :array0) and (UPPER(c.apellidos) like :array1)) OR ((UPPER(c.apellidos) like :array0) and (UPPER(c.nombres) like :array1))  ) ")
+						  	.setParameter("nom","%"+nombre.toUpperCase().trim()+"%")
+							.setParameter("array0","%"+array0.toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+cadenas[2].toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+			 }
+			 else if(cadenas.length==4)
+			 {
+				 
+				 String nombre=cadenas[0]+" "+cadenas[1]+" "+cadenas[2]+" "+cadenas[3];
+				 
+				 String array0=cadenas[0]+" "+cadenas[1];
+				 String array1=cadenas[2]+" "+cadenas[3];
+				 
+				return  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+							" OR ( ((UPPER(c.nombres) like :array0) and (UPPER(c.apellidos) like :array1)) OR ((UPPER(c.apellidos) like :array0) and (UPPER(c.nombres) like :array1))  ) ")
+						  	.setParameter("nom","%"+nombre.toUpperCase().trim()+"%")
+							.setParameter("array0","%"+array0.toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+array1.toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+				 
+			 }
+			 else
+			 {
+				 
+				 
+				 
+				return  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+							" OR UPPER(c.docId) LIKE :dui")
+							.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+							.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+				 
+			 }
+		 }
+		 else
+		 {
+			return  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						" OR UPPER(c.docId) LIKE :dui")
+						.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+						.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+						.setMaxResults(30).getResultList();
+		 }
+		 
+		 
 		 
 		 //.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
 		 
@@ -695,20 +768,64 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		 
 		 if(o.toString().contains(" "))
 		 {
+			 
+			 System.out.println("Cadena contiene espacios");
+			 
 			 String[] cadenas = cadena.split(" ");
 			 
 			 if(cadenas.length==2)
 			 {
-				 
-				 
-				 
+				 				 
 				  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
-						  	" OR ( (UPPER(c.nombres) like :array0) OR (UPPER(c.apellidos)) OR ) " +
-							" OR UPPER(c.docId) LIKE :dui")
-							.setParameter("array0","%"+o.toString().toUpperCase().trim()+"%")
-							.setParameter("array1","%"+o.toString().toUpperCase().trim()+"%")
+						  	" OR ( (UPPER(c.nombres) like :array0) OR (UPPER(c.apellidos) like :array1) OR (UPPER(c.apellidos) like :array0) OR (UPPER(c.nombres) like :array1)) ")
+							.setParameter("array0","%"+cadenas[0].toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+cadenas[1].toString().toUpperCase().trim()+"%")
 							.setMaxResults(30).getResultList();
 			 }
+			 else if(cadenas.length==3)
+			 {
+				 
+				 String array0=cadenas[0]+" "+cadenas[1];
+				 
+				 getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						  	" OR ( (UPPER(c.nombres) like :array0) OR (UPPER(c.apellidos) like :array1) OR (UPPER(c.apellidos) like :array0) OR (UPPER(c.nombres) like :array1)) ")
+							.setParameter("array0","%"+array0.toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+cadenas[2].toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+			 }
+			 else if(cadenas.length==4)
+			 {
+				 
+				 String array0=cadenas[0]+" "+cadenas[1];
+				 String array1=cadenas[2]+" "+cadenas[3];
+				 
+				 getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						  	" OR ( (UPPER(c.nombres) like :array0) OR (UPPER(c.apellidos) like :array1) OR (UPPER(c.apellidos) like :array0) OR (UPPER(c.nombres) like :array1)) ")
+							.setParameter("array0","%"+array0.toString().toUpperCase().trim()+"%")
+							.setParameter("array1","%"+array1.toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+				 
+			 }
+			 else
+			 {
+				 
+				 System.out.println("No tiene espacios");
+				 
+				 getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+							" OR UPPER(c.docId) LIKE :dui")
+							.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+							.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+							.setMaxResults(30).getResultList();
+				 
+			 }
+		 }
+		 else
+		 {
+			  getEntityManager().createQuery("SELECT c.nombres, c.apellidos,c.telefono1, c.docId ,c from Cliente c WHERE CONCAT(UPPER(TRIM(c.nombres)),' ',UPPER(TRIM(c.apellidos))) LIKE :nom " +
+						" OR UPPER(c.docId) LIKE :dui")
+						.setParameter("dui","%"+ o.toString().toUpperCase()+"%")
+						.setParameter("nom","%"+o.toString().toUpperCase().trim()+"%")
+						.setMaxResults(30).getResultList();
 		 }
 		 
 		 return "";

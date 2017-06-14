@@ -288,7 +288,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 			this.productos = getEntityManager()
 					.createQuery(
 							"select i from Inventario i where (i.sucursal = :sucursal) and"
-									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom)) order by i.producto.nombre")
+									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom)) order by i.producto.referencia,i.producto.nombre")
 					.setParameter("cod", "%" + nomCoinci + "%")
 					.setParameter("nom", "%" + nomCoinci + "%")
 					.setParameter("sucursal", this.sucursalSeleccionada)
@@ -297,7 +297,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 			this.productos = getEntityManager()
 					.createQuery(
 							"select i from Inventario i where (i.sucursal = :sucursal) AND"
-									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom)) order by i.producto.nombre")
+									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom)) order by i.producto.referencia,i.producto.nombre")
 					.setParameter("sucursal",
 							this.loginUser.getUser().getSucursal())
 					.setParameter("cod", "%" + nomCoinci + "%")

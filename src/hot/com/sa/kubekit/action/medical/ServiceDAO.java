@@ -59,10 +59,11 @@ public class ServiceDAO extends KubeDAO<Service> {
 	}
 	
 	public void buscadorServicios(){
+		
 		resultList = getEntityManager()
 				.createQuery("SELECT s FROM Service s WHERE ((UPPER(s.name) LIKE UPPER(:nom) OR " +
 						"UPPER(s.codigo) LIKE UPPER(:cod)) AND" +
-						" (s.tipoServicio = 'CMB' OR s.tipoServicio = 'TLL'))")
+						" (s.tipoServicio = 'CMB' OR s.tipoServicio = 'TLL')) order by s.codigo,s.name")
 				.setParameter("cod","%"+nomCoinci.toUpperCase()+"%" )
 				.setParameter("nom","%"+nomCoinci.toUpperCase()+"%")
 				.getResultList();

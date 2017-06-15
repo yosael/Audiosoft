@@ -56,12 +56,12 @@
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Ultima consulta:</ui:define>
+								<ui:define name="label">Ultima consulta:</ui:define>
+								<h:outputText
+									value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
 									<h:outputText
-										value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
-										<h:outputText
-										value="No se encontraron citas anteriores" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
-								</s:decorate>
+									value="No se encontraron citas anteriores" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
+							</s:decorate>
 						
 							<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">Nombre Completo:</ui:define>

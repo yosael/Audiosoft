@@ -43,6 +43,9 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	@In(create = true)
 	protected AntecedenteHome antecedenteHome;
 	
+	@In(create = true)
+	protected MotivoConsultaHome motivoConsultaHome;
+	
 	@In(required=false, create=true)
 	private PrescriptionHome prescriptionHome;
 	
@@ -108,9 +111,12 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 				
 				this.init();
 				antecedenteHome.load();//Para carcar la lista de antecedentes disponibles
+				motivoConsultaHome.load();
 			}
 			
 			antecedenteHome.cargarAntecedentesPaciente(clienteHome.getInstance());//Para cargar antecedente de pacientes
+			
+			motivoConsultaHome.cargarMotivosUltimaConsulta(clienteHome.getInstance().getId());
 			
 			prescriptionHome.setInstance(generalMedicalDAO.getInstance().getMedicalAppointment().getPrescription());
 			
@@ -345,6 +351,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									System.out.println("ELIMINO LOS SERVICIOS DESDE EL WIZARD **********");
 								}
 								*/
+								
+								//Guardar aqui los nuevos motivos de consulta
 								
 								saveDiagnostics();
 								

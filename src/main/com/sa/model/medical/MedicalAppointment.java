@@ -200,7 +200,6 @@ public class MedicalAppointment implements Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sucursal_id", nullable = false)
 	@ForeignKey(name = "ctmd_suc_fk")
-	
 	public Sucursal getSucursal() {
 		return sucursal;
 	}

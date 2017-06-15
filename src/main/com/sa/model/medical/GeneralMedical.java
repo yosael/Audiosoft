@@ -27,6 +27,14 @@ public class GeneralMedical extends ClinicalHistory {
 	private String regTips;
 	private String regGenitals;
 	
+	//Nuevo el 14/06/2017
+	//Nueva seccion OIDO-NARIZ-GARGANTA
+	private String oidos;
+	private String narizFosasNasales;
+	private String bocaFaringe;
+	private String laringe;
+	private String cabezaCuello;
+	
 	
 	public GeneralMedical() {
 
@@ -148,5 +156,48 @@ public class GeneralMedical extends ClinicalHistory {
 	public void setRegGenitals(String regGenitals) {
 		this.regGenitals = regGenitals;
 	}
+
+	public String getOidos() {
+		return oidos;
+	}
+
+	public void setOidos(String oidos) {
+		this.oidos = oidos;
+	}
+
+	public String getNarizFosasNasales() {
+		return narizFosasNasales;
+	}
+
+	public void setNarizFosasNasales(String narizFosasNasales) {
+		this.narizFosasNasales = narizFosasNasales;
+	}
+
+	public String getBocaFaringe() {
+		return bocaFaringe;
+	}
+
+	public void setBocaFaringe(String bocaFaringe) {
+		this.bocaFaringe = bocaFaringe;
+	}
+
+	public String getLaringe() {
+		return laringe;
+	}
+
+	public void setLaringe(String laringe) {
+		this.laringe = laringe;
+	}
+
+	public String getCabezaCuello() {
+		return cabezaCuello;
+	}
+
+	public void setCabezaCuello(String cabezaCuello) {
+		this.cabezaCuello = cabezaCuello;
+	}
+	
+	
+	
 
 }

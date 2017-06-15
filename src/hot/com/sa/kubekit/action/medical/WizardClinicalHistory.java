@@ -6,9 +6,6 @@ import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Out;
-import org.jboss.seam.core.Conversation;
-
-import sun.security.jca.GetInstance;
 
 import com.sa.model.medical.ClinicalHistory;
 import com.sa.model.medical.DiagnosticoConsulta;
@@ -207,11 +204,13 @@ public abstract class WizardClinicalHistory {
 	// metodo para el registro de diagnosticos
 
 	public void createDiagnostics() {
-		if (generalContainer.getDiagnostics() == null) {
-			generalContainer
-					.setDiagnostics(new ArrayList<ServiceClinicalHistory>());
-			for (MedicalAppointmentService serv : medicalAppointmentDAO
-					.getInstance().getMedicalAppointmentServices()) {
+		
+		if (generalContainer.getDiagnostics() == null) 
+		{
+			generalContainer.setDiagnostics(new ArrayList<ServiceClinicalHistory>());
+			
+			for (MedicalAppointmentService serv : medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) 
+			{
 				ServiceClinicalHistory servClinicalHistory = new ServiceClinicalHistory();
 				servClinicalHistory.setService(serv.getService());
 				servClinicalHistory.setMedicalAppointmentService(serv);

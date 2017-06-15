@@ -41,8 +41,9 @@
 				        />	 -->
 						
 				</s:div>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab1}" id="toggles21" opened="#{generalMedicalDAO.toggle2}">
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" style="font-size:14px;" label="#{app.general_step2_tab1}" id="toggles21" opened="#{generalMedicalDAO.toggle2}">
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
+						
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
 								<h:inputTextarea
@@ -50,6 +51,20 @@
 									cols="75" rows="5"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
+							
+							<rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivCo"  >
+								<rich:column >
+									<f:facet name="header">Motivo</f:facet>
+									<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
+								</rich:column>
+								<rich:column rendered="#{wizardGeneralMedical.mode != 'r'}" >
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink value="Quitar" reRender="motivCo"
+										 ajaxSingle="true" eventsQueue="q1">
+									</a:commandLink>
+								</rich:column>
+							</rich:dataTable>
+							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
 								<h:inputTextarea
@@ -58,7 +73,7 @@
 							</s:decorate>
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="#{generalMedicalDAO.toggle2}">
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="false">
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_height}:</ui:define>
@@ -100,7 +115,7 @@
 							</s:decorate>
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="#{generalMedicalDAO.toggle2}">
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="false">
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px ">					
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_head}:</ui:define>
@@ -133,6 +148,36 @@
 								<h:inputTextarea
 									value="#{generalMedicalDAO.instance.regGenitals}"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+							</s:decorate>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="OIDO-NARIZ-GARGANTA-LARINGE" id="toggles24" opened="false">
+						<h:panelGrid columns="1" style="padding-left:50px;font-size:14px;width:780px; ">					
+							<s:decorate template="/layout/kEditSpace.xhtml"  >
+								<ui:define name="label">Oidos:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.oidos}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Nariz - Fosas nasales:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.narizFosasNasales}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;"  />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml"  >
+								<ui:define name="label">Boca - Faringe:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.bocaFaringe}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}"  style="width:780px;" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Laringe:</ui:define>
+								<h:inputTextarea
+									value="#{generalMedicalDAO.instance.laringe}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Cabeza - Cuello:</ui:define>
+								<h:inputTextarea value="#{generalMedicalDAO.instance.cabezaCuello}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;" />
 							</s:decorate>
 						</h:panelGrid>
 					</rich:simpleTogglePanel>

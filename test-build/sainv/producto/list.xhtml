@@ -14,19 +14,33 @@
 			<f:facet name="header"><span class="marginhead">#{app.productolist_head}</span></f:facet>
 			<h:form id="formA">
 				
-				<h:panelGrid columns="2" style="margin:0 auto;" >
+				<h:panelGrid columns="3" style="margin:0 auto;" >
+				
 					<s:decorate template="/layout/kActions.xhtml">
 						<s:button view="/sainv/producto/list.xhtml" propagation="begin"
 							styleClass="refreshBtn" value="Actualizar" rendered="true"  action="#{productoList.recargar()}" >
-							
 						</s:button>
 					</s:decorate>
-				<s:decorate template="/layout/kActions.xhtml">
+					
+					<s:decorate template="/layout/kActions.xhtml">
 						<s:button view="/sainv/producto/master.xhtml" propagation="begin"
 							styleClass="newBtn" value="#{msn.button_register}" rendered="true">
 							<f:param name="id" value="" />
 						</s:button>
 					</s:decorate>
+					<!-- 
+					<s:decorate template="/layout/kEditSpace.xhtml">
+						<a:commandButton value="Items" action="#{productoHome.loadConsolidadoExis()}"
+							oncomplete="showReport('listadoExistencias', '#{conversation.id}');" styleClass="pdfBtn"   />
+					</s:decorate>
+						 -->
+					<s:decorate template="/layout/kActions.xhtml">
+						<s:button action="#{productoHome.loadItemsExcel()}" style="width:200px;" ajax="false" propagation="join"
+							styleClass="excBtn" value="Items" >
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+						</s:button>
+					</s:decorate>
+					
 				</h:panelGrid>
 			<rich:spacer height="10" />
 						

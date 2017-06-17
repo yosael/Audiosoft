@@ -12,13 +12,13 @@
 	<ui:define name="body">
 		<script type="text/javascript">
 		  function showReport(conversationId) {
-		  if (document.getElementById("messages") != null) {
-		    return;
-		  }
-		  var reportWin = window.open('comprobanteRep.sa?docId=1' + '&amp;cid=' + conversationId);
-		  if (!reportWin) {
-		    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
-		  }
+			  if (document.getElementById("messages") != null) {
+			    return;
+			  }
+			  var reportWin = window.open('comprobanteRep.sa?docId=1' + '&amp;cid=' + conversationId);
+			  if (!reportWin) {
+			    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
+			  }
 		  }
 		</script>
 		<rich:panel>
@@ -47,7 +47,8 @@
 										</h:inputText>
 									</s:decorate>
 								</td>
-								<td><s:decorate template="/layout/kEditSpace.xhtml"
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml"
 										id="_precioRep">
 										<ui:define name="label">#{app.repcli_costo}:</ui:define>
 										<h:inputText value="#{reparacionClienteHome.precioEstimado}"
@@ -61,9 +62,11 @@
 										<h:outputText value="#{app.repcli_prc_nodisp}"
 											rendered="#{reparacionClienteHome.precioEstimado==null or reparacionClienteHome.precioEstimado==0}" />
 
-									</s:decorate></td>
+									</s:decorate>
+								</td>
 
-								<td><s:decorate template="/layout/kEditSpace.xhtml">
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml">
 										<ui:define name="label">#{app.repcli_fechaIng}: <span class="required">*</span></ui:define>
 										<rich:calendar
 											value="#{reparacionClienteHome.instance.fechaIngreso}"
@@ -194,8 +197,8 @@
 										<ui:define name="label">#{app.repcli_descripcion}:</ui:define>
 										<h:inputTextarea
 											value="#{reparacionClienteHome.instance.descripcion}"
-											cols="20" rows="3" style="width:220px;" required="false">
-											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+											cols="20" rows="3" style="width:220px;" required="false" id="descripcionP" >
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" reRender="descripcionP" />
 										</h:inputTextarea>
 									</s:decorate></td>
 								<td><s:decorate template="/layout/kEditSpace.xhtml"
@@ -224,7 +227,8 @@
 												eventsQueue="q1" />
 										</h:selectOneMenu>
 									</s:decorate></td>
-								<td><s:decorate template="/layout/kEditSpace.xhtml"
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml"
 										id="_srvCobrarLOV"
 										rendered="#{not reparacionClienteHome.managed}">
 										<ui:define name="label">#{app.repcli_cbr_srv}:</ui:define>
@@ -260,17 +264,31 @@
 											</center>
 
 										</h:panelGroup>
-									</s:decorate> <s:decorate template="/layout/kEditSpace.xhtml"
-										rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
-								and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
-										styleClass="radioB">
-										<ui:define name="label">Cobrar aunque haya garantia:</ui:define>
-										<h:selectBooleanCheckbox
-											value="#{reparacionClienteHome.cobrarSiempre}">
-											<a:support eventsQueue="q1" ajaxSingle="true"
-												event="onchange" />
-										</h:selectBooleanCheckbox>
-									</s:decorate></td>
+										</s:decorate> <s:decorate template="/layout/kEditSpace.xhtml"
+											rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
+									and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
+											styleClass="radioB">
+											<ui:define name="label">Cobrar aunque haya garantia:</ui:define>
+											<h:selectBooleanCheckbox
+												value="#{reparacionClienteHome.cobrarSiempre}">
+												<a:support eventsQueue="q1" ajaxSingle="true"
+													event="onchange" />
+											</h:selectBooleanCheckbox>
+										</s:decorate>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml" >
+										<ui:define name="label">Adelanto:</ui:define>
+										<h:inputText value="#{reparacionClienteHome.instance.adelanto}"  rendered="#{not reparacionClienteHome.managed}" id="adelanto" >
+											<a:support eventsQueue="q1" ajaxSingle="true"  event="onblur" reRender="adelanto"  ></a:support>
+										</h:inputText>
+									</s:decorate>
+								</td>
+								<td colspan="2">
+									
+								</td>
 							</tr>
 							<tr>
 								<td colspan="3">

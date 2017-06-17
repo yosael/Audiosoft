@@ -61,6 +61,7 @@ public class ReparacionCliente implements Serializable {
 	private String tipoRep;
 	private Integer idCot;
 	private String estadoRepExterna;
+	private Float adelanto;
 	
 	private List<DetalleReparacionExterna> detallesReparacionExterna = new ArrayList<DetalleReparacionExterna>();
 	
@@ -316,6 +317,17 @@ public class ReparacionCliente implements Serializable {
 	public void setDetallesReparacionExterna(
 			List<DetalleReparacionExterna> detallesReparacionExterna) {
 		this.detallesReparacionExterna = detallesReparacionExterna;
+	}
+
+	
+	@Column(name = "adelanto", nullable = true)
+	@Min(value = 0)
+	public Float getAdelanto() {
+		return adelanto;
+	}
+
+	public void setAdelanto(Float adelanto) {
+		this.adelanto = adelanto;
 	}
 
 	

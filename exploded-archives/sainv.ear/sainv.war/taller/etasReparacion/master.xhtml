@@ -117,7 +117,7 @@
 									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden eq 1}" >
 										<ui:define name="label">#{app.etarepcli_comentarios}:</ui:define>
 										<h:inputTextarea value="#{etapaRepCliHome.instance.descripcion}" required="false">
-											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"  />
 										</h:inputTextarea>
 									</s:decorate>
 									
@@ -284,7 +284,7 @@
 											</s:decorate>
 											<rich:dataTable var="res" value="#{reparacionClienteHome.selCondicionesApa}"
 												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
-												headerClass="tablaHeader" footerClass="tableScroll">
+												headerClass="tablaHeader" footerClass="tableScroll" id="tblCondiciones" >
 												<f:facet name="header">#{app.repcli_lstcnds}</f:facet>
 												<rich:column>
 													<h:outputText value="#{res.nombre}">
@@ -443,9 +443,9 @@
 							</a:commandButton>
 						</s:decorate>
 					</td>
-				</tr>
+				</tr><!--  --><!-- rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42 || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad'  and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}" -->
 				<tr><td style="width:60%;">
-				<rich:dataTable var="res" id="tblRequisiciones" rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}"
+				<rich:dataTable var="res" id="tblRequisiciones"  rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.etarepcli_requi}</f:facet>

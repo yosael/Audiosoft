@@ -48,8 +48,8 @@
 						<h:selectBooleanCheckbox disabled="true" value="#{res.tieneNumSerie}" />
 					</rich:column>
 					<rich:column>
-						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.movimientomast_select_product}" reRender="_tblItemsCmb"
+						<f:facet name="header">#{msn.col_actions}</f:facet><!--  -->
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formcombo"
 							action="#{comboAparatoHome.agregarCategoria(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('catsList')}.hide();">
 						</a:commandLink>

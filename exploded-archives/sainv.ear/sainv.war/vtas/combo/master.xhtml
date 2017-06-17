@@ -25,7 +25,7 @@
 				<center>
 					<table>
 					<tr>
-					<td style="width:50%;">
+					<td style="width:50%;" >
 						<h:panelGrid columns="2" >
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
 								<ui:define name="label">#{app.combapa_codigo}:</ui:define>
@@ -70,6 +70,11 @@
 									<f:selectItem itemLabel="#{app.combapa_gar_183d}" itemValue="183" />
 									<f:selectItem itemLabel="#{app.combapa_gar_366d}" itemValue="366" />
 								</h:selectOneMenu>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_costoEstimado" >
+								<ui:define name="label" >Precio Estimado:</ui:define>
+								<h:outputText value="#{comboAparatoHome.costoEstimado}" />
 							</s:decorate>
 							
 						</h:panelGrid> 
@@ -150,7 +155,7 @@
 							<rich:column >
 								<f:facet name="header">#{app.pedido_itemlist_col3}</f:facet>
 								<h:inputText value="#{res.cantidad}" readonly="false" style="width:50px; text-align:right;">
-									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" action="#{comboAparatoHome.calcularCostoEstimado()}" reRender="formcombo" />
 								</h:inputText>
 							</rich:column>
 							<rich:column>

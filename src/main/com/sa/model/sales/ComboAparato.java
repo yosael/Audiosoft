@@ -35,6 +35,8 @@ public class ComboAparato implements Serializable {
 	private List<ItemComboApa> itemsCombo = new ArrayList<ItemComboApa>();
 	private List<CostoServicio> costosCombo = new ArrayList<CostoServicio>();
 	private List<CotizacionCombos> cmbCotizados = new ArrayList<CotizacionCombos>(); 
+	
+	
 		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -154,5 +156,17 @@ public class ComboAparato implements Serializable {
 	public void setTotal(float total){
 		this.total = total;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

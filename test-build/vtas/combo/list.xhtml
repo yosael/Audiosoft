@@ -16,16 +16,24 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<center>
-					<h:panelGrid columns="2">
-					<s:decorate template="/layout/kActions.xhtml">
-						<s:button view="/vtas/combo/master.xhtml" propagation="begin"
-							styleClass="newBtn" value="#{msn.button_register}" rendered="true">	
-							<f:param name="id" value="" />
-						</s:button>
-					</s:decorate>
-					<s:decorate template="/layout/kActions.xhtml">
-						<a:commandButton value="#{app.bt_rep_cmb_cat}" oncomplete="showReport('/sainv/rep/vta/catCombosPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
-					</s:decorate>
+					<h:panelGrid columns="3">
+						<s:decorate template="/layout/kActions.xhtml">
+							<s:button view="/vtas/combo/master.xhtml" propagation="begin"
+								styleClass="newBtn" value="#{msn.button_register}" rendered="true">	
+								<f:param name="id" value="" />
+							</s:button>
+						</s:decorate>
+						<s:decorate template="/layout/kActions.xhtml">
+							<a:commandButton value="#{app.bt_rep_cmb_cat}" oncomplete="showReport('/sainv/rep/vta/catCombosPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kActions.xhtml">
+							<s:button action="#{comboAparatoHome.exportarExcel()}" ajax="false"  propagation="join"
+								styleClass="excBtn" value="#{msn.button_excel}" >
+								<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true" />
+							</s:button>
+						</s:decorate>
+						
 					</h:panelGrid>
 				</center>
 					<a:queue name="q1" />
@@ -56,6 +64,10 @@
 					<rich:column >
 						<f:facet name="header">#{app.combapa_description}</f:facet>
 						<h:outputText value="#{res.descripcion}" />
+					</rich:column>
+					<rich:column >
+						<f:facet name="header">Precio Estimado</f:facet>
+						<h:outputText value="#{comboAparatoHome.calcularCostoEstimadoPorCombo(res)}" />
 					</rich:column>
 					<rich:column filterBy="#{comboAparatoHome.filterEstado}" filterExpression="#{empty comboAparatoHome.filterEstado?(true):(comboAparatoHome.filterEstado==res.estado)}" >
 						<f:facet name="header">

@@ -12,14 +12,14 @@
 	<ui:define name="body">
 		
 		<rich:panel>
-			<f:facet name="header"><span class="marginhead" >Clientes nuevos</span></f:facet>
+			<f:facet name="header"><span class="marginhead" >Pacientes nuevos</span></f:facet>
 			<rich:spacer height="20" />
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
 				<fieldset>					
-					<legend>Informacion de clientes nuevos</legend>
+					<legend>Informacion de pacientes nuevos</legend>
 					<center>
 					<h:panelGrid columns="3">
 						
@@ -68,7 +68,7 @@
 						<h:outputText value="#{res.nombres}" />
 					</rich:column>
 					
-					<rich:column sortBy="#{res.apellidos}" >
+					<rich:column filterBy="#{res.apellidos}" filterEvent="onkeyup">
 						<f:facet name="header">Apellidos</f:facet>
 						<h:outputText value="#{res.apellidos}" >
 						</h:outputText>

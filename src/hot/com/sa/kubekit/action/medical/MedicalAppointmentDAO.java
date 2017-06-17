@@ -300,6 +300,30 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		}
 	}
 	
+	public boolean pacienteSubsecuente(Cliente cliente)
+	{
+		
+		List<Integer> lsNm = new ArrayList<Integer>();
+		lsNm = (List<Integer>) getEntityManager()
+				.createQuery(
+						"select COUNT(s.cliente.id) from MedicalAppointment s where s.cliente.id = :cliente")
+				.setParameter("cliente", cliente.getId())
+				.getSingleResult();
+		
+		if(lsNm.size()>0 && lsNm.get(0)>1)
+		{
+			System.out.println("Es subsecuente");
+			return true;
+			
+		}
+		else
+		{
+			System.out.println("NOO es subsecuente");
+			return false;
+		}
+		
+	}
+	
 	public Date ultimaConsultaCliente(Cliente cliente)
 	{
 		

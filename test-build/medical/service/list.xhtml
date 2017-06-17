@@ -18,15 +18,15 @@
 					<h:panelGrid columns="3">
 					<s:decorate template="/layout/kActions.xhtml">
 						<s:button view="/medical/service/master.xhtml" propagation="begin"
-							styleClass="newBtn" value="#{msn.button_register}"></s:button>
+							styleClass="newBtn" value="#{msn.button_register}"  ></s:button>
 					</s:decorate>
 					<s:decorate template="/layout/kActions.xhtml">
 						<a:commandButton value="#{app.bt_rep_serv_cat}" oncomplete="showReport('/sainv/rep/med/catServsPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
 					</s:decorate>
 					<s:decorate template="/layout/kActions.xhtml">
-						<s:button action="#{serviceDAO.exportarExcel()}" ajax="false" propagation="join"
+						<s:button action="#{serviceDAO.exportarExcel()}" ajax="false"  propagation="join"
 							styleClass="excBtn" value="#{msn.button_excel}" >
-							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true" />
 						</s:button>
 					</s:decorate>
 					

@@ -14,16 +14,16 @@
 				<p:focus />
 				<a:queue name="q1" />
 				<center>
-				<s:span styleClass="busHead">#{app.combapa_service_find}:</s:span>
-						<rich:spacer width="0" /> <s:decorate></s:decorate>
-						<h:inputText styleClass="busProd" value="#{serviceDAO.nomCoinci}"
-							 id="_nomCoinci">
-						<a:support  event="onkeydown" reRender="#{rich:clientId('_tableS')}"
-							ajaxSingle="true" action="#{serviceDAO.buscadorServiciosGral()}" />
-						<a:support event="onkeyup" reRender="#{rich:clientId('_tableS')}"
-							ajaxSingle="true" action="#{serviceDAO.buscadorServiciosGral()}" />
-					</h:inputText>
-					</center>
+						<s:span styleClass="busHead">#{app.combapa_service_find}:</s:span>
+							<!-- <rich:spacer width="0" /> <s:decorate></s:decorate>
+							<h:inputText styleClass="busProd" value="#{serviceDAO.nomCoinci}"
+								 id="_nomCoinci">
+								<a:support  event="onkeydown" reRender="#{rich:clientId('_tableS')}"
+									ajaxSingle="true" action="#{serviceDAO.buscadorServiciosGral()}" />
+								<a:support event="onkeyup" reRender="#{rich:clientId('_tableS')}"
+									ajaxSingle="true" action="#{serviceDAO.buscadorServiciosGral()}" />
+							</h:inputText> -->
+				</center>
 				<rich:dataTable var="res" value="#{serviceDAO.resultList}" id="_tableS"
 					rendered="#{not empty serviceDAO.resultList}" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 

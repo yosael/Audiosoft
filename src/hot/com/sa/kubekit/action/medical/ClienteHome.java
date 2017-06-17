@@ -198,6 +198,11 @@ public class ClienteHome extends KubeDAO<Cliente>{
 					.getSingleResult();		
 			setInstance(cliente);
 			loadOcupaciones();
+			
+			
+			verificarEdad();
+			
+			
 		/*}
 		catch (Exception e) {
 			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema cargando el paciente");
@@ -205,6 +210,18 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		}*/
 	}
 	
+	public void verificarEdad()
+	{
+		if(instance.getNombresEncargado()!=null && !instance.getNombresEncargado().equals(""))
+		{
+		   esInfante=true;
+		   System.out.println("Entro a es infante");
+		}
+		else
+		{
+			esInfante=false;
+		}
+	}
 	
 	public void loadHistory(boolean detail) {
 		//Conversation.instance().begin();
@@ -906,7 +923,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		}*/
 		
 		
-		if(instance.getFechaNacimiento()!=null)
+		/*if(instance.getFechaNacimiento()!=null)
 		{
 			
 				int edad=0;
@@ -923,7 +940,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		else
 		{	
 			System.out.println("Fecha ingresada: "+instance.getFechaNacimiento());
-		}
+		}*/
 		
 		
 		instance.setFechaCreacion(new Date());

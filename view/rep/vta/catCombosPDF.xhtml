@@ -5,20 +5,23 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
-	pageSize="LETTER" type="pdf" orientation="portrait" margins="30 30 30 30">
-	<p:font size="18" style="bold">
+	title="Listado de Combos" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="portrait" margins="30 30 30 30" >
+	<p:font size="18" style="bold" >
 		<p:paragraph alignment="center">Listado de combos de aparatos</p:paragraph>
 	</p:font>
 	<p:html><br /></p:html>
 	<p:font size="9">
-		<p:table columns="3" widthPercentage="70" headerRows="1"  widths="1 3 1" >
+		<p:table columns="4" widthPercentage="70" headerRows="1"  widths="1 3 1 1" >
 			<p:font color="white" style="bold" size="10">
 			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
 				<p:paragraph alignment="center">#{app.combapa_codigo}</p:paragraph>
 			</p:cell>
 			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
 				<p:paragraph alignment="center">#{app.combapa_nombre}</p:paragraph>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:paragraph alignment="center">Precio Estimado</p:paragraph>
 			</p:cell>
 			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
 				<p:paragraph alignment="center">#{app.combapa_estado}</p:paragraph>
@@ -31,6 +34,9 @@
 			</p:cell>
 			<p:cell verticalAlignment="middle" horizontalAlignment="center">
 				<p:paragraph>#{cmb.nombre}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center">
+				<p:paragraph>#{comboAparatoHome.calcularCostoEstimadoPorCombo(cmb)}</p:paragraph>
 			</p:cell>
 			<p:cell verticalAlignment="middle" horizontalAlignment="center">
 				<p:paragraph rendered="#{cmb.estado=='ACT'}">#{msn.status_active}</p:paragraph>

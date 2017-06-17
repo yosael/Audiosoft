@@ -231,7 +231,7 @@
 											label="#{_mDif.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
-											reRender="formEC" />
+											reRender="formEC"  action="#{clienteHome.validarReferencias()}"  />
 									</h:selectOneMenu>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml"
@@ -243,7 +243,7 @@
 									</h:inputText>
 								</s:decorate>
 								
-								<s:decorate template="/layout/kEditSpace.xhtml" >
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==7}" >
 									<ui:define name="label">Paciente que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"
@@ -258,19 +258,19 @@
 
 								</s:decorate>
 
-								<s:decorate template="/layout/kEditSpace.xhtml" >
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==3}" >
 									<ui:define name="label">Doctor que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"
 										value="#{doctorExternoHome.docCoinci}" 
-										id="_docCoinci" />
+										id="_docCoinci"  />
 									<h:inputText
 										value="#{clienteHome.instance.doctorRef.nombres} #{clienteHome.instance.doctorRef.apellidos}"
 										readonly="true" disabled="true" 
-										style="width:200px;" id="docRef" />
+										style="width:200px;" id="docRef"  />
 									<a:commandButton
 										onclick="#{rich:component('addDocsModal')}.show();"
-										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
+										ajaxSingle="true" action="#{doctorExternoHome.iniciarNuevoDoctor()}"
 										reRender="mDoc" styleClass="addBtn" value=" "
 										style="width:27px; height:23px">
 									</a:commandButton>

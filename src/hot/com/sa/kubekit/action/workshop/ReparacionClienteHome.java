@@ -142,6 +142,16 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		}
 	}
 	
+	public boolean isNumericFloat(String cadena)
+	{
+		try {
+			Float.parseFloat(cadena);
+			return true;
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+	
 	
 	public void load(){
 		try{
@@ -904,6 +914,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			return false;
 		}
 		
+		
+		System.out.println("ENTRO AL PRESAVE ");
 		if(instance.getFechaIngreso()==null)
 		{
 			FacesMessages.instance().add(Severity.WARN,"Especifique la fecha de ingreso");
@@ -923,7 +935,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			instance.setEstado("PEN");
 		
 		
-		
+		System.out.println("ADELANTO "+instance.getAdelanto());
 		
 		if(instance.getProceso()==null)
 		{
@@ -942,13 +954,32 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		{
 			
 			FacesMessages.instance().add(Severity.WARN,"Debe indicar la condición del aparato");
-			
 			return false;
+		}
+		
+		System.out.println("ALGO *******");
+		
+		
+		
+		if(instance.getAdelanto()==null)
+		{
+			instance.setAdelanto(0f);
+		}
+		else
+		{
+			if(!isNumericFloat(instance.getAdelanto().toString()))
+			{
+				FacesMessages.instance().add(Severity.WARN,"El valor del adelanto debe ser numerico");
+				return false;
+			}
+			
 		}
 		
 	
 		instance.setTipoRep("NML");
 		instance.setAprobada(true);
+		
+		System.out.println("ADELTANTO *********** "+instance.getAdelanto());
 		
 		return true; 
 	}
@@ -1048,6 +1079,52 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			getEntityManager().persist(etRepCli);
 		    getEntityManager().flush();
 		}
+		
+		
+		//Si existe un adelanto hay que generar la venta
+		if(instance.getAdelanto()>0)
+		{
+			
+			VentaProdServ vta = new VentaProdServ();
+			
+			vta.setCliente(instance.getCliente());
+			vta.setDetalle("Adelanto de servicio de "+instance.getProceso().getNombre());
+			vta.setEmpresa(loginUser.getUser().getSucursal().getEmpresa());
+			vta.setEstado("PEN");
+			vta.setFechaVenta(new Date());
+			vta.setIdDetalle(instance.getId());
+			vta.setMonto(instance.getAdelanto());
+			vta.setSucursal(instance.getSucursal());
+			vta.setCodTipoVenta(instance.getProceso().getPrcCode()+""+instance.getId());
+			vta.setTipoVenta("TLL");
+			vta.setUsrEfectua(loginUser.getUser());
+			getEntityManager().persist(vta);
+			
+			
+			
+			DetVentaProdServ det = new DetVentaProdServ();
+			
+			det.setCantidad(1);
+			det.setMonto(instance.getAdelanto());
+			det.setDetalle("Adelanto servicio de "+instance.getProceso().getNombre());
+			det.setCodClasifVta("SRV");
+			det.setCodExacto("RPR"+instance.getId());
+			det.setEscondido(false);
+			
+			det.setVenta(vta);
+			
+			
+			getEntityManager().persist(det);
+			
+			
+			System.out.println("Se genero el adelanto");
+			
+			FacesMessages.instance().add(Severity.INFO,"Cobro de adelanto registrado");
+			
+			
+		}
+		
+		
 		
 		FacesMessages.instance().add(Severity.INFO,"Orden de laboratorio registrada");
 	}
@@ -1183,7 +1260,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 				// Actualizamos el monto de la venta
 				getEntityManager().refresh(vta);
-				vta.setMonto(super.moneyDecimal(totalReparacion).floatValue());
+				vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017 
 				etapaRepCliHome.getInstance().getReparacionCli().setCosto(vta.getMonto());
 				getEntityManager().merge(vta);
 				

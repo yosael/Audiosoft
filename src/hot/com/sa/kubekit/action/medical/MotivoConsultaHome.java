@@ -4,11 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.util.KubeDAO;
+import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.medical.MotivoConsulta;
 import com.sa.model.medical.MotivoConsultaPaciente;
 
@@ -24,6 +29,7 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	private Integer idMotivo;
 	private List<MotivoConsulta> motivosConsulta = new ArrayList<MotivoConsulta>();
 	private List<MotivoConsultaPaciente> motivosConsultaPA = new ArrayList<MotivoConsultaPaciente>();
+	private List<MotivoConsultaPaciente> motivosUltimaConsultaPA = new ArrayList<MotivoConsultaPaciente>();
 	
 	
 	public void load()
@@ -49,7 +55,7 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	
 	public void cargarMotivosUltimaConsulta(Integer idCliente)
 	{
-		motivosConsultaPA = getEntityManager().createQuery("SELECT m FROM MotivoConsultaPaciente m where m.consulta.id=(SELECT MAX(c.id) FROM MedicalAppointment c where c.cliente.id="+idCliente+" )").getResultList();
+		motivosUltimaConsultaPA = getEntityManager().createQuery("SELECT m FROM MotivoConsultaPaciente m where m.consulta.id=(SELECT MAX(c.id) FROM MedicalAppointment c where c.cliente.id="+idCliente+" )").getResultList();
 	}
 	
 	
@@ -59,10 +65,61 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	}
 	
 	
+	public void persistirMotivosLista()
+	{
+		try {
+			
+			for(MotivoConsultaPaciente motiv: motivosConsultaPA)
+			{
+				if(motiv.getId()==null)
+				{
+					getEntityManager().persist(motiv);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+	}
+	
+	public void agregarMotivoPaciente(MotivoConsulta motivo,MedicalAppointment medicalAp)
+	{
+		MotivoConsultaPaciente motivoPaciente = new MotivoConsultaPaciente();
+		motivoPaciente.setMotivo(motivo);
+		motivoPaciente.setConsulta(medicalAp);
+		
+		if(motivosConsultaPA.size()>0)
+		{
+			for(MotivoConsultaPaciente motiv: motivosConsultaPA)
+			{
+				if(motiv.getMotivo().getId()==motivo.getId())
+				{
+					FacesMessages.instance().add(Severity.WARN,"El motivo de la consulta ya esta agregado");
+					return;
+				}
+			}
+		}
+		
+		motivosConsultaPA.add(motivoPaciente);
+	}
+	
+	
+	
+	
 	@Override
 	public boolean preSave() {
 		// TODO Auto-generated method stub
-		return false;
+		
+		if(instance.getDescripcion()==null || instance.getDescripcion().equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Agregar descripcion");
+			return false;
+		}
+		
+		instance.setDescripcion(instance.getDescripcion().toUpperCase());
+		
+		return true;
 	}
 
 
@@ -70,7 +127,15 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	@Override
 	public boolean preModify() {
 		// TODO Auto-generated method stub
-		return false;
+		
+		if(instance.getDescripcion()==null || instance.getDescripcion().equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Agregar descripcion");
+			return false;
+		}
+		
+		
+		return true;
 	}
 
 
@@ -126,6 +191,19 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	public void setMotivosConsultaPA(List<MotivoConsultaPaciente> motivosConsultaPA) {
 		this.motivosConsultaPA = motivosConsultaPA;
 	}
+
+
+	public List<MotivoConsultaPaciente> getMotivosUltimaConsultaPA() {
+		return motivosUltimaConsultaPA;
+	}
+
+
+	public void setMotivosUltimaConsultaPA(
+			List<MotivoConsultaPaciente> motivosUltimaConsultaPA) {
+		this.motivosUltimaConsultaPA = motivosUltimaConsultaPA;
+	}
+	
+	
 
 
 }

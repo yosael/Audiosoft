@@ -26,7 +26,7 @@
 							<legend>#{app.patimast_legend}</legend>
 							<h:panelGrid columns="2" style="padding-left:100px;">
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label" >Numero de identificacion:</ui:define>
+									<ui:define name="label" >Numero de identificacion: <span class="required" >*</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.docId}" id="txtId">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
@@ -67,7 +67,7 @@
 										rendered="#{not empty clienteHome.instance.apellidos}" />
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Ocupacion:</ui:define>
+									<ui:define name="label">Ocupacion: <span class="required" >*</span></ui:define>
 									<a:commandButton
 										onclick="#{rich:component('addOcupaciones')}.show();"
 										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
@@ -86,8 +86,7 @@
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">Grupo sanguineo:</ui:define>
-									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
-										required="true">
+									<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}" >
 										<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
 										<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
 										<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
@@ -102,7 +101,7 @@
 										rendered="#{not empty clienteHome.instance.grupoSanguineo}" />
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Fecha de nacimiento: (dd/MM/yyyy)</ui:define>
+									<ui:define name="label">Fecha de nacimiento: (dd/MM/yyyy) <span class="required" >*</span></ui:define>
 									<!-- <rich:calendar value="#{clienteHome.instance.fechaNacimiento}" datePattern="dd/MM/yyyy">
 										<a:support event="oncollapse" ajaxSingle="true"
 											eventsQueue="q1" reRender="formAC" />
@@ -181,7 +180,7 @@
 									</h:inputText>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">#{app.patimast_address}:</ui:define>
+									<ui:define name="label">#{app.patimast_address}: <span class="required" >*</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.direccion}">
 										<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 									</h:inputText>
@@ -225,13 +224,13 @@
 								</s:decorate>
 								
 								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Por que medio conocio de Audiomed?</ui:define>
+									<ui:define name="label">Por que medio conocio de Audiomed? <span class="required" >*</span></ui:define>
 									<h:selectOneMenu value="#{clienteHome.instance.mdif}">
 										<s:selectItems value="#{mDifList.resultList}" var="_mDif"
 											label="#{_mDif.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
 										<a:support event="onchange" eventsQueue="q1" ajaxSingle="true"
-											reRender="formAC" />
+											reRender="formAC" action="#{clienteHome.validarReferencias()}" />
 									</h:selectOneMenu>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml"
@@ -243,7 +242,7 @@
 									</h:inputText>
 								</s:decorate>
 								
-								<s:decorate template="/layout/kEditSpace.xhtml" >
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==7}" >
 									<ui:define name="label">Paciente que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"
@@ -258,7 +257,7 @@
 
 								</s:decorate>
 
-								<s:decorate template="/layout/kEditSpace.xhtml" >
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.mdif.id==3}" >
 									<ui:define name="label">Doctor que refiere:</ui:define>
 									<rich:spacer width="0" />
 									<h:inputText styleClass="busProd"
@@ -270,7 +269,7 @@
 										style="width:200px;" id="docRef" />
 									<a:commandButton
 										onclick="#{rich:component('addDocsModal')}.show();"
-										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
+										ajaxSingle="true" action="#{doctorExternoHome.iniciarNuevoDoctor()}"
 										reRender="mDoc" styleClass="addBtn" value=" "
 										style="width:27px; height:23px">
 									</a:commandButton>

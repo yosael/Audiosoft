@@ -245,6 +245,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				.setParameter("prd", aparato)
 				.setParameter("inv", inv).getResultList();
 		
+		//System.out.println("Sucursal Usuario: "+loginUser.getUser().getSucursal().getNombre());
+		
 		
 	}
 	

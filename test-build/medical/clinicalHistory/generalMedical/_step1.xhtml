@@ -259,8 +259,8 @@
 									disabled="true" />
 							</s:decorate>
 						</h:panelGrid>
-				    </rich:simpleTogglePanel>--> 										
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" styleClass="letra15" label="#{app.general_step1_tab3}" id="toggle3" opened="#{generalMedicalDAO.toggle}" >
+				    </rich:simpleTogglePanel>--> 										<!-- #{generalMedicalDAO.toggle} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" styleClass="letra15" label="#{app.general_step1_tab3}" id="toggle3" opened="false" >
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Antecedentes</ui:define>
@@ -340,8 +340,8 @@
 									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>
-					</rich:simpleTogglePanel> -->
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab5}" styleClass="letra15" id="toggle4" opened="#{generalMedicalDAO.toggle}" >
+					</rich:simpleTogglePanel> -->	<!-- #{generalMedicalDAO.toggle} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab5}" styleClass="letra15" id="toggle4" opened="false" >
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>

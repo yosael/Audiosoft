@@ -52,6 +52,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	@In(required = true)
 	protected KubeBundle sainv_messages;
 	
+	
+	
 	private String paginaAnterior;
 	private String observacionVenta;
 
@@ -426,12 +428,15 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 										entityManager.persist(dtVta);
 									}
 								}
+								
 								//Actualizamos el monto de la venta
 								entityManager.refresh(vta);
 								vta.setMonto(new VentaProdServHome().moneyDecimal(totalReparacion).floatValue());
 								entityManager.merge(vta);
 								
+								motivoConsultaHome.persistirMotivosLista();
 								antecedenteHome.persistirAntecedentesLista();
+								
 							}
 						} else if (generalMedicalDAO.modify()){
 							saveDiagnostics();

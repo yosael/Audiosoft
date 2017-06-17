@@ -46,24 +46,30 @@
 						
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
-								<h:inputTextarea
+								 <h:inputTextarea
 									value="#{generalMedicalDAO.instance.consultationReason}"
 									cols="75" rows="5"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+								
+									<!-- <rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivPa"  >
+										<rich:column >
+											<f:facet name="header">Motivo</f:facet>
+											<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
+										</rich:column>
+										<rich:column rendered="#{wizardGeneralMedical.mode != 'r'}" >
+											<f:facet name="header">#{msn.col_actions}</f:facet>
+											<a:commandLink value="Quitar" reRender="motivPa"
+												 ajaxSingle="true" eventsQueue="q1">
+											</a:commandLink>
+										</rich:column>
+								</rich:dataTable>
+								<a:commandButton  styleClass="addBtn" value="+" 
+									onclick="#{rich:component('selMotiv')}.show();"
+								 	ajaxSingle="true"
+								 	reRender="_tableMotiv"
+								 	action="#{motivosConsultaHome.load()}"
+								/> -->
 							</s:decorate>
-							
-							<rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivCo"  >
-								<rich:column >
-									<f:facet name="header">Motivo</f:facet>
-									<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
-								</rich:column>
-								<rich:column rendered="#{wizardGeneralMedical.mode != 'r'}" >
-									<f:facet name="header">#{msn.col_actions}</f:facet>
-									<a:commandLink value="Quitar" reRender="motivCo"
-										 ajaxSingle="true" eventsQueue="q1">
-									</a:commandLink>
-								</rich:column>
-							</rich:dataTable>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
@@ -71,6 +77,28 @@
 									value="#{generalMedicalDAO.instance.observation}" cols="75"
 									rows="5" disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
+							
+							<!-- 
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Motivos de consulta anteriores:</ui:define>
+								<rich:dataTable rendered="#{not empty (motivoConsultaHome.motivosUltimaConsultaPA)}" style="font-size:12px"  value="#{motivoConsultaHome.motivosUltimaConsultaPA}" var="mot" id="motivPa"  >
+											<rich:column >
+												<f:facet name="header">Motivo</f:facet>
+												<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
+											</rich:column>
+											<rich:column rendered="#{wizardGeneralMedical.mode != 'r'}" >
+												<f:facet name="header">#{msn.col_actions}</f:facet>
+												<a:commandLink value="Quitar" reRender="motivPa"
+													 ajaxSingle="true" eventsQueue="q1">
+												</a:commandLink>
+											</rich:column>
+									</rich:dataTable>
+									
+									<h:outputLabel value="No se encontraron registros anteriores..." rendered="#{empty (motivoConsultaHome.motivosUltimaConsultaPA)}" />
+									
+							</s:decorate>
+							 -->
+							
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
 					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="false">
@@ -182,4 +210,51 @@
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
 		</rich:panel>
+		
+		<rich:modalPanel id="selMotiv" width="400" moveable="true" autosized="true"  top="40"
+			onmaskclick="#{rich:component('selMotiv')}.hide();"
+			onbeforeshow="activeModal.setActiveModalPanel('selMotiv');">
+			<f:facet name="header">Motivos consulta</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selMotiv')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="frmSelMotiv">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+								
+				<rich:dataTable var="res" value="#{motivoConsultaHome.motivosConsulta}" id="_tableMotiv"
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Motivos de consulta</f:facet>
+					<rich:column filterBy="#{res.descripcion}" filterEvent="onkeyup">
+						<f:facet name="header">Nombre</f:facet>
+						<h:outputText value="#{res.descripcion}" />
+					</rich:column>
+									
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="motivPa"
+							action="#{motivoConsultaHome.agregarMotivoPaciente(res,medicalAppointmentDAO.instance)}" ajaxSingle="true" eventsQueue="q1"							
+							onclick="#{rich:component('selAnt')}.hide();">
+						</a:commandLink>
+						<!-- <a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
+							action="#{clienteHome.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
+							onclick="#{rich:component('selAnt')}.hide();">
+						</a:commandLink> -->
+						<!--  --> 
+						<!--<h:selectBooleanCheckbox value="#{clienteHome.anteceDenteSl}">
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  reRender="ant" 
+									action="#{clienteHome.addAntecedente(res)}" />
+						</h:selectBooleanCheckbox>  -->
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>				
+			</h:form>			
+		</rich:modalPanel>
 </ui:composition>

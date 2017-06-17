@@ -1,8 +1,24 @@
 package com.sa.kubekit.action.sales;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -12,6 +28,7 @@ import org.jboss.seam.faces.FacesMessages;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.inventory.Categoria;
+import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
 import com.sa.model.sales.ComboAparato;
 import com.sa.model.sales.CostoServicio;
@@ -34,6 +51,7 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 	private boolean tieneGarantia;
 	private String nomCoinci="";
 	private String filterEstado;
+	private Float costoEstimado;
 
 	/*
 	@In(required=false,create=true)
@@ -65,6 +83,11 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 				setTieneGarantia(true);
 			else
 				setTieneGarantia(false);
+			
+			
+			costoEstimado=0f;
+			
+			calcularCostoEstimado();
 			
 		}catch (Exception e) { 
 			clearInstance();
@@ -129,6 +152,8 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 			nwCst.setValor(pv.getCosto().floatValue());
 			costos.add(nwCst);
 		}
+		
+		calcularCostoEstimado();
 	}
 	
 	public void agregarCategoria(Categoria ct) {
@@ -144,6 +169,8 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 			nwItm.setCantidad(Short.valueOf("1"));
 			items.add(nwItm);
 		}
+		
+		calcularCostoEstimado();
 	}
 	
 	public void agregarItem(Producto pr) {
@@ -163,14 +190,18 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 				nwItm.setPrincipal(true);
 			items.add(nwItm);
 		}
+		
+		calcularCostoEstimado();
 	}
 	
 	public void delItem(ItemComboApa itm) {
 		items.remove(itm);
+		calcularCostoEstimado();
 	}
 	
 	public void delCosto(CostoServicio cst) {
 		costos.remove(cst);
+		calcularCostoEstimado();
 	}
 	
 	@Override
@@ -277,6 +308,271 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 		getEntityManager().flush();
 		return true;
 	}
+	
+	
+	public void calcularCostoEstimado()
+	{
+		
+		costoEstimado=0f;
+		
+		System.out.println("Costo inicial "+costoEstimado);
+		
+		if(costos.size()>0)
+		{
+			for(CostoServicio costoSer:costos)
+			{
+				costoEstimado+=costoSer.getValor();
+			}
+			
+		}
+		
+		if(items.size()>0)
+		{
+			for(ItemComboApa itemCombo: items)
+			{
+					
+				if(itemCombo.getCategoria()!=null && itemCombo.getProducto()==null)
+				{
+					
+					Producto producto=(Producto)itemCombo.getCategoria().getProductos().toArray()[0];
+					
+					costoEstimado+=(producto.getPrcNormal()*itemCombo.getCantidad());
+					
+					System.out.println("Es categoria");
+				}
+				else
+				{
+					costoEstimado+=(itemCombo.getProducto().getPrcNormal()*itemCombo.getCantidad());
+				}
+			}
+		}
+		
+		costoEstimado= super.moneyDecimal(costoEstimado).floatValue();
+		
+		System.out.println("Costo final "+costoEstimado);
+	}
+	
+	
+	public Float calcularCostoEstimadoPorCombo(ComboAparato combo)
+	{
+		
+		Float costoEstimadoCombo=0f;
+		
+		System.out.println("Costo inicial "+costoEstimadoCombo);
+		
+		if(combo.getCostosCombo().size()>0)
+		{
+			for(CostoServicio costoSer:combo.getCostosCombo())
+			{
+				costoEstimadoCombo+=costoSer.getValor();
+			}
+			
+		}
+		
+		if(combo.getItemsCombo().size()>0)
+		{
+			for(ItemComboApa itemCombo: combo.getItemsCombo())
+			{
+					
+				if(itemCombo.getCategoria()!=null && itemCombo.getProducto()==null)
+				{
+					
+					System.out.println("NOMBRE del combo "+itemCombo.getDescripcion());
+					System.out.println("NOMBRE la categoria  "+itemCombo.getCategoria().getNombre());
+					
+					if(itemCombo.getCategoria().getProductos().size()>0)
+					{
+						Producto producto=(Producto)itemCombo.getCategoria().getProductos().toArray()[0];
+						
+						costoEstimadoCombo+=(producto.getPrcNormal()*itemCombo.getCantidad());
+					}
+					
+					System.out.println("Es categoria");
+				}
+				else
+				{
+					costoEstimadoCombo+=(itemCombo.getProducto().getPrcNormal()*itemCombo.getCantidad());
+				}
+			}
+		}
+		
+		costoEstimadoCombo = super.moneyDecimal(costoEstimadoCombo).floatValue();
+		
+		System.out.println("Costo final "+costoEstimadoCombo);
+		
+		
+		
+		return costoEstimadoCombo;
+	}
+	
+	
+	public void exportarExcel() throws IOException
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 0);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) context
+				.getExternalContext().getResponse();
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader(
+				"Content-Disposition",
+				"attachment;filename=listaCombos-"
+						+ sdf.format(cal.getTime()) + ".xls");
+		
+		
+		HSSFWorkbook libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		CreationHelper ch = libro.getCreationHelper();
+
+		HSSFRow fila;
+		HSSFCell celda;
+
+		// definicion de estilos para las celdas
+		HSSFFont headfont = libro.createFont(), headfont2 = libro
+				.createFont(),headfontW = libro.createFont(), headfont3 = libro.createFont();
+		headfont.setFontName("Arial");
+		headfont.setFontHeightInPoints((short) 8);
+		headfont2.setFontName("Arial");
+		headfont2.setFontHeightInPoints((short) 10);
+		headfont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		headfontW.setFontName("Arial");
+		headfontW.setFontHeightInPoints((short) 12);
+		headfontW.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		headfontW.setColor(HSSFColor.WHITE.index);
+		
+		headfont3.setFontName("Arial");
+		headfont3.setFontHeightInPoints((short) 10);
+		//headfont3.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+
+					HSSFCellStyle stAling = libro.createCellStyle(), stDate = libro
+							.createCellStyle(), stAlingRight = libro.createCellStyle(), stTitles = libro.createCellStyle(), stTotals = libro.createCellStyle(), stList = libro
+							.createCellStyle(), stFinal = libro.createCellStyle(), stPorcent = libro
+							.createCellStyle();
+
+					// Para Formatos de dolar y porcentaje
+					DataFormat estFormato = libro.createDataFormat();
+
+					stAling.setFont(headfont);
+					stAling.setWrapText(true);
+					stAling.setAlignment(stAling.ALIGN_RIGHT);
+					stAling.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					stDate.setDataFormat(ch.createDataFormat().getFormat("dd/mm/yy"));
+					stDate.setFont(headfont2);
+
+					stTitles.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitles.setAlignment(stTitles.ALIGN_CENTER);
+					stTitles.setFont(headfontW);
+					stTitles.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitles.setFillForegroundColor(HSSFColor.GREEN.index);
+					
+
+					stList.setAlignment(stList.ALIGN_CENTER);
+					stList.setVerticalAlignment(stList.VERTICAL_TOP);
+					stList.setWrapText(true);
+					stList.setFont(headfont3);
+
+					stFinal.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stFinal.setAlignment(stTitles.ALIGN_RIGHT);
+					stFinal.setFont(headfont2);
+					stFinal.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					// Estilo para porcentaje
+					stPorcent.setFont(headfont);
+					stPorcent.setWrapText(true);
+					stPorcent.setAlignment(stAlingRight.ALIGN_RIGHT);
+					stPorcent.setDataFormat(estFormato.getFormat("#0.#00%"));
+					
+					
+					// agregando la lista de productos, srv, combos.
+					fila = hoja.createRow(1);
+					
+					celda = fila.createCell(0);
+					celda.setCellValue("Codigo");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(1);
+					celda.setCellValue("Nombre");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(2);
+					celda.setCellValue("Descripcion");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(3);
+					celda.setCellValue("Precio estimado");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(4);
+					celda.setCellValue("Estado");
+					celda.setCellStyle(stTitles);
+					
+					
+					
+					//celda = fila.createCell(7);
+					
+					//						0    1              2      3    4                5                                  6
+					/*String jpql="SELECT c.id,c.fechaIngreso,c.estado,c,c.cliente.nombres,c.usuarioGenera.nombreCompleto,SUM(cotCmbsItm.precioCotizado) FROM " +
+							" CotCmbsItems cotCmbsItm,CotizacionCombos cotcm,CotizacionComboApa c where cotCmbsItm.ctCmbs=cotcm AND cotcm.cotizacion=c ";*/
+					
+					int contFila=2;//,contCelda=0;
+					
+					
+					for(ComboAparato combo: resultList)
+					{
+						fila = hoja.createRow(contFila);
+						
+						celda=fila.createCell(0);//Codigo
+						celda.setCellValue(combo.getCodigo());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(0);
+						
+						celda=fila.createCell(1);//Nombre
+						celda.setCellValue(combo.getNombre());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(1);
+						
+						celda=fila.createCell(2);//Descripcion
+						celda.setCellValue(combo.getDescripcion());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(2);
+						
+						celda=fila.createCell(3); //Costo
+						celda.setCellValue(calcularCostoEstimadoPorCombo(combo));
+						celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(3);
+						
+						
+						
+						
+						celda=fila.createCell(4);//Estado
+						if(combo.getEstado().equals("ACT"))
+							celda.setCellValue("Activo");
+						else
+							celda.setCellValue("Inactivo");
+						
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(4);
+						
+						contFila++;
+						
+					}
+					
+					hoja.createFreezePane(3, 0);
+
+					OutputStream os = response.getOutputStream();
+					libro.write(os);
+					os.close();
+					
+					
+					FacesContext.getCurrentInstance().responseComplete();
+	}
+	
 
 	@Override
 	public boolean preModify() {
@@ -409,6 +705,18 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 
 	public void setFilterEstado(String filterEstado) {
 		this.filterEstado = filterEstado;
+	}
+
+
+
+	public Float getCostoEstimado() {
+		return costoEstimado;
+	}
+
+
+
+	public void setCostoEstimado(Float costoEstimado) {
+		this.costoEstimado = costoEstimado;
 	}
 	
 	

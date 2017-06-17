@@ -54,7 +54,13 @@ public class ServiceDAO extends KubeDAO<Service> {
 	
 	public void loadServiciosList() {
 		resultList = getEntityManager()
-				.createQuery("select e from Service e order by e.estado ASC,e.codigo ASC")//SELECT s FROM Service s ORDER BY s.codigo ASC
+				.createQuery("select e from Service e order by e.estado ASC,e.codigo ASC ")//SELECT s FROM Service s ORDER BY s.codigo ASC
+				.getResultList();
+	}
+	
+	public void loadServiciosTallersList() {
+		resultList = getEntityManager()
+				.createQuery("select e from Service e where e.estado='ACT' order by e.estado ASC,e.codigo ASC ")//SELECT s FROM Service s ORDER BY s.codigo ASC
 				.getResultList();
 	}
 	

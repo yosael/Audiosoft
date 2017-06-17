@@ -169,8 +169,11 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 	{
 		
 		Calendar calTmp = new GregorianCalendar();
-		calTmp.set(Calendar.DATE, 1);
-		setDate1(resetTimeDate(calTmp.getTime(), 1));
+		//calTmp.set(Calendar.DATE, 1);
+		//calTmp.set(Calendar.DATE);
+		//setDate1(resetTimeDate(calTmp.getTime(), 1));
+		setDate1(resetTimeDate(new Date(),1));
+		
 		calTmp = new GregorianCalendar();
 		calTmp.set(Calendar.DATE, 1);
 		calTmp.set(Calendar.MONTH, calTmp.get(Calendar.MONTH) + 1);
@@ -178,6 +181,8 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 		setDate2(resetTimeDate(calTmp.getTime(), 2));
 		
 		//status=0;
+		
+		buscarCitasProgramadas();
 		
 	}
 	

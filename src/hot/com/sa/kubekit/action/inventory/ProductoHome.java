@@ -87,6 +87,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 	private String tipoProducto="";
 	private String nombreSucursalSelec="";
 	
+	private List<Producto> listaItems = new ArrayList<Producto>();
+	
 
 	public void create() {
 		setCreatedMessage(createValueExpression(this.sainv_messages
@@ -139,9 +141,9 @@ public class ProductoHome extends KubeDAO<Producto> {
 		for (Producto tmpPrd : prdsExistencias) {
 			Integer conteo = 0;
 			for (Inventario tmpInv : tmpPrd.getInventarios()) {
-				if (sucursalFlt != null) {System.out.println("Sucursal no nula");//linea de prueba
-					if (tmpInv.getSucursal().getId()
-							.equals(sucursalFlt.getId())) {
+				if (nombreSucursalSelec != null  && !nombreSucursalSelec.equals("")) {System.out.println("Sucursal no nula");//linea de prueba
+					if (tmpInv.getSucursal().getNombre().equals(nombreSucursalSelec)) 
+					{
 						conteo += tmpInv.getCantidadActual();
 						break;
 					}
@@ -302,6 +304,20 @@ public class ProductoHome extends KubeDAO<Producto> {
 							this.loginUser.getUser().getSucursal())
 					.setParameter("cod", "%" + nomCoinci + "%")
 					.setParameter("nom", "%" + nomCoinci + "%").getResultList();
+	}
+	
+	
+	public void cargarItems()
+	{
+		
+		try {
+			
+			
+			listaItems = getEntityManager().createQuery("select p FROM Producto p").getResultList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void cargarListaProductos(Sucursal sucFiltro) {
@@ -755,6 +771,230 @@ public class ProductoHome extends KubeDAO<Producto> {
 						
 						contFila++;
 						total+=prod.getTotalPrds();
+						
+					}
+					
+					fila = hoja.createRow(contFila);
+					
+					celda = fila.createCell(6);
+					celda.setCellValue("Total: ");
+					celda.setCellStyle(stList);
+					hoja.autoSizeColumn(6);
+					
+					celda = fila.createCell(7);
+					celda.setCellValue(total);
+					celda.setCellStyle(stList);
+					hoja.autoSizeColumn(7);
+					
+					
+					
+					hoja.createFreezePane(3, 0);
+
+					OutputStream os = response.getOutputStream();
+					libro.write(os);
+					os.close();
+					
+					
+					FacesContext.getCurrentInstance().responseComplete();
+		
+	}
+	
+	
+	
+	
+	public void loadItemsExcel() throws IOException
+	{
+		
+		//cargarExcel();
+		
+		cargarItems();
+		
+		
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 0);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) context
+				.getExternalContext().getResponse();
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader(
+				"Content-Disposition",
+				"attachment;filename=ListaItems-"
+						+ sdf.format(cal.getTime()) + ".xls");
+		
+		
+		HSSFWorkbook libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		CreationHelper ch = libro.getCreationHelper();
+
+		HSSFRow fila;
+		HSSFCell celda;
+
+		// definicion de estilos para las celdas
+		HSSFFont headfont = libro.createFont(), headfont2 = libro
+				.createFont(),headfontW = libro.createFont(), headfont3 = libro.createFont();
+		headfont.setFontName("Arial");
+		headfont.setFontHeightInPoints((short) 8);
+		headfont2.setFontName("Arial");
+		headfont2.setFontHeightInPoints((short) 10);
+		headfont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		headfontW.setFontName("Arial");
+		headfontW.setFontHeightInPoints((short) 10);
+		headfontW.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		headfontW.setColor(HSSFColor.WHITE.index);
+		
+		headfont3.setFontName("Arial");
+		headfont3.setFontHeightInPoints((short) 8);
+		//headfont3.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+
+					HSSFCellStyle stAling = libro.createCellStyle(), stDate = libro
+							.createCellStyle(), stAlingRight = libro.createCellStyle(), stTitles = libro.createCellStyle(),stTitlesD = libro
+							.createCellStyle(),stTitlesI = libro.createCellStyle(), stTotals = libro.createCellStyle(), stList = libro
+							.createCellStyle(), stFinal = libro.createCellStyle(), stPorcent = libro
+							.createCellStyle();
+
+					// Para Formatos de dolar y porcentaje
+					DataFormat estFormato = libro.createDataFormat();
+
+					stAling.setFont(headfont);
+					stAling.setWrapText(true);
+					stAling.setAlignment(stAling.ALIGN_RIGHT);
+					stAling.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					stDate.setDataFormat(ch.createDataFormat().getFormat("dd/mm/yy"));
+					stDate.setFont(headfont3);
+
+					stTitles.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitles.setAlignment(stTitles.ALIGN_CENTER);
+					stTitles.setFont(headfontW);
+					stTitles.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitles.setFillForegroundColor(HSSFColor.GREEN.index);
+					
+					stTitlesD.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesD.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesD.setFont(headfontW);
+					stTitlesD.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesD.setFillForegroundColor(HSSFColor.RED.index);
+					
+					stTitlesI.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesI.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesI.setFont(headfontW);
+					stTitlesI.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesI.setFillForegroundColor(HSSFColor.BLUE.index);
+
+					stList.setAlignment(stList.ALIGN_CENTER);
+					//stList.setVerticalAlignment(stList.VERTICAL_TOP);
+					stList.setWrapText(true);
+					stList.setFont(headfont3);
+
+					stFinal.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stFinal.setAlignment(stTitles.ALIGN_RIGHT);
+					stFinal.setFont(headfont3);
+					stFinal.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					// Estilo para porcentaje
+					stPorcent.setFont(headfont);
+					stPorcent.setWrapText(true);
+					stPorcent.setAlignment(stAlingRight.ALIGN_RIGHT);
+					stPorcent.setDataFormat(estFormato.getFormat("#0.#00%"));
+					
+					
+					// agregando la lista de productos, srv, combos.
+					fila = hoja.createRow(1);
+					
+					celda = fila.createCell(0);
+					celda.setCellValue("Codigo");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(1);
+					celda.setCellValue("Nombre");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(2);
+					celda.setCellValue("Marca");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(3);
+					celda.setCellValue("Modelo");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(4);
+					celda.setCellValue("Tipo");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(5);
+					celda.setCellValue("Categoria");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(6);
+					celda.setCellValue("Cod Cat");
+					celda.setCellStyle(stTitles);
+
+					
+					//celda = fila.createCell(7);
+					
+					//						0    1              2      3    4                5                                  6
+					/*String jpql="SELECT r.estado,r.fechaEntrega,r.fechaIngreso,cond.condAparato.nombre,CONCAT(r.cliente.nombres,' ',r.cliente.apellidos),
+					 * r.aparatoRep.marca,r.aparatoRep.modelo,r.aparatoRep.numSerie,r.id,r.costo,r,r.proceso.nombre FROM ReparacionCliente r,
+					 * CondAparatoRep cond where r.id=cond.repCliente.id";*/
+					
+					int contFila=2;//,contCelda=0;
+					
+					
+					int total=0;
+					 //prdsExistenciasExl
+					for(Producto prod: listaItems)
+					{
+						
+						fila = hoja.createRow(contFila);
+						
+						
+						celda=fila.createCell(0);//Codigo 
+						celda.setCellValue(prod.getReferencia());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(0);
+						 
+						celda=fila.createCell(1); //Nombre
+						celda.setCellValue(prod.getNombre());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(1);
+						
+						celda=fila.createCell(2); //Marca
+						celda.setCellValue(prod.getMarca()!=null?prod.getMarca().getNombre():"");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(2);
+						
+						celda=fila.createCell(3); //Modulo
+						celda.setCellValue(prod.getModelo()!=null?prod.getModelo():"");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(3);
+						
+						celda=fila.createCell(4); //Tipo 
+						celda.setCellValue(prod.getTipo());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(4);
+						
+						celda=fila.createCell(5); //Categoria 
+						celda.setCellValue(prod.getCategoria()!=null?prod.getCategoria().getNombre():"");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(5);
+						
+						celda=fila.createCell(6); //Cod cat 
+						celda.setCellValue(prod.getCategoria()!=null?prod.getCategoria().getCodigo():"");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(6);
+						
+						
+						
+						contFila++;
+						
 						
 					}
 					
@@ -1265,6 +1505,14 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	public void setNombreSucursalSelec(String nombreSucursalSelec) {
 		this.nombreSucursalSelec = nombreSucursalSelec;
+	}
+
+	public List<Producto> getListaItems() {
+		return listaItems;
+	}
+
+	public void setListaItems(List<Producto> listaItems) {
+		this.listaItems = listaItems;
 	}
 
 	

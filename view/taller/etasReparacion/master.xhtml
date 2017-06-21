@@ -109,7 +109,7 @@
 								<td>
 									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden>1}" >
 									<ui:define name="label">Comentario etapa anterior:</ui:define>
-									<h:inputTextarea value="#{etapaRepCliHome.comentarioAnterior}" required="false">
+									<h:inputTextarea value="#{etapaRepCliHome.comentarioAnterior}" required="false"  >
 										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
 									</h:inputTextarea>
 									</s:decorate>
@@ -372,6 +372,14 @@
 					<s:button view="/taller/etasReparacion/list.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
+					
+					<a:commandButton onclick="#{rich:component('modDetTrabajo')}.show();"
+						reRender="dvDetTrabajo"
+						styleClass="modalBtn" value="Detalle Trabajo Taller"
+						action="#{etapaRepCliHome.cargarEtapasRep()}">
+					
+					</a:commandButton>
+					
 					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna==null || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='FIN')}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
@@ -444,8 +452,8 @@
 						</s:decorate>
 					</td>
 				</tr><!--  --><!-- rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42 || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad'  and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}" -->
-				<tr><td style="width:60%;">
-				<rich:dataTable var="res" id="tblRequisiciones"  rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}"
+				<tr><td style="width:60%;"><!--  -->
+				<rich:dataTable var="res" id="tblRequisiciones"  rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}" value="#{etapaRepCliHome.instance.requisicionesEtapa}"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.etarepcli_requi}</f:facet>
@@ -848,6 +856,22 @@
 							</s:decorate>
 						</h:panelGrid>
 					</h:form>
+				</rich:modalPanel>
+				
+				<rich:modalPanel id="modDetTrabajo" width="1100" moveable="true"
+					 top="40"  height="450" style="overflow-y:scroll"
+					 onmaskclick="#{rich:component('modDetTrabajo')}.hide();"
+					onbeforeshow="activeModal.setActiveModalPanel('addClient');">
+					<f:facet name="header">Detalle trabajo taller</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('modDetTrabajo')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="dvDetTrabajo">
+						<ui:include src="detalleTrabajoTaller.xhtml" />
+					</s:div>
 				</rich:modalPanel>
 
 				<rich:modalPanel id="cancellationWrk" width="400" moveable="true"

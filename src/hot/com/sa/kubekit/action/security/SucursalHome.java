@@ -80,6 +80,9 @@ public class SucursalHome extends KubeDAO<Sucursal>{
 	}
 	
 	public void cargarSucursales() {
+		
+		System.out.println("Entro a cargar sucursales");
+		
 		resultList = getEntityManager()
 				.createQuery("SELECT s FROM Sucursal s ORDER BY s.codigo ASC")
 				.getResultList();

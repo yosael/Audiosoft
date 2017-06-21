@@ -10,20 +10,23 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 	
-	<h:form id="frmSelSus">
+	<h:form id="frmSelSus" >
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
 				<table style="width:400px;" >   
 				<tr>
 					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newsustancia}" />:</td>
-					<td><h:inputText value="#{medicamentoHome.susAct.nombre}" style="width:200px;" >
+					<td>
+						<h:inputText value="#{medicamentoHome.susAct.nombre}" style="width:200px;" >
 							<a:support event="onkeydown" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
-						</h:inputText></td>
-					<td><a:commandButton action="#{medicamentoHome.addSustanciaAct()}" reRender="_tblSusa" id="_btnAdd"
+						</h:inputText>
+					</td>
+					<td>
+						<a:commandButton action="#{medicamentoHome.addSustanciaAct()}" reRender="_tblSusa" id="_btnAdd"
 						disabled="#{empty medicamentoHome.susAct.nombre or medicamentoHome.susAct.nombre==''}" 
 						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						 value="#{msn.button_save}" />
+						 value="#{msn.button_save}" ajaxSingle="true" />
 					</td>
 				</tr>
 				</table>

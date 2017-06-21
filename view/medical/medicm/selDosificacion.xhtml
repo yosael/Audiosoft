@@ -20,7 +20,8 @@
 					<td><h:inputText value="#{medicamentoHome.dosif.nombre}" style="width:200px;font-size:14px;" >
 							<a:support event="onkeydown" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
 						</h:inputText></td>
-					<td><a:commandButton action="#{medicamentoHome.addNewDosificacion()}" reRender="_tblDos" id="_btnAdd"
+					<td>
+						<a:commandButton action="#{medicamentoHome.addNewDosificacion()}" reRender="_tblDos" id="_btnAdd"
 						disabled="#{empty medicamentoHome.dosif.nombre or medicamentoHome.dosif.nombre==''}" 
 						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
 						 value="#{msn.button_save}" />

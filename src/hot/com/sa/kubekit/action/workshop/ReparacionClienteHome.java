@@ -935,7 +935,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			instance.setEstado("PEN");
 		
 		
-		System.out.println("ADELANTO "+instance.getAdelanto());
+		
 		
 		if(instance.getProceso()==null)
 		{
@@ -1260,7 +1260,16 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 				// Actualizamos el monto de la venta
 				getEntityManager().refresh(vta);
-				vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017 
+				
+				if(instance.getAdelanto()!=null)
+				{	
+					vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+				}
+				else
+				{
+					vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+				}
+				
 				etapaRepCliHome.getInstance().getReparacionCli().setCosto(vta.getMonto());
 				getEntityManager().merge(vta);
 				

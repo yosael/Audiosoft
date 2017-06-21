@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -45,6 +46,11 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	private Dosificacion dosif;
 	private Presentacion presen;
 	private String nomCoinci;
+	private boolean cerrarModal=false;
+	
+	@In(required=false, create=true)
+	private PrescriptionHome prescriptionHome;
+	
 	
 	@Override
 	public void create() {
@@ -57,6 +63,9 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	}
 	
 	public void load(){
+		
+		System.out.println("ENTRO a LOAD MEDICAMENTOS ********");
+		
 		try{
 			setInstance(getEntityManager().find(Medicamento.class, medmId));
 			dosificacionesList = instance.getDosificaciones();
@@ -74,6 +83,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	}
 	
 	public void getMedicamentosList() {
+		
 		resultList = getEntityManager()
 				.createQuery("select m from Medicamento m ")
 				.getResultList();
@@ -101,6 +111,10 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	}
 	
 	public void cargarSustanciasAct() {
+		
+		System.out.println("Entro a cargar las sustancias *********");
+		
+		sustanciasAct = new ArrayList<SustanciaActiva>();
 		sustanciasAct = getEntityManager()
 				.createQuery("select s from SustanciaActiva s ")
 				.getResultList();
@@ -173,6 +187,33 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		}
 	}
 	
+	
+	public void agregarSeleccionarDosificacion()
+	{
+		
+		if(dosif != null && dosif.getNombre() != null && !dosif.getNombre().trim().equals("")) {
+			//VErificamos que no exista ese nombre de dosificacion
+			List<LaboratorioMed> coincidencias = getEntityManager()
+					.createQuery("SELECT d FROM Dosificacion d WHERE UPPER(d.nombre) = UPPER(:nomLab)")
+					.setParameter("nomLab", dosif.getNombre())
+					.getResultList();
+			if(coincidencias == null || coincidencias.size() <= 0) { 
+				
+				getEntityManager().persist(dosif);
+				dosif=getEntityManager().merge(dosif);	
+				
+				addDosificacion(dosif);
+					
+				dosif = new Dosificacion();
+				cargarListaDosif();
+				dosif.setNombre("");
+			} else {
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("medicm_error_dosexis"));
+			}
+		}
+	}
+	
 	public void addNewPresentacion() {
 		if(presen != null && presen.getNombre() != null && !presen.getNombre().trim().equals("")) {
 			//VErificamos que no exista ese nombre de dosificacion
@@ -192,7 +233,36 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		}
 	}
 	
+	
+	public void agregarSeleccionarPresentacion()
+	{
+		if(presen != null && presen.getNombre() != null && !presen.getNombre().trim().equals("")) {
+			//VErificamos que no exista ese nombre de dosificacion
+			List<LaboratorioMed> coincidencias = getEntityManager()
+					.createQuery("SELECT p FROM Presentacion p WHERE UPPER(p.nombre) = UPPER(:nomLab)")
+					.setParameter("nomLab", presen.getNombre())
+					.getResultList();
+			if(coincidencias == null || coincidencias.size() <= 0) { 
+				
+				getEntityManager().persist(presen);
+				presen=getEntityManager().merge(presen);
+				addPresentacion(presen);
+				
+				presen = new Presentacion();
+				cargarListaPresen();
+				presen.setNombre("");
+			} else {
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("medicm_error_presexis"));
+			}
+		}
+	}
+	
 	public void addLaboratorio() {
+		
+		//System.out.println("Entro a agregar laboratorio");
+		
+		//System.out.println("LAB NOMBRE"+labMed.getNombre());
 		
 		if(labMed != null && labMed.getNombre() != null && !labMed.getNombre().trim().equals("")) {
 			//VErificamos que no exista ese nombre de laboratorio
@@ -202,6 +272,36 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 					.getResultList();
 			if(coincidencias == null || coincidencias.size() <= 0) { 
 				getEntityManager().persist(labMed);
+				labMed = new LaboratorioMed();
+				cargarListaLabs();
+				labMed.setNombre("");
+			} else {
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("medicm_error_labexis"));
+			}
+		}
+	}
+	
+	
+	public void agregarSeleccionarLabotaratorio()
+	{
+		if(labMed != null && labMed.getNombre() != null && !labMed.getNombre().trim().equals("")) {
+			//VErificamos que no exista ese nombre de laboratorio
+			List<LaboratorioMed> coincidencias = getEntityManager()
+					.createQuery("SELECT l FROM LaboratorioMed l WHERE UPPER(l.nombre) = UPPER(:nomLab)")
+					.setParameter("nomLab", labMed.getNombre())
+					.getResultList();
+			if(coincidencias == null || coincidencias.size() <= 0) { 
+				
+				getEntityManager().persist(labMed);
+				labMed=getEntityManager().merge(labMed);
+				
+				System.out.println("ID laboratorio registrado "+labMed.getId());
+				
+				agregarLaboratorio(labMed);
+				
+				
+				
 				labMed = new LaboratorioMed();
 				cargarListaLabs();
 				labMed.setNombre("");
@@ -231,7 +331,36 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		}
 	}
 	
+	
+	public void agregarSeleccionarIndiceTerapeutico()
+	{
+		if(indTer != null && indTer.getNombre() != null && !indTer.getNombre().trim().equals("")) {
+			//VErificamos que no exista ese nombre de laboratorio
+			List<IndiceTerapeutico> coincidencias = getEntityManager()
+					.createQuery("SELECT i FROM IndiceTerapeutico i WHERE UPPER(i.nombre) = UPPER(:nomInd)")
+					.setParameter("nomInd", indTer.getNombre())
+					.getResultList();
+			if(coincidencias == null || coincidencias.size() <= 0) {
+				
+				getEntityManager().persist(indTer);
+				indTer=getEntityManager().merge(indTer);
+				
+				instance.setIndiceTer(indTer);
+				
+				indTer = new IndiceTerapeutico();
+				cargarListaIndices();
+				indTer.setNombre("");
+			} else {
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("medicm_error_indexis"));
+			}
+		}
+	}
+	
 	public void addSustanciaAct() {
+		
+		System.out.println("Entro a agregar sustancia");
+		
 		if(susAct != null && susAct.getNombre() != null && !susAct.getNombre().trim().equals("")) {
 			//VErificamos que no exista ese nombre de laboratorio
 			List<SustanciaActiva> coincidencias = getEntityManager()
@@ -239,6 +368,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 					.setParameter("nomSus", susAct.getNombre())
 					.getResultList();
 			if(coincidencias == null || coincidencias.size() <= 0) { 
+				
 				getEntityManager().persist(susAct);
 				susAct = new SustanciaActiva();
 				cargarSustanciasAct();
@@ -248,6 +378,38 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 						sainv_messages.get("medicm_error_suaexis"));
 			}
 		}
+	}
+	
+	
+	public void agregarSeleccionarSustancia()
+	{
+		
+		System.out.println("Entro a agregar sustancia");
+		
+		SustanciaActiva sustanciaSeleccionada = new SustanciaActiva();
+		if(susAct != null && susAct.getNombre() != null && !susAct.getNombre().trim().equals("")) {
+			//VErificamos que no exista ese nombre de laboratorio
+			List<SustanciaActiva> coincidencias = getEntityManager()
+					.createQuery("SELECT s FROM SustanciaActiva s WHERE UPPER(s.nombre) = UPPER(:nomSus)")
+					.setParameter("nomSus", susAct.getNombre())
+					.getResultList();
+			if(coincidencias == null || coincidencias.size() <= 0) { 
+				
+				 getEntityManager().persist(susAct);
+				 sustanciaSeleccionada = getEntityManager().merge(susAct);
+				 instance.setSustanciaAct(sustanciaSeleccionada);
+				 
+				susAct = new SustanciaActiva();
+				cargarSustanciasAct();
+				susAct.setNombre("");
+			} else {
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("medicm_error_suaexis"));
+			}
+		}
+		
+		System.out.println("sustancia seleciionada "+sustanciaSeleccionada.getNombre());
+		
 	}
 	
 	public void remDosifMedic(DosificacionMedicamento dos) {
@@ -261,7 +423,76 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	@Override
 	public boolean preSave() {
 		
+		
+		if(instance.getNombre()==null || instance.getNombre().equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor agregar nombre del medicamento");
+			return false; 
+		}
+		
+		if(presentacionesList.size()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar presentacion");
+			return false;
+		}
+		
+		if(laboratorios.size()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar laboratorios");
+			return false;
+		}
+		
+		
+		if(dosificacionesList.size()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar dosificaciones");
+			return false;
+		}
+		
+		if(presentacionesList.size()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar presencaciones");
+			return false;
+		}
+		
+		if(instance.getSustanciaAct()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar sustancia activa");
+			return false;
+		}
+		
+		if(instance.getIndiceTer()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar indice terapeutico");
+			return false;
+		}
+		
 		return true;
+	}
+	
+	
+	
+	public void agregarSeleccionarMedicamento()
+	{
+		
+		cerrarModal=false;
+		
+		if(save())
+		{
+			
+			getMedicamentosList();
+			//prescriptionHome.agregarMedicamento(instance);
+			cerrarModal=true;
+			System.out.println("Entro a cerrar");
+		}
+		else
+		{
+			
+			cerrarModal=false;
+			
+			return;
+		}
+			
 	}
 
 	@Override
@@ -522,6 +753,14 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	public void setListaMedicamentosLabs(
 			List<MedicamentoLaboratorios> listaMedicamentosLabs) {
 		this.listaMedicamentosLabs = listaMedicamentosLabs;
+	}
+
+	public boolean isCerrarModal() {
+		return cerrarModal;
+	}
+
+	public void setCerrarModal(boolean cerrarModal) {
+		this.cerrarModal = cerrarModal;
 	}
 	
 	

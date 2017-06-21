@@ -327,6 +327,12 @@
 				
 				<s:decorate template="/layout/kActions.xhtml">
 				
+					<a:commandButton action="#{ventaProdServHome.anularVenta()}" reRender="formvta"
+						styleClass="removeBtn" value="Anular" rendered="#{ventaProdServHome.instance.estado!='PEN' and ventaProdServHome.instance.estado!='ANU'  and loginUser.user.accionEspecial}" />
+						
+					<a:commandButton action="#{ventaProdServHome.revertirVenta()}" reRender="formvta"
+						styleClass="backBtn" value="Revertir" rendered="#{ventaProdServHome.instance.estado!='PEN' and loginUser.user.accionEspecial}" />	
+				
 					<a:commandButton  reRender="dtCxc"
 										onclick="#{rich:component('detCuentasPend')}.show();" ajaxSingle="true" eventsQueue="q1"
 										style="background-image: url(../../kubeImg/alert.png);

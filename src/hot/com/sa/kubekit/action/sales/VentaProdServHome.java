@@ -791,7 +791,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		prodServList = getEntityManager()
 				.createQuery(
 						"SELECT det.codClasifVta, det.detalle, SUM(det.cantidad) AS cantidad, SUM(CASE WHEN det.venta.monto>0 THEN (det.monto*det.cantidad) END) AS  monto FROM DetVentaProdServ det WHERE det.venta IN "
-								+ "(SELECT ps.id FROM VentaProdServ ps WHERE (ps.sucursal = :suc or ps.sucursal IN (:subSuc) ) AND ps.estado <> 'PEN' and ps.estado<>'PDS' "
+								+ "(SELECT ps.id FROM VentaProdServ ps WHERE (ps.sucursal = :suc or ps.sucursal IN (:subSuc) ) AND ps.estado <> 'PEN' AND ps.estado<>'PDS' AND ps.estado<>'ANU'"
 								+ fltFch
 								+ ")  GROUP BY det.codClasifVta,det.detalle ORDER BY det.codClasifVta,det.detalle")
 				.setParameter("suc", loginUser.getUser().getSucursal())
@@ -856,6 +856,128 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		}*/
 
 	}
+	
+	
+	
+	public void revertirVenta()
+	{
+		
+		
+		try {
+			
+			verificarCuentasPorCobrarExistentes();
+			
+			
+			instance.setEstado("PEN");
+			instance.setCantidadDescuento(null);
+			instance.setTipoDescuento(null);
+			instance.setUsrDescuento(null);
+			
+			recuperarValorVenta();
+			
+			System.out.println("Estado actual  venta ****** "+instance.getEstado());
+			modify();
+			
+			System.out.println("Estado despues  venta ****** "+instance.getEstado());
+			
+			FacesMessages.instance().add(Severity.INFO,"Venta editada exitosamente");
+			
+		} catch (Exception e) {
+			
+			FacesMessages.instance().add(Severity.ERROR,"La venta no pudo ser editada");
+			e.printStackTrace();
+		}
+	
+		
+	}
+	
+	
+	public void anularVenta()
+	{
+		
+		try {
+			
+			verificarCuentasPorCobrarExistentes();
+			instance.setEstado("ANU");
+			modify();
+			FacesMessages.instance().add(Severity.INFO,"Venta editada exitosamente");
+			
+		} catch (Exception e) {
+			
+			FacesMessages.instance().add(Severity.ERROR,"La venta no pudo ser editada");
+			e.printStackTrace();
+		}
+			
+		
+	}
+	
+	
+	public void verificarCuentasPorCobrarExistentes() throws Exception
+	{
+		List<CuentaCobrar> cxcVenta = new ArrayList<CuentaCobrar>();
+		cxcVenta = getEntityManager().createQuery("SELECT c FROM CuentaCobrar c where c.id_venta=:idVenta")
+				.setParameter("idVenta", instance.getId()).getResultList();
+		
+		if(cxcVenta.size()>0)
+		{
+			
+			List<PagoCuentaPend> pagosCxc = new ArrayList<PagoCuentaPend>();
+			pagosCxc = getEntityManager().createQuery("SELECT p FROM PagoCuentaPend p where p.cuentaCobrar.id=:idCuenta").setParameter("idCuenta", cxcVenta.get(0).getId()).getResultList();
+			
+			if(pagosCxc.size()>0)
+			{
+				for(PagoCuentaPend pago:pagosCxc)
+				{
+					getEntityManager().remove(pago);
+				}
+				
+				
+				
+				List<VentaProdServ> ventasPagos = new ArrayList<VentaProdServ>();
+				ventasPagos = getEntityManager().createQuery("SELECT v FROM VentaProdServ v where v.codTipoVenta=:codigo and v.id!=:idActual")
+						.setParameter("codigo", instance.getCodTipoVenta())
+						.setParameter("idActual", instance.getId())
+						.getResultList();
+				
+				if(ventasPagos.size()>0)
+				{
+					
+					for(VentaProdServ venta: ventasPagos)
+					{
+						for(DetVentaProdServ det: venta.getDetVenta())
+						{
+							getEntityManager().remove(det);
+						}
+						
+						getEntityManager().remove(venta);
+					}
+				}
+				
+				
+				FacesMessages.instance().add(Severity.INFO,"Se eliminaron los pagos de la cuenta por cobrar");
+			}
+			
+			
+			
+			FacesMessages.instance().add(Severity.INFO,"Se eliminaron las cuentas por cobrar");
+			getEntityManager().remove(cxcVenta.get(0));
+		}
+	}
+	
+	public void recuperarValorVenta()
+	{
+		Float total=0f;
+		for(DetVentaProdServ det:instance.getDetVenta())
+		{
+			total+=(det.getMonto()*det.getCantidad());
+			det.setDescuentoCorp(null);
+			getEntityManager().merge(det);
+		}
+		
+		instance.setMonto(total);
+		instance.setTotalDescuentoCorp(null);
+	}
+	
 
 	// Devuelve el total de cobros pendientes
 	public float getTotalPend() {

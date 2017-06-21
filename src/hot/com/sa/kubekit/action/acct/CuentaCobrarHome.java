@@ -501,7 +501,7 @@ public void getCuentasCobrarListPagadas(){
 			vtaAbono.setSucursal(loginUser.getUser().getSucursal());
 			vtaAbono.setTipoDescuento(null);
 			vtaAbono.setCliCorp(null);
-			vtaAbono.setCodTipoVenta(null);
+			vtaAbono.setCodTipoVenta(instance.getComprobante());
 			getEntityManager().persist(vtaAbono);
 			
 			DetVentaProdServ detalleAbn = new DetVentaProdServ();

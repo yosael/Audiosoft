@@ -305,11 +305,13 @@
 									rendered="#{clienteHome.numId==-1}" styleClass="refreshBtn"
 									value="#{msn.button_new}">
 								</a:commandButton>
+								
 								<a:commandLink  ajaxSingle="true" action="#{clienteHome.saveClear(true)}" reRender="formAC,val,lblSelPat"
 									 styleClass="saveBtnLnk" oncomplete="validar()"
 									value="#{msn.button_save}">
 									<s:conversationPropagation type="join"></s:conversationPropagation>
 								</a:commandLink><!-- rendered="#{clienteHome.numId==-1}" -->
+								
 								<s:div id="val" >
 						<script type="text/javascript"> 
 						function validar(){

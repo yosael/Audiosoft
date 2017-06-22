@@ -9,10 +9,13 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.medical.GeneralMedical;
 import com.sa.model.medical.MedicamentoConsulta;
+import com.sa.model.medical.MotivoConsulta;
 
 @Name("generalMedicalDAO")
 @Scope(ScopeType.CONVERSATION)
@@ -23,7 +26,7 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 	private boolean toggle=true;
 	private boolean toggle2=true;
 	private boolean toggle3=true;
-	
+	private List<MotivoConsulta> motivosAgregados = new ArrayList<MotivoConsulta>();
 	
 
 	@Override
@@ -45,6 +48,52 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 			e.printStackTrace();
 			clearInstance();
 		}
+	}
+	
+	
+	public void agregarMotivoConsulta(MotivoConsulta motivo)
+	{
+		
+		
+		/*if(motivosAgregados.contains(motivo))
+		{
+			
+			FacesMessages.instance().add(Severity.WARN,"El motivo de consulta ya fue agregado");
+			return;
+		}*/
+		
+		if(instance.getConsultationReason()==null)
+		{
+			instance.setConsultationReason("");
+		}
+		
+		
+		if(instance.getConsultationReason().contains(motivo.getDescripcion()))
+		{
+			FacesMessages.instance().add(Severity.WARN,"El motivo de consulta ya fue agregado");
+			return;
+		}
+		
+		instance.setConsultationReason(instance.getConsultationReason()+". "+motivo.getDescripcion());
+		FacesMessages.instance().add(Severity.INFO,"Motivo de consulta agregado");
+		
+		//motivosAgregados.add(motivo);
+		
+	}
+	
+	public void generarMotivoConsulta()
+	{
+		instance.setConsultationReason("");
+		
+		if(motivosAgregados.size()>0)
+		{
+			instance.getConsultationReason();
+			for(MotivoConsulta motivo:motivosAgregados)
+			{
+				instance.setConsultationReason(instance.getConsultationReason()+motivo.getDescripcion());
+			}
+		}
+		
 	}
 	
 	public void openToggle(boolean bol)

@@ -47,17 +47,28 @@
 						</h:panelGrid>
 						
 						<h:panelGrid columns="1" >
+						
 							<s:span styleClass="busHead">Buscar recomendacion:</s:span>
-							<s:decorate></s:decorate> <rich:spacer width="2px;" height="10px;"/> 
-							<h:inputText style="width:250px;" autocomplete="off"  styleClass="busDiag" value="#{recomendacionMedHome.nomCoinci}" id="_nomCoinci">
+							<s:decorate></s:decorate> <rich:spacer width="2px;" height="10px;"/>
+							<h:panelGrid columns="2" >  
+								<h:inputText style="width:250px;" autocomplete="off"  styleClass="busDiag" value="#{recomendacionMedHome.nomCoinci}" id="_nomCoinci">
+								
+									<!-- <a:support  event="onkeydown" reRender="#{rich:clientId('_tableRec')}"
+										ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" /> -->
+									<a:support event="onkeyup" reRender="#{rich:clientId('_tableRec')}"
+										ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" />
+										
+								</h:inputText>
 							
-								<!-- <a:support  event="onkeydown" reRender="#{rich:clientId('_tableRec')}"
-									ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" /> -->
-								<a:support event="onkeyup" reRender="#{rich:clientId('_tableRec')}"
-									ajaxSingle="true" action="#{recomendacionMedHome.getRecomenListByNameCod()}" />
-									
-							</h:inputText>
+							
+								<a:commandButton onclick="#{rich:component('modNuevaRecom')}.show();" ajaxSingle="true" 
+									 action="#{recomendacionMedHome.iniciarNuevaRecomendacion()}" reRender="dNRecomen,formrecomed"
+									styleClass="addBtn" value="" style="width:30px" >
+								</a:commandButton>
+							</h:panelGrid>	
+							
 							<p:watermark for="_nomCoinci" value="#{app.diagmed_find_placeholder}" id="watermark" />
+							
 						</h:panelGrid>
 					
 					</h:panelGrid>
@@ -98,4 +109,19 @@
 					</f:facet>
 				</rich:dataTable>
 			</h:form>
+			
+			
+			<rich:modalPanel id="modNuevaRecom" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('modNuevaRecom')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('modNuevaRecom');"  >
+				<f:facet name="header">Medicamento sugerido</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('modNuevaRecom')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="dNRecomen"><ui:include src="/medical/clinicalHistory/nuevaRecomendacion.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
 </ui:composition>

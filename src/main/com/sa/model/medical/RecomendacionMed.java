@@ -19,6 +19,9 @@ public class RecomendacionMed implements Serializable {
 	private Integer id;
 	private String nombre;
 	private String codigo;
+	private String tipo;
+	private int contAudio;
+	private int contOto;
 	
 	private boolean asociado;
 	
@@ -55,6 +58,17 @@ public class RecomendacionMed implements Serializable {
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
+	
+	@Column(name="tipo",nullable=true,length=2)
+	public String getTipo() {
+		return tipo;
+	}
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
+	
+	
 	
 	
 	

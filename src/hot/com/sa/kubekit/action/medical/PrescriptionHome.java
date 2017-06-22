@@ -132,6 +132,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	}
 	
 	public void agregarMedicamento(Medicamento medicm) {
+		
 		for(MedicamentoConsulta tmpMed : itemsAgregados)
 			if(tmpMed.getMedicamento().equals(medicm)){
 				

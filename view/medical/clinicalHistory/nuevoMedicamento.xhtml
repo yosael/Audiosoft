@@ -75,19 +75,27 @@
 						styleClass="newBtn" value="#{msn.button_new}">
 						<f:param name="id" value="" />
 					</s:button>
-					<a:commandButton action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm"
+					
+					<!--<a:commandButton action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm"
 						rendered="#{not medicamentoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						oncomplete="validar()" value="#{msn.button_save}" ajaxSingle="true" />
+						oncomplete="validar()" value="#{msn.button_save}" ajaxSingle="true" /> -->
+						
+					<a:commandLink  ajaxSingle="true" action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm,_table"
+						 styleClass="saveBtnLnk" oncomplete="validar()"
+						value="#{msn.button_save}">
+						<s:conversationPropagation type="join"></s:conversationPropagation>
+					</a:commandLink>	
 						
 				</s:decorate>
-				<script type="text/javascript"> 
-						function validar(){
-							//alert('#{clienteHome.valtel}');																
-							if(#{medicamentoHome.cerrarModal}){
-								#{rich:component('modNuevoMedi')}.hide();					
-							}					
-							}
-						</script>
+				<script type="text/javascript" > 
+					function validar(){
+						
+						//alert('#{clienteHome.valtel}');																
+						if(#{medicamentoHome.cerrarModal}){
+							#{rich:component('modNuevoMedi')}.hide();					
+						}					
+					}
+				</script>
 				
 				<table style="width:900px;">
 					<tr>

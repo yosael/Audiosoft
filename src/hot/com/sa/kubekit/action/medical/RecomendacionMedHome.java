@@ -10,6 +10,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.util.KubeDAO;
+import com.sa.model.medical.ContadorRecomendacionAudio;
+import com.sa.model.medical.ContadorRecomendacionOto;
 import com.sa.model.medical.RecomendacionMed;
 
 @Name("recomendacionMedHome")
@@ -24,6 +26,9 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 	private boolean buscarAudio=false;
 	private boolean buscarOto=false;
 	private String opcionBusqueda="";
+	private List<RecomendacionMed> listaUltimosOto;
+	private List<RecomendacionMed> listaUltimosAudio;
+	private boolean cerrarModal=false;
 	
 	@Override
 	public void create() {
@@ -42,6 +47,78 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 			clearInstance();
 			setInstance(new RecomendacionMed());
 		}
+	}
+	
+	public void iniciarNuevaRecomendacion()
+	{
+		clearInstance();
+		setInstance(new RecomendacionMed());
+	}
+	
+	
+	public void obtenerUltimosCodigosOto()
+	{
+		
+		listaUltimosOto = new ArrayList<RecomendacionMed>();
+		
+		
+		listaUltimosOto = getEntityManager().createQuery("SELECT r FROM RecomendacionMed r where c.codigo like 'O%' order by r.codigo desc ").setMaxResults(5).getResultList();
+		
+	}
+	
+	public void obtenerUltimosCodigosAudio()
+	{
+		listaUltimosAudio = new ArrayList<RecomendacionMed>();
+		
+		listaUltimosAudio = getEntityManager().createQuery("SELECT r FROM RecomendacionMed r order by r.codigo desc ").setMaxResults(5).getResultList();
+	}
+	
+	
+	public String generarCodigo()
+	{
+		
+		String numeroActual="";
+		String codigo="";
+		
+		
+		if(instance.getTipo().equals("A"))
+		{
+			ContadorRecomendacionAudio contador = new ContadorRecomendacionAudio();
+			contador = (ContadorRecomendacionAudio) getEntityManager().createQuery("SELECT c FROM ContadorRecomendacionAudio c").getResultList().get(0);
+			numeroActual=contador.getConteo().toString();
+			
+			contador.setConteo(contador.getConteo()+1);
+			getEntityManager().merge(contador);
+			
+			
+		}	
+		else if(instance.getTipo().equals("O"))
+		{
+			ContadorRecomendacionOto contador = new ContadorRecomendacionOto();
+			contador = (ContadorRecomendacionOto) getEntityManager().createQuery("SELECT c FROM ContadorRecomendacionOto c").getResultList().get(0);
+			numeroActual=contador.getConteo().toString();
+			
+			contador.setConteo(contador.getConteo()+1);
+			getEntityManager().merge(contador);
+		}
+		
+		
+		
+		if(numeroActual.length()==1)
+		{
+			codigo=instance.getTipo()+"00"+numeroActual;
+		}
+		else if(numeroActual.length()==2)
+		{
+			codigo=instance.getTipo()+"0"+numeroActual;
+		}
+		else if(numeroActual.length()==3)
+		{
+			codigo=instance.getTipo()+numeroActual;
+		}
+		
+		return codigo.toUpperCase();
+		
 	}
 	
 	public void getRecomenList() {
@@ -117,19 +194,30 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 
 	@Override
 	public boolean preSave() {
+		
+		
+		if(instance.getTipo()==null || instance.getTipo().equals(""))
+		{
+			
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar el tipo de recomendacion");
+			return false;
+		}
+		
+		
 		instance.setNombre(instance.getNombre().replaceAll("  ", " "));
 		//Verificamos que no se repita
 		List<RecomendacionMed> coinList = getEntityManager()
 				.createQuery("SELECT r FROM RecomendacionMed r WHERE UPPER(r.nombre) = UPPER(:rec)")
 				.setParameter("rec", instance.getNombre())
 				.getResultList();
+		
 		if(coinList != null && coinList.size() > 0) {
 			FacesMessages.instance().add(
 					sainv_messages.get("recomed_name_dupl"));
 			return false;
 		}
 		
-		List<RecomendacionMed> coinList2 = getEntityManager()
+		/*List<RecomendacionMed> coinList2 = getEntityManager()
 				.createQuery("SELECT r FROM RecomendacionMed r WHERE UPPER(r.codigo) = UPPER(:rec)")
 				.setParameter("rec", instance.getCodigo())
 				.getResultList();
@@ -137,7 +225,11 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 		if(coinList2 != null && coinList2.size() > 0) {
 			FacesMessages.instance().add(Severity.WARN,"El codigo ya existe");
 			return false;
-		}
+		}*/
+		
+		instance.setCodigo(generarCodigo());
+		
+		
 		
 		return true;
 	}
@@ -174,6 +266,25 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 		}
 		
 		return true;
+	}
+	
+	
+	public void agregarRecomendacionModal()
+	{
+		
+		System.out.println("Entro a recomendacion modal");
+		cerrarModal=false;
+		
+		if(save())
+		{
+			cerrarModal=true;
+			System.out.println("Guardo con exito");
+		}
+		else
+		{
+			return;
+		}
+		
 	}
 
 	@Override
@@ -254,6 +365,30 @@ public class RecomendacionMedHome extends KubeDAO<RecomendacionMed>{
 
 	public void setOpcionBusqueda(String opcionBusqueda) {
 		this.opcionBusqueda = opcionBusqueda;
+	}
+
+	public List<RecomendacionMed> getListaUltimosOto() {
+		return listaUltimosOto;
+	}
+
+	public void setListaUltimosOto(List<RecomendacionMed> listaUltimosOto) {
+		this.listaUltimosOto = listaUltimosOto;
+	}
+
+	public List<RecomendacionMed> getListaUltimosAudio() {
+		return listaUltimosAudio;
+	}
+
+	public void setListaUltimosAudio(List<RecomendacionMed> listaUltimosAudio) {
+		this.listaUltimosAudio = listaUltimosAudio;
+	}
+
+	public boolean isCerrarModal() {
+		return cerrarModal;
+	}
+
+	public void setCerrarModal(boolean cerrarModal) {
+		this.cerrarModal = cerrarModal;
 	}
 	
 	

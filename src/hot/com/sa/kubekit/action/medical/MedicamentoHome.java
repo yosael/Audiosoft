@@ -82,6 +82,24 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		presen = new Presentacion();
 	}
 	
+	public void iniciarNuevoMedicamento()
+	{
+		clearInstance();
+		setInstance(new Medicamento());
+		
+		susAct = new SustanciaActiva();
+		indTer = new IndiceTerapeutico();
+		labMed = new LaboratorioMed();
+		dosif = new Dosificacion();
+		presen = new Presentacion();
+		
+		
+		listaMedicamentosLabs = new ArrayList<MedicamentoLaboratorios>();
+		dosificacionesList = new ArrayList<DosificacionMedicamento>();
+		presentacionesList = new ArrayList<PresentacionMedicamento>();
+		
+	}
+	
 	public void getMedicamentosList() {
 		
 		resultList = getEntityManager()
@@ -95,7 +113,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 				.setParameter("nombre", "%"+nomCoinci.toUpperCase()+"%")
 				.getResultList();
 		
-		System.out.println("ENtro a medicamentos Tamanio *** "+ resultList.size());
+		System.out.println("Entro a medicamentos Tamanio *** "+ resultList.size());
 	}
 	
 	public void cargarListaLabs() {
@@ -141,6 +159,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 				break;
 			}
 		}
+		
 		if(!existe) {
 			DosificacionMedicamento newDosMed = new DosificacionMedicamento();
 			newDosMed.setDosificacion(dos);
@@ -203,6 +222,8 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 				dosif=getEntityManager().merge(dosif);	
 				
 				addDosificacion(dosif);
+				
+				System.out.println("ID DOFISICACION "+dosif.getId());
 					
 				dosif = new Dosificacion();
 				cargarListaDosif();
@@ -237,21 +258,28 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	public void agregarSeleccionarPresentacion()
 	{
 		if(presen != null && presen.getNombre() != null && !presen.getNombre().trim().equals("")) {
+			
 			//VErificamos que no exista ese nombre de dosificacion
 			List<LaboratorioMed> coincidencias = getEntityManager()
 					.createQuery("SELECT p FROM Presentacion p WHERE UPPER(p.nombre) = UPPER(:nomLab)")
 					.setParameter("nomLab", presen.getNombre())
 					.getResultList();
-			if(coincidencias == null || coincidencias.size() <= 0) { 
+			
+			if(coincidencias == null || coincidencias.size() <= 0){ 
 				
 				getEntityManager().persist(presen);
 				presen=getEntityManager().merge(presen);
+				
+				System.out.println("ID PRESENTACION "+presen.getId());
+				
 				addPresentacion(presen);
 				
 				presen = new Presentacion();
 				cargarListaPresen();
 				presen.setNombre("");
+				
 			} else {
+				
 				FacesMessages.instance().add(Severity.WARN,
 						sainv_messages.get("medicm_error_presexis"));
 			}
@@ -481,7 +509,15 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		{
 			
 			getMedicamentosList();
-			//prescriptionHome.agregarMedicamento(instance);
+			
+			
+			//instance=(Medicamento) getEntityManager().createQuery("SELECT m FROM Medicamento m where m.id=:idMedi").setParameter("idMedi", instance.getId()).getResultList().get(0);
+			
+			System.out.println("DOSIFICACIONEs "+instance.getDosificaciones().size());
+			System.out.println("Presentaciones "+instance.getPresentaciones().size());
+			System.out.println("LABORATORIOS "+instance.getMedicamentosLab().size());
+			
+			
 			cerrarModal=true;
 			System.out.println("Entro a cerrar");
 		}
@@ -492,7 +528,6 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			
 			return;
 		}
-			
 	}
 
 	@Override
@@ -522,6 +557,8 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	}
 	
 	private void saveDetailMed() {
+		
+		
 		getEntityManager().refresh(instance);
 		if(instance.getDosificaciones() != null)
 			for(DosificacionMedicamento dosMed : instance.getDosificaciones()) 
@@ -533,13 +570,15 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			for(PresentacionMedicamento preMed : instance.getPresentaciones()) 
 				getEntityManager().remove(preMed);
 		
-		getEntityManager().flush();
+		//getEntityManager().flush(); comentado el 21/06/2017
+		
 		// Guardamos las dosificaciones y presentaciones de la lista
 		for(DosificacionMedicamento dosMed : dosificacionesList) {
 			DosificacionMedicamento newDos = new DosificacionMedicamento();  
 			newDos.setMedicamento(instance);
 			newDos.setDosificacion(dosMed.getDosificacion());
 			getEntityManager().persist(newDos);
+			System.out.println("guardo las dosificaciones");
 		}	
 		
 		
@@ -548,7 +587,13 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			newPre.setMedicamento(instance);
 			newPre.setPresentacion(preMed.getPresentacion());
 			getEntityManager().persist(newPre);
+			System.out.println("Guardo las presentaciones");
 		}	
+		
+		getEntityManager().flush();
+		getEntityManager().refresh(instance);
+		
+		System.out.println("DOSI POST "+instance.getDosificaciones().size());
 	}
 	
 	
@@ -565,6 +610,7 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	{
 		System.out.println("Entro a persistir");
 		System.out.println("Tamabio lista medicamentos "+listaMedicamentosLabs.size());
+		
 		for(MedicamentoLaboratorios medLabs: listaMedicamentosLabs)
 		{
 			

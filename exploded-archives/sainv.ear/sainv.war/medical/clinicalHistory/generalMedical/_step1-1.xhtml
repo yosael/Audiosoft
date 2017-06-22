@@ -198,7 +198,7 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Notas</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.get(0).personalPathologies}"
+									value="#{clienteHome2.instance.generalInformation.personalPathologies}"
 									cols="75" rows="5"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
@@ -249,61 +249,61 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femMenarche}"
+									value="#{clienteHome2.instance.generalInformation.femMenarche}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_development}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femSexualDevelopment}"
+									value="#{clienteHome2.instance.generalInformation.femSexualDevelopment}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_rhythm}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femMenstrualRhythm}"
+									value="#{clienteHome2.instance.generalInformation.femMenstrualRhythm}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_last_menstruation}:</ui:define>
 								<rich:calendar
-									value="#{clienteHome2.instance.generalInformation.get(0).femLastMenstruation}"
+									value="#{clienteHome2.instance.generalInformation.femLastMenstruation}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_life}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femSexualLife}"
+									value="#{clienteHome2.instance.generalInformation.femSexualLife}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_cesarean}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femCesarean}"
+									value="#{clienteHome2.instance.generalInformation.femCesarean}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_birth}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femBirth}"
+									value="#{clienteHome2.instance.generalInformation.femBirth}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_abortions}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femAbortions}"
+									value="#{clienteHome2.instance.generalInformation.femAbortions}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_contraceptive_method}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femContraceptiveMethod}"
+									value="#{clienteHome2.instance.generalInformation.femContraceptiveMethod}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menopause}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.get(0).femMenopause}"
+									value="#{clienteHome2.instance.generalInformation.femMenopause}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>

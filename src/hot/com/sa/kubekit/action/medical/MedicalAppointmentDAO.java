@@ -77,6 +77,18 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		instance.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 	}
 	
+	
+	
+	public void refreshCitaMedicaStepDiag()
+	{
+		System.out.println("Actualizo Step Diagn");
+	}
+	
+	public void refreshCitaMedicaStep1()
+	{
+		System.out.println("Actualizo Steap 1");
+	}
+	
 	public void load2() {
 		try {
 			selMedAps.clear();

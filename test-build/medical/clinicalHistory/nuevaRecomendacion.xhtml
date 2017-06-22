@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="#{recomendacionMedHome.managed?sainv_view_messages.get('recomed_head_edit'):sainv_view_messages.get('recomed_head_register')}" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formrecomed" >
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<fieldset>
+				
+					<legend>#{app.recomed_legend}</legend> 
+					<h:panelGrid columns="3" style="margin:0 auto;">
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Tipo:</ui:define>
+							<h:selectOneMenu value="#{recomendacionMedHome.instance.tipo}" id="slTipo" >
+								<f:selectItem itemLabel=""  itemValue="" />
+								<f:selectItem itemLabel="OTORRINOLARINGOLOGIA" itemValue="O" />
+								<f:selectItem itemLabel="AUDIOLOGIA" itemValue="A" />
+								<a:support event="onchange" ajaxSingle="true" ></a:support>
+							</h:selectOneMenu>
+						</s:decorate>
+						<rich:spacer width="5px;"></rich:spacer>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.recomed_name}:</ui:define>
+							<h:inputText value="#{recomendacionMedHome.instance.nombre}" required="true" style="width:330px;" id="txtNombreRecomend">
+								<a:support event="onkeyup" ajaxSingle="true"  ></a:support>
+							</h:inputText>
+						</s:decorate>
+						
+					</h:panelGrid> 
+				
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton action="#{recomendacionMedHome.agregarRecomendacionModal()}" reRender="formrecomed,formAddR"
+							rendered="#{not recomendacionMedHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="#{msn.button_save}" oncomplete="validar()" />
+							
+							<a:commandLink  ajaxSingle="true" action="#{recomendacionMedHome.agregarRecomendacionModal()}" reRender="formrecomed,formAddR" 
+								 styleClass="saveBtnLnk" oncomplete="validar()" ignoreDupResponses="true" eventsQueue="q1" 
+								value="#{msn.button_save}">
+								<s:conversationPropagation type="join"></s:conversationPropagation>
+							</a:commandLink>
+							
+					</s:decorate>
+					
+				</fieldset>
+				
+				<script type="text/javascript"> 
+					function validar(){
+						
+							if(#{recomendacionMedHome.cerrarModal}){
+								#{rich:component('modNuevaRecom')}.hide();					
+							}					
+						}
+				</script>
+			</h:form>
+		</rich:panel>
+		
+</ui:composition>

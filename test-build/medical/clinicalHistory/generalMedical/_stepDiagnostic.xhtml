@@ -23,13 +23,16 @@
 					<h:outputText
 						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
 						styleClass="consecutive" />
-				</s:div>	
+				</s:div>
+					
+				<a:poll id="autoRefreshDiagnostic" interval="60000" enabled="true" reRender="btnAddDiag" action="#{medicalAppointmentDAO.refreshCitaMedicaStepDiag()}"  />
+				
 				<rich:simpleTogglePanel styleClass="classHead"  switchType="ajax" label="#{app.diagnostic_tab}"  opened="true">
 					<table style="width:100%;" >
 						<tr >
 							<td style="width:100%" >
 								<s:decorate template="/layout/kActions.xhtml">
-									<a:commandButton onclick="#{rich:component('selDiagn')}.show();"  ajaxSingle="true" 
+									<a:commandButton onclick="#{rich:component('selDiagn')}.show();" id="btnAddDiag"  ajaxSingle="true" 
 									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
 										 action="#{diagnosticoMedHome.getDiagnostListByName()}" reRender="d1"
 										styleClass="addBtn" value="DIAGNOTICOS" style="font-size:14px;width:230px"><!-- #{app.button_add_diagn} -->
@@ -64,16 +67,17 @@
 							<rich:spacer height="40" ></rich:spacer>
 						</tr>
 						
-						<tr >
+						<tr>
+							<rich:spacer height="20" ></rich:spacer>
 							<td style="width:100%" >
-									<s:decorate template="/layout/kActions.xhtml" style="margin:0 auto" rendered="#{clienteHome.instance.diagnosSordera!=null}">
+								<s:decorate template="/layout/kActions.xhtml" style="margin:0 auto" rendered="#{clienteHome.instance.diagnosSordera!=null}">
+								
+									<ui:define name="label"><span style="font-size:14px;">#{app.diagn_sordera}:</span></ui:define>
+									<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
+											<s:convertDateTime pattern="dd/MM/yyyy" />
+									</h:inputText>
 									
-										<ui:define name="label"><span style="font-size:14px;">#{app.diagn_sordera}:</span></ui:define>
-										<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
-												<s:convertDateTime pattern="dd/MM/yyyy" />
-										</h:inputText>
-										
-									</s:decorate>
+								</s:decorate>
 							</td>	
 						</tr>	
 						<tr>
@@ -88,7 +92,7 @@
 						</tr>	
 						<tr>	
 							<td style="width:100%" >
-								<s:div>
+								<s:div >
 									<s:decorate template="/layout/kEditSpace.xhtml" style="margin-left:25%"  id="dcTratamientoSord" >
 										<h:panelGrid columns="1" >
 											<h:outputLabel value="TRATAMIENTO A REALIZAR"  style="font-size:14px;margin-left:30%;font-weight:bold" /><!-- #{app.diagnostic_treatment}: -->
@@ -334,7 +338,11 @@
 										<rich:column ><!-- #{app.examed_list_sel} -->
 											<f:facet name="header">#{app.medicm_name}</f:facet>
 											<h:outputText value="#{res.examen.name}" />
-										</rich:column>		
+										</rich:column>
+										<rich:column ><!-- #{app.examed_list_sel} -->
+											<f:facet name="header">Costo</f:facet>
+											<h:outputText value="#{res.examen.costo}" />
+										</rich:column>			
 										<rich:column >
 											<f:facet name="header">#{app.cjachi_comentario}</f:facet>
 											<h:inputTextarea value="#{res.comentario}" style="width:99%;"
@@ -373,6 +381,10 @@
 										<rich:column><!-- #{app.serv_list_selmed} -->
 											<f:facet name="header">#{app.medicm_name}</f:facet>
 											<h:outputText value="#{res.service.name}" />
+										</rich:column>		
+										<rich:column><!-- #{app.serv_list_selmed} -->
+											<f:facet name="header">Costo</f:facet>
+											<h:outputText value="#{res.service.costo}" />
 										</rich:column>						
 										<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
 											<f:facet name="header">Quitar</f:facet>

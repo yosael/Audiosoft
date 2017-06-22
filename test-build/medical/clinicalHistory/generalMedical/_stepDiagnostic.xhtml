@@ -8,7 +8,9 @@
 	xmlns:a="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
 	<ui:define name="head">
+	
 		<style type="text/css">
 			.classHead {
 				background-color: #7d7777;
@@ -16,6 +18,7 @@
     			background-image:none;
 			}
 		</style>
+		
 	</ui:define>
 		<rich:panel style="padding:1px;font-size:14px;">
 				<f:facet name="header">#{app.diagnostic_head_diag}</f:facet>
@@ -69,10 +72,12 @@
 						
 						<tr>
 							<rich:spacer height="20" ></rich:spacer>
+							
 							<td style="width:100%" >
+							
 								<s:decorate template="/layout/kActions.xhtml" style="margin:0 auto" rendered="#{clienteHome.instance.diagnosSordera!=null}">
 								
-									<ui:define name="label"><span style="font-size:14px;">#{app.diagn_sordera}:</span></ui:define>
+									<ui:define name="label"><span style="font-size:14px;">SORDERA DIAGNOSTICADA</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
 											<s:convertDateTime pattern="dd/MM/yyyy" />
 									</h:inputText>

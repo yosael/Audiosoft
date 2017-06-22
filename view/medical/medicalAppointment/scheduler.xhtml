@@ -253,7 +253,7 @@
 
 			<rich:modalPanel id="newAppointment" width="800" height="440" moveable="true"
 				top="100" left="335" style="overflow-y:scroll"
-				onshow="#{sucursalHome.cargarSucursales()}"
+				onshow="#{sucursalHome.cargarSucursalesPrincipales()}"
 				onbeforeshow="activeModal.setActiveModalPanel('newAppointment');">
 				<f:facet name="header">Cita medica</f:facet>
 				<f:facet name="controls">
@@ -288,7 +288,7 @@
 			<rich:modalPanel id="newBlock" width="800" moveable="true"
 				autosized="true" top="40" left="10"
 				onmaskclick="#{rich:component('newBlock')}.hide();"
-				onshow="#{sucursalHome.cargarSucursales()}"
+				onshow="#{sucursalHome.cargarSucursalesPrincipales()}"
 				onbeforeshow="activeModal.setActiveModalPanel('newBlock');" onbeforehide="#{appointmentGrid.createGridDay()}"
 				>
 				<f:facet name="header">Nuevo bloque</f:facet>

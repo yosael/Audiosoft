@@ -131,14 +131,14 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 		
 		try {
 			
-			if(getSearchSucOb().getNombre().equals("MIRAMONTE"))
+			if((getSearchSucOb().getBodega()==false || getSearchSucOb().getBodega()==null)  && getSearchSucOb().getSucursalSuperior()==null)
 			{
 				resultList = getEntityManager()
-						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal.sucursalSuperior = :searchSucOb  order by e.nombres")
+						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal.sucursalSuperior = :searchSucOb  order by e.nombres")// Si la sucursal tiene sucursal superior. El usuario tiene sucursal superior y hay que compararlo con esa
 						.setParameter("searchSucOb",searchSucOb)
 						.getResultList();
 			}
-			else
+			else if(getSearchSucOb().getBodega()==true && getSearchSucOb().getSucursalSuperior()==null)// Para evitar que se filtren las bodegas que tienen sucursal superior
 			{
 				
 				resultList = getEntityManager()
@@ -162,30 +162,49 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 	
 	public void searchDocBySucSlFromDoc()
 	{
-		if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)
-			setSearchSucOb(loginUser.getUser().getSucursal().getSucursalSuperior());
-		else
-			setSearchSucOb(loginUser.getUser().getSucursal());
-		
 		
 		try {
 			
-			if(getSearchSucOb().getNombre().equals("MIRAMONTE"))
+			
+		
+			if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)
 			{
+				setSearchSucOb(loginUser.getUser().getSucursal().getSucursalSuperior());
+				
 				resultList = getEntityManager()
 						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal.sucursalSuperior = :searchSucOb  order by e.nombres")
 						.setParameter("searchSucOb",searchSucOb)
 						.getResultList();
+				
+				
 			}
 			else
 			{
+				setSearchSucOb(loginUser.getUser().getSucursal());
 				
 				resultList = getEntityManager()
 						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal = :searchSucOb  order by e.nombres")
 						.setParameter("searchSucOb",searchSucOb)
 						.getResultList();
 				
+				
 			}
+		
+		
+		
+		
+		
+		/*	
+			if(getSearchSucOb().getNombre().equals("MIRAMONTE"))
+			{
+				
+			}
+			else
+			{
+				
+				
+				
+			}*/
 			
 		} catch (Exception e) {
 			

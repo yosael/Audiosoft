@@ -98,6 +98,26 @@ public class SucursalHome extends KubeDAO<Sucursal>{
 			
 	}
 	
+	
+	//Nuevo agregado el 22/06/2017
+	public void cargarSucursalesPrincipales()
+	{
+		
+		System.out.println("Entro a cargar sucursales principales");
+		
+		try {
+				
+			notBodegasSuc = getEntityManager()
+					.createQuery("SELECT s FROM Sucursal s where (s.bodega=true and s.sucursalSuperior=null) or (s.bodega=null or s.bodega=false and s.sucursalSuperior=null) ORDER BY s.codigo ASC")
+					.getResultList();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void cargarBodegas()
 	{
 		resultList = getEntityManager()

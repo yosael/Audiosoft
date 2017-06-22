@@ -136,6 +136,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			// cargamos historiales y citas medicas y los servicios
 			System.out.println("Entrando en load: " + detail);
 			if (detail) {
+				
 				clinicalHistoryList.clear();
 				medicalAppointmentList.clear();
 				servicesAttended.clear();

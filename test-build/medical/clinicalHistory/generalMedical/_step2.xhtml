@@ -51,8 +51,14 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:panelGrid columns="1" >
 								
+									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical.subsecuente}" >
+										<ui:define name="label">Motivo consulta anterior:</ui:define>	
+										<h:inputTextarea
+											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:780px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" />	
+									</s:decorate>
+								
 									<h:panelGrid columns="2" >
-										<h:outputLabel value="#{app.general_step2_reason}:" style="font-weight:bold" />
+										<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
 										
 										<a:commandButton  styleClass="addBtn" value=" " 
 											onclick="#{rich:component('selMotiv')}.show();"
@@ -60,13 +66,16 @@
 										 	reRender="_tableMotiv"
 										 	action="#{motivoConsultaHome.load()}"
 										 	style="width:30px"
+										 	rendered="#{wizardGeneralMedical.mode != 'r'}"
 										/>
 									</h:panelGrid>
 									
 									<h:inputTextarea
 										value="#{generalMedicalDAO.instance.consultationReason}"
-										disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;font-size:14px" id="txtMotivoConsulta" />
-										
+										disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;font-size:14px" id="txtMotivoConsulta" >
+											<a:support event="onchange" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+										</h:inputTextarea>
+									
 								</h:panelGrid>
 							</s:decorate>	
 
@@ -94,7 +103,9 @@
 								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
 								<h:inputTextarea
 									value="#{generalMedicalDAO.instance.observation}" 
-									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtTiempoEvolucion" style="width:780px;font-size:14px" />	
+									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtTiempoEvolucion" style="width:780px;font-size:14px" >
+									 <a:support event="onkeyup" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
 							</s:decorate>
 							
 							<!-- 
@@ -125,12 +136,16 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_height}:</ui:define>
 								<h:inputText value="#{generalMedicalDAO.instance.height}"
-									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" >
+									<a:support event="onkeyup" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>	
+								</h:inputText>
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_weight}:</ui:define>
 								<h:inputText value="#{generalMedicalDAO.instance.weight}"
-									disabled="#{wizardGeneralMedical.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" >
+									<a:support event="onkeyup" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+								</h:inputText>
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_temperature}:</ui:define>
@@ -230,7 +245,7 @@
 					</rich:simpleTogglePanel>
 		</rich:panel>
 		
-		<rich:modalPanel id="selMotiv" width="400" moveable="true" autosized="true"  top="40"
+		<rich:modalPanel id="selMotiv" width="600" moveable="true" autosized="true"  top="40"
 			onmaskclick="#{rich:component('selMotiv')}.hide();"
 			onbeforeshow="activeModal.setActiveModalPanel('selMotiv');">
 			<f:facet name="header">Motivos consulta</f:facet>

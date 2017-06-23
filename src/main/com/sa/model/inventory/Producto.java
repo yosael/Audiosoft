@@ -62,6 +62,14 @@ public class Producto implements Serializable{
 	private Short tiempoEnvio;
 	private List<Inventario> inventarios = new ArrayList<Inventario>();
 	private List<CotizacionPrdSvcAdicionales> cotizPrd= new ArrayList<CotizacionPrdSvcAdicionales>();
+	
+	
+	private Float prcNormalCalculado;
+	private Float prcMinimoCalculado;
+	private Float prcOfertaCalculado;
+	
+	
+	
 	public Producto(){
 		this.costo = 0f;
 	}
@@ -358,5 +366,39 @@ public class Producto implements Serializable{
 	public void setCotizPrd(List<CotizacionPrdSvcAdicionales> cotizPrd) {
 		this.cotizPrd = cotizPrd;
 	}
+
+	
+	
+	@Column(name = "prc_normal_calc", nullable = true)
+	public Float getPrcNormalCalculado() {
+		return prcNormalCalculado;
+	}
+
+	public void setPrcNormalCalculado(Float prcNormalCalculado) {
+		this.prcNormalCalculado = prcNormalCalculado;
+	}
+
+	
+	@Column(name = "prc_minimo_calc", nullable = true)
+	public Float getPrcMinimoCalculado() {
+		return prcMinimoCalculado;
+	}
+
+	public void setPrcMinimoCalculado(Float prcMinimoCalculado) {
+		this.prcMinimoCalculado = prcMinimoCalculado;
+	}
+
+	@Column(name = "prc_oferta_calc", nullable = true)
+	public Float getPrcOfertaCalculado() {
+		return prcOfertaCalculado;
+	}
+
+	public void setPrcOfertaCalculado(Float prcOfertaCalculado) {
+		this.prcOfertaCalculado = prcOfertaCalculado;
+	}
+	
+	
+	
+	
 
 }

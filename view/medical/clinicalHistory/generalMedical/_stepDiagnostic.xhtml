@@ -30,6 +30,15 @@
 					
 				<a:poll id="autoRefreshDiagnostic" interval="60000" enabled="true" reRender="btnAddDiag" action="#{medicalAppointmentDAO.refreshCitaMedicaStepDiag()}"  />
 				
+				<rich:simpleTogglePanel styleClass="classHead"  switchType="ajax" label="RESUMEN PACIENTE"  opened="true"  >
+					<table style="width:100%;" >
+						<tr >
+							<td style="width:100%" >
+								<h:inputTextarea value="#{wizardGeneralMedical.resumenPaciente}" style="border:none;width:900px;font-size:16px"  id="txtResumenPaciente"/>
+							</td>
+						</tr>
+					</table>
+				</rich:simpleTogglePanel>
 				<rich:simpleTogglePanel styleClass="classHead"  switchType="ajax" label="#{app.diagnostic_tab}"  opened="true">
 					<table style="width:100%;" >
 						<tr >
@@ -66,22 +75,18 @@
 										</a:commandLink>
 									</rich:column>
 								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
 							</td>
-							<rich:spacer height="40" ></rich:spacer>
 						</tr>
 						
-						<tr>
-							<rich:spacer height="20" ></rich:spacer>
+						<tr>	
 							
 							<td style="width:100%" >
-							
-								<s:decorate template="/layout/kActions.xhtml" style="margin:0 auto" rendered="#{clienteHome.instance.diagnosSordera!=null}">
-								
+								<s:decorate template="/layout/kEditSpace.xhtml" style="margin-left:40%" rendered="#{clienteHome.instance.diagnosSordera!=null}">
 									<ui:define name="label"><span style="font-size:14px;">SORDERA DIAGNOSTICADA</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
 											<s:convertDateTime pattern="dd/MM/yyyy" />
 									</h:inputText>
-									
 								</s:decorate>
 							</td>	
 						</tr>	

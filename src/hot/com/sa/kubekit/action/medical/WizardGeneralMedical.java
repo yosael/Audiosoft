@@ -53,9 +53,14 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	protected KubeBundle sainv_messages;
 	
 	
+	List<ClinicalHistory> historialAnterior = new ArrayList<ClinicalHistory>();
+	
 	
 	private String paginaAnterior;
 	private String observacionVenta;
+	private boolean subsecuente=false;
+	private String motivoConsultaAnterior="";
+	private String resumenPaciente="";
 
 	public WizardGeneralMedical() {
 		// cofiguramos las vistas de navegacion generales
@@ -109,11 +114,16 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 					}
 				}
 				System.out.println("Paso3");
+				
+				generarResumen();
+				
 			} else {
 				
 				this.init();
 				antecedenteHome.load();//Para carcar la lista de antecedentes disponibles
 				motivoConsultaHome.load();
+				
+				motivoConsultaAnterior();
 			}
 			
 			antecedenteHome.cargarAntecedentesPaciente(clienteHome.getInstance());//Para cargar antecedente de pacientes
@@ -150,6 +160,70 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		System.out.println("Paso3");
 	}
 	
+	public void motivoConsultaAnterior()
+	{
+		
+		System.out.println("ENTRO A MOTIVO CONSULTA ANTERIOR ************");
+		historialAnterior=(List<ClinicalHistory>) entityManager.createQuery("SELECT c FROM ClinicalHistory c where c.consecutive=(SELECT MAX(m.consecutive) FROM ClinicalHistory m where m.cliente.id="+clienteHome.getInstance().getId()+" ) ").getResultList();
+		
+		
+		if(historialAnterior.size()>0)
+		{
+			System.out.println("ENTRO A ES SUBSECUENTE ************");
+			motivoConsultaAnterior = historialAnterior.get(0).getConsultationReason();
+			subsecuente=true;
+			
+		}
+	}
+	
+	
+	public void generarResumen()
+	{
+		System.out.println("Entro a resumen paciente");
+		
+		resumenPaciente="";
+		
+		resumenPaciente+="Paciente ";
+		
+		if(clienteHome.getInstance().getGenero()==1)
+		{
+			resumenPaciente+="Masculino. ";
+		}
+		else
+		{
+			resumenPaciente+="Femenina. ";
+		}
+		
+		resumenPaciente+="De "+clienteHome.calcularEdad()+" años de edad. ";
+		
+		if(clienteHome.getInstance().getOcupacion()!=null)
+		{
+			resumenPaciente+=clienteHome.getInstance().getOcupacion()+". ";
+		}
+			
+		if(generalMedicalDAO.getInstance().getHeight()!=null)
+		{
+			resumenPaciente+="Estatura: "+generalMedicalDAO.getInstance().getHeight()+"cm. ";
+		}
+		
+		if(generalMedicalDAO.getInstance().getWeight()!=null)
+		{
+			resumenPaciente+="Peso: "+generalMedicalDAO.getInstance().getWeight()+"kg. ";
+		}
+		
+		if(generalMedicalDAO.getInstance().getConsultationReason()!=null)
+		{
+			resumenPaciente+="Consulta por "+generalMedicalDAO.getInstance().getConsultationReason()+". ";
+		}
+		
+		if(generalMedicalDAO.getInstance().getObservation()!=null)
+		{
+			resumenPaciente+="Tiempo de evolucion: "+generalMedicalDAO.getInstance().getObservation()+". ";
+		}
+		
+		
+		System.out.println(resumenPaciente);
+	}
 	
 	
 	public void load2() {
@@ -601,6 +675,40 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	public void setObservacionVenta(String observacionVenta) {
 		this.observacionVenta = observacionVenta;
 	}
+
+	public boolean isSubsecuente() {
+		return subsecuente;
+	}
+
+	public void setSubsecuente(boolean subsecuente) {
+		this.subsecuente = subsecuente;
+	}
+
+	public List<ClinicalHistory> getHistorialAnterior() {
+		return historialAnterior;
+	}
+
+	public void setHistorialAnterior(List<ClinicalHistory> historialAnterior) {
+		this.historialAnterior = historialAnterior;
+	}
+
+	public String getMotivoConsultaAnterior() {
+		return motivoConsultaAnterior;
+	}
+
+	public void setMotivoConsultaAnterior(String motivoConsultaAnterior) {
+		this.motivoConsultaAnterior = motivoConsultaAnterior;
+	}
+
+	public String getResumenPaciente() {
+		return resumenPaciente;
+	}
+
+	public void setResumenPaciente(String resumenPaciente) {
+		this.resumenPaciente = resumenPaciente;
+	}
+
+	
 
 	
 	

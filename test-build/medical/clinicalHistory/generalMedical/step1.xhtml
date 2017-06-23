@@ -58,6 +58,8 @@
 				<a:queue name="q1"  />
 				<h:panelGroup id="details">
 				
+					<!-- <h:commandButton  onclick="#{rich:component('modalLoading')}.show();" value="Ver modal" /> -->
+					
 					<rich:tabPanel switchType="client" width="1000px" style="margin:0 auto;font-size:15px;" >
 						<rich:tab name="tabHi_1" label="#{app.general_step1_head}" styleClass="letra15">
 							<rich:spacer width="250px;"></rich:spacer>
@@ -126,9 +128,9 @@
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
 							</s:div>
 						</rich:tab>
-						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15">
+						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15"   >
 							<s:div>
-								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
+								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" ajaxSingle="true"   />
 							</s:div>
 						</rich:tab>
 					</rich:tabPanel>
@@ -170,7 +172,7 @@
 						</a:commandButton> -->
 						<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
 							value="Finalizar Consulta" styleClass="saveBtn"
-							onclick="terminar()"
+							onclick="terminar();#{rich:component('modalLoading')}.show();"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton>
 						
@@ -476,6 +478,17 @@
 							<ui:include src="../verHistorialMedico.xhtml" />
 						</s:div>
 					</s:div>
+					
+					<rich:modalPanel id="modalLoading" width="110" height="120" left="660"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+						onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
+						<h:form id="formModalLoading" style="margin:0;padding:0;" >
+							<h:panelGrid columns="1" style="margin:0">
+								<h:graphicImage value="/kubeImg/imCargando.gif" style="margin:0;" />
+								<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
+							</h:panelGrid>	
+						</h:form>			
+					</rich:modalPanel>
+					
 				</rich:modalPanel> 
 		</rich:panel>
 		

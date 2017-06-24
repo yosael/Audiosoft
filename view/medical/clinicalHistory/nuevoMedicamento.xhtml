@@ -64,29 +64,18 @@
 								styleClass="modifyBtn" value=" " style="width:30px;">
 							</a:commandButton>
 						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
+							<ui:define name="label">.....</ui:define>
+							<a:commandLink  ajaxSingle="true" action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm,_table"
+								 styleClass="saveBtnLnk" oncomplete="validar()"
+								value="#{msn.button_save}">
+								<s:conversationPropagation type="join"></s:conversationPropagation>
+							</a:commandLink>
+						</s:decorate>
+						
 				</h:panelGrid> 
 				
-				<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
-				
-					<s:button view="/medical/medicm/list.xhtml" propagation="begin"
-						styleClass="listBtn" value="#{msn.button_list}">
-					</s:button>
-					<s:button view="/medical/medicm/master.xhtml" propagation="begin"
-						styleClass="newBtn" value="#{msn.button_new}">
-						<f:param name="id" value="" />
-					</s:button>
-					
-					<!--<a:commandButton action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm"
-						rendered="#{not medicamentoHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						oncomplete="validar()" value="#{msn.button_save}" ajaxSingle="true" /> -->
-						
-					<a:commandLink  ajaxSingle="true" action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm,_table"
-						 styleClass="saveBtnLnk" oncomplete="validar()"
-						value="#{msn.button_save}">
-						<s:conversationPropagation type="join"></s:conversationPropagation>
-					</a:commandLink>	
-						
-				</s:decorate>
 				<script type="text/javascript" > 
 					function validar(){
 						
@@ -97,13 +86,13 @@
 					}
 				</script>
 				
-				<table style="width:900px;">
+				<table style="width:900px;" >
 					<tr>
 						<td>
 							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
 								<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
 									action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1"
-									styleClass="addBtn" value="Agregar laboratorio" style="font-size:14px;">
+									styleClass="addBtn" value="Laboratorio" style="font-size:14px;width:240px">
 								</a:commandButton>
 							</s:decorate>
 							
@@ -139,7 +128,7 @@
 							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;" >
 								<a:commandButton onclick="#{rich:component('selDosificacion')}.show();" ajaxSingle="true" 
 									action="#{medicamentoHome.cargarListaDosif()}" reRender="dos" eventsQueue="q1"
-									styleClass="addBtn" value="#{app.medicm_btn_add_dosif}" style="font-size:14px;">
+									styleClass="addBtn" value="Dosificacion" style="font-size:14px;width:240px">
 								</a:commandButton>
 							</s:decorate>
 							
@@ -169,7 +158,7 @@
 							<s:decorate template="/layout/kActions.xhtml" style="font-size:14px;">
 								<a:commandButton onclick="#{rich:component('selPresentacion')}.show();" ajaxSingle="true" 
 									action="#{medicamentoHome.cargarListaPresen()}" reRender="pre" eventsQueue="q1"
-									styleClass="addBtn" value="#{app.medicm_btn_add_presen}" style="font-size:14px;">
+									styleClass="addBtn" value="Presentaciones" style="font-size:14px;width:240px">
 								</a:commandButton>
 							</s:decorate>
 							

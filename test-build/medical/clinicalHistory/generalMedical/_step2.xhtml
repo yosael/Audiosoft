@@ -51,7 +51,7 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:panelGrid columns="1" >
 								
-									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical.subsecuente}" >
+									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='') }" >
 										<ui:define name="label">Motivo consulta anterior:</ui:define>	
 										<h:inputTextarea
 											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:780px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" />	
@@ -259,35 +259,42 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-								
-				<rich:dataTable var="res" value="#{motivoConsultaHome.motivosConsulta}" id="_tableMotiv"
-					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-					headerClass="tablaHeader" footerClass="tableScroll">
-					<f:facet name="header">Motivos de consulta</f:facet>
-					<rich:column >
-						<f:facet name="header">Nombre</f:facet>
-						<h:outputText value="#{res.descripcion}" />
-					</rich:column>
+						
+				<h:panelGrid columns="1" style="width:600px;margin:0 auto;" >
+				
+					<h:inputText value="#{motivoConsultaHome.busqueda}"   >
+						<a:support event="onkeyup" action="#{motivoConsultaHome.buscarMotivosConsulta()}" reRender="_tableMotiv" ajaxSingle="true" ></a:support>
+					</h:inputText>
 									
-					<rich:column>
-						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandButton  styleClass="addBtn" value=" " reRender="txtMotivoConsulta,frmSelMotiv"
-							action="#{generalMedicalDAO.agregarMotivoConsulta(res)}" ajaxSingle="true" eventsQueue="q1"	>
-						</a:commandButton>
-						<!-- <a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
-							action="#{clienteHome.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
-							onclick="#{rich:component('selAnt')}.hide();">
-						</a:commandLink> -->
-						<!--  --> 
-						<!--<h:selectBooleanCheckbox value="#{clienteHome.anteceDenteSl}">
-							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  reRender="ant" 
-									action="#{clienteHome.addAntecedente(res)}" />
-						</h:selectBooleanCheckbox>  -->
-					</rich:column>
-					<f:facet name="footer">
-						<rich:datascroller id="ds1" renderIfSinglePage="true" />
-					</f:facet>
-				</rich:dataTable>				
+					<rich:dataTable var="res" value="#{motivoConsultaHome.motivosConsulta}" id="_tableMotiv"
+						rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header">Motivos de consulta</f:facet>
+						<rich:column >
+							<f:facet name="header">Nombre</f:facet>
+							<h:outputText value="#{res.descripcion}" />
+						</rich:column>
+										
+						<rich:column>
+							<f:facet name="header">#{msn.col_actions}</f:facet>
+							<a:commandButton  styleClass="addBtn" value=" " reRender="txtMotivoConsulta,frmSelMotiv"
+								action="#{generalMedicalDAO.agregarMotivoConsulta(res)}" ajaxSingle="true" eventsQueue="q1"	>
+							</a:commandButton>
+							<!-- <a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
+								action="#{clienteHome.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
+								onclick="#{rich:component('selAnt')}.hide();">
+							</a:commandLink> -->
+							<!--  --> 
+							<!--<h:selectBooleanCheckbox value="#{clienteHome.anteceDenteSl}">
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  reRender="ant" 
+										action="#{clienteHome.addAntecedente(res)}" />
+							</h:selectBooleanCheckbox>  -->
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="ds1" renderIfSinglePage="true" />
+						</f:facet>
+					</rich:dataTable>
+				</h:panelGrid>					
 			</h:form>			
 		</rich:modalPanel>
 </ui:composition>

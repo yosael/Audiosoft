@@ -105,8 +105,8 @@
 								<s:div >
 									<s:decorate template="/layout/kEditSpace.xhtml" style="margin-left:25%"  id="dcTratamientoSord" >
 										<h:panelGrid columns="1" >
-											<h:outputLabel value="TRATAMIENTO A REALIZAR"  style="font-size:14px;margin-left:30%;font-weight:bold" /><!-- #{app.diagnostic_treatment}: -->
-											<h:inputTextarea value="#{generalContainer.treatment}" style="width:450px;font-size:16px"
+											<h:outputLabel value="PLAN DE ATENCION"  style="font-size:14px;margin-left:33%;font-weight:bold" /><!-- #{app.diagnostic_treatment}: -->
+											<h:inputTextarea value="#{generalContainer.treatment}" style="width:500px;font-size:16px"
 												rows="6" disabled="#{generalContainer.mode=='r' || medicalAppointmentDAO.instance.clinicalHistory!=null}" >
 												<a:support event="onblur" ajaxSingle="true"/>
 											</h:inputTextarea>
@@ -418,7 +418,7 @@
 					</h:panelGrid>
 				</rich:simpleTogglePanel>
 					
-			<rich:modalPanel id="selMedicm" width="800" moveable="true" autosized="true"  top="40"
+			<rich:modalPanel id="selMedicm" width="700" moveable="true" autosized="true"  top="40"
 				onmaskclick="#{rich:component('selMedicm')}.hide();"
 				onbeforeshow="activeModal.setActiveModalPanel('selMedicm');">
 				<f:facet name="header">Medicamentos recetables</f:facet>

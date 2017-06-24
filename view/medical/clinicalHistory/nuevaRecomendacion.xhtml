@@ -44,10 +44,11 @@
 					</h:panelGrid> 
 				
 					<s:decorate template="/layout/kActions.xhtml">
-						<a:commandButton action="#{recomendacionMedHome.agregarRecomendacionModal()}" reRender="formrecomed,formAddR"
-							rendered="#{not recomendacionMedHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-							value="#{msn.button_save}" oncomplete="validar()" />
-							
+							<!-- 
+								<a:commandButton action="#{recomendacionMedHome.agregarRecomendacionModal()}" reRender="formrecomed,formAddR"
+									rendered="#{not recomendacionMedHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+									value="#{msn.button_save}" oncomplete="validar()" />
+							-->
 							<a:commandLink  ajaxSingle="true" action="#{recomendacionMedHome.agregarRecomendacionModal()}" reRender="formrecomed,formAddR" 
 								 styleClass="saveBtnLnk" oncomplete="validar()" ignoreDupResponses="true" eventsQueue="q1" 
 								value="#{msn.button_save}">

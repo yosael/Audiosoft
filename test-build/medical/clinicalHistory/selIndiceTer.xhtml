@@ -14,25 +14,54 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
+				
+				<!-- 
 				<table style="width:400px;" >   
 				<tr>
 					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newindice}" />:</td>
-					<td><h:inputText value="#{medicamentoHome.indTer.nombre}" style="width:200px;" >
-							<a:support event="onkeyup" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
-						</h:inputText></td>
-					<td><a:commandButton action="#{medicamentoHome.agregarSeleccionarIndiceTerapeutico()}" reRender="frmSelInd,formmedicm" id="_btnAdd"
-						disabled="#{empty medicamentoHome.indTer.nombre or medicamentoHome.indTer.nombre==''}" 
-						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1" ajaxSingle="true"
-						 value="#{msn.button_save}" oncomplete="#{rich:component('selIndiceTer')}.hide();" />
+					<td>
+						
+					</td>
+					<td>
+						
 					</td>
 				</tr>
 				</table>
+				 -->
+				 
+				<h:panelGrid columns="1" style="margin:0 auto;" >
+				 
+					<h:panelGrid columns="2" >
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">NUEVA</ui:define>
+							<h:inputText value="#{medicamentoHome.indTer.nombre}" style="width:200px;" >
+								<a:support event="onkeyup" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
+							</h:inputText>
+						</s:decorate>
+						
+						<a:commandButton action="#{medicamentoHome.agregarSeleccionarIndiceTerapeutico()}" reRender="frmSelInd,formmedicm" id="_btnAdd"
+						disabled="#{empty medicamentoHome.indTer.nombre or medicamentoHome.indTer.nombre==''}" 
+						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1" ajaxSingle="true"
+						 value="#{msn.button_save}" oncomplete="#{rich:component('selIndiceTer')}.hide();" />
+					</h:panelGrid>
+					
+					<rich:spacer height="5" ></rich:spacer>
+					
+					<h:inputText value="#{medicamentoHome.busquedaIndice}"  id="txtBusquedaIndice"  style="width:200px;" >
+						<a:support event="onkeyup" reRender="_tblIndTer"  action="#{medicamentoHome.buscarIndiceTeraPorNombre()}" ajaxSingle="true" ></a:support>
+					</h:inputText>
+					
+					<p:watermark for="txtBusquedaIndice" value="Buscar Indice Terapeutico" id="watermarkIndice"  />
+					
+				</h:panelGrid>
+				
 				<rich:dataTable var="res" value="#{medicamentoHome.indicesTer}" id="_tblIndTer" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.medicm_indices_ter}</f:facet>
 					
-					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+					<rich:column >
 						<f:facet name="header">#{app.medicm_name}</f:facet>
 						<h:outputText value="#{res.nombre}" />
 					</rich:column>					

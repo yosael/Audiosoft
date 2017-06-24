@@ -31,6 +31,8 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	private List<MotivoConsultaPaciente> motivosConsultaPA = new ArrayList<MotivoConsultaPaciente>();
 	private List<MotivoConsultaPaciente> motivosUltimaConsultaPA = new ArrayList<MotivoConsultaPaciente>();
 	
+	private String busqueda;
+	
 	
 	public void load()
 	{
@@ -61,6 +63,18 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	
 	public void cargarMotivosConsultaPaciente()
 	{
+		
+		
+		
+	}
+	
+	public void buscarMotivosConsulta()
+	{
+		
+		if(busqueda!=null)
+		{
+			motivosConsulta = getEntityManager().createQuery("SELECT m FROM MotivoConsulta m where UPPER(m.descripcion) like :busqueda ").setParameter("busqueda", "%"+busqueda.toUpperCase()+"%").getResultList();
+		}	
 		
 	}
 	
@@ -202,8 +216,18 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 			List<MotivoConsultaPaciente> motivosUltimaConsultaPA) {
 		this.motivosUltimaConsultaPA = motivosUltimaConsultaPA;
 	}
-	
-	
 
+
+	public String getBusqueda() {
+		return busqueda;
+	}
+
+
+	public void setBusqueda(String busqueda) {
+		this.busqueda = busqueda;
+	}
+	
+	
+	
 
 }

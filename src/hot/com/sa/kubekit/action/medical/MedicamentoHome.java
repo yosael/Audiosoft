@@ -48,6 +48,14 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 	private String nomCoinci;
 	private boolean cerrarModal=false;
 	
+	
+	private String busquedaLab;
+	private String busquedaDosi;
+	private String busquedaPresentacion;
+	private String busquedaIndice;
+	private String busquedaSustancia;
+	
+	
 	@In(required=false, create=true)
 	private PrescriptionHome prescriptionHome;
 	
@@ -529,6 +537,55 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			return;
 		}
 	}
+	
+	
+	public void buscarLaboratorioPorNombre()
+	{
+		if(busquedaLab!=null)
+		{
+			laboratorios= getEntityManager().createQuery("SELECT l FROM LaboratorioMed l where UPPER(l.nombre) like :nombreLab ").setParameter("nombreLab","%"+busquedaLab.toUpperCase()+"%").getResultList();
+		}	
+	}
+	
+	
+	public void buscarDosificacionPorNombre()
+	{
+		if(busquedaDosi!=null)
+		{
+			
+			dosificacionesSel= getEntityManager().createQuery("SELECT d FROM Dosificacion d where UPPER(d.nombre) like :nombreDosi ").setParameter("nombreDosi","%"+busquedaDosi.toUpperCase()+"%").getResultList();
+			
+		}
+	}
+	
+	public void buscarPresentacionPorNombre()
+	{
+		
+		if(busquedaPresentacion!=null)
+		{
+			
+			presentacionesSel= getEntityManager().createQuery("SELECT p FROM Presentacion p where UPPER(p.nombre) like :nombrePresentacion ").setParameter("nombrePresentacion","%"+busquedaPresentacion.toUpperCase()+"%").getResultList();
+		}
+	}
+	
+	
+	public void buscarSustanciaPorNombre()
+	{
+		
+		if(busquedaSustancia!=null)
+		{
+			sustanciasAct = getEntityManager().createQuery("SELECT s FROM SustanciaActiva s where UPPER(s.nombre) like :sustancia").setParameter("sustancia","%"+busquedaSustancia.toUpperCase()+"%").getResultList();
+		}
+	}
+	
+	public void buscarIndiceTeraPorNombre()
+	{
+		if(busquedaIndice!=null)
+		{
+			indicesTer = getEntityManager().createQuery("SELECT i FROM IndiceTerapeutico i where UPPER(i.nombre) like :nombreIndice ").setParameter("nombreIndice","%"+busquedaIndice.toUpperCase()+"%").getResultList();
+		}
+	}
+	
 
 	@Override
 	public boolean preModify() {
@@ -807,6 +864,46 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 
 	public void setCerrarModal(boolean cerrarModal) {
 		this.cerrarModal = cerrarModal;
+	}
+
+	public String getBusquedaLab() {
+		return busquedaLab;
+	}
+
+	public void setBusquedaLab(String busquedaLab) {
+		this.busquedaLab = busquedaLab;
+	}
+
+	public String getBusquedaDosi() {
+		return busquedaDosi;
+	}
+
+	public void setBusquedaDosi(String busquedaDosi) {
+		this.busquedaDosi = busquedaDosi;
+	}
+
+	public String getBusquedaPresentacion() {
+		return busquedaPresentacion;
+	}
+
+	public void setBusquedaPresentacion(String busquedaPresentacion) {
+		this.busquedaPresentacion = busquedaPresentacion;
+	}
+
+	public String getBusquedaIndice() {
+		return busquedaIndice;
+	}
+
+	public void setBusquedaIndice(String busquedaIndice) {
+		this.busquedaIndice = busquedaIndice;
+	}
+
+	public String getBusquedaSustancia() {
+		return busquedaSustancia;
+	}
+
+	public void setBusquedaSustancia(String busquedaSustancia) {
+		this.busquedaSustancia = busquedaSustancia;
 	}
 	
 	

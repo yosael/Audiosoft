@@ -1055,13 +1055,21 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	public void validarReferencias()
 	{
 		
-		if(instance.getMdif().getId()!=3 && instance.getDoctorRef()!=null)
+		if(instance.getMdif()!=null)
+		{
+			if(instance.getMdif().getId()!=3 && instance.getDoctorRef()!=null)
+			{
+				instance.setDoctorRef(null);
+			}
+			
+			if(instance.getMdif().getId()!=7 && instance.getReferidoPor()!=null)
+			{
+				instance.setReferidoPor(null);
+			}
+		}
+		else
 		{
 			instance.setDoctorRef(null);
-		}
-		
-		if(instance.getMdif().getId()!=7 && instance.getReferidoPor()!=null)
-		{
 			instance.setReferidoPor(null);
 		}
 		

@@ -67,6 +67,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	}
 	
 	public void genResultList() {
+		
+		
 		List<Sucursal> subSucFlt = getEntityManager()
 				.createQuery("SELECT s FROM Sucursal s WHERE s = :suc OR s.sucursalSuperior = :suc or s.sucursalSuperior = :otraSuc")
 				.setParameter("suc", loginUser.getUser().getSucursal())
@@ -88,6 +90,25 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		
 		fltSuc.append(" 1 = 2 ");
 		
+		
+		
+		
+		
+		/*resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
+				"	suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
+				"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
+				"	prt.codigo codProceso, rpc.repcli_id idRep, rqe.estado estado " +
+				" FROM  cliente cli, " +
+				" reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, " +
+				" etapa_rep_cliente etc, requisicion_etapa_rep rqe, sucursal suc " +
+				" WHERE rpc.apacli_id = apc.apacli_id and rpc.repcli_id = etc.repcli_id " +
+						" and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id " +
+						" and rqe.etarepcli_id = etc.etarepcli_id and rqe.sucreq_id = suc.id " +
+						"  and ( " + fltSuc + " ) and rqe.estado = 'PEN' " +
+								"ORDER BY rqe.fecha_ingreso DESC ")
+					.getResultList();*/
+		
+		
 		resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
 				"	apc.nombre nomProducto, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
 				"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
@@ -102,6 +123,18 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 						"  and ( " + fltSuc + " ) and rqe.estado = 'PEN' " +
 								"ORDER BY rqe.fecha_ingreso DESC ")
 					.getResultList();
+		
+		
+		
+		/*//Se van a filtrar 
+		if(instance.getSucursalSol().getSucursalSuperior()!=null)
+		{
+			String sqlQuery="SELECT req.etapaRepCli.etapaRep.procesoTll.nombre,req.id,req.etapaRepCli.reparacionCli.sucursal.nombre," +
+					"req.fechaIngreso,req.etapaRepCli.fechaEstFin,req.id,req.etapaRepCli.etapaRep.procesoTll.prcCode,req.etapaRepCli.reparacionCli.id,req.estado FROM RequisicionEtapaRep req where  ";
+		}
+			*/
+		
+		
 	}
 	
 	public void limpiarProductos() {

@@ -14,29 +14,55 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
+				<!-- 
 				<table style="width:400px;" >   
-				<tr>
-					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newlab}" />:</td>
-					<td>
-						<h:inputText value="#{medicamentoHome.labMed.nombre}" style="width:200px;font-size:14px" >
-							<a:support event="onkeyup" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
-						</h:inputText>
-					</td>
-					<td>
-						<a:commandButton action="#{medicamentoHome.agregarSeleccionarLabotaratorio()}" reRender="frmSelLab,formmedicm" id="_btnAdd"
-						disabled="#{empty medicamentoHome.labMed.nombre or medicamentoHome.labMed.nombre==''}" 
-						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						 value="#{msn.button_save}" style="font-size:14px;" ajaxSingle="true"  oncomplete="#{rich:component('selLaboratorio')}.hide();" />
-					</td>
-				</tr>
+					<tr>
+						<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newlab}" />:</td>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+					</tr>
 				</table>
+				 -->
+				 <h:panelGrid columns="1" style="margin:0 auto;" >
+				 
+					<h:panelGrid columns="2" >
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">NUEVA</ui:define>
+							<h:inputText value="#{medicamentoHome.labMed.nombre}" style="width:200px;font-size:14px" >
+								<a:support event="onkeyup" eventsQueue="q1" reRender="_btnAdd" ajaxSingle="true"></a:support>
+							</h:inputText>
+						</s:decorate>
+						
+						<a:commandButton action="#{medicamentoHome.agregarSeleccionarLabotaratorio()}" reRender="frmSelLab,formmedicm" id="_btnAdd"
+								disabled="#{empty medicamentoHome.labMed.nombre or medicamentoHome.labMed.nombre==''}" 
+								styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+								 value="#{msn.button_save}" style="font-size:14px;" ajaxSingle="true"  oncomplete="#{rich:component('selLaboratorio')}.hide();" />
+								 
+					</h:panelGrid>
+					
+					<rich:spacer height="5" ></rich:spacer>
+					
+					<h:inputText value="#{medicamentoHome.busquedaLab}" id="txtBusquedaLab" style="width:200px;" >
+						<a:support event="onkeyup" reRender="_tblLabs" action="#{medicamentoHome.buscarLaboratorioPorNombre()}" ajaxSingle="true" ></a:support>
+					</h:inputText>
+					
+					<p:watermark for="txtBusquedaLab" value="Buscar laboratorio" id="watermarkLab" />
+					
+				</h:panelGrid>
+				
 				<rich:dataTable var="res" value="#{medicamentoHome.laboratorios}" id="_tblLabs" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_laboratorios}</span></f:facet>
 					
-					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
-						<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_name}</span></f:facet>
+					<rich:column >
+						<f:facet name="header"><span style="font-size:14px;" >#{app.medicm_name}</span>
+						</f:facet>
 						<h:outputText value="#{res.nombre}" style="font-size:14px;" />
 					</rich:column>					
 					<rich:column>

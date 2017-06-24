@@ -14,30 +14,55 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
+				
+				<!--  
 				<table style="width:400px;" >   
-				<tr>
-					<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newsustancia}" />:</td>
-					<td>
-						<h:inputText value="#{medicamentoHome.susAct.nombre}" style="width:200px;"  id="inpNombre" >
-							<a:support event="onkeyup"  ajaxSingle="true"></a:support>
-						</h:inputText>
-					</td>
-					<td>
-						<a:commandButton action="#{medicamentoHome.agregarSeleccionarSustancia()}"  reRender="frmSelSus,_tblSusa,formmedicm" id="_btnAdd"
-						styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1" 
-						 value="#{msn.button_save}"  ajaxSingle="true" oncomplete="#{rich:component('selSustanciaAct')}.hide();" >
-						 	
-						 </a:commandButton>
-						 
-					</td>
-				</tr>
+					<tr>
+						<td style="vertical-align:middle; font-weight:bold;"><h:outputLabel value="#{app.medicm_newsustancia}" />:</td>
+						<td>
+
+						</td>
+						<td>
+							 
+						</td>
+					</tr>
 				</table>
+				-->
+				
+				<h:panelGrid columns="1" style="margin:0 auto;" >
+				 
+					<h:panelGrid columns="2" >
+					
+						<s:decorate template="/layout/kEditSpace.xhtml" >
+							<ui:define name="label">NUEVA</ui:define>
+							<h:inputText value="#{medicamentoHome.susAct.nombre}" style="width:200px;"  id="inpNombre" >
+								<a:support event="onkeyup"  ajaxSingle="true"></a:support>
+							</h:inputText>
+						</s:decorate>	
+						
+						<a:commandButton action="#{medicamentoHome.agregarSeleccionarSustancia()}"  reRender="frmSelSus,_tblSusa,formmedicm" id="_btnAdd"
+							styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1" 
+							 value="#{msn.button_save}"  ajaxSingle="true" oncomplete="#{rich:component('selSustanciaAct')}.hide();" >
+						</a:commandButton>
+							 
+					</h:panelGrid>
+					
+					<rich:spacer height="5" ></rich:spacer>
+					
+					<h:inputText value="#{medicamentoHome.busquedaSustancia}" id="txtBusquedaSustancia" style="width:200px;" >
+						<a:support event="onkeyup" reRender="_tblSusa" action="#{medicamentoHome.buscarSustanciaPorNombre()}" ajaxSingle="true" ></a:support>
+					</h:inputText>
+					
+					<p:watermark for="txtBusquedaSustancia" value="Buscar sustancia activa" id="watermarkSustancia"  />
+					
+				</h:panelGrid>	
+				
 				<rich:dataTable var="res" value="#{medicamentoHome.sustanciasAct}" id="_tblSusa" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.medicm_sustancias_act}</f:facet>
 					
-					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+					<rich:column >
 						<f:facet name="header">#{app.medicm_name}</f:facet>
 						<h:outputText value="#{res.nombre}" />
 					</rich:column>					

@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header"><span class="marginhead">#{app.pedidolist_head}</span></f:facet>
+			<f:facet name="header"><span class="marginhead">Requisiciones pendientes</span></f:facet>
 			
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -20,7 +20,7 @@
 				<rich:dataTable var="res" value="#{requisicionEtaHome.resultList}"
 					rows="20"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-					headerClass="tablaHeader" footerClass="tableScroll">
+					headerClass="tablaHeader" footerClass="tableScroll" >
 					<!-- <f:facet name="header">#{app.pedidolist_pending_list}</f:facet> -->
 					<rich:column filterBy="#{res[7]}#{res[8]}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.repcli_id}</f:facet>
@@ -35,7 +35,7 @@
 						<h:outputText value="#{res[1]}" />
 					</rich:column>
 					<rich:column filterBy="#{res[2]}" filterEvent="onkeyup">
-						<f:facet name="header">#{app.etarepcli_aparato}</f:facet>
+						<f:facet name="header">Descripcion</f:facet>
 						<h:outputText value="#{res[2]}" />
 					</rich:column>
 					<rich:column filterBy="#{res[3]}" filterEvent="onkeyup">
@@ -48,6 +48,7 @@
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>
+					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<s:link title="#{msn.button_edit}" 

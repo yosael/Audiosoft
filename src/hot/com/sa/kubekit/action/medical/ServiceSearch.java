@@ -18,7 +18,7 @@ public class ServiceSearch extends KubeSearcher<Service> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void searchImpl() {
-		String jpql = "select m from Service m WHERE 1 = 1 AND s.estado = 'ACT' ";
+		String jpql = "select m from Service m WHERE 1 = 1 AND m.estado = 'ACT' and (m.eliminado is null or m.eliminado<>'ELIM') ";
 		String order = " order by m.name ASC";
 		if (text != null && !text.isEmpty()) {
 			jpql += " AND  "

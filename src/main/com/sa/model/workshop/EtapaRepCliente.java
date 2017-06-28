@@ -40,6 +40,7 @@ public class EtapaRepCliente implements Serializable {
 	private String estado;
 	private Integer numDias;
 	private List<RequisicionEtapaRep> requisicionesEtapa =  new ArrayList<RequisicionEtapaRep>();
+	private String historico;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -144,6 +145,17 @@ public class EtapaRepCliente implements Serializable {
 	public void setNumDias(Integer numDias) {
 		this.numDias = numDias;
 	}
+	
+	
+	@Column(name = "historico", nullable = true,length=10)
+	public String getHistorico() {
+		return historico;
+	}
+	public void setHistorico(String historico) {
+		this.historico = historico;
+	}
+	
+	
 	
 	
 		

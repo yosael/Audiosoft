@@ -66,9 +66,15 @@
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
-							<ui:define name="label">#{app.reqeta_sucursalSol}:</ui:define>
+							<ui:define name="label">Solicitado a:</ui:define>
 							<h:inputText value="#{requisicionEtaHome.instance.sucursalSol.nombre}" disabled="true" />
 						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" id="_aparato" rendered="#{requisicionEtaHome.aparatoRequision!=null}" >
+							<ui:define name="label">Aparato Cliente:</ui:define>
+							<h:inputText value="#{requisicionEtaHome.aparatoRequision.nombre}" disabled="true" />
+						</s:decorate>
+						
 				</h:panelGrid> 
 
 				

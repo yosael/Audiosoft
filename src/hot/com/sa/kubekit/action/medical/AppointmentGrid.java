@@ -305,6 +305,11 @@ public class AppointmentGrid {
 				medicalAppointmentDAO.getSelectedSuc());
 			}
 			*/
+			
+			if(doctorSel!=null)
+				medicalAppointmentDAO.getInstance().setDoctor(doctorSel);
+			
+			
 			if (!medicalAppointmentDAO.validateSucursal() && medicalAppointmentDAO.getInstance().getSucursal() == null){
 				FacesMessages.instance().clear();
 				FacesMessages.instance().add(sainv_messages.get("medicalAppointmentDAO_nosuc"));

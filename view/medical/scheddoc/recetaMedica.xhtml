@@ -1,0 +1,144 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Receta Medica" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30" >
+	<p:font size="14" >
+		<p:paragraph alignment="right">Dr. Juan Bautista Caballero Sibrian
+									<span style="font-size:10px">CLINICA DE OIDO, NARIZ y GARGANTA</span>	
+		</p:paragraph>
+	</p:font>
+	
+	<p:table columns="2" widthPercentage="100"  headerRows="0" borderVisible="false" widths="5 5" >
+	
+		<p:cell  horizontalAlignment="center" verticalAlignment="left" paddingTop="6" paddingBottom="6" >
+			<p:font  >
+				<p:paragraph >
+					Calle sisimiles 3004, Col.Miramonte
+					San Salvador, El Salvador C.A.
+					Tel. 2525-0914 / Citas al 2525-0918
+				</p:paragraph>
+			</p:font>
+		</p:cell >
+		
+		<p:cell  verticalAlignment="right" paddingLeft="6"  >
+				<p:paragraph >RECETA</p:paragraph>
+		</p:cell>
+		
+	</p:table>
+	
+	<p:html><br /><br /></p:html>
+	
+	<p:table columns="3" widthPercentage="100"  headerRows="0" borderVisible="false" widths="3 6 1" >
+				
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingTop="6" paddingBottom="6" >
+				<p:font color="white" style="bold" >
+					<p:paragraph >MEDICAMENTO</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle" paddingLeft="6" >
+					<p:paragraph >MODO DE USO</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >CANTIDAD</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="medi" value="#{medicalAppointmentDAO.clinicalHistoryReceta.medicamentos}">
+				<p:cell  horizontalAlignment="center" verticalAlignment="left"  >
+					<p:font color="white"  >
+						<p:paragraph >#{medi.medicamento.nombre}</p:paragraph>
+					</p:font>
+				</p:cell>
+				<p:cell  verticalAlignment="middle" paddingLeft="3" >
+						<p:paragraph >#{medi.dosificacion.nombre}</p:paragraph>
+				</p:cell>
+				<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+					<p:font color="white" style="bold"  >
+						<p:paragraph >#{medi.observacion}</p:paragraph>
+					</p:font>
+				</p:cell>
+			</ui:repeat>
+			
+		</p:table>
+		
+		<p:html><br /></p:html>
+		
+		<p:font style="margin:0 auto" >
+				
+		</p:font>
+		
+		<p:table columns="2" widthPercentage="100" headerRows="2"  widths="3 7" >
+			<p:cell>
+				<p:paragraph >
+					DIAGNOSTICO: 
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					#{medicalAppointmentDAO.crearDiagnostico()}
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					PLAN:
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					#{medicalAppointmentDAO.clinicalHistoryReceta.treatmentDescriptive}
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					RECOMENDACIONES
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					#{medicalAppointmentDAO.crearRecomendaciones()}
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					PROXIMA CITA
+				</p:paragraph>
+			</p:cell>
+			<p:cell>
+				<p:paragraph >
+					Diagnostico
+				</p:paragraph>
+			</p:cell>
+			
+		</p:table>	
+				
+		<p:html><br /></p:html>
+		<p:html><br /></p:html>
+		
+		
+		<p:table columns="2" widthPercentage="100" headerRows="2"   widths="2 7" >
+			<p:cell colspan="2" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" size="12" >
+					<p:paragraph alignment="center">EXAMENES DE LABORATORIO</p:paragraph>
+				</p:font>
+			</p:cell>
+	
+			<ui:repeat var="ex" value="#{medicalAppointmentDAO.clinicalHistoryReceta.examenes}">
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingRight="6"  paddingTop="4" paddingBottom="3">
+					<p:paragraph>1</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle" paddingLeft="5" paddingTop="4" paddingBottom="3" >
+					<p:paragraph>#{ex.examen.name}</p:paragraph>
+				</p:cell>		
+			</ui:repeat>
+		
+						
+		</p:table>
+		
+</p:document>

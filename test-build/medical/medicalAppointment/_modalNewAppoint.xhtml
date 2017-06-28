@@ -266,8 +266,10 @@
 					<!-- renderImp,formApp,table,val para refrescar: comentado el 12/06/2017 -->
 					<a:commandButton 
 						reRender="formApp,formA" styleClass="saveBtn"
-						 value="#{msn.button_save}" oncomplete="validar()"
+						 value="#{msn.button_save}" oncomplete="validar();#{rich:component('modalLoadingAp')}.hide();"
 						 eventsQueue="q1"
+						 ignoreDupResponses="true"
+						 onclick="#{rich:component('modalLoadingAp')}.show();"
 						rendered="#{not medicalAppointmentDAO.managed}" action="#{appointmentGrid.registerNew()}" >
 					</a:commandButton><!-- <f:setPropertyActionListener value="#{appointmentGrid.doctorSel.id}" target="#{appointmentGrid.idDoctor}" /> comentado el 12/06/2017 -->
 					 
@@ -389,6 +391,16 @@
 						</s:div>
 					</s:div>
 				</rich:modalPanel>
+				
+			<rich:modalPanel id="modalLoadingAp" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+						onbeforeshow="activeModal.setActiveModalPanel('modalLoadingAp');" autosized="false" resizeable="false"  >
+						<h:form id="formModalLoadingAp" style="margin:0;padding:0;" >
+							<h:panelGrid columns="1" style="margin:0">
+								<h:graphicImage value="/kubeImg/imCargando.gif" style="margin:0;" />
+								<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
+							</h:panelGrid>	
+						</h:form>			
+					</rich:modalPanel>	
 	
 		
 	    </ui:composition>

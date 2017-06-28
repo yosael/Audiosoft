@@ -73,7 +73,12 @@
 							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
 						</h:inputTextarea>
 					</s:decorate>
-				</h:panelGrid> <s:decorate template="/layout/kActions.xhtml" id="action">
+				</h:panelGrid> 
+				<s:decorate template="/layout/kActions.xhtml" id="action">
+					<a:commandButton reRender="formA"
+						rendered="#{serviceDAO.managed}" styleClass="deleteBtn"
+						 value="Eliminar" onclick="upperCaseAllInputs();#{rich:component('confirmation')}.show();" />
+						
 					<s:button view="/medical/service/list.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}"></s:button>
 					<s:button view="/medical/service/master.xhtml" propagation="begin"
@@ -91,6 +96,32 @@
 			</h:form>
 			<rich:spacer height="10" />
 		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.servlist_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.servlist_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{serviceDAO.eliminarServicio()}" reRender="formA"
+						rendered="#{serviceDAO.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
 		
 	</ui:define>
 </ui:composition>

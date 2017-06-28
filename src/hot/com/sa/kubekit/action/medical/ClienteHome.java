@@ -460,9 +460,11 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	
 	//guarda y limpia desde el modal para agregar nuevo paciente
 	public void saveClear(boolean s){
+		
 		FacesMessages.instance().clear();
 		
 		if(s){
+			
 			valtel = false;
 			if(instance.getNombres() == null){
 				

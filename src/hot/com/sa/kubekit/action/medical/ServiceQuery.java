@@ -14,7 +14,7 @@ public class ServiceQuery extends KubeQuery<Service> {
 
 	@Create
 	public void init() {
-		setJpql("select e from Service e order by e.estado ASC,e.codigo ASC");
+		setJpql("select e from Service e where (e.eliminado is null or e.eliminado<>'ELIM') order by e.estado ASC,e.codigo ASC");
 	}
 
 }

@@ -306,6 +306,28 @@ public class ProductoHome extends KubeDAO<Producto> {
 					.setParameter("nom", "%" + nomCoinci + "%").getResultList();
 	}
 	
+	public void buscadorProductosRequi() {
+		
+		if (this.sucursalSeleccionada != null)
+			this.productos = getEntityManager()
+					.createQuery(
+							"select i from Inventario i where (i.sucursal = :sucursal) and"
+									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom) or UPPER(i.producto.categoria.nombre) like UPPER(:nom) or UPPER(i.producto.marca.nombre) like UPPER(:nom)) order by i.producto.referencia,i.producto.nombre")
+					.setParameter("cod", "%" + nomCoinci + "%")
+					.setParameter("nom", "%" + nomCoinci + "%")
+					.setParameter("sucursal", this.sucursalSeleccionada)
+					.getResultList();
+		else
+			this.productos = getEntityManager()
+					.createQuery(
+							"select i from Inventario i where (i.sucursal = :sucursal) AND"
+									+ " (UPPER(i.producto.referencia) like UPPER(:cod) or UPPER(i.producto.nombre) like UPPER(:nom) or UPPER(i.producto.categoria.nombre) like UPPER(:nom) or UPPER(i.producto.marca.nombre) like UPPER(:nom)) order by i.producto.referencia,i.producto.nombre")
+					.setParameter("sucursal",
+							this.loginUser.getUser().getSucursal())
+					.setParameter("cod", "%" + nomCoinci + "%")
+					.setParameter("nom", "%" + nomCoinci + "%").getResultList();
+	}
+	
 	
 	public void cargarItems()
 	{
@@ -375,6 +397,9 @@ public class ProductoHome extends KubeDAO<Producto> {
 	}
 
 	public void cargarListaProdsTaller(Sucursal sucFiltro) {
+		
+		sucursalSeleccionada=sucFiltro;
+		
 		this.productos = getEntityManager()
 				.createQuery(
 						"select i from Inventario i where i.sucursal = :sucursal order by i.producto.nombre ")

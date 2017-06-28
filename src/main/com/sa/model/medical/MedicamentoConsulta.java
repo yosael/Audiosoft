@@ -34,6 +34,10 @@ public class MedicamentoConsulta implements Serializable {
 	private MedicamentoLaboratorios selLab;
 	
 	
+	//agregado el 26/06/2017
+	private String observacion;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -128,6 +132,15 @@ public class MedicamentoConsulta implements Serializable {
 	public void setSelLab(MedicamentoLaboratorios selLab) {
 		this.selLab = selLab;
 		setLaboratorio(selLab.getLaboratorio());
+	}
+	
+	
+	@Column(name = "observacion", nullable = true,length=100)
+	public String getObservacion() {
+		return observacion;
+	}
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
 	}
 	
 	

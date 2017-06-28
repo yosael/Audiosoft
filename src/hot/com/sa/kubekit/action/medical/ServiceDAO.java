@@ -25,6 +25,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.sales.Service;
@@ -76,10 +77,21 @@ public class ServiceDAO extends KubeDAO<Service> {
 		
 	}
 	
+	
+	public boolean eliminarServicio()
+	{
+		
+		instance.setEstado("INA");
+		instance.setEliminado("ELIM");
+		
+
+		return modify(); 
+	}
+	
 	public void buscadorServiciosGral(){
 		resultList = getEntityManager()
 				.createQuery("SELECT s FROM Service s WHERE ((UPPER(s.name) LIKE UPPER(:nom) OR " +
-						"UPPER(s.codigo) LIKE UPPER(:cod)))")
+						"UPPER(s.codigo) LIKE UPPER(:cod)) and (s.eliminado is null or s.eliminado<>'ELIM'))")
 				.setParameter("cod","%"+nomCoinci+"%" )
 				.setParameter("nom","%"+nomCoinci+"%")
 				.getResultList();
@@ -89,7 +101,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 	public void loadServiciosList(String tipoServ) {
 		nomCoinci="";
 		resultList = getEntityManager()
-				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' ORDER BY s.codigo ASC")
+				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
 				.setParameter("tps", tipoServ)
 				.getResultList();
 	}
@@ -97,7 +109,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 	public void loadServiciosListByName(String tipoServ) {
 			
 			resultList = getEntityManager()
-					.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' AND (UPPER(s.name) like :nom) ORDER BY s.codigo ASC")
+					.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' and (s.eliminado is null or s.eliminado<>'ELIM') AND (UPPER(s.name) like :nom) ORDER BY s.codigo ASC")
 					.setParameter("tps", tipoServ)
 					.setParameter("nom","%"+this.nomCoinci.toUpperCase()+"%")
 					.getResultList();
@@ -111,7 +123,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 		System.out.println("ENtro a buscar examen");
 		
 		resultListExa = getEntityManager()
-				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' ORDER BY s.codigo ASC")
+				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
 				.setParameter("tps", "EXA")
 				.getResultList();
 		
@@ -123,7 +135,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 		System.out.println("Var coinci "+nomCoinci);
 		
 		resultListExa = getEntityManager()
-				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' AND (UPPER(s.name) like :nom)  ORDER BY s.codigo ASC")
+				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps AND s.estado = 'ACT' AND (UPPER(s.name) like :nom) and (s.eliminado is null or s.eliminado<>'ELIM')  ORDER BY s.codigo ASC")
 				.setParameter("tps", "EXA")
 				.setParameter("nom","%"+this.nomCoinci.toUpperCase()+"%")
 				.getResultList();
@@ -135,7 +147,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 		System.out.println("entré a a findServiciosByName y o.tostring es: "+ o.toString());  
 		return getEntityManager()
 			.createQuery("SELECT s.codigo, s.name,s FROM Service s WHERE (s.tipoServicio = :tps1 OR s.tipoServicio = :tps2)" +
-					" AND s.estado = 'ACT' AND (UPPER(s.name) LIKE UPPER(:nom)) OR (UPPER(s.codigo) LIKE UPPER(:nom)) ORDER BY s.codigo ASC")
+					" AND s.estado = 'ACT' AND (UPPER(s.name) LIKE UPPER(:nom) OR UPPER(s.codigo) LIKE UPPER(:nom)) and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
 			.setParameter("tps1", "EXA")
 			.setParameter("tps2", "MED")
 			.setParameter("nom","%"+o.toString()+"%")
@@ -145,7 +157,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 	
 	public void loadServiciosList(String tipoServ1, String tipoServ2) {
 		resultList = getEntityManager()
-				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps1 OR s.tipoServicio = :tps2 AND s.estado = 'ACT' ORDER BY s.codigo ASC")
+				.createQuery("SELECT s FROM Service s WHERE s.tipoServicio = :tps1 OR s.tipoServicio = :tps2 AND s.estado = 'ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
 				.setParameter("tps1", tipoServ1)
 				.setParameter("tps2", tipoServ2)
 				.getResultList();
@@ -171,13 +183,13 @@ public class ServiceDAO extends KubeDAO<Service> {
 		
 		if(!isManaged()) { 
 			serviciosCoinci = getEntityManager()
-					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.estado='ACT'")
+					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
 					.setParameter("cod", instance.getCodigo())
 					.getResultList();
 			
 		} else {
 			serviciosCoinci = getEntityManager()
-					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.id <> :idSvc AND s.estado='ACT'")
+					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.id <> :idSvc AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
 					.setParameter("cod", instance.getCodigo())
 					.setParameter("idSvc", instance.getId())
 					.getResultList();
@@ -185,7 +197,7 @@ public class ServiceDAO extends KubeDAO<Service> {
 		
 		if(serviciosCoinci != null && serviciosCoinci.size() > 0) {
 			sainv_messages.clear();
-			FacesMessages.instance().add(
+			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("serviceDAO_codrep"));
 			return false;
 		}
@@ -196,6 +208,10 @@ public class ServiceDAO extends KubeDAO<Service> {
 	
 	public void exportarExcel() throws IOException
 	{
+		
+		resultList=getEntityManager().createQuery("SELECT s FROM Service s where s.eliminado is null or s.eliminado<>'ELIM' order by s.codigo ").getResultList();
+		
+		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 0);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

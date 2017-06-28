@@ -48,7 +48,7 @@
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
-							<ui:define name="label">#{app.movimientomast_branch}:</ui:define>
+							<ui:define name="label">Solicitar a:</ui:define>
 							<h:selectOneMenu value="#{requisicionEtaHome.instance.sucursalSol}" required="true" 
 								enabled="#{requisicionEtaHome.instance.estado == 'PEN' or requisicionEtaHome.instance.estado == null}" >
 								

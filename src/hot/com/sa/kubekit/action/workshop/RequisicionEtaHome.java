@@ -24,6 +24,7 @@ import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Sucursal;
+import com.sa.model.workshop.AparatoCliente;
 import com.sa.model.workshop.ItemRequisicionEta;
 import com.sa.model.workshop.RequisicionEtapaRep;
 
@@ -53,6 +54,7 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	private List<Sucursal> sucursalesSoli = new ArrayList<Sucursal>();
 	private List<Producto> productosSeleccionar = new ArrayList<Producto>();
 	private Sucursal sucursalActUs;
+	private AparatoCliente aparatoRequision;
 	
 	private Integer reqId;
 	
@@ -83,10 +85,17 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		
 		//Iteramos sobre las sucursales para formar el filtro
 		StringBuilder fltSuc = new StringBuilder();
+		
 		for(Sucursal tmpSuc : subSucFlt) {
 			fltSuc.append(" rqe.sucreq_id = ");
 			fltSuc.append(tmpSuc.getId()).append(" OR ");
 		}
+		
+		
+		/*for(Sucursal tmpSuc : subSucFlt) {
+			fltSuc.append(" req.sucursalSol.id = ");
+			fltSuc.append(tmpSuc.getId()).append(" OR ");
+		}*/
 		
 		fltSuc.append(" 1 = 2 ");
 		
@@ -108,16 +117,33 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 								"ORDER BY rqe.fecha_ingreso DESC ")
 					.getResultList();*/
 		
+		//Actual resp
+			/*	resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
+						"	apc.nombre nomProducto, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
+						"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
+						"	prt.codigo codProceso, rpc.repcli_id idRep, rqe.estado estado " +
+						" FROM aparato_cliente apc, cliente cli, " +
+						" reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, " +
+						" etapa_rep_cliente etc, requisicion_etapa_rep rqe, sucursal suc " +
+						" WHERE apc.cliente_id = cli.cliente_id " +
+								" and rpc.apacli_id = apc.apacli_id and rpc.repcli_id = etc.repcli_id " +
+								" and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id " +
+								" and rqe.etarepcli_id = etc.etarepcli_id and rqe.sucreq_id = suc.id " +
+								"  and ( " + fltSuc + " ) and rqe.estado = 'PEN' " +
+										"ORDER BY rqe.fecha_ingreso DESC ")
+							.getResultList();
+		*/
 		
+		//Actual
 		resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
-				"	apc.nombre nomProducto, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
+				"	rqe.descripcion, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
 				"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
 				"	prt.codigo codProceso, rpc.repcli_id idRep, rqe.estado estado " +
-				" FROM aparato_cliente apc, cliente cli, " +
+				" FROM  cliente cli, " +
 				" reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, " +
 				" etapa_rep_cliente etc, requisicion_etapa_rep rqe, sucursal suc " +
-				" WHERE apc.cliente_id = cli.cliente_id " +
-						" and rpc.apacli_id = apc.apacli_id and rpc.repcli_id = etc.repcli_id " +
+				" WHERE rpc.cli_id = cli.cliente_id " +
+						" and rpc.repcli_id = etc.repcli_id " +
 						" and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id " +
 						" and rqe.etarepcli_id = etc.etarepcli_id and rqe.sucreq_id = suc.id " +
 						"  and ( " + fltSuc + " ) and rqe.estado = 'PEN' " +
@@ -126,13 +152,15 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		
 		
 		
-		/*//Se van a filtrar 
-		if(instance.getSucursalSol().getSucursalSuperior()!=null)
-		{
-			String sqlQuery="SELECT req.etapaRepCli.etapaRep.procesoTll.nombre,req.id,req.etapaRepCli.reparacionCli.sucursal.nombre," +
-					"req.fechaIngreso,req.etapaRepCli.fechaEstFin,req.id,req.etapaRepCli.etapaRep.procesoTll.prcCode,req.etapaRepCli.reparacionCli.id,req.estado FROM RequisicionEtapaRep req where  ";
-		}
-			*/
+		//Se van a filtrar 
+		/*if(instance.getSucursalSol().getSucursalSuperior()!=null)
+		{*/
+			/*String jpqlQuery="SELECT req.etapaRepCli.etapaRep.procesoTll.nombre,req.id,req.etapaRepCli.reparacionCli.sucursal.nombre," +
+					"req.fechaIngreso,req.etapaRepCli.fechaEstFin,req.id,req.etapaRepCli.etapaRep.procesoTll.prcCode,req.etapaRepCli.reparacionCli.id,req.estado FROM RequisicionEtapaRep req where  ( " + fltSuc + " ) and req.estado='PEN' order by req.fechaIngreso ";*/
+		//}
+			
+		//resultList = getEntityManager().createQuery(jpqlQuery).getResultList();	
+			
 		
 		
 	}
@@ -162,7 +190,16 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 					instance.setSucursalSol(loginUser.getUser().getSucursal().getSucursalSuperior());
 			}
 			
+			
+			//AparatoCliente aparatoCliente;
+			
+			if(instance.getEtapaRepCli().getReparacionCli().getAparatoRep()!=null)
+			{
+				aparatoRequision=instance.getEtapaRepCli().getReparacionCli().getAparatoRep();
+			}
+			
 		}catch (Exception e) {
+			
 			e.printStackTrace();
 			System.out.println("Entré al catch porque no pude cargar la requisición");
 			clearInstance();
@@ -197,6 +234,64 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			System.out.println("***nombre sucursal actual "+loginUser.getUser().getSucursal().getNombre());
 			System.out.println("***nombre sucursal instance "+instance.getSucursalSol().getNombre());
 			
+		}
+	}
+	
+	
+	public void cargarRequisicion(RequisicionEtapaRep requi)
+	{
+		try {
+			
+			
+			setInstance(requi);
+			itemsAgregados= getEntityManager().createQuery("SELECT i FROM ItemRequisicionEta i where i.reqEtapa.id=:idReq").setParameter("idReq", instance.getId()).getResultList();
+			sucursalesSoli = (List<Sucursal>)getEntityManager().createQuery("SELECT s FROM Sucursal s where s.bodega=TRUE").getResultList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			FacesMessages.instance().add(Severity.WARN,"No se pudo cargar la requisicion");
+		}
+	}
+	
+	public void editarRequisicion()
+	{
+		
+		if(itemsAgregados.size()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccionar un item");
+			return;
+		}
+		
+		if(modify())
+		{
+			for(ItemRequisicionEta item: itemsAgregados)
+			{
+				if(item.getId()==null)
+				{
+					item.setReqEtapa(instance);
+					getEntityManager().persist(item);
+				}
+			}
+			
+			FacesMessages.instance().add(Severity.INFO,"Se actualizo la requisicion");
+		}
+		else
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al editar la requisicion");
+		}
+	}
+	
+	public void quitarItemEditar(ItemRequisicionEta item)
+	{
+		if(item.getId()!=null)
+		{
+			getEntityManager().remove(item);
+			itemsAgregados.remove(item);
+		}
+		else
+		{
+			itemsAgregados.remove(item);
 		}
 	}
 	
@@ -367,6 +462,7 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	@Override
 	public boolean preModify() {
+		
 		for(ItemRequisicionEta tmpItm : itemsAgregados) {
 			//Validamos que para todos los productos de la venta que lleven codigo de lote o de serie, lleven uno
 			//Y que lleven el mismo numero de codigos que de items
@@ -496,6 +592,14 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 
 	public void setSucursalActUs(Sucursal sucursalActUs) {
 		this.sucursalActUs = sucursalActUs;
+	}
+
+	public AparatoCliente getAparatoRequision() {
+		return aparatoRequision;
+	}
+
+	public void setAparatoRequision(AparatoCliente aparatoRequision) {
+		this.aparatoRequision = aparatoRequision;
 	}
 
 	

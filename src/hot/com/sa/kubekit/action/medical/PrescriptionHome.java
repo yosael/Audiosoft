@@ -151,6 +151,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		item.setSelDosif(medicm.getDosificaciones().get(0));
 		item.setSelPresen(medicm.getPresentaciones().get(0));
 		item.setSelLab(medicm.getMedicamentosLab().get(0));
+		item.setObservacion("");
 		
 		itemsAgregados.add(item);
 	}

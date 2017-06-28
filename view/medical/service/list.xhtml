@@ -89,7 +89,7 @@
 							<f:param name="id" value="#{res.id}" />
 						</s:link>
 						<rich:spacer width="10" />
-						<a:commandLink title="#{app.servlist_delete}" reRender="m1" eventsQueue="q1"
+						<a:commandLink title="Desactivar servicio" reRender="m1" eventsQueue="q1"
 							action="#{serviceDAO.select(res)}" ajaxSingle="true"
 							onclick="#{rich:component('confirmation')}.show();">
 							<h:graphicImage value="/kubeImg/table_delete16.png" />
@@ -122,7 +122,7 @@
 					</a:commandButton>
 					<a:commandButton action="#{serviceDAO.desactivarServicio()}" reRender="formA"
 						rendered="#{serviceDAO.managed}" styleClass="deleteBtn"
-						value="#{msn.button_delete}"
+						value="Desea desactivar el servicio?"
 						onclick="#{rich:component('confirmation')}.hide();">
 					</a:commandButton>
 				</s:decorate>

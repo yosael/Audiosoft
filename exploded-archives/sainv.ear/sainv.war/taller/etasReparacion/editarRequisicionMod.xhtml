@@ -16,7 +16,7 @@
 					value="#{requisicionEtaHome.managed?sainv_view_messages.get('reqeta_head_edit'):sainv_view_messages.get('reqeta_head_register')}" />
 			</f:facet>
 			<rich:spacer height="10" />
-			<h:form id="formrequisicionMod">
+			<h:form id="formrequisicionModEdit">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
@@ -24,7 +24,7 @@
 				<fieldset>
 					<legend>#{app.reqeta_legend}</legend> 
 					
-					<h:panelGrid columns="3">
+					<h:panelGrid columns="3" >
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.reqeta_fechaIng}:</ui:define>
@@ -70,9 +70,9 @@
 				</h:panelGrid> 
 				
 				<s:decorate template="/layout/kActions.xhtml">
-					<a:commandButton onclick="#{rich:component('confirmationReq')}.show();" ajaxSingle="true" 
+					<a:commandButton onclick="#{rich:component('confirmationReqEdit')}.show();" ajaxSingle="true" 
 						disabled="#{requisicionEtaHome.instance.sucursalSol==null}" id="_btnItems" 
-						action="#{productoHome.cargarListaProdsTaller(requisicionEtaHome.instance.sucursalSol)}" reRender="mprd" 
+						action="#{productoHome.cargarListaProdsTaller(requisicionEtaHome.instance.sucursalSol)}" reRender="mprdEdit" 
 						styleClass="addBtn" value="#{msn.button_add_product}" 
 						rendered="#{requisicionEtaHome.instance.estado == 'COT'}" >  
 					</a:commandButton>
@@ -105,10 +105,10 @@
 						<h:outputText value="#{res.producto.prcNormal}" size="8" >
 						</h:outputText>
 					</rich:column>
-					<rich:column rendered="#{not requisicionEtaHome.managed}">
+					<rich:column >
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink reRender="formrequisicionMod"  eventsQueue="q1"
-							action="#{requisicionEtaHome.removerItem(res)}" ajaxSingle="true">
+						<a:commandLink reRender="formrequisicionModEdit"  eventsQueue="q1"
+							action="#{requisicionEtaHome.quitarItemEditar(res)}" ajaxSingle="true">
 							<h:graphicImage value="/kubeImg/table_delete16.png" />
 						</a:commandLink>
 					</rich:column>
@@ -118,16 +118,16 @@
 				<rich:spacer height="6"/>
 				
 				<s:decorate template="/layout/kActions.xhtml">
-						<a:commandButton action="#{requisicionEtaHome.save()}" onclick="#{rich:component('detReq')}.hide();" reRender="formrequisicionMod, pnlRequisiciones, tblRequisiciones"
-						rendered="#{not requisicionEtaHome.managed}" styleClass="saveBtn"
-						value="#{msn.button_save}"/>
+						<a:commandButton action="#{requisicionEtaHome.editarRequisicion()}" ajaxSingle="true" onclick="#{rich:component('detReqEdit')}.hide();" reRender="formrequisicionModEdit, pnlRequisiciones, tblRequisiciones"
+						 styleClass="modifyBtn"
+						value="Actualizar"/>
 				</s:decorate>
 				</fieldset>
 				</center>
 			</h:form>
 			
-			<rich:modalPanel id="confirmationReq"  width="700" moveable="true" autosized="true" top="50px"
-				onbeforeshow="activeModal.setActiveModalPanel('confirmationReq');">
+			<rich:modalPanel id="confirmationReqEdit"  width="700" moveable="true" autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('confirmationReqEdit');">
 				
 				<f:facet name="header">
 					#{app.movimientolist_add_products_modal}
@@ -136,11 +136,12 @@
 				<f:facet name="controls">
 					<h:panelGroup>
 						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
-							onclick="#{rich:component('confirmationReq')}.hide();" />
+							onclick="#{rich:component('confirmationReqEdit')}.hide();" />
 					</h:panelGroup>
 				</f:facet>
-				<s:div id="mprd">
-					<ui:include  src="addPrdReq.xhtml" />
+				
+				<s:div id="mprdEdit">
+					<ui:include  src="addPrdReqEdit.xhtml" />
 				</s:div>
 			</rich:modalPanel>
 			

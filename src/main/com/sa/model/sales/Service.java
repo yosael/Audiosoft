@@ -45,7 +45,8 @@ public class Service {
 	private Set<ServiceClinicalHistory> serviceClinicalHistories = new HashSet<ServiceClinicalHistory>(0);
 	private Set<Specialty> specialties = new HashSet<Specialty>(0);
 	private List<CotizacionPrdSvcAdicionales> cotizSvcAdi = new ArrayList<CotizacionPrdSvcAdicionales>();
-	private boolean asociado;	
+	private boolean asociado;
+	private String eliminado;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -175,6 +176,16 @@ public class Service {
 
 	public void setAsociado(boolean asociado) {
 		this.asociado = asociado;
+	}
+
+	
+	@Column(name = "eliminado", nullable = true, length = 4)
+	public String getEliminado() {
+		return eliminado;
+	}
+
+	public void setEliminado(String eliminado) {
+		this.eliminado = eliminado;
 	}
 
 	

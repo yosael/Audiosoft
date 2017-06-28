@@ -63,17 +63,18 @@
 						<tr>
 							
 
-							<td width="200px"><s:decorate
-									template="/layout/kActions.xhtml">
-
+							<td width="200px">
+								<s:decorate template="/layout/kActions.xhtml">
 									<s:button view="/taller/trackReparacion/master.xhtml"
 										propagation="begin" styleClass="newBtn"
 										style="width:140px;height:30px;font-size:15px;padding-top:0px;"
 										value="#{msn.button_register}" rendered="true">
 										<f:param name="id" value="" />
 									</s:button>
-								</s:decorate></td>
-								<td width="200px"><s:decorate
+								</s:decorate>
+							</td>
+							<td width="200px">
+								<s:decorate
 									template="/layout/kActions.xhtml" id="action">
 
 									<a:commandButton
@@ -84,7 +85,8 @@
 										value="#{msn.button_search}" reRender="formA">
 										<s:defaultAction />
 									</a:commandButton>
-								</s:decorate></td>
+								</s:decorate>
+							</td>
 						</tr>
 
 					</table>
@@ -100,7 +102,7 @@
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<!--<f:facet name="header">#{app.repcli_lstReps}</f:facet>-->
 
-					<rich:column filterBy="#{res.proceso.prcCode}#{res.id}"
+					<rich:column filterBy="#{res.id}"
 						filterEvent="onkeyup">
 						<f:facet name="header">#{app.repcli_id}</f:facet>
 						<h:outputText value="#{res.proceso.prcCode}#{res.id}" />

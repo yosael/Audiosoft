@@ -171,6 +171,13 @@
 										</h:selectOneMenu>
 										<h:outputText value="#{res.presentacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;" />
 									</rich:column>
+									<rich:column >
+										<f:facet name="header">Modo de uso</f:facet>
+										<h:inputText value="#{res.observacion}" rendered="#{not generalMedicalDAO.isManaged()}" >
+											<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+										</h:inputText>
+										<h:outputText value="#{res.observacion}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;"/>
+									</rich:column>
 									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
 										<f:facet name="header">Quitar</f:facet>
 										<a:commandLink reRender="_tableMedSug"

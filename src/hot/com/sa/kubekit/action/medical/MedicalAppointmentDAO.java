@@ -16,8 +16,11 @@ import org.jboss.seam.faces.FacesMessages;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.crm.Cliente;
+import com.sa.model.medical.ClinicalHistory;
+import com.sa.model.medical.DiagnosticoConsulta;
 import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.medical.MedicalAppointmentService;
+import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.id.MedicalAppointmentServiceId;
 import com.sa.model.sales.Service;
 import com.sa.model.security.Sucursal;
@@ -37,7 +40,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 	private Sucursal selectedSuc;
 	private String search ="";
 	private String comentStatus;
-	
+	private ClinicalHistory clinicalHistoryReceta;
 	
 	//Nuevo prueba 21/12/2016
 	
@@ -126,6 +129,67 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		System.out.println("cliente "+medicalAppointment.getStatus());
 	}
 	
+	
+	
+	public void cargarRecetaMedica()
+	{
+		MedicalAppointment medicalAppointment = getEntityManager().find(MedicalAppointment.class, appointmentId);
+		clinicalHistoryReceta = medicalAppointment.getClinicalHistory();
+		
+		System.out.println("Entro a cargar receta medica");
+		
+		System.out.println("Clinical history "+clinicalHistoryReceta.getConsultationReason());
+		
+	}
+	
+	public String crearDiagnostico()
+	{
+		
+		
+		
+		if(clinicalHistoryReceta.getDiagnosticos().size()>0)
+		{
+			StringBuilder diagnostico = new StringBuilder();
+		
+			for(DiagnosticoConsulta diag:clinicalHistoryReceta.getDiagnosticos())
+			{
+				diagnostico.append(diag.getDiagnostico().getNombre());
+				diagnostico.append(". ");
+			}
+			
+			return diagnostico.toString();
+		
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
+	
+	public String crearRecomendaciones()
+	{
+		
+		
+		
+		if(clinicalHistoryReceta.getRecomendaciones().size()>0)
+		{
+			StringBuilder recomendacion = new StringBuilder();
+		
+			for(RecomendacionConsulta rec:clinicalHistoryReceta.getRecomendaciones())
+			{
+				recomendacion.append(rec.getRecomendacion().getNombre());
+				recomendacion.append(". ");
+			}
+			
+			return recomendacion.toString();
+		
+		}
+		else
+		{
+			return "";
+		}
+	}
 	
 	public boolean validateSucursal(){
 		try {
@@ -547,6 +611,8 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 	}
 
 	public void cleanForNew() {
+		
+		
 		System.out.println("Pasé por cleanForNew() de MedicalAppointmentDAO");
 		selMedAps.clear();
 		this.servicios.clear();
@@ -636,6 +702,14 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 
 	public void setComentStatus(String comentStatus) {
 		this.comentStatus = comentStatus;
+	}
+
+	public ClinicalHistory getClinicalHistoryReceta() {
+		return clinicalHistoryReceta;
+	}
+
+	public void setClinicalHistoryReceta(ClinicalHistory clinicalHistoryReceta) {
+		this.clinicalHistoryReceta = clinicalHistoryReceta;
 	}
 
 	

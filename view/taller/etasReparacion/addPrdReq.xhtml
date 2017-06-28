@@ -11,20 +11,21 @@
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 	
 	<h:form id="formAddReq">
+	
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-				<!-- <center>
+				<center>
 						<s:span styleClass="busHead">#{app.compramast_buscar_product}:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 						<h:inputText styleClass="busProd" value="#{productoHome.nomCoinci}"
 							 id="_nomCoinci">
-						<a:support  event="onkeydown" reRender="#{rich:clientId('tableP')}"
-							ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
-						<a:support event="onkeyup" reRender="#{rich:clientId('tableP')}"
-							ajaxSingle="true" action="#{productoHome.buscadorProductos()}" />
-					</h:inputText>
-					</center> -->
+							 
+							<a:support event="onkeyup" reRender="#{rich:clientId('tableP')}"
+								ajaxSingle="true" action="#{productoHome.buscadorProductosRequi()}" />
+								
+						</h:inputText>
+				</center>
 				<rich:dataTable var="res" value="#{productoHome.productos}" id="tableP"
 					rendered="#{not empty productoHome.productos}" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 

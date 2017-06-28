@@ -30,7 +30,14 @@
 							action="#{etapaRepCliHome.repsPendientes()}" />
 						
 					</h:inputText>
-				</center> -->  <rich:spacer height="30px" ></rich:spacer>
+				</center> --> 
+				
+				<h:panelGrid style="margin:0 auto;" >
+					<a:commandButton value="Ver historicos" action="#{etapaRepCliHome.verRegistrosHistoricos()}" reRender="repsPendientes" ajaxSingle="true"  style="width:150px" ></a:commandButton>
+				</h:panelGrid>
+				
+				
+				 <rich:spacer height="30px" ></rich:spacer>
 				<rich:dataTable id="repsPendientes" 
 					var="res" value="#{etapaRepCliHome.etapasRepCli}"
 					rendered="#{not empty etapaRepCliHome.etapasRepCli}" rows="20"

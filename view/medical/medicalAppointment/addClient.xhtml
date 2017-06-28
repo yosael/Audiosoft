@@ -306,19 +306,22 @@
 									value="#{msn.button_new}">
 								</a:commandButton>
 								
-								<a:commandLink  ajaxSingle="true" action="#{clienteHome.saveClear(true)}" reRender="formAC,val,lblSelPat"
-									 styleClass="saveBtnLnk" oncomplete="validar()"
+								<a:commandLink  ajaxSingle="true" action="#{clienteHome.saveClear(true)}" onclick="#{rich:component('modalLoading')}.show();" reRender="formAC,val,lblSelPat"
+									 styleClass="saveBtnLnk" oncomplete="validar();#{rich:component('modalLoading')}.hide();"
+									 ignoreDupResponses="true"
 									value="#{msn.button_save}">
 									<s:conversationPropagation type="join"></s:conversationPropagation>
 								</a:commandLink><!-- rendered="#{clienteHome.numId==-1}" -->
 								
 								<s:div id="val" >
 						<script type="text/javascript"> 
-						function validar(){
-							//alert('#{clienteHome.valtel}');																
-							if(#{clienteHome.valtel}){
-								#{rich:component('addClient')}.hide();					
-							}					
+							function validar(){
+							
+								//alert('#{clienteHome.valtel}');																
+								if(#{clienteHome.valtel}){
+									#{rich:component('addClient')}.hide();					
+								}
+													
 							}
 						</script>
 					</s:div>		
@@ -490,6 +493,16 @@
 									<rich:datascroller id="ds1" renderIfSinglePage="true" />
 								</f:facet>
 							</rich:dataTable>				
+						</h:form>			
+					</rich:modalPanel>
+					
+					<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+						onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
+						<h:form id="formModalLoading" style="margin:0;padding:0;" >
+							<h:panelGrid columns="1" style="margin:0">
+								<h:graphicImage value="/kubeImg/imCargando.gif" style="margin:0;" />
+								<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
+							</h:panelGrid>	
 						</h:form>			
 					</rich:modalPanel>
 					

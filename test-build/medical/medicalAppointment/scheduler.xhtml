@@ -237,7 +237,8 @@
 						</td>
 					</tr>
 					<tr>
-						<td><s:decorate template="/layout/kEditSpace.xhtml"
+						<td>
+							<s:decorate template="/layout/kEditSpace.xhtml"
 								style="width:200px;">
 								<ui:define name="label">#{app.sched_date}:</ui:define>
 								<rich:calendar value="#{appointmentGrid.dateSel}"
@@ -245,7 +246,8 @@
 									<a:support action="#{appointmentGrid.createGridDay()}"
 										reRender="formA, action" event="onchanged" />
 								</rich:calendar>
-							</s:decorate></td>
+							</s:decorate>
+						</td>
 						<td>&nbsp;</td>
 					</tr>
 				</table>

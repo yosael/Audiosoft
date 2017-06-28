@@ -141,7 +141,7 @@
 							</td>
 							<td>
 								<s:decorate template="/layout/kEditSpace.xhtml"  rendered="#{etapaRepCliHome.instance.etapaRep.nombre=='Informar'}">
-									<a:commandButton onclick="#{rich:component('modComentario')}.show()" value="Actualizar comentario" ajaxSingle="true" reRender="frComent" ></a:commandButton>
+									<a:commandButton onclick="#{rich:component('modComentario')}.show()" value="Agregar comentario" ajaxSingle="true" reRender="frComent" ></a:commandButton>
 								</s:decorate>
 							</td>
 							<td>
@@ -481,13 +481,15 @@
 			            <h:outputText value="#{msn.status_approved}" rendered="#{res.estado=='APR'}" />
 			            <h:outputText value="#{msn.status_rejected}" rendered="#{res.estado=='REC'}" />
 					</rich:column>
+					
 					<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)}">
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<s:link title="#{msn.button_edit}" rendered="true"
+						<!-- <s:link title="#{msn.button_edit}" rendered="true"
 							view="/taller/etasReparacion/detRequisicion.xhtml" propagation="join">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="reqId" value="#{res.id}" />
-						</s:link>
+						</s:link> -->
+						<a:commandButton value="" styleClass="editBtn" style="width:40px;" ajaxSingle="true" action="#{requisicionEtaHome.cargarRequisicion(res)}" reRender="mReqEdit" onclick="#{rich:component('detReqEdit')}.show();" ></a:commandButton>
 						<rich:spacer width="10" />
 					</rich:column>
 					<f:facet name="footer">
@@ -655,6 +657,19 @@
 					</h:panelGroup>
 				</f:facet>
 				<s:div id="mReq"><ui:include  src="detRequisicionMod.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
+			<rich:modalPanel id="detReqEdit"  width="800" moveable="true" autosized="true" top="50px" 
+				onbeforeshow="activeModal.setActiveModalPanel('detReqEdit');">
+				<f:facet name="header">Requisiciones</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('detReqEdit')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mReqEdit"><ui:include  src="editarRequisicionMod.xhtml" /></s:div>
 			</rich:modalPanel>
 			
 			<rich:modalPanel id="defcap"  width="800" moveable="true" autosized="true" top="50px"
@@ -840,7 +855,7 @@
 						</h:panelGroup>
 					</f:facet>
 					<h:form id="frmComent">
-						<p>Actualizar comentario</p>
+						<p>agregar comentario</p>
 						<h:panelGrid columns="1" style="margin:0 auto;">
 							<h:inputTextarea value="#{etapaRepCliHome.instance.descripcion}" style="width:355px;height:100px;" />
 							<s:decorate template="/layout/kActions.xhtml" id="m1">
@@ -850,7 +865,7 @@
 								<a:commandButton
 									action="#{etapaRepCliHome.actualizarComentario()}"
 									reRender="formreparacioncli" styleClass="apprBtn"
-									value="Actualizar"
+									value="Aceptar"
 									onclick="#{rich:component('modComentario')}.hide();">
 								</a:commandButton>
 							</s:decorate>
@@ -932,10 +947,23 @@
 								onclick="#{rich:component('cancellationWrk')}.hide();">
 							</a:commandButton>
 						</s:decorate>
-
 					</h:form>
 				</rich:modalPanel>
 				
+				<rich:modalPanel id="servsCbr" width="800" moveable="true"
+					autosized="true" top="40"
+					onbeforeshow="activeModal.setActiveModalPanel('servsCbr');">
+					<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+								onclick="#{rich:component('servsCbr')}.hide();" />
+						</h:panelGroup>
+					</f:facet>
+					<s:div id="mSrvC">
+						<ui:include src="../trackReparacion/addServCobro.xhtml" />
+					</s:div>
+				</rich:modalPanel>
 			
 		</rich:panel>
 	</ui:define>

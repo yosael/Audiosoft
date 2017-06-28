@@ -133,8 +133,8 @@
 							view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
-							styleClass="detailBtn" value="#{app.sched_detail}" >
-							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" style="font-size:15px;" />
+							styleClass="detailBtn" value="#{app.sched_detail}"  style="font-size:15px;" >
+							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}"  />
 							<f:param name="historyId"
 								value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
 						</s:button>
@@ -181,6 +181,11 @@
 										<f:param name="numId"
 											value="#{medicalAppointmentDAO.instance.cliente.id}" />
 							</s:button>
+							
+							<a:commandButton value="Receta Medica" action="#{medicalAppointmentDAO.cargarRecetaMedica()}" rendered="#{(medicalAppointmentDAO.managed) and 
+							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+								oncomplete="showReport('recetaMedica', '#{conversation.id}');" styleClass="pdfBtn" style="font-size:15px;"   />
+							
 					</s:decorate>
 				</s:div>
 				</h:form>

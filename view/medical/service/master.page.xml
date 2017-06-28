@@ -15,4 +15,11 @@
 			<redirect view-id="/medical/service/list.xhtml" />
 		</rule>
 	</navigation>
+	
+	<navigation from-action="#{serviceDAO.eliminarServicio()}">
+		<rule if-outcome="true">
+			<redirect view-id="/medical/service/list.xhtml" />
+		</rule>
+	</navigation>
+	
 </page>

@@ -18,15 +18,18 @@
 					rendered="#{not empty serviceDAO.resultList}" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
+					
 					<f:facet name="header">#{app.servlist_list}</f:facet>
 					<rich:column filterBy="#{res.id}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.servlist_col1}</f:facet>
 						<h:outputText value="#{res.id}" />
 					</rich:column>
+					
 					<rich:column filterBy="#{res.name}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.servlist_col2}</f:facet>
 						<h:outputText value="#{res.name}" />
 					</rich:column>
+					
 					<rich:column filterBy="#{res.costo}" filterEvent="onkeyup" rendered="false">
 						<f:facet name="header">#{app.servmast_costo}</f:facet>
 						<h:outputText value="#{res.costo}" >
@@ -34,6 +37,7 @@
                             	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
 						</h:outputText>
 					</rich:column>
+					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formreparacioncli"
@@ -41,6 +45,7 @@
 							onclick="#{rich:component('servTll')}.hide();">
 						</a:commandLink>
 					</rich:column>
+					
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>

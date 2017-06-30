@@ -54,6 +54,8 @@ public class ClinicalHistory {
 	private List<DiagnosticoConsulta> diagnosticos = new ArrayList<DiagnosticoConsulta>();
 	private List<ExamenConsulta> examenes = new ArrayList<ExamenConsulta>();
 	
+	private String proximaCita;
+	
 	
 	
 	public ClinicalHistory() {
@@ -233,5 +235,19 @@ public class ClinicalHistory {
 	public void setDiagnosticos(List<DiagnosticoConsulta> diagnosticos) {
 		this.diagnosticos = diagnosticos;
 	}
+	
+	
+	@Column(name="proxima_cita",nullable=true,length=50)
+	public String getProximaCita() {
+		return proximaCita;
+	}
+
+	public void setProximaCita(String proximaCita) {
+		this.proximaCita = proximaCita;
+	}
+	
+	
+	
+	
 
 }

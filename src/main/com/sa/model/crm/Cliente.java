@@ -2,6 +2,7 @@ package com.sa.model.crm;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
+import org.jboss.seam.faces.FacesMessages;
 
 import com.sa.model.acct.CuentaCobrar;
 import com.sa.model.medical.ClinicalHistory;
@@ -429,7 +431,27 @@ public class Cliente implements Serializable {
 
 	
 	
-	
+	@Transient
+	public Integer getEdadPaciente()
+	{
+		if (getFechaNacimiento() != null){
+			Calendar dob = Calendar.getInstance();  
+			dob.setTime(getFechaNacimiento());  
+			Calendar today = Calendar.getInstance();  
+			int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);  
+			if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
+			  age--;  
+			} else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)
+			    && today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
+			  age--;  
+			}
+			if (age < 0 ){
+						return 0;
+			}else 			
+				return age;
+			}
+			return 0;
+	}
 	
 	
 	

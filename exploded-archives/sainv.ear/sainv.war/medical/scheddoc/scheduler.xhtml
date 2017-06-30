@@ -48,9 +48,15 @@
 							</td>
 							<td>
 								<!-- <h:commandButton value="Actualizar"  action="#{appointmentGrid.createGridDay()}" /> -->
-								<s:button 
-									styleClass="refreshBtn" style="font-size:15px;" value="Actualizar" propagation="begin"  view="/medical/scheddoc/scheduler.xhtml"   rendered="true"  >
-								</s:button>
+								<s:decorate template="/layout/kEditSpace.xhtml" style="display:inline;" id="action2" >	
+									<s:button 
+										styleClass="refreshBtn" style="font-size:15px;" value="Actualizar" propagation="begin"  view="/medical/scheddoc/scheduler.xhtml"   rendered="true"  >
+									</s:button>
+									<a:commandButton value="Receta DR" action="#{medicalAppointmentDAO.cargarRecetaMedica()}" rendered="#{(medicalAppointmentDAO.managed) and 
+									(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+										oncomplete="showReport('recetaMedica', '#{conversation.id}');" styleClass="pdfBtn" style="font-size:15px;"   >
+									</a:commandButton>
+								</s:decorate>	
 							</td>
 						</tr>
 					</table>
@@ -115,7 +121,7 @@
 										<h:outputText value="#{app.sched_absence}"
 											rendered="#{res.status==3}" style="font-size:15px;" />
 									</rich:column>
-						<a:support reRender="action,renderImp" immediate="true"
+						<a:support reRender="action,renderImp,action2" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
 							event="onselectionchange" ajaxSingle="true" />
 					</rich:extendedDataTable>
@@ -182,9 +188,6 @@
 											value="#{medicalAppointmentDAO.instance.cliente.id}" />
 							</s:button>
 							
-							<a:commandButton value="Receta Medica" action="#{medicalAppointmentDAO.cargarRecetaMedica()}" rendered="#{(medicalAppointmentDAO.managed) and 
-							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
-								oncomplete="showReport('recetaMedica', '#{conversation.id}');" styleClass="pdfBtn" style="font-size:15px;"   />
 							
 					</s:decorate>
 				</s:div>

@@ -31,7 +31,7 @@
 					columns="2" style="padding-left:100px;">
 					<s:decorate template="/layout/kEditSpace.xhtml">
 						<ui:define name="label">#{app.servmast_code}:</ui:define>
-						<h:inputText value="#{serviceDAO.instance.codigo}" required="true" >
+						<h:inputText value="#{serviceDAO.instance.codigo}" maxlength="10" required="true" >
 							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
 						</h:inputText>
 					</s:decorate>

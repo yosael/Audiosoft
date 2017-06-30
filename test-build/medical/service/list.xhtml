@@ -24,9 +24,9 @@
 						<a:commandButton value="#{app.bt_rep_serv_cat}" oncomplete="showReport('/sainv/rep/med/catServsPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
 					</s:decorate>
 					<s:decorate template="/layout/kActions.xhtml">
-						<s:button action="#{serviceDAO.exportarExcel()}" ajax="false"  propagation="join"
+						<s:button action="#{serviceDAO.exportarExcel()}" ajax="false"    propagation="join"
 							styleClass="excBtn" value="#{msn.button_excel}" >
-							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true" />
+							<!-- <a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true" /> -->
 						</s:button>
 					</s:decorate>
 					

@@ -192,11 +192,10 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				//Verificamos si aun se tiene la garantia vigente
 				if(instance.getAparatoRep()!=null)
 				{
+					
 					garVtaVigente = tieneGarantiaVigente(instance.getAparatoRep().getFechaAdquisicion(), instance.getAparatoRep().getPeriodoGarantia());
 				
-			
-					
-					
+
 					/*
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 					Integer hoy = Integer.valueOf(sdf.format(new Date()));
@@ -212,6 +211,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 							// todavia no ha entrado en garantia
 					}
 					*/
+					
 					Date fa = new Date();		
 					if (instance.getAparatoRep().getFechaGarRep()!=null && instance.getAparatoRep().getFechaGarRep().after(fa)){
 						Calendar calMan = new GregorianCalendar();
@@ -774,26 +774,118 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 	
 	public boolean rechazoCliente() {
-		instance.setAprobada(false);
-		instance.setEstado("REC");
-		if(servsCobro != null && servsCobro.size() > 0) 
-			cobrarServiciosAparte();
-		boolean res = modify();
 		
-		for (EtapaRepCliente tmpEta: instance.getEtapasReparacion()){
-			if (tmpEta.getEtapaRep().getId().equals(102)){
-				System.out.println("Entre a la etapa: " + tmpEta.getEtapaRep().getNombre());
-				tmpEta.setEstado("REC");
-				System.out.println("Size de las Requisiciones "+ tmpEta.getRequisicionesEtapa().size());
-				for (RequisicionEtapaRep tmpReq: tmpEta.getRequisicionesEtapa()){
-					System.out.println("Entre a la requisición: "+ tmpReq.getId());
-					tmpReq.setEstado("REC");
-					getEntityManager().merge(tmpReq);
-					getEntityManager().flush();
+		instance.setAprobada(false);
+		
+		instance.setEstado("REC");// Comentado el 29/06/2017
+		
+		System.out.println("Tamanio servicios reparacion: "+getServiciosRep().size());
+		/*if(servsCobro != null && servsCobro.size() > 0) 
+			cobrarServiciosAparte();*/
+		
+		
+		
+		//Eliminar servicios actuales
+		/*if(serviciosRep.size()>0)
+		{*/
+			
+			/*for(ServicioReparacion ser:getServiciosRep())
+			{
+				if(ser.getId()!=null)
+				{
+					getEntityManager().remove(ser);
+					serviciosRep.remove(ser);
+					
 				}
-				
+				else
+				{
+					serviciosRep.remove(ser);
+				}
+			}*/
+		//}
+		
+		List<ServicioReparacion> serviciosRepActual = new ArrayList<ServicioReparacion>();
+		serviciosRepActual=getEntityManager().createQuery("SELECT s FROM ServicioReparacion s where s.reparacion.id=:idRep").setParameter("idRep", instance.getId()).getResultList();
+		
+		if(serviciosRepActual.size()>0)
+		{
+			for(ServicioReparacion servi:serviciosRepActual)
+			{
+				getEntityManager().remove(servi);
 			}
 		}
+		
+		serviciosRep.clear();
+		
+		
+		System.out.println("Servicios cobro tTAM "+getServsCobro().size());
+		//Agregamos los nuevos servicios para cobro
+		if(servsCobro != null && servsCobro.size() > 0)
+		{
+			for(Service srC : servsCobro) 
+			{
+				ServicioReparacion nwSrv = new ServicioReparacion();
+				nwSrv.setEstado("");
+				nwSrv.setReparacion(instance);
+				nwSrv.setServicio(srC);
+				getEntityManager().persist(nwSrv);
+				
+				addServicioRep(srC);
+				
+				System.out.println("Agregando nuevo servicio..... ");
+			}
+		}	
+		
+		
+		
+		boolean res = modify();
+		
+		for (EtapaRepCliente tmpEta: instance.getEtapasReparacion())
+		{
+			
+			if(tmpEta.getEtapaRep().getId().equals(102))
+			{
+				
+				System.out.println("Entre a la etapa: " + tmpEta.getEtapaRep().getNombre());
+				
+				tmpEta.setEstado("REC");
+				tmpEta.setFechaInicio(new Date());
+				tmpEta.setFechaRealFin(new Date());
+				getEntityManager().merge(tmpEta);
+				
+				System.out.println("Size de las Requisiciones "+ tmpEta.getRequisicionesEtapa().size());
+				
+				for (RequisicionEtapaRep tmpReq: tmpEta.getRequisicionesEtapa())
+				{
+					System.out.println("Entre a la requisición: "+ tmpReq.getId());
+					tmpReq.setEstado("REC");
+					//getEntityManager().merge(tmpReq);
+					getEntityManager().remove(tmpReq);
+					//getEntityManager().flush();
+				}
+			}
+			else if(tmpEta.getEtapaRep().getId().equals(44) || tmpEta.getEtapaRep().getId().equals(42))
+			{
+				System.out.println("Entro a ");
+				tmpEta.setEstado("REC");
+				tmpEta.setFechaInicio(new Date());
+				tmpEta.setFechaRealFin(new Date());
+				getEntityManager().merge(tmpEta);
+			}
+			
+	
+			if(tmpEta.getEtapaRep().getId().equals(103))
+			{
+				tmpEta.setEstado("PEN");
+				tmpEta.setFechaInicio(new Date());
+				getEntityManager().merge(tmpEta);
+			}
+			
+			System.out.println("ETAPA ++ "+tmpEta.getEtapaRep().getNombre());
+			System.out.println("ETAPA ++ "+tmpEta.getEtapaRep().getId());
+		}
+		
+		getEntityManager().flush();
 		
 		FacesMessages.instance().clear();
 		if(res)
@@ -802,6 +894,13 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		else
 			FacesMessages.instance().add(
 					sainv_messages.get("repCliHome_err_rech"));
+		
+		if(getServiciosRep()!=null)
+		{
+			System.out.println("Ultimo servicio agregado "+getServiciosRep().get(0).getServicio().getName());
+			
+		}
+		
 		return res;
 	}
 	
@@ -907,6 +1006,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 
 	@Override
 	public boolean preSave() {
+		
 		FacesMessages.instance().clear();
 		if(instance.getProceso()==null)
 		{
@@ -984,7 +1084,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		return true; 
 	}
 	
-	private void cobrarServiciosAparte() {
+	private void cobrarServiciosAparte(){
+		
 		List<DetVentaProdServ> detsVtaSrv = new ArrayList<DetVentaProdServ>();
 		
 		for(Service srC : servsCobro) {
@@ -1130,6 +1231,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	}
 	
 	private void saveCaracteristicasAparato() {
+		
 		if(instance.getId() != null && instance.getId() > 0) {
 			for(ComponenteDefRep tmpDf : instance.getCompsDefAparato()) 
 				getEntityManager().remove(tmpDf);

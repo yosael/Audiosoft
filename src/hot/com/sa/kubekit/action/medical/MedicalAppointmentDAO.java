@@ -1,6 +1,8 @@
 package com.sa.kubekit.action.medical;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -41,6 +43,9 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 	private String search ="";
 	private String comentStatus;
 	private ClinicalHistory clinicalHistoryReceta;
+	
+	private int contadorExamenReceta=1;
+	private int contadorMedicamentoReceta=1;
 	
 	//Nuevo prueba 21/12/2016
 	
@@ -121,6 +126,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		}
 		*/
 		
+		
 		setServicios(listaServicios);
 				
 		
@@ -129,6 +135,15 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		System.out.println("cliente "+medicalAppointment.getStatus());
 	}
 	
+	
+	public String obtenerSoloFecha(Date date)
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+		
+		String dateF = sdf.format(date);
+		
+		return dateF;
+	}
 	
 	
 	public void cargarRecetaMedica()
@@ -154,10 +169,10 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			for(DiagnosticoConsulta diag:clinicalHistoryReceta.getDiagnosticos())
 			{
 				diagnostico.append(diag.getDiagnostico().getNombre());
-				diagnostico.append(". ");
+				diagnostico.append(" / ");
 			}
 			
-			return diagnostico.toString();
+			return diagnostico.toString().toUpperCase();
 		
 		}
 		else
@@ -182,7 +197,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 				recomendacion.append(". ");
 			}
 			
-			return recomendacion.toString();
+			return recomendacion.toString().toUpperCase();
 		
 		}
 		else
@@ -710,6 +725,25 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 
 	public void setClinicalHistoryReceta(ClinicalHistory clinicalHistoryReceta) {
 		this.clinicalHistoryReceta = clinicalHistoryReceta;
+	}
+	
+	
+	
+
+	public int getContadorExamenReceta() {
+		return contadorExamenReceta++;
+	}
+
+	public void setContadorExamenReceta(int contadorExamenReceta) {
+		this.contadorExamenReceta = contadorExamenReceta;
+	}
+
+	public int getContadorMedicamentoReceta() {
+		return contadorMedicamentoReceta++;
+	}
+
+	public void setContadorMedicamentoReceta(int contadorMedicamentoReceta) {
+		this.contadorMedicamentoReceta = contadorMedicamentoReceta;
 	}
 
 	

@@ -46,6 +46,11 @@ public class ItemComboApa implements Serializable {
 	
 	private int idRd;
 	
+	//nuevo el 29/06/2017
+	private Boolean generaRequisicion;
+	
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "itcbap_id", nullable = false)
@@ -166,6 +171,16 @@ public class ItemComboApa implements Serializable {
 	public void setIdRd(int idRd) {
 		this.idRd = idRd;
 	}
+	
+	
+	@Column(name = "genera_requisicion", nullable = true)
+	public Boolean getGeneraRequisicion() {
+		return generaRequisicion;
+	}
+	public void setGeneraRequisicion(Boolean generaRequisicion) {
+		this.generaRequisicion = generaRequisicion;
+	}
+	
 	
 	
 		

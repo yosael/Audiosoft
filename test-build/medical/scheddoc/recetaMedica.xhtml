@@ -9,14 +9,14 @@
 	pageSize="LETTER" type="pdf" margins="70 30 30 30" >
 	<p:font size="14" >
 		<p:paragraph alignment="right">Dr. Juan Bautista Caballero Sibrian
-									<span style="font-size:10px">CLINICA DE OIDO, NARIZ y GARGANTA</span>	
+									<p:html><br></br><span style="font-size:9px">CLINICA DE OIDO, NARIZ Y GARGANTA</span></p:html>	
 		</p:paragraph>
 	</p:font>
-	
+	<p:html><br></br></p:html>
 	<p:table columns="2" widthPercentage="100"  headerRows="0" borderVisible="false" widths="5 5" >
 	
-		<p:cell  horizontalAlignment="center" verticalAlignment="left" paddingTop="6" paddingBottom="6" >
-			<p:font  >
+		<p:cell  horizontalAlignment="left" verticalAlignment="left" paddingTop="9"  paddingBottom="6"  borderWidthTop="0.7" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+			<p:font  size="9" style="bold" >
 				<p:paragraph >
 					Calle sisimiles 3004, Col.Miramonte
 					San Salvador, El Salvador C.A.
@@ -25,45 +25,80 @@
 			</p:font>
 		</p:cell >
 		
-		<p:cell  verticalAlignment="right" paddingLeft="6"  >
+		<p:cell  horizontalAlignment="center" verticalAlignment="right" paddingLeft="15" paddingBottom="6" paddingTop="9"  borderWidthTop="0.7" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
 				<p:paragraph >RECETA</p:paragraph>
 		</p:cell>
 		
+		<p:cell  horizontalAlignment="left" verticalAlignment="left"  paddingBottom="6"  borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+			<p:font  size="10" >
+				<p:paragraph >
+					PACIENTE:  #{medicalAppointmentDAO.clinicalHistoryReceta.cliente.nombreCompleto.toUpperCase()} #{'                    '} 
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+		
+		<p:cell horizontalAlignment="center" verticalAlignment="right" paddingLeft="10" paddingBottom="6"  paddingTop="9"  borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+			<p:font  size="10" >
+				<p:paragraph >( #{medicalAppointmentDAO.clinicalHistoryReceta.cliente.getEdadPaciente()}#{' a&#241;os'} )#{'    '}#{medicalAppointmentDAO.obtenerSoloFecha(medicalAppointmentDAO.clinicalHistoryReceta.medicalAppointment.dateTime)} </p:paragraph>
+			</p:font>	
+		</p:cell>		
+		
 	</p:table>
 	
-	<p:html><br /><br /></p:html>
+	<p:html><br /></p:html>
 	
-	<p:table columns="3" widthPercentage="100"  headerRows="0" borderVisible="false" widths="3 6 1" >
-				
-			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingTop="6" paddingBottom="6" >
-				<p:font color="white" style="bold" >
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="0.6 3 6 1" >
+			
+			<p:cell  horizontalAlignment="left" verticalAlignment="middle" paddingTop="3" paddingBottom="3" borderWidthTop="0.7" borderWidthBottom="1" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="11" >
+					<p:paragraph ></p:paragraph>
+				</p:font>
+			</p:cell>	
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingTop="3" paddingBottom="3" borderWidthTop="0.7" borderWidthBottom="1" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="11" >
 					<p:paragraph >MEDICAMENTO</p:paragraph>
 				</p:font>
 			</p:cell>
-			<p:cell  verticalAlignment="middle" paddingLeft="6" >
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingTop="3" paddingBottom="3" size="12"  borderWidthTop="0.7" borderWidthBottom="1" borderWidthLeft="0" borderWidthRight="0">
+				<p:font  size="11" >
 					<p:paragraph >MODO DE USO</p:paragraph>
+				</p:font>	
 			</p:cell>
-			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
-				<p:font color="white" style="bold" >
-					<p:paragraph >CANTIDAD</p:paragraph>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" paddingTop="3" paddingBottom="3" size="12" borderWidthTop="0.7" borderWidthBottom="1" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font size="11"  >
+					<p:paragraph >CANT</p:paragraph>
 				</p:font>
 			</p:cell>
 			
 			<ui:repeat var="medi" value="#{medicalAppointmentDAO.clinicalHistoryReceta.medicamentos}">
-				<p:cell  horizontalAlignment="center" verticalAlignment="left"  >
-					<p:font color="white"  >
-						<p:paragraph >#{medi.medicamento.nombre}</p:paragraph>
+				<p:cell  horizontalAlignment="center" paddingTop="8" verticalAlignment="middle" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+					<p:font  size="10" >
+						<p:paragraph >#{medicalAppointmentDAO.contadorMedicamentoReceta} )</p:paragraph>
 					</p:font>
 				</p:cell>
-				<p:cell  verticalAlignment="middle" paddingLeft="3" >
-						<p:paragraph >#{medi.dosificacion.nombre}</p:paragraph>
+				<p:cell  horizontalAlignment="left" paddingTop="8" verticalAlignment="left" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+					<p:font size="10"  >
+						<p:paragraph >#{medi.medicamento.nombre.toUpperCase()}#{' '}#{medi.dosificacion.nombre}#{' EN '}#{medi.presentacion.nombre.toUpperCase()}</p:paragraph>
+					</p:font>
 				</p:cell>
-				<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
-					<p:font color="white" style="bold"  >
-						<p:paragraph >#{medi.observacion}</p:paragraph>
+				<p:cell  horizontalAlignment="left" verticalAlignment="left" paddingLeft="8" paddingTop="8" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+					<p:font  size="10" >
+						<p:paragraph >#{medi.observacion.toUpperCase()}</p:paragraph>
+					</p:font>	
+				</p:cell>
+				<p:cell  horizontalAlignment="center" paddingTop="8" verticalAlignment="middle" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+					<p:font  size="10" >
+						<p:paragraph >#{medi.cantidadSt.toUpperCase()}</p:paragraph>
 					</p:font>
 				</p:cell>
 			</ui:repeat>
+			
+			<p:cell colspan="3" borderWidthTop="0" borderWidthBottom="0.7" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="10" >
+						<p:paragraph >.
+						</p:paragraph>
+				</p:font>	
+			</p:cell>
 			
 		</p:table>
 		
@@ -73,68 +108,94 @@
 				
 		</p:font>
 		
-		<p:table columns="2" widthPercentage="100" headerRows="2"  widths="3 7" >
-			<p:cell>
+		<p:table columns="2" widthPercentage="100" headerRows="2"  widths="1 10" >
+		
+			<p:cell borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
 				<p:paragraph >
-					DIAGNOSTICO: 
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					#{medicalAppointmentDAO.crearDiagnostico()}
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					PLAN:
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					#{medicalAppointmentDAO.clinicalHistoryReceta.treatmentDescriptive}
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					RECOMENDACIONES
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					#{medicalAppointmentDAO.crearRecomendaciones()}
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					PROXIMA CITA
-				</p:paragraph>
-			</p:cell>
-			<p:cell>
-				<p:paragraph >
-					Diagnostico
+					 
 				</p:paragraph>
 			</p:cell>
 			
+			<p:cell paddingRight="1"  borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="10" >
+					<p:paragraph >
+						DIAGNOSTICO: #{medicalAppointmentDAO.crearDiagnostico()} 
+					</p:paragraph>
+				</p:font>	
+			</p:cell>
+			<p:cell borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:paragraph >
+					 
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell paddingRight="1" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="10" >
+					<p:paragraph >
+						PLAN: #{medicalAppointmentDAO.clinicalHistoryReceta.treatmentDescriptive.toUpperCase()}
+					</p:paragraph>
+				</p:font>	
+			</p:cell>
+			
+			<p:cell borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:paragraph >
+					 
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell paddingRight="1" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="10" >
+					<p:paragraph >
+						RECOMENDACIONES:  #{medicalAppointmentDAO.crearRecomendaciones()} 
+					</p:paragraph>
+				</p:font>	
+			</p:cell>
+			
+			<p:cell borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:paragraph >
+					 
+				</p:paragraph>
+			</p:cell>
+			
+			<p:cell paddingRight="1" borderWidthTop="0" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0" >
+				<p:font  size="10" >
+					<p:paragraph >
+						PROXIMA CITA: #{medicalAppointmentDAO.clinicalHistoryReceta.proximaCita.toUpperCase()} 
+					</p:paragraph>
+				</p:font>	
+			</p:cell>
 		</p:table>	
 				
 		<p:html><br /></p:html>
 		<p:html><br /></p:html>
 		
+		<p:font size="9" >
+			<p:paragraph alignment="left">
+				SR(A) DEPENDIENTE  DE LA FARMACIA: POR FAVOR NO CAMBIAR MEDICAMENTOS EN ESTA RECETA SIN ANTES CONSULTARME,DE LO CONTRARIO LO HARE DEL CONOCIMIENTO DE LAS AUTORIDADES CORRESPONDIENTES.
+			</p:paragraph>
+		</p:font>
 		
-		<p:table columns="2" widthPercentage="100" headerRows="2"   widths="2 7" >
-			<p:cell colspan="2" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
-				horizontalAlignment="center" verticalAlignment="middle">
-				<p:font color="white" style="bold" size="12" >
-					<p:paragraph alignment="center">EXAMENES DE LABORATORIO</p:paragraph>
+		<p:html><br /><br /></p:html>
+		
+		<p:table columns="2" widthPercentage="100" headerRows="2"   widths="0.5 7" >
+		
+			<p:cell colspan="2" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="left" verticalAlignment="left">
+				<p:font  size="10" >
+					<p:paragraph alignment="left">EXAMENES DE LABORATORIO</p:paragraph>
 				</p:font>
 			</p:cell>
 	
 			<ui:repeat var="ex" value="#{medicalAppointmentDAO.clinicalHistoryReceta.examenes}">
-				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingRight="6"  paddingTop="4" paddingBottom="3">
-					<p:paragraph>1</p:paragraph>
+				<p:cell verticalAlignment="left" horizontalAlignment="left" paddingRight="0"  paddingTop="4" paddingBottom="3" borderWidth="0" >
+					<p:font  size="10" >
+						<p:paragraph>#{medicalAppointmentDAO.contadorExamenReceta}#{'.'}</p:paragraph>
+					</p:font>	
 				</p:cell>
-				<p:cell verticalAlignment="middle" paddingLeft="5" paddingTop="4" paddingBottom="3" >
-					<p:paragraph>#{ex.examen.name}</p:paragraph>
+				<p:cell verticalAlignment="left" horizontalAlignment="left" paddingLeft="1" paddingTop="4" paddingBottom="3" borderWidth="0" >
+					<p:font  size="10" >
+						<p:paragraph>#{ex.examen.name}</p:paragraph>
+					</p:font>	
 				</p:cell>		
 			</ui:repeat>
 		

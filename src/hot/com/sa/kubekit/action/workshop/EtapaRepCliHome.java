@@ -96,7 +96,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 								+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 								+ " and suc.id = rpc.sucursal_id " 
 								+ " and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico') "
-								+ " ORDER BY rpc.fecha_ingreso ASC ")
+								+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 				.getResultList();	
 					
 				
@@ -120,7 +120,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 									/*+ " 	and etr.orden = (select MIN(tetr.orden) from etapa_reparacion tetr, etapa_rep_cliente tetc "
 									+ "   where tetr.etarep_id = tetc.etarep_id and rpc.repcli_id = tetc.repcli_id "
 									+ "	and tetr.areneg_id = ? and tetc.estado = 'PEN') " */
-									+ " ORDER BY rpc.fecha_ingreso ASC ")
+									+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 					.setParameter("nom", "%"+getNomCoinci().toUpperCase()+"%")
 					//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
 					.getResultList();
@@ -145,7 +145,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 											/*+ " 	and etr.orden = (select MIN(tetr.orden) from etapa_reparacion tetr, etapa_rep_cliente tetc "
 											+ "   where tetr.etarep_id = tetc.etarep_id and rpc.repcli_id = tetc.repcli_id "
 											+ "	and tetr.areneg_id = ? and tetc.estado = 'PEN') " */
-											+ " ORDER BY rpc.fecha_ingreso ASC ")
+											+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 							.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 							.setParameter("nom", "%"+getNomCoinci().toUpperCase().trim()+"%")
 							//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
@@ -175,7 +175,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
 										+ " and suc.id = rpc.sucursal_id "  
 										+ " and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico')"
-										+ " ORDER BY rpc.fecha_ingreso ASC ")
+										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						// Al setear la variable del area de negocio como se aprecia abajo da error (desde que se agregó filtro de busqueda por nombre de cliente)
 						//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )  
@@ -265,7 +265,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 										+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
 										+ " and etc.estado = 'PEN' and rpc.sucursal_id=:sucUser and (etc.historico is null or etc.historico<>'historico') "
-										+ " ORDER BY rpc.fecha_ingreso ASC ")
+										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						.setParameter("sucUser",sucursalUser.getId())
 						
@@ -295,7 +295,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 											+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 											+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
 											+ " and etc.estado = 'PEN' and rpc.sucursal_id=:sucUser and (etc.historico is null or etc.historico<>'historico') "
-											+ " ORDER BY rpc.fecha_ingreso ASC ")
+											+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 							.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 							.setParameter("sucUser",sucursalUser.getId())
 							.setParameter("nom", "%"+getNomCoinci().toUpperCase()+"%")
@@ -421,7 +421,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 								+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 								+ " and suc.id = rpc.sucursal_id " 
 								+ " and etc.estado = 'PEN' "
-								+ " ORDER BY rpc.fecha_ingreso ASC ")
+								+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 				.getResultList();	
 					
 				
@@ -445,7 +445,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 									/*+ " 	and etr.orden = (select MIN(tetr.orden) from etapa_reparacion tetr, etapa_rep_cliente tetc "
 									+ "   where tetr.etarep_id = tetc.etarep_id and rpc.repcli_id = tetc.repcli_id "
 									+ "	and tetr.areneg_id = ? and tetc.estado = 'PEN') " */
-									+ " ORDER BY rpc.fecha_ingreso ASC ")
+									+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 					.setParameter("nom", "%"+getNomCoinci().toUpperCase()+"%")
 					//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
 					.getResultList();
@@ -470,7 +470,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 											/*+ " 	and etr.orden = (select MIN(tetr.orden) from etapa_reparacion tetr, etapa_rep_cliente tetc "
 											+ "   where tetr.etarep_id = tetc.etarep_id and rpc.repcli_id = tetc.repcli_id "
 											+ "	and tetr.areneg_id = ? and tetc.estado = 'PEN') " */
-											+ " ORDER BY rpc.fecha_ingreso ASC ")
+											+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 							.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 							.setParameter("nom", "%"+getNomCoinci().toUpperCase().trim()+"%")
 							.getResultList();
@@ -494,7 +494,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
 										+ " and suc.id = rpc.sucursal_id "  
 										+ " and etc.estado = 'PEN'"
-										+ " ORDER BY rpc.fecha_ingreso ASC ")
+										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						.getResultList();
 					
@@ -520,7 +520,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 										+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
 										+ " and etc.estado = 'PEN' and rpc.sucursal_id=:sucUser "
-										+ " ORDER BY rpc.fecha_ingreso ASC ")
+										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						.setParameter("sucUser",sucursalUser.getId())
 						.getResultList();
@@ -547,7 +547,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 											+ " and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id "
 											+ " and suc.id = rpc.sucursal_id and etr.areneg_id = :neg" 
 											+ " and etc.estado = 'PEN' and rpc.sucursal_id=:sucUser "
-											+ " ORDER BY rpc.fecha_ingreso ASC ")
+											+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 							.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 							.setParameter("sucUser",sucursalUser.getId())
 							.setParameter("nom", "%"+getNomCoinci().toUpperCase()+"%")
@@ -762,6 +762,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		if(!accionEta.equals("NAP"))
 		{
+			System.out.println("Entro a diferente de NAP");
+			
 			//Validar si se ingreso al menos un servicio o descripcion adicional(componente defectuoso, defecto de capsula)
 			if(instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) && instance.getEstado().equals("PEN"))
 			{
@@ -822,6 +824,9 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			
 		}
 		else {
+			
+			System.out.println("Entro al else DescRechazo");
+			
 			descRechazo = instance.getDescripcion();
 			instance.setEstado(null);
 			instance.setFechaRealFin(null);
@@ -851,12 +856,13 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			List<EtapaRepCliente> siguienteEtapa = getEntityManager()
 					.createQuery(
 							"SELECT er FROM EtapaRepCliente er "
-									+ "	WHERE er.reparacionCli = :rep AND (er.estado is null or er.estado <> 'APR' and er.estado <> 'NAP') "
+									+ "	WHERE er.reparacionCli = :rep AND (er.estado is null or er.estado <> 'APR' and er.estado <> 'NAP' and er.estado <> 'REC') "
 									+ "	AND er <> :currEta ORDER BY er.etapaRep.orden ASC")
 					.setParameter("rep", instance.getReparacionCli())
 					.setParameter("currEta", instance).getResultList();
 			System.out.println("Tamabio etapas"+siguienteEtapa.size());
-			if (siguienteEtapa != null && siguienteEtapa.size() > 0) 
+			
+			if(siguienteEtapa != null && siguienteEtapa.size() > 0) 
 			{
 				EtapaRepCliente tmpEta = (EtapaRepCliente) siguienteEtapa.get(0);
 				
@@ -922,8 +928,6 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 								else
 									reparacionClienteHome.getInstance().setAprobada(true);
 					}
-				
-				
 
 			} 
 			else //if(siguienteEtapa == null || siguienteEtapa.size() == 0 || siguienteEtapa.get(0).getEtapaRep().getOrden()==7) 
@@ -1062,7 +1066,10 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			{
 				//tmpSrvR.setId(null);
 				if(tmpSrvR.getId()==null)
+				{
 					getEntityManager().persist(tmpSrvR);
+					
+				}
 			}
 
 				FacesMessages.instance().clear();
@@ -1103,7 +1110,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					}
 					else
 					{
-						etpas.setEstado("APR");
+						etpas.setEstado("PEN");
 						getEntityManager().merge(etpas);
 						break;
 					}
@@ -1183,6 +1190,9 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		
 		else {
+			
+			System.out.println("Entro al else en posModify");
+			
 			String tmpDesc = "";
 			// Limpiamos la fecha de finalizacion de la etapa y los comentarios,
 			// y los borramos
@@ -1198,6 +1208,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 				tmpEt.setDescripcion(null);
 				tmpEt.setUsuario(null);
 				tmpEt.setEstado(null);
+				
 				if (tmpEt.getEtapaRep().equals(
 						instance.getEtapaRep().getLoopBack())) {
 					tmpDesc = descRechazo + " - " + tmpDesc;
@@ -1207,8 +1218,10 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					getEntityManager().flush();
 					break;
 				}
+				
 				getEntityManager().merge(tmpEt);
 			}
+			
 			getEntityManager().flush();
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(
@@ -1216,6 +1229,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		}
 		// Ya sea que aprobamos o no, guardamos las condiciones del aparato que fueron cambiadas
 		reparacionClienteHome.modify();
+		
 		// Reseteamos la lista de las reparaciones pendientes para el usuario
 		repsPendientes();
 	}

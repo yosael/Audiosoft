@@ -181,25 +181,32 @@ public class ServiceDAO extends KubeDAO<Service> {
 		//Evaluamos el codigo del combo que no se repita
 		List<Service> serviciosCoinci = new ArrayList<Service>();
 		
-		if(!isManaged()) { 
-			serviciosCoinci = getEntityManager()
-					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
-					.setParameter("cod", instance.getCodigo())
-					.getResultList();
-			
-		} else {
-			serviciosCoinci = getEntityManager()
-					.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.id <> :idSvc AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
-					.setParameter("cod", instance.getCodigo())
-					.setParameter("idSvc", instance.getId())
-					.getResultList();
-		}
 		
-		if(serviciosCoinci != null && serviciosCoinci.size() > 0) {
-			sainv_messages.clear();
-			FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("serviceDAO_codrep"));
-			return false;
+		
+		if(instance.getEliminado()==null || !instance.getEliminado().equals("ELIM"))
+		{
+			
+			if(!isManaged()) { 
+				serviciosCoinci = getEntityManager()
+						.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
+						.setParameter("cod", instance.getCodigo())
+						.getResultList();
+				
+			} else {
+				serviciosCoinci = getEntityManager()
+						.createQuery("SELECT s FROM Service s WHERE s.codigo = :cod AND s.id <> :idSvc AND s.estado='ACT' and (s.eliminado is null or s.eliminado<>'ELIM') ")
+						.setParameter("cod", instance.getCodigo())
+						.setParameter("idSvc", instance.getId())
+						.getResultList();
+			}
+		
+			if(serviciosCoinci != null && serviciosCoinci.size() > 0) {
+				sainv_messages.clear();
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("serviceDAO_codrep"));
+				return false;
+			}
+		
 		}
 		
 		return true;
@@ -209,8 +216,12 @@ public class ServiceDAO extends KubeDAO<Service> {
 	public void exportarExcel() throws IOException
 	{
 		
-		resultList=getEntityManager().createQuery("SELECT s FROM Service s where s.eliminado is null or s.eliminado<>'ELIM' order by s.codigo ").getResultList();
 		
+		System.out.println("TAM Result list antes "+resultList.size());
+		resultList.clear();
+		resultList=getEntityManager().createQuery("SELECT s FROM Service s  order by s.codigo ").getResultList();
+		
+		System.out.println("Tam result list dps "+resultList.size());
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 0);

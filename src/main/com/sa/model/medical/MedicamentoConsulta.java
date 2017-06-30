@@ -37,6 +37,9 @@ public class MedicamentoConsulta implements Serializable {
 	//agregado el 26/06/2017
 	private String observacion;
 	
+	//agregado el 28/06/20217
+	private String cantidadSt;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -141,6 +144,15 @@ public class MedicamentoConsulta implements Serializable {
 	}
 	public void setObservacion(String observacion) {
 		this.observacion = observacion;
+	}
+	
+	
+	@Column(name = "cantidad_st", nullable = true,length=30)
+	public String getCantidadSt() {
+		return cantidadSt;
+	}
+	public void setCantidadSt(String cantidadSt) {
+		this.cantidadSt = cantidadSt;
 	}
 	
 	

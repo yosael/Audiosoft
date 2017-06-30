@@ -349,6 +349,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	}*/
 	
 	public Integer calcularEdad(){
+		
 		if (instance != null && instance.getFechaNacimiento() != null){
 		Calendar dob = Calendar.getInstance();  
 		dob.setTime(instance.getFechaNacimiento());  

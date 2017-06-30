@@ -143,6 +143,12 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 			tmpItm.setPrincipal(false);
 		selItm.setPrincipal(true);
 	}
+	
+	
+	public void setGeneraRequisicion(ItemComboApa item)
+	{
+		//for()
+	}
 
 	public void agregarCosto(Service pv) {
 		boolean existe = false;

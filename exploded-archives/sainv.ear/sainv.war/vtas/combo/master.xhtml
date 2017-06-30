@@ -163,8 +163,17 @@
 								<center>
 								<h:selectBooleanCheckbox value="#{res.principal}" disabled="#{res.categoria==null}" >
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
-								action="#{comboAparatoHome.setPrincipal(res)}" reRender="formcombo"/>
+								action="#{comboAparatoHome.instance.setPrincipal(res)}" reRender="formcombo"  />
 								</h:selectBooleanCheckbox>
+								</center>
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Genera Requisicion</f:facet>
+								<center>
+									<h:selectBooleanCheckbox value="#{res.generaRequisicion}" >
+										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+									action="#{comboAparatoHome.setGeneraRequisicion(res)}" reRender="formcombo"/>
+									</h:selectBooleanCheckbox>
 								</center>
 							</rich:column>
 							<rich:column>

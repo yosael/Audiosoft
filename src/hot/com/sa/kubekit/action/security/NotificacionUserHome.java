@@ -89,7 +89,7 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
 										+ " and suc.id = rpc.sucursal_id " 
 										+ " and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico')"
-										+ " ORDER BY rpc.fecha_ingreso ASC ")
+										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						.getResultList();
 						

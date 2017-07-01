@@ -56,6 +56,7 @@ import com.sa.model.workshop.ItemRequisicionEta;
 import com.sa.model.workshop.ProcesoTaller;
 import com.sa.model.workshop.ReparacionCliente;
 import com.sa.model.workshop.RequisicionEtapaRep;
+import com.sa.model.workshop.ServicioReparacion;
 import com.sa.kubekit.action.acct.ConceptoMovHome;
 import com.sa.kubekit.action.acct.CuentaCobrarHome;
 
@@ -270,6 +271,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							tmpNItem.setId(tmpItm.getId());
 							tmpNItem.setProducto(tmpItm.getProducto());
 							tmpNItem.setPrincipal(tmpItm.isPrincipal());
+							tmpNItem.setGeneraRequisicion(tmpItm.isGeneraRequisicion());// nuevo el 30/06/2017
 							//tmpNItem.setPrecioCotizado(tmpItm.getPrecioCotizado());
 							//tmpNItem.setTipoPrecio(tmpItm.getTipoPrecio());
 							//tmpNItem.setTipPreCotizado(tmpItm.getTipPreCotizado());
@@ -329,6 +331,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							nwItm.setCombo(comboVta);
 							nwItm.setDescripcion(tmpItm.getDescripcion());
 							nwItm.setPrincipal(tmpItm.isPrincipal());
+							nwItm.setGeneraRequisicion(tmpItm.isGeneraRequisicion());//nuevo el 30/06/2017
 							nwItm.setProducto(tmpItm.getProducto());
 							nwItm.setTipoPrecio(tmpItm.getTipoPrecio());
 							nwItm.setPrecioCotizado(tmpItm.getPrecioCotizado());
@@ -391,6 +394,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								tmpNItem.setId(tmpItmBin.getId());
 								tmpNItem.setProducto(tmpItmBin.getProducto());
 								tmpNItem.setPrincipal(tmpItmBin.isPrincipal());
+								tmpNItem.setGeneraRequisicion(tmpItmBin.isGeneraRequisicion());// nuevo el 30/06/2017
 								//tmpNItem.setPrecioCotizado(tmpItm.getPrecioCotizado());
 								//tmpNItem.setTipoPrecio(tmpItm.getTipoPrecio());
 								//tmpNItem.setTipPreCotizado(tmpItm.getTipPreCotizado());
@@ -463,6 +467,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						nwItm.setCombo(comboVtaBin);
 						nwItm.setDescripcion(tmpItm.getDescripcion());
 						nwItm.setPrincipal(tmpItm.isPrincipal());
+						nwItm.setGeneraRequisicion(tmpItm.isGeneraRequisicion());// nuevo el 30/06/2017
 						nwItm.setProducto(tmpItm.getProducto());
 						nwItm.setTipoPrecio(tmpItm.getTipoPrecio());
 						nwItm.setPrecioCotizado(tmpItm.getPrecioCotizado());
@@ -863,6 +868,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			nwItm.setCombo(cmbApa);
 			nwItm.setDescripcion(tmpItm.getDescripcion());
 			nwItm.setPrincipal(tmpItm.isPrincipal());
+			nwItm.setGeneraRequisicion(tmpItm.isGeneraRequisicion()); // nuevo el 30/06/2017
 			nwItm.setProducto(tmpItm.getProducto());
 			nwItm.setTipoPrecio(tmpItm.getTipoPrecio());
 			
@@ -898,6 +904,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			nwItm.setCombo(cmbApa);
 			nwItm.setDescripcion(tmpItm.getDescripcion());
 			nwItm.setPrincipal(tmpItm.isPrincipal());
+			nwItm.setGeneraRequisicion(tmpItm.isGeneraRequisicion()); // nuevo el 30/06/2017
 			nwItm.setProducto(tmpItm.getProducto());
 			nwItm.setTipoPrecio(tmpItm.getTipoPrecio());
 			
@@ -1075,6 +1082,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									repCli.setIdCot(cotizacion.getId());
 									
 									getEntityManager().persist(repCli);
+									reparacionCombo1 = getEntityManager().merge(repCli);// Nuevo el 29/06/2017
+									
+									System.out.println("Asigno a la variable reparacionCombo 1 ********");
 									
 									//Luego de guardar la reparacion, generamos todas las etapas
 									List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -1120,51 +1130,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				
 				
 			//Generar requisiciones y agregar servicios. 29/06/2017
-				
+			generarRequisicionesCombo1();	
 
-			if(reparacionCombo1!=null)
-			{
-				
-				for(EtapaRepCliente etarep:reparacionCombo1.getEtapasReparacion())
-				{
-					
-					
-					if(etarep.getEtapaRep().isAceptaReqs())
-					{
-						
-						RequisicionEtapaRep requisicion = new RequisicionEtapaRep();
-						
-						requisicion.setDescripcion("Requisicion: "+comboVta.getDescripcion());
-						requisicion.setEtapaRepCli(etarep);
-						requisicion.setFechaIngreso(new Date());
-						Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
-						requisicion.setSucursalSol(sucursalReq);
-						
-						requisicion.setEstado("COT");
-						
-						for (ItemComboApa itemCmb : itemsComboApa)
-						{
-							
-							if(itemCmb.getGeneraRequisicion())
-							{
-								ItemRequisicionEta itemRequi = new ItemRequisicionEta();
-								
-								int cant =(int)itemCmb.getCantidad();
-										
-								itemRequi.setCantidad(cant);
-								itemRequi.setInventario(itemCmb.getInventario());
-								itemRequi.setProducto(itemCmb.getProducto());
-								itemRequi.setReqEtapa(requisicion);
-								
-								
-							}
-							
-						}
-						
-						
-					}
-				}
-			}
+			
 			
 			
 				
@@ -1177,6 +1145,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		}
 		
 	}
+	
 	
 	public void preVentaBin()
 	{
@@ -1216,6 +1185,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						
 						getEntityManager().persist(apaCliBin);
 						
+						
 						System.out.println("id aparato"+apaCliBin.getId());
 						
 							System.out.println("Es principal 2 ");
@@ -1250,6 +1220,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									repCliBin.setIdCot(cotizacion.getHijoBin().get(0).getId());
 									
 									getEntityManager().persist(repCliBin);
+									
+									reparacionCombo2=getEntityManager().merge(repCliBin);// nuevo el 30/06/2017
+									
 									
 									//Luego de guardar la reparacion, generamos todas las etapas
 									List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -1314,6 +1287,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									
 									getEntityManager().persist(repCliBin);
 									
+									reparacionCombo2=getEntityManager().merge(repCliBin);// nuevo el 30/06/2017
+									
 									//Luego de guardar la reparacion, generamos todas las etapas
 									List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
 												"	WHERE e.procesoTll = :proceso ORDER BY e.orden ASC")
@@ -1355,6 +1330,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						
 					}
 			}
+				
+				
+			generarRequisicionesCombo2();	
 		}
 		else
 		{
@@ -1362,6 +1340,199 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			return;
 		}
 	}
+	
+	
+	
+	public void generarRequisicionesCombo1()
+	{
+		if(reparacionCombo1!=null)
+		{
+			
+			System.out.println("Entro a reparacion Combo 1");
+			
+			System.out.println("ID reparacion "+reparacionCombo1.getId());
+			
+			System.out.println("Tam etapas reparacion: "+reparacionCombo1.getEtapasReparacion().size());
+			
+			List<EtapaRepCliente> etapasRep = new ArrayList<EtapaRepCliente>();
+			etapasRep = getEntityManager().createQuery("SELECT e FROM EtapaRepCliente e where e.reparacionCli.id=:idRep").setParameter("idRep", reparacionCombo1.getId()).getResultList();
+			
+			for(EtapaRepCliente etarep:etapasRep)
+			{
+				
+				System.out.println("NOMBRE ETAPA "+etarep.getEtapaRep().getNombre());
+				System.out.println("ACEPTA REP ETAPA "+etarep.getEtapaRep().isAceptaReqs());
+				
+				if(etarep.getEtapaRep().isAceptaReqs())
+				{
+					
+					System.out.println("Etapa acepta requisiciones");
+					
+					RequisicionEtapaRep requisicion = new RequisicionEtapaRep();
+					
+					requisicion.setDescripcion("Requisicion: "+comboVta.getDescripcion());
+					requisicion.setEtapaRepCli(etarep);
+					requisicion.setFechaIngreso(new Date());
+					Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
+					requisicion.setSucursalSol(sucursalReq);
+					
+					requisicion.setEstado("COT");
+					
+					getEntityManager().persist(requisicion);
+					
+					System.out.println("TAMANIO de los ITEMS del combo "+comboVta.getItemsCombo().size());
+					System.out.println("Nombre del combo "+comboVta.getNombre());
+					
+					/*List<ItemComboApa> itemsCombo = getEntityManager().createQuery("SELECT i FROM ItemComboApa i where i.combo.id=:idCombo").setParameter("idCombo", comboVta.getId()).getResultList();
+					System.out.println("TAmanio combos encontrados: "+itemsCombo.size());*/
+					for (ItemComboApa itemCmb : comboVta.getItemsCombo())
+					{
+						System.out.println("NOmbre Cat item: "+itemCmb.getCategoria().getNombre());
+						System.out.println("NOmbre item: "+itemCmb.getProducto().getNombre());
+						System.out.println("FOR ITEMCmb : "+itemCmb.isGeneraRequisicion());
+						
+						
+						if(itemCmb.isGeneraRequisicion())
+						{
+							System.out.println("GENERA REQUISICION");
+							ItemRequisicionEta itemRequi = new ItemRequisicionEta();
+							
+							int cant =(int)itemCmb.getCantidad();//puede dar error
+									
+							itemRequi.setCantidad(cant);
+							itemRequi.setInventario(itemCmb.getInventario());
+							itemRequi.setProducto(itemCmb.getProducto());
+							itemRequi.setReqEtapa(requisicion);
+							itemRequi.setGenerado("GEN");
+							
+							getEntityManager().persist(itemRequi);
+							
+							System.out.println("Asigno requisicion");
+							
+							
+						}
+					}
+				}
+			}
+			
+			
+			
+			if(comboVta.getCostosCombo().size()>0)
+			{
+				
+				for(CostoServicio costoCmb:comboVta.getCostosCombo())
+				{
+					
+					System.out.println("CARACTER EXTRAIDOOO *****"+costoCmb.getServicio().getCodigo().substring(0,1));
+					if(costoCmb.getServicio().getCodigo().substring(0,1).equals("T"))
+					{
+						
+						ServicioReparacion servicioRep = new ServicioReparacion();
+						servicioRep.setServicio(costoCmb.getServicio());
+						servicioRep.setReparacion(reparacionCombo1);
+						servicioRep.setEstado("");
+						servicioRep.setGenerado("GEN");
+						
+						getEntityManager().persist(servicioRep);
+						
+					}
+					
+				}
+				
+			}
+			
+			
+			getEntityManager().flush();
+		}
+	}
+	
+	public void generarRequisicionesCombo2()
+	{
+		if(reparacionCombo2!=null)
+		{
+			
+			
+			System.out.println("Entro a reparacion combo2 ");
+			
+			
+			List<EtapaRepCliente> etapasRep = new ArrayList<EtapaRepCliente>();
+			etapasRep = getEntityManager().createQuery("SELECT e FROM EtapaRepCliente e where e.reparacionCli.id=:idRep").setParameter("idRep", reparacionCombo2.getId()).getResultList();
+			
+			for(EtapaRepCliente etarep:etapasRep)
+			{
+				System.out.println("Etas reparacion combo 2");
+				
+				if(etarep.getEtapaRep().isAceptaReqs())
+				{
+					
+					RequisicionEtapaRep requisicion = new RequisicionEtapaRep();
+					
+					requisicion.setDescripcion("Requisicion: "+comboVtaBin.getDescripcion());
+					requisicion.setEtapaRepCli(etarep);
+					requisicion.setFechaIngreso(new Date());
+					Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
+					requisicion.setSucursalSol(sucursalReq);
+					
+					requisicion.setEstado("COT");
+					
+					getEntityManager().persist(requisicion);
+					
+					for (ItemComboApa itemCmb : itemsComboApaBin)
+					{
+						
+						if(itemCmb.isGeneraRequisicion())
+						{
+							ItemRequisicionEta itemRequi = new ItemRequisicionEta();
+							
+							int cant =(int)itemCmb.getCantidad();//puede dar error
+									
+							itemRequi.setCantidad(cant);
+							itemRequi.setInventario(itemCmb.getInventario());
+							itemRequi.setProducto(itemCmb.getProducto());
+							itemRequi.setReqEtapa(requisicion);
+							itemRequi.setGenerado("GEN");
+							
+							getEntityManager().persist(itemRequi);
+							
+							System.out.println("Asigno requisicion");
+							
+							
+						}
+					}
+				}
+			}
+			
+			System.out.println("TAmanio costos combo bin "+comboVtaBin.getCostosCombo().size());
+			
+			if(comboVtaBin.getCostosCombo().size()>0)
+			{
+				
+				for(CostoServicio costoCmb:comboVtaBin.getCostosCombo())
+				{
+					
+					if(costoCmb.getServicio().getCodigo().substring(0, costoCmb.getServicio().getCodigo().length()).equals("T"))
+					{
+						
+						ServicioReparacion servicioRep = new ServicioReparacion();
+						servicioRep.setServicio(costoCmb.getServicio());
+						servicioRep.setReparacion(reparacionCombo2);
+						servicioRep.setEstado("");
+						servicioRep.setGenerado("GEN");
+						
+						getEntityManager().persist(servicioRep);
+						
+					}
+					
+				}
+				
+			}
+			
+			
+			getEntityManager().flush();
+		}
+	}
+	
+
 
 	public void removerItemPrd(Item i) {
 		ventaItemHome.removerItem(i);
@@ -2817,7 +2988,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		
 		if(comboVta!=null)
 		{
-			for (ItemComboApa tmpItm : itemsComboApa) {
+		
+			
+			for (ItemComboApa tmpItm : itemsComboApa) 
+			{
 				if (tmpItm.getProducto() == null) {
 					FacesMessages.instance().add(
 							sainv_messages.get("vtaitm_error_noitm"));
@@ -2846,25 +3020,39 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					return false;
 				}
 	
-				Inventario currInv = (Inventario) getEntityManager()
-						.createQuery(
-								"SELECT i FROM Inventario i WHERE i.producto = :prd AND i.sucursal = :suc")
-						.setParameter("prd", tmpItm.getProducto())
-						.setParameter("suc", instance.getSucursal())
-						.getSingleResult();
-	
-				if (invItemsUsed.get(currInv) == null)
-					invItemsUsed.put(currInv, 1);
-				else
-					invItemsUsed.put(currInv,
-							invItemsUsed.get(currInv).intValue() + 1);
-	
-				tmpItm.setInventario(currInv);
+				System.out.println("GENERA REQUISICION: "+tmpItm.isGeneraRequisicion());
+				
+				
+					Inventario currInv = (Inventario) getEntityManager()
+							.createQuery(
+									"SELECT i FROM Inventario i WHERE i.producto = :prd AND i.sucursal = :suc")
+							.setParameter("prd", tmpItm.getProducto())
+							.setParameter("suc", instance.getSucursal())
+							.getSingleResult();
+					
+					
+				if(tmpItm.isGeneraRequisicion()==false)// nuevo el 30/06/2017
+				{
+		
+					if (invItemsUsed.get(currInv) == null)
+						invItemsUsed.put(currInv, 1);
+					else
+						invItemsUsed.put(currInv,
+								invItemsUsed.get(currInv).intValue() + 1);
+					
+				}	
+		
+					tmpItm.setInventario(currInv);
+				
+			
+			
 			}
+			
 		}
 
 		if (isBinaural() && comboVtaBin!=null)
-			for (ItemComboApa tmpItm : itemsComboApaBin) {
+			for (ItemComboApa tmpItm : itemsComboApaBin) 
+			{
 				if (tmpItm.getProducto() == null) {
 					FacesMessages.instance().add(
 							sainv_messages.get("vtaitm_error_noitm"));
@@ -2891,20 +3079,26 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					return false;
 				}
 
-				Inventario currInv = (Inventario) getEntityManager()
-						.createQuery(
-								"SELECT i FROM Inventario i WHERE i.producto = :prd AND i.sucursal = :suc")
-						.setParameter("prd", tmpItm.getProducto())
-						.setParameter("suc", instance.getSucursal())
-						.getSingleResult();
-
-				if (invItemsUsed.get(currInv) == null)
-					invItemsUsed.put(currInv, 1);
-				else
-					invItemsUsed.put(currInv, invItemsUsed.get(currInv)
-							.intValue() + 1);
-
-				tmpItm.setInventario(currInv);
+				
+					Inventario currInv = (Inventario) getEntityManager()
+							.createQuery(
+									"SELECT i FROM Inventario i WHERE i.producto = :prd AND i.sucursal = :suc")
+							.setParameter("prd", tmpItm.getProducto())
+							.setParameter("suc", instance.getSucursal())
+							.getSingleResult();
+	
+				if(tmpItm.isGeneraRequisicion()==false)
+				{	
+					if (invItemsUsed.get(currInv) == null)
+						invItemsUsed.put(currInv, 1);
+					else
+						invItemsUsed.put(currInv, invItemsUsed.get(currInv)
+								.intValue() + 1);
+					
+				}	
+					tmpItm.setInventario(currInv);
+					
+					
 			}
 
 		for (Inventario usdInv : invItemsUsed.keySet()) {
@@ -3164,6 +3358,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								repCli.setProceso(procesoTall);
 								
 								getEntityManager().persist(repCli);
+								reparacionCombo1 = repCli;
 								
 								//Luego de guardar la reparacion, generamos todas las etapas
 								List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -3227,6 +3422,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								repCli.setProceso(procesoTall);
 								
 								getEntityManager().persist(repCli);
+								reparacionCombo1 = repCli;
 								
 								//Luego de guardar la reparacion, generamos todas las etapas
 								List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -3389,6 +3585,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 													repCli.setProceso(procesoTall);
 													
 													getEntityManager().persist(repCli);
+													reparacionCombo2 = repCli;
 													
 													//Luego de guardar la reparacion, generamos todas las etapas
 													List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -3464,6 +3661,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 													repCli.setProceso(procesoTall);
 													
 													getEntityManager().persist(repCli);
+													reparacionCombo2 = repCli;
 													
 													//Luego de guardar la reparacion, generamos todas las etapas
 													List<EtapaReparacion> lstEtapas = getEntityManager().createQuery("SELECT e FROM EtapaReparacion e " +
@@ -3743,10 +3941,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	
 				
 			
-				for (ItemComboApa itemCmb : itemsComboApa) {
+				for (ItemComboApa itemCmb : itemsComboApa) 
+				{
 					//itemCmb.setId(null);
 					//itemCmb.setCombo(null);
-					if (!lstProdsMov.containsKey(itemCmb.getProducto().getId())) {
+					
+					
+					if (!lstProdsMov.containsKey(itemCmb.getProducto().getId())) 
+					{
 						
 						
 						System.out.println("*********************************************************************Precio de itemComboApa "+itemCmb.getPrecioCotizado());
@@ -3757,10 +3959,18 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						if(itemCmb.getCodProducto()!=null)
 							itemCmb.setCodProducto(itemCmb.getCodProducto());
 						
-						lstProdsMov.put(itemCmb.getProducto().getId(), itemCmb);
+						if(itemCmb.isGeneraRequisicion()==false)//nuevo agregado el 30/06/2017
+						{
+							System.out.println("SALIDA DE PRODUCTO ----> "+itemCmb.getProducto().getNombre());
+							lstProdsMov.put(itemCmb.getProducto().getId(), itemCmb);
+						}
+						
 						itemCmb.setCantidad((short) 1);
+						
 					} else {
+						
 						System.out.println("Precio de itemComboApa "+itemCmb.getPrecioCotizado());
+						
 						short qty = lstProdsMov.get(itemCmb.getProducto().getId()).getCantidad();
 						lstProdsMov.get(itemCmb.getProducto().getId()).setCantidad(
 								++qty);
@@ -3768,10 +3978,15 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	
 					Item item = new Item();
 					item.setCantidad(1);
-					item.setInventario(itemCmb.getInventario());
-					item.setItemId(new ItemId());
-					item.getItemId().setInventarioId(
-					itemCmb.getInventario().getId());
+					
+					/*if(itemCmb.isGeneraRequisicion()==false)//nuevo el 30/06/2017
+					{*/ 
+						item.setInventario(itemCmb.getInventario());
+						item.setItemId(new ItemId());
+						item.getItemId().setInventarioId(
+						itemCmb.getInventario().getId());
+					//}	
+					
 					//item.setCodProducto(itemCmb.getCodProducto());
 					//item.setCodProducto(codCombo1);
 					item.setTipoPrecio(itemCmb.getTipPreCotizado());
@@ -3819,16 +4034,23 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					}*/
 					
 					
-					if(!cotizacion.getEstado().equals("TFN"))//agregado el 06/03/2016
-						aparatoClienteHome.getItems().add(item);
+					if(itemCmb.isGeneraRequisicion()==false)
+					{
+						if(!cotizacion.getEstado().equals("TFN"))//agregado el 06/03/2016
+							aparatoClienteHome.getItems().add(item);
+						
+					}	
 					
 					// Generamos el detalle de la venta
 					DetVentaProdServ detVta = new DetVentaProdServ();
 					detVta.setCantidad(item.getCantidad());
 					detVta.setMonto(itemCmb.getPrecioCotizado());
 					detVta.setVenta(instance);
+					
 					detVta.setCodExacto(item.getInventario().getProducto()
-							.getReferencia());
+							.getReferencia()); 
+					//detVta.setCodExacto(itemCmb.getProducto().getReferencia());//nuevo el 30/06/2017
+					
 					detVta.setCodClasifVta("PRD");
 					detVta.setCosto(item.getInventario().getProducto().getCosto());
 	
@@ -3908,16 +4130,22 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					//itemCmbBin.setId(null);
 					//itemCmbBin.setCombo(null);
 					
-					if (!lstProdsMovBin.containsKey(itemCmbBin.getProducto()
-							.getId())) {
+					if (!lstProdsMovBin.containsKey(itemCmbBin.getProducto().getId())) 
+					{
 						
 						System.out.println("Precio de itemComboApa "+itemCmbBin.getPrecioCotizado());
 						itemCmbBin.setPrecioCotizado(itemCmbBin.getPrecioCotizado());
 						
-						lstProdsMovBin.put(itemCmbBin.getProducto().getId(),
-								itemCmbBin);
+						
+						if(itemCmbBin.isGeneraRequisicion()==false)
+						{
+							lstProdsMovBin.put(itemCmbBin.getProducto().getId(),itemCmbBin);
+						}
+						
 						itemCmbBin.setCantidad((short) 1);
-					} else {
+						
+					} else 
+					{
 						System.out.println("Precio de itemComboApa "+itemCmbBin.getPrecioCotizado());
 						short qty = lstProdsMovBin.get(
 								itemCmbBin.getProducto().getId()).getCantidad();

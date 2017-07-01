@@ -163,7 +163,7 @@
 								<center>
 								<h:selectBooleanCheckbox value="#{res.principal}" disabled="#{res.categoria==null}" >
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
-								action="#{comboAparatoHome.instance.setPrincipal(res)}" reRender="formcombo"  />
+								action="#{comboAparatoHome.setPrincipal(res)}" reRender="formcombo"  />
 								</h:selectBooleanCheckbox>
 								</center>
 							</rich:column>
@@ -172,8 +172,8 @@
 								<center>
 									<h:selectBooleanCheckbox value="#{res.generaRequisicion}" >
 										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
-									action="#{comboAparatoHome.setGeneraRequisicion(res)}" reRender="formcombo"/>
-									</h:selectBooleanCheckbox>
+									 reRender="formcombo"/>
+									</h:selectBooleanCheckbox><!-- action="#{res.setGeneraRequisicion(res.generaRequisicion)}" -->
 								</center>
 							</rich:column>
 							<rich:column>

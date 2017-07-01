@@ -35,6 +35,7 @@ public class ItemRequisicionEta implements Serializable {
 	private Inventario inventario;
 	private CodProducto codProducto;
 	private String ubicacionActual;
+	private String generado;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,6 +126,18 @@ public class ItemRequisicionEta implements Serializable {
 	public void setInventario(Inventario inventario) {
 		this.inventario = inventario;
 	}
+	
+	@Column(name = "generado", nullable = true,length=3)
+	public String getGenerado() {
+		return generado;
+	}
+
+	public void setGenerado(String generado) {
+		this.generado = generado;
+	}
+	
+	
+	
 	
 	
 }

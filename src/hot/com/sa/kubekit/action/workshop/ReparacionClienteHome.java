@@ -1291,7 +1291,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 							"	WHERE e.reparacionCli = :rep ORDER BY e.etapaRep.orden DESC ")
 					.setParameter("rep", instance)
 					.getResultList();
-			if(etas != null && etas.size() > 0) {
+			if(etas != null && etas.size() > 0) 
+			{
 				etapaRepCliHome.setInstance(etas.get(0)); System.out.println("****Instancia ReparacionCliente "+etas.get(0));
 				// Guardamos el detalle de la venta para que aparezca en la
 				// pantalla de cobros (incluir requi y costos)
@@ -1316,8 +1317,12 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 								"SELECT i FROM ItemRequisicionEta i WHERE i.reqEtapa.etapaRepCli.reparacionCli = :rep")
 						.setParameter("rep", etapaRepCliHome.getInstance().getReparacionCli())
 						.getResultList();
+				
+				Float totalRepa=0f; // nuevo agregado el 30/06/2017
+				
 				if (itemsRequis != null && itemsRequis.size() > 0)
-					for (ItemRequisicionEta tmpItr : itemsRequis) {
+					for (ItemRequisicionEta tmpItr : itemsRequis) 
+					{
 						DetVentaProdServ dtVta = new DetVentaProdServ();
 						dtVta.setCantidad(tmpItr.getCantidad());
 						StringBuilder bld = new StringBuilder();
@@ -1332,11 +1337,20 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						bld.append(", Marca "
 								+ tmpItr.getProducto().getMarca().getNombre());
 						dtVta.setDetalle(bld.toString());
-						dtVta.setMonto(tmpItr.getProducto().getPrcNormal());
+						
+						if(tmpItr.getGenerado()!=null && tmpItr.getGenerado().equals("GEN"))
+							dtVta.setMonto(0f);
+						else
+						{
+							dtVta.setMonto(tmpItr.getProducto().getPrcNormal());
+							totalRepa+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
+						}
+						
 						dtVta.setVenta(vta);
 						dtVta.setCodExacto(tmpItr.getProducto().getReferencia());
 						dtVta.setCodClasifVta("PRD");
 						dtVta.setCosto(tmpItr.getProducto().getCosto());
+						
 						totalReparacion += dtVta.getMonto()
 								* dtVta.getCantidad();
 						getEntityManager().persist(dtVta);
@@ -1351,7 +1365,16 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						bld.append(srv.getServicio().getName());
 						dtVta.setDetalle(bld.toString());
 						dtVta.setEscondido(true);
-						dtVta.setMonto(srv.getServicio().getCosto().floatValue());
+						
+						if(srv.getGenerado()!=null && srv.getGenerado().equals("GEN"))							
+							dtVta.setMonto(0f);
+						else
+						{
+							dtVta.setMonto(srv.getServicio().getCosto().floatValue());
+							totalRepa+=srv.getServicio().getCosto().floatValue();
+						}
+						
+						
 						dtVta.setVenta(vta);
 						dtVta.setCodExacto(srv.getServicio().getCodigo());
 						dtVta.setCodClasifVta("SRV");
@@ -1359,17 +1382,23 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						getEntityManager().persist(dtVta);
 					}
 				}
+				
+				instance.setCosto(totalRepa);
+				
+				//vta.setMonto(totalRepa);
 	
 				// Actualizamos el monto de la venta
 				getEntityManager().refresh(vta);
 				
 				if(instance.getAdelanto()!=null)
 				{	
-					vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					//vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(super.moneyDecimal(totalRepa-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				else
 				{
-					vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					//vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(super.moneyDecimal(totalRepa).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				
 				etapaRepCliHome.getInstance().getReparacionCli().setCosto(vta.getMonto());
@@ -1421,6 +1450,27 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			}
 		}
 		getEntityManager().flush();
+	}
+	
+	
+	public void recalcularTotalVenta()
+	{
+		
+		Float totalNuevo=0f;
+		
+		for (ServicioReparacion srv : getServiciosRep()) {
+			
+			if(srv.getEstado() == null || !srv.getEstado().equals("CBR")) {
+				
+				if(srv.getGenerado()!=null && srv.getGenerado().equals("GEN"))							
+				{
+					
+					totalNuevo+=srv.getServicio().getCosto().floatValue();
+					
+				}
+				
+			}
+		}
 	}
 
 	@Override

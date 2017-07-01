@@ -47,7 +47,7 @@ public class ItemComboApa implements Serializable {
 	private int idRd;
 	
 	//nuevo el 29/06/2017
-	private Boolean generaRequisicion;
+	private boolean generaRequisicion;
 	
 	
 	
@@ -172,14 +172,19 @@ public class ItemComboApa implements Serializable {
 		this.idRd = idRd;
 	}
 	
-	
-	@Column(name = "genera_requisicion", nullable = true)
-	public Boolean getGeneraRequisicion() {
+	@Column(name = "genera_requisicion", nullable = false)
+	public boolean isGeneraRequisicion() {
 		return generaRequisicion;
 	}
-	public void setGeneraRequisicion(Boolean generaRequisicion) {
+	public void setGeneraRequisicion(boolean generaRequisicion) {
 		this.generaRequisicion = generaRequisicion;
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	

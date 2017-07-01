@@ -39,6 +39,7 @@ public class RequisicionEtapaRep implements Serializable {
 	private String estado;
 	private Set<ItemRequisicionEta> itemsRequisicion = new HashSet<ItemRequisicionEta>();
 	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "reqeta_id", nullable = false)
@@ -122,6 +123,9 @@ public class RequisicionEtapaRep implements Serializable {
 	public void setUsrAprueba(Usuario usrAprueba) {
 		this.usrAprueba = usrAprueba;
 	}
+	
+	
+	
 	
 	
 	

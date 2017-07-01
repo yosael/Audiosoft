@@ -25,6 +25,7 @@ public class ServicioReparacion implements Serializable {
 	private ReparacionCliente reparacion;
 	private Service servicio;
 	private String estado;
+	private String generado;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,5 +64,14 @@ public class ServicioReparacion implements Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+	
+	@Column(name = "generado", nullable = true,length=3)
+	public String getGenerado() {
+		return generado;
+	}
+	public void setGenerado(String generado) {
+		this.generado = generado;
+	}
+	
 	
 }

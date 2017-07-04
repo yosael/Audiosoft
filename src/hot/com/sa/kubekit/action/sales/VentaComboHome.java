@@ -1510,7 +1510,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				for(CostoServicio costoCmb:comboVtaBin.getCostosCombo())
 				{
 					
-					if(costoCmb.getServicio().getCodigo().substring(0, costoCmb.getServicio().getCodigo().length()).equals("T"))
+					if(costoCmb.getServicio().getCodigo().substring(0,1).equals("T"))
 					{
 						
 						ServicioReparacion servicioRep = new ServicioReparacion();
@@ -3459,6 +3459,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						}
 					}
 			}
+				
+			
+			generarRequisicionesCombo1(); // nuevo el 03/07/2017
+				
 		} ////////////////////////////
 		
 		
@@ -3707,6 +3711,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					
 					cotiBin.setCuentaCobrar(cxc);
 					getEntityManager().merge(cotiBin);*/
+					
+					generarRequisicionesCombo2();
 					
 				}
 		

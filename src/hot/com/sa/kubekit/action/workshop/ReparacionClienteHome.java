@@ -1343,7 +1343,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						else
 						{
 							dtVta.setMonto(tmpItr.getProducto().getPrcNormal());
-							totalRepa+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
+							//totalRepa+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
 						}
 						
 						dtVta.setVenta(vta);
@@ -1358,7 +1358,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 				for (ServicioReparacion srv : getServiciosRep()) {
 					if(srv.getEstado() == null || !srv.getEstado().equals("CBR")) {
-						totalReparacion += srv.getServicio().getCosto();
+						//totalReparacion += srv.getServicio().getCosto();
 						DetVentaProdServ dtVta = new DetVentaProdServ();
 						dtVta.setCantidad(1);
 						StringBuilder bld = new StringBuilder();
@@ -1371,9 +1371,10 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						else
 						{
 							dtVta.setMonto(srv.getServicio().getCosto().floatValue());
-							totalRepa+=srv.getServicio().getCosto().floatValue();
+							//totalRepa+=srv.getServicio().getCosto().floatValue();
 						}
 						
+						totalReparacion+=dtVta.getMonto();
 						
 						dtVta.setVenta(vta);
 						dtVta.setCodExacto(srv.getServicio().getCodigo());
@@ -1383,7 +1384,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 					}
 				}
 				
-				instance.setCosto(totalRepa);
+				//instance.setCosto(totalRepa);
+				instance.setCosto(totalReparacion.floatValue());
 				
 				//vta.setMonto(totalRepa);
 	
@@ -1392,13 +1394,13 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				
 				if(instance.getAdelanto()!=null)
 				{	
-					//vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
-					vta.setMonto(super.moneyDecimal(totalRepa-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					//vta.setMonto(super.moneyDecimal(totalRepa-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				else
 				{
-					//vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
-					vta.setMonto(super.moneyDecimal(totalRepa).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					//vta.setMonto(super.moneyDecimal(totalRepa).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				
 				etapaRepCliHome.getInstance().getReparacionCli().setCosto(vta.getMonto());

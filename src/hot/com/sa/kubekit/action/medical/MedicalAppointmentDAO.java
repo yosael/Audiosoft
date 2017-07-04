@@ -375,20 +375,54 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 					.setParameter("cliente", med.getCliente().getId())
 					.getSingleResult();
 		if (res != null && (Long)res > 1) {
-			subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")  + res + ". "
-		+ sainv_messages.get("medicalAppointmentDAO_fecCreac")+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
+			//subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")  + res + ". "
+			subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")
+		+ sainv_messages.get("medicalAppointmentDAO_fecCreac");//+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10); comentado el 03/07/2017
 			
 			return subsecuencia;
 		} else
-			subsecuencia=sainv_messages.get("medicalAppointmentDAO_nuevo") + ". "
-					+ sainv_messages.get("medicalAppointmentDAO_fecCreac")+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
+			subsecuencia=sainv_messages.get("medicalAppointmentDAO_nuevo")
+					+ sainv_messages.get("medicalAppointmentDAO_fecCreac");//+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
 			return subsecuencia;
 		}
 		catch(Exception E){
 			System.out.println(E.getMessage());
-			subsecuencia=sainv_messages.get("medicalAppointmentDAO_error6");
+			//subsecuencia=sainv_messages.get("medicalAppointmentDAO_error6"); comentado el 03/07/2017
+			subsecuencia=" ";
 			return subsecuencia;
 		}
+	}
+	
+	public String verificarReferenciaPaciente()
+	{
+		StringBuilder bl = new StringBuilder();
+		
+		if(instance.getCliente().getMdif()!=null)
+		{
+			if(instance.getCliente().getMdif().getId()==3)
+			{
+				bl.append("Dr. ");
+				bl.append(instance.getCliente().getDoctorRef().getNombres());
+				bl.append(" ");
+				bl.append(instance.getCliente().getDoctorRef().getApellidos());
+			}
+			else if(instance.getCliente().getMdif().getId()==7)
+			{
+				bl.append("Paciente. ");
+				bl.append(instance.getCliente().getReferidoPor().getNombreCompleto());
+			}
+			else
+			{
+				bl.append("Medio. ");
+				bl.append(instance.getCliente().getMdif().getNombre());
+			}
+		}
+		else
+		{
+			bl.append("No especifico");
+		}
+		
+		return bl.toString();
 	}
 	
 	public boolean pacienteSubsecuente(Cliente cliente)

@@ -81,7 +81,7 @@
 								<s:convertDateTime pattern="HH:mm a" />
 							</h:outputText>
 						</rich:column>
-						<rich:column width="200px" styleClass="letra15">
+						<rich:column width="370px" styleClass="letra15">
 							<f:facet name="header"><span class="letra15" >#{app.schedlist_col2}</span></f:facet>
 							<h:outputText title="#{res.cliente.fullName}" value="#{res.cliente.fullName}"
 								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
@@ -92,35 +92,35 @@
 							   <h:outputText value="#{srv.service.name}"  /><br />
 							</a:repeat>
 						</rich:column>
-						<rich:column styleClass="letra15">
+						<rich:column width="130px"  styleClass="letra15">
 								<f:facet name="header"><span class="letra15" >#{app.usuariomast_branch}</span></f:facet>
 								<h:outputText value="#{res.sucursal.nombre}" styleClass="letra15" />
-							</rich:column>
-						<rich:column width="220px" styleClass="letra15">
+						</rich:column>
+						<rich:column width="210px" styleClass="letra15">
 							<f:facet name="header"><span class="letra15" >#{app.schedlist_col4}</span></f:facet>
 							<h:outputText value="#{res.comment}" title="#{res.comment}"
 								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
 						</rich:column>
-						<rich:column width="340px" styleClass="letra15">
+						<rich:column width="140px" styleClass="letra15">
 							<f:facet name="header"><span class="letra15" >Subsecuencia</span></f:facet>
 								<h:outputText value="#{medicalAppointmentDAO.verificarSubsecuentes(res)}" title="#{medicalAppointmentDAO.verificarSubsecuentes(res)}"
 								styleClass="#{res.status == 2?'canceled':''}" style="font-size:15px;" />
 						</rich:column>
-					<rich:column width="110px" style="font-size:15px;" styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
-										<f:facet name="header"><span class="letra15" >#{app.schedlist_col5}</span></f:facet>
-										<h:outputText value="#{app.sched_reserved}"
-											rendered="#{res.status==5}" styleClass="resBlock" style="font-size:15px;" />
-										<h:outputText value="#{app.sched_confirmed}"
-											rendered="#{res.status==4}" style="font-size:15px;" />
-										<h:outputText value="#{app.sched_scheduled}"
-											rendered="#{res.status==0}" style="font-size:15px;" />
-										<h:outputText value="#{app.sched_served}"
-											rendered="#{res.status==1}"  style="font-size:15px;"/>
-										<h:outputText value="#{app.sched_canceled}"
-											rendered="#{res.status==2}" styleClass="canceled" style="font-size:15px;" />
-										<h:outputText value="#{app.sched_absence}"
-											rendered="#{res.status==3}" style="font-size:15px;" />
-									</rich:column>
+						<rich:column width="120px" style="font-size:15px;" styleClass="#{res.status==0 ? 'tblBooked' : (res.status==1 ? 'tblFinished' : (res.status==2 ? 'tblCancelled' : (res.status==3 ? 'tblMissed' : (res.status==4 ? 'tblConfirmed' : (res.status==5 ? 'tblBusy' : 'tblFree')))))}">
+							<f:facet name="header"><span class="letra15" >#{app.schedlist_col5}</span></f:facet>
+							<h:outputText value="#{app.sched_reserved}"
+								rendered="#{res.status==5}" styleClass="resBlock" style="font-size:15px;" />
+							<h:outputText value="#{app.sched_confirmed}"
+								rendered="#{res.status==4}" style="font-size:15px;" />
+							<h:outputText value="#{app.sched_scheduled}"
+								rendered="#{res.status==0}" style="font-size:15px;" />
+							<h:outputText value="#{app.sched_served}"
+								rendered="#{res.status==1}"  style="font-size:15px;"/>
+							<h:outputText value="#{app.sched_canceled}"
+								rendered="#{res.status==2}" styleClass="canceled" style="font-size:15px;" />
+							<h:outputText value="#{app.sched_absence}"
+								rendered="#{res.status==3}" style="font-size:15px;" />
+						</rich:column>
 						<a:support reRender="action,renderImp,action2" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
 							event="onselectionchange" ajaxSingle="true" />

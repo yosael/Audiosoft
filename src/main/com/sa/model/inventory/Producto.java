@@ -69,6 +69,14 @@ public class Producto implements Serializable{
 	private Float prcOfertaCalculado;
 	
 	
+	//nuevo 04/07/2017
+	private Float ivaPorcent;
+	
+	private Float prcNormalSinIva;
+	private Float prcMinimoSinIva;
+	private Float prcOfertaSinIva;
+	
+	
 	
 	public Producto(){
 		this.costo = 0f;
@@ -395,6 +403,46 @@ public class Producto implements Serializable{
 
 	public void setPrcOfertaCalculado(Float prcOfertaCalculado) {
 		this.prcOfertaCalculado = prcOfertaCalculado;
+	}
+
+	
+	@Column(name = "iva_porcent", nullable = true)
+	public Float getIvaPorcent() {
+		return ivaPorcent;
+	}
+	
+	
+	@Column(name = "iva_porcent", nullable = true)
+	public void setIvaPorcent(Float ivaPorcent) {
+		this.ivaPorcent = ivaPorcent;
+	}
+
+	
+	@Column(name = "prc_normal_siniva", nullable = true)
+	public Float getPrcNormalSinIva() {
+		return prcNormalSinIva;
+	}
+
+	public void setPrcNormalSinIva(Float prcNormalSinIva) {
+		this.prcNormalSinIva = prcNormalSinIva;
+	}
+
+	@Column(name = "prc_minimo_siniva", nullable = true)
+	public Float getPrcMinimoSinIva() {
+		return prcMinimoSinIva;
+	}
+
+	public void setPrcMinimoSinIva(Float prcMinimoSinIva) {
+		this.prcMinimoSinIva = prcMinimoSinIva;
+	}
+
+	@Column(name = "prc_oferta_siniva", nullable = true)
+	public Float getPrcOfertaSinIva() {
+		return prcOfertaSinIva;
+	}
+
+	public void setPrcOfertaSinIva(Float prcOfertaSinIva) {
+		this.prcOfertaSinIva = prcOfertaSinIva;
 	}
 	
 	

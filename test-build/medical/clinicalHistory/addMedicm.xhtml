@@ -48,13 +48,13 @@
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.medicamentos_list}</f:facet>
 					
-					<rich:column style="font-size:13px;">
+					<rich:column style="font-size:13px;text-align:left;">
 						<f:facet name="header">#{app.medicm_name}</f:facet>
-						<h:outputText value="#{res.nombre}" />
+						<h:outputText value="#{res.nombre}" style="margin-left:30px;" />
 					</rich:column>
-					<rich:column style="font-size:13px;">
+					<rich:column style="font-size:13px;text-align:left;">
 						<f:facet name="header">#{app.medicm_sustancia}</f:facet>
-						<h:outputText value="#{res.sustanciaAct.nombre}" />
+						<h:outputText value="#{res.sustanciaAct.nombre}" style="margin-left:30px;" />
 					</rich:column>
 					<!-- <rich:column style="font-size:13px;" >
 						<f:facet name="header">#{app.medicm_laboratorio}</f:facet>

@@ -335,8 +335,7 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 								.isTieneNumSerie()) {
 					if (tmpItm.getAparato().getLadoAparato() == null
 							|| tmpItm.getAparato().getPeriodoGarantia() == null) {
-						FacesMessages.instance().add(
-								sainv_messages.get("vtaitm_error_apadet"));
+						FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_error_apadet"));
 						return false;
 					}
 				}
@@ -345,8 +344,7 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 						.isTieneNumLote()
 						&& (codsProds == null || codsProds.size() < tmpItm
 								.getCantidad())) {
-					FacesMessages.instance().add(
-							sainv_messages.get("vtaitm_error_itmnolot"));
+					FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_error_itmnolot"));
 					return false;
 				}
 
@@ -354,22 +352,19 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 						.isTieneNumSerie()
 						&& (codsProds == null || codsProds.size() < tmpItm
 								.getCantidad())) {
-					FacesMessages.instance().add(
-							sainv_messages.get("vtaitm_error_itmnoser"));
+					FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_error_itmnoser"));
 					return false;
 				}
 
 				// Verificamos que no se superen las existencias
 				if (tmpItm.getInventario().getCantidadActual() < tmpItm
 						.getCantidad()) {
-					FacesMessages.instance().add(
-							sainv_messages.get("vtaitm_error_noexisvta"));
+					FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_error_noexisvta"));
 					return false;
 				}
 
 				if (tmpItm.getCantidad() <= 0) {
-					FacesMessages.instance().add(
-							sainv_messages.get("vtaitm_error_itmnumcero"));
+					FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_error_itmnumcero"));
 					return false;
 				}
 			}

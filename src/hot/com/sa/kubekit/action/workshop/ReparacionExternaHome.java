@@ -179,6 +179,17 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			}
 		}*/
 		
+		
+		if(pieza.getCategoria()!=null)
+		{
+			if(pieza.getCategoria().isTieneNumSerie() || pieza.getCategoria().isTieneNumLote())
+			{
+				FacesMessages.instance().add(Severity.WARN,"La pieza no puede ser un aparato");
+				return;
+			}
+		}
+		
+		
 		nuevoDetalle.setPiezaReparacion(pieza);
 	}
 	
@@ -207,13 +218,21 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("prd", aparato).getSingleResult();
 
+		
+		//Comentado el 04/07/2017
 		// Sacamos el inventario del producto
-		listaCodigos = (ArrayList<CodProducto>) getEntityManager()
+		/*listaCodigos = (ArrayList<CodProducto>) getEntityManager()
 				.createQuery(
 						"SELECT c FROM CodProducto c "
 								+ "	WHERE c.inventario.producto = :prd AND c.inventario = :inv AND c.estado = 'USD' ")
 				.setParameter("prd", aparato)
-				.setParameter("inv", inv).getResultList();
+				.setParameter("inv", inv).getResultList();*/
+		
+		listaCodigos = (ArrayList<CodProducto>) getEntityManager()
+				.createQuery(
+						"SELECT c FROM CodProducto c "
+								+ "	WHERE c.inventario.producto = :prd  AND c.estado = 'USD' ")
+				.setParameter("prd", aparato).getResultList();
 		
 		
 	}
@@ -558,7 +577,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 				
 				itemCompra.setCostoUnitario(item.getPiezaReparacion().getCosto());
 				itemCompra.setInventario(cargarInventarioProducto(item.getPiezaReparacion()));
-				itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getPiezaReparacion()).getId());
+				//itemCompra.getItemId().setInventarioId(cargarInventarioProducto(item.getPiezaReparacion()).getId());
+				itemCompra.getItemId().setInventarioId(itemCompra.getInventario().getId());
 			}
 			
 			
@@ -578,7 +598,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		compraHome.setInstance(new Compra());
 		compraHome.getInstance().setFecha(new Date());
 		compraHome.getInstance().setNumeroFactura(numFacturaCompra);
-		compraHome.getInstance().setSucursal(obtenerSucursalPrincipal());
+		compraHome.getInstance().setSucursal(obtenerSucursalPrincipal());//siempre se reingresan a la sucursal principal
 		compraHome.getInstance().setFormaPago("Efectivo");
 		compraHome.getInstance().setTipoMovimiento("E");
 		compraHome.getInstance().setRazon("C");
@@ -667,7 +687,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			for(Item itemAc: listaItemsMovimiento)
 			{
 				
-				if(itemAc.getInventario()==item.getInventario())
+				if(itemAc.getInventario().getId()==item.getInventario().getId())
 				{
 					existe=true;
 					//listaItemsMovimiento.remove(itemAc);

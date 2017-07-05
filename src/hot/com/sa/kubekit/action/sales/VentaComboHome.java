@@ -2236,16 +2236,19 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			{
 				
 				
-				if (!lstProdsMov.containsKey(tmpItm.getProducto().getId())) {
-					
-					tmpItm.setCantidad((short) 1);
-					tmpItm.setInventario(tmpItm.getInventario());
-					//tmpItm.setPrecioCotizado();
-					lstProdsMov.put(tmpItm.getProducto().getId(), tmpItm);
-					
-				} else {
-					short qty = lstProdsMov.get(tmpItm.getProducto().getId()).getCantidad();
-					lstProdsMov.get(tmpItm.getProducto().getId()).setCantidad(++qty);
+				if(tmpItm.isGeneraRequisicion()==false)
+				{
+					if (!lstProdsMov.containsKey(tmpItm.getProducto().getId())) {
+						
+						tmpItm.setCantidad((short) 1);
+						tmpItm.setInventario(tmpItm.getInventario());
+						//tmpItm.setPrecioCotizado();
+						lstProdsMov.put(tmpItm.getProducto().getId(), tmpItm);
+						
+					} else {
+						short qty = lstProdsMov.get(tmpItm.getProducto().getId()).getCantidad();
+						lstProdsMov.get(tmpItm.getProducto().getId()).setCantidad(++qty);
+					}
 				}
 				
 				System.out.println("inventsrio nombre o id "+ tmpItm.getInventario().getId());
@@ -2764,7 +2767,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				
 				//getEntityManager().persist(itemBin);//item del movimiento
 				
-				
+			if(tmpItm.isGeneraRequisicion()==false)
+			{
 				if (!lstProdsMov.containsKey(tmpItm.getProducto().getId())) {
 					lstProdsMov.put(tmpItm.getProducto().getId(),tmpItm);
 					tmpItm.setCantidad((short) 1);
@@ -2772,8 +2776,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					short qty = lstProdsMov.get(tmpItm.getProducto().getId()).getCantidad();
 					lstProdsMov.get(tmpItm.getProducto().getId()).setCantidad(++qty);
 				}
+			}
 	
-			}//Fin for
+		}//Fin for
 			
 			
 			
@@ -3020,7 +3025,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					return false;
 				}
 	
-				System.out.println("GENERA REQUISICION: "+tmpItm.isGeneraRequisicion());
+				//System.out.println("GENERA REQUISICION: "+tmpItm.isGeneraRequisicion());
 				
 				
 					Inventario currInv = (Inventario) getEntityManager()

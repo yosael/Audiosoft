@@ -1234,6 +1234,16 @@ public class ProductoHome extends KubeDAO<Producto> {
 					+ (instance.getPercentTaxes() != null ? instance
 							.getPercentTaxes().shortValue()
 							* tmpTotal.floatValue() / 100.0F : 0.0F));
+			
+			
+			if(instance.getIvaPorcent()==null)//Agregado el 04/07/2017
+				instance.setIvaPorcent(Float.valueOf(0.0F));
+			
+			
+			instance.setPrcNormalSinIva(Float.valueOf(0.0F)); // nuevo agregado el 04/07/2017
+			instance.setPrcMinimoSinIva(Float.valueOf(0.0F)); // nuevo agregado el 04/07/2017
+			instance.setPrcOfertaSinIva(Float.valueOf(0.0F)); // nuevo agregado el 04/07/2017
+			
 
 			instance.setPrcNormal(Float.valueOf(0.0F));
 			instance.setPrcMinimo(Float.valueOf(0.0F));
@@ -1243,20 +1253,19 @@ public class ProductoHome extends KubeDAO<Producto> {
 			instance.setPrcMinimoCalculado(Float.valueOf(0.0F)); //Nuevo agregado el 22/06/2017
 			instance.setPrcOfertaCalculado(Float.valueOf(0.0F)); //Nuevo agregado el 22/06/2017
 			
-
-			instance.setPrcNormal(Float.valueOf((tmpTotal.floatValue() + (instance
+			
+			
+			instance.setPrcNormalSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
 					.getClaseProducto().getGananciaNormal() != null ? instance
 					.getClaseProducto().getGananciaNormal().floatValue()
 					* tmpTotal.floatValue() / 100.0F : 0.0F))
 					* instance.getMoneda().getMaxVal().floatValue()));
-			
-			instance.setPrcMinimo(Float.valueOf((tmpTotal.floatValue() + (instance
+			instance.setPrcMinimoSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
 					.getClaseProducto().getGananciaMinima() != null ? instance
 					.getClaseProducto().getGananciaMinima().floatValue()
 					* tmpTotal.floatValue() / 100.0F : 0.0F))
 					* instance.getMoneda().getMaxVal().floatValue()));
-			
-			instance.setPrcOferta(Float.valueOf((tmpTotal.floatValue() + (instance
+			instance.setPrcOfertaSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
 					.getClaseProducto().getGananciaOferta() != null ? instance
 					.getClaseProducto().getGananciaOferta().floatValue()
 					* tmpTotal.floatValue() / 100.0F : 0.0F))
@@ -1264,24 +1273,33 @@ public class ProductoHome extends KubeDAO<Producto> {
 			
 			
 			
-			instance.setPrcNormalCalculado(Float.valueOf((tmpTotal.floatValue() + (instance
-					.getClaseProducto().getGananciaNormal() != null ? instance
-					.getClaseProducto().getGananciaNormal().floatValue()
-					* tmpTotal.floatValue() / 100.0F : 0.0F))
-					* instance.getMoneda().getMaxVal().floatValue()));  //Nuevo agregado el 22/06/2017
 			
-			instance.setPrcMinimoCalculado(Float.valueOf((tmpTotal.floatValue() + (instance
-					.getClaseProducto().getGananciaMinima() != null ? instance
-					.getClaseProducto().getGananciaMinima().floatValue()
-					* tmpTotal.floatValue() / 100.0F : 0.0F))
-					* instance.getMoneda().getMaxVal().floatValue())); //Nuevo agregado el 22/06/2017
 			
-			instance.setPrcOfertaCalculado(Float.valueOf((tmpTotal.floatValue() + (instance
-					.getClaseProducto().getGananciaOferta() != null ? instance
-					.getClaseProducto().getGananciaOferta().floatValue()
-					* tmpTotal.floatValue() / 100.0F : 0.0F))
-					* instance.getMoneda().getMaxVal().floatValue())); //Nuevo agregado el 22/06/2017
+			//Nuevo modificado el 04/07/2017
+			instance.setPrcNormalCalculado(Float.valueOf(instance.getPrcNormalSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcNormalSinIva().floatValue() / 100.0F)));
 			
+			instance.setPrcMinimoCalculado(Float.valueOf(instance.getPrcMinimoSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcMinimoSinIva().floatValue() / 100.0F)));
+			
+			instance.setPrcOfertaCalculado(Float.valueOf(instance.getPrcOfertaSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcOfertaSinIva().floatValue() / 100.0F)));
+			
+			
+			//Nuevo modificado el 04/07/2017
+			instance.setPrcNormal(Float.valueOf(instance.getPrcNormalSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcNormalSinIva().floatValue() / 100.0F)));
+			
+			instance.setPrcMinimo(Float.valueOf(instance.getPrcMinimoSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcMinimoSinIva().floatValue() / 100.0F)));
+			
+			instance.setPrcOferta(Float.valueOf(instance.getPrcOfertaSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcOfertaSinIva().floatValue() / 100.0F)));
+			
+			
+			
+			
+			//Nuevo agregado el 04/07/2017
+			instance.setPrcNormalSinIva(Float.valueOf(this.frmtMoney.format(instance 
+					.getPrcNormalSinIva())));
+			instance.setPrcMinimoSinIva(Float.valueOf(this.frmtMoney.format(instance
+					.getPrcMinimoSinIva())));
+			instance.setPrcOfertaSinIva(Float.valueOf(this.frmtMoney.format(instance
+					.getPrcOfertaSinIva())));
 			
 			
 
@@ -1312,22 +1330,47 @@ public class ProductoHome extends KubeDAO<Producto> {
 		if ((instance.getCosto() != null) && (instance.getMoneda() != null) && (instance.getClaseProducto() != null)) 
 		{
 			Float tmpTotal = Float.valueOf(instance.getCosto().floatValue());
-			tmpTotal = Float
-					.valueOf(tmpTotal.floatValue()
-							+ (instance.getPercentImport() != null ? instance
-									.getPercentImport().shortValue()
-									* instance.getCosto().floatValue() / 100.0F
+			tmpTotal = Float.valueOf(tmpTotal.floatValue()+ (instance.getPercentImport() != null ? instance.getPercentImport().shortValue()
+					* instance.getCosto().floatValue() / 100.0F
 									: 0.0F));
-			tmpTotal = Float.valueOf(tmpTotal.floatValue()
-					+ (instance.getPercentTaxes() != null ? instance
-							.getPercentTaxes().shortValue()
+			
+			tmpTotal = Float.valueOf(tmpTotal.floatValue()+ (instance.getPercentTaxes() != null ? instance.getPercentTaxes().shortValue()
 							* tmpTotal.floatValue() / 100.0F : 0.0F));
+			
+			
+			if(instance.getIvaPorcent()==null)//Agregado el 04/07/2017
+				instance.setIvaPorcent(Float.valueOf(0.0F));
+			
+			
+			
+			instance.setPrcNormalSinIva(Float.valueOf(0.0F));
+			instance.setPrcMinimoSinIva(Float.valueOf(0.0F));
+			instance.setPrcOfertaSinIva(Float.valueOf(0.0F));
 
 			instance.setPrcNormalCalculado(Float.valueOf(0.0F));
 			instance.setPrcMinimoCalculado(Float.valueOf(0.0F));
 			instance.setPrcOfertaCalculado(Float.valueOf(0.0F));
+			
+			
+			instance.setPrcNormalSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
+					.getClaseProducto().getGananciaNormal() != null ? instance
+					.getClaseProducto().getGananciaNormal().floatValue()
+					* tmpTotal.floatValue() / 100.0F : 0.0F))
+					* instance.getMoneda().getMaxVal().floatValue()));
+			instance.setPrcMinimoSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
+					.getClaseProducto().getGananciaMinima() != null ? instance
+					.getClaseProducto().getGananciaMinima().floatValue()
+					* tmpTotal.floatValue() / 100.0F : 0.0F))
+					* instance.getMoneda().getMaxVal().floatValue()));
+			instance.setPrcOfertaSinIva(Float.valueOf((tmpTotal.floatValue() + (instance
+					.getClaseProducto().getGananciaOferta() != null ? instance
+					.getClaseProducto().getGananciaOferta().floatValue()
+					* tmpTotal.floatValue() / 100.0F : 0.0F))
+					* instance.getMoneda().getMaxVal().floatValue()));
+			
+			
 
-			instance.setPrcNormalCalculado(Float.valueOf((tmpTotal.floatValue() + (instance
+			/*instance.setPrcNormalCalculado(Float.valueOf((tmpTotal.floatValue() + (instance
 					.getClaseProducto().getGananciaNormal() != null ? instance
 					.getClaseProducto().getGananciaNormal().floatValue()
 					* tmpTotal.floatValue() / 100.0F : 0.0F))
@@ -1341,7 +1384,29 @@ public class ProductoHome extends KubeDAO<Producto> {
 					.getClaseProducto().getGananciaOferta() != null ? instance
 					.getClaseProducto().getGananciaOferta().floatValue()
 					* tmpTotal.floatValue() / 100.0F : 0.0F))
-					* instance.getMoneda().getMaxVal().floatValue()));
+					* instance.getMoneda().getMaxVal().floatValue()));*/
+			
+			
+			
+			//Nuevo agregado el 04/07/2017
+			instance.setPrcNormalSinIva(Float.valueOf(this.frmtMoney.format(instance 
+					.getPrcNormalSinIva())));
+			instance.setPrcMinimoSinIva(Float.valueOf(this.frmtMoney.format(instance
+					.getPrcMinimoSinIva())));
+			instance.setPrcOfertaSinIva(Float.valueOf(this.frmtMoney.format(instance
+					.getPrcOfertaSinIva())));
+			
+			
+			
+			//Nuevo modificado el 04/07/2017
+			instance.setPrcNormalCalculado(Float.valueOf(instance.getPrcNormalSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcNormalSinIva().floatValue() / 100.0F)));
+			
+			instance.setPrcMinimoCalculado(Float.valueOf(instance.getPrcMinimoSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcMinimoSinIva().floatValue() / 100.0F)));
+			
+			instance.setPrcOfertaCalculado(Float.valueOf(instance.getPrcOfertaSinIva() + (instance.getIvaPorcent().floatValue()* instance.getPrcOfertaSinIva().floatValue() / 100.0F)));
+			
+			
+			
 
 			instance.setPrcNormalCalculado(Float.valueOf(this.frmtMoney.format(instance
 					.getPrcNormalCalculado())));

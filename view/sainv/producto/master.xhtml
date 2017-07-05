@@ -108,7 +108,7 @@
 										<s:convertEntity />
 										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"
 											action="#{productoHome.actualizarMontos()}"
-											reRender="_prcCls1,_prcCls2,_prcCls3,_total1,_total2,_total3,_total1C,_total2C,_total3C" />
+											reRender="_prcCls1,_prcCls2,_prcCls3,_total1,_total2,_total3,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI" />
 									</h:selectOneMenu>
 								</s:decorate>
 
@@ -217,7 +217,7 @@
 													<s:convertEntity />
 													<a:support event="onchange" ajaxSingle="true"
 														eventsQueue="q1"
-														reRender="_total1,_total2,_total3,_cst,_perctax,_percimp,_xript,_total1C,_total2C,_total3C"
+														reRender="_total1,_total2,_total3,_cst,_perctax,_percimp,_xript,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI"
 														action="#{productoHome.actualizarMontos()}" />
 												</h:selectOneMenu>
 											</s:decorate>
@@ -231,7 +231,7 @@
 													onkeypress="return restrictNumDigitsDecimals(event, this, 8, 2);"
 													style="width:70%;">
 													<a:support event="onblur" ajaxSingle="true"
-														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C"
+														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI"
 														action="#{productoHome.actualizarMontos()}" />
 												</h:inputText>
 											</s:decorate>
@@ -258,7 +258,7 @@
 													onkeypress="return restrictNumDigits(event, this, 2);"
 													style="width:70%;">
 													<a:support event="onblur" ajaxSingle="true"
-														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C"
+														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI"
 														action="#{productoHome.actualizarMontos()}" />
 												</h:inputText>
 											</s:decorate>
@@ -271,7 +271,7 @@
 													onkeypress="return restrictNumDigits(event, this, 2);"
 													style="width:70%;">
 													<a:support event="onblur" ajaxSingle="true"
-														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C"
+														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI"
 														action="#{productoHome.actualizarMontos()}" />
 												</h:inputText>
 											</s:decorate>
@@ -306,6 +306,48 @@
 												</h:inputText>
 											</s:decorate>
 											
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total1SI"
+												style="width:120px;">
+												<ui:define name="label">Precio normal sin iva</ui:define><!-- #{app.producto_prc1}: -->
+												<h:inputText value="#{productoHome.instance.prcNormalSinIva}"
+													 class="qntDec" required="true"  
+													style="width:70%;" readonly="true" ><!-- Tenian readonly=true -->
+												</h:inputText> 
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total2SI" 
+												style="width:120px;">
+												<ui:define name="label">Precio minimo sin iva</ui:define><!-- #{app.producto_prc2}:  -->
+												<h:inputText value="#{productoHome.instance.prcMinimoSinIva}"
+													 class="qntDec" required="true"
+													style="width:70%;" readonly="true" > <!-- Tenian readonly=true -->
+												</h:inputText>
+											</s:decorate>
+											<s:decorate template="/layout/kEditSpace.xhtml" id="_total3SI"  
+												style="width:120px;">
+												<ui:define name="label">Precio oferta sin iva</ui:define><!-- #{app.producto_prc3}: -->
+												<h:inputText value="#{productoHome.instance.prcOfertaSinIva}"
+													 class="qntDec" required="true"  
+													style="width:70%;" readonly="true" >  <!-- Tenian readonly=true -->
+												</h:inputText>
+											</s:decorate>
+											
+											<s:decorate template="/layout/kEditSpace.xhtml"
+												style="width:120px;" id="_percIVA"
+												rendered="#{loginUser.user.sucursal==null}">
+												<ui:define name="label">Iva (%):</ui:define>
+												<h:inputText value="#{productoHome.instance.ivaPorcent}"
+													required="true"
+													onkeypress="return restrictNumDigits(event, this, 2);"
+													style="width:70%;">
+													<a:support event="onblur" ajaxSingle="true"
+														eventsQueue="q1" reRender="_total1,_total2,_total3,_total1C,_total2C,_total3C,_total1SI,_total2SI,_total3SI"
+														action="#{productoHome.actualizarMontos()}" />
+												</h:inputText>
+											</s:decorate>
+											
+											<h:column rendered="#{loginUser.user.sucursal==null}" />
+											<h:column  rendered="#{loginUser.user.sucursal==null}" />
+											
 											
 											<s:decorate template="/layout/kEditSpace.xhtml" id="_total1C"
 												style="width:120px;">
@@ -325,7 +367,7 @@
 											</s:decorate>
 											<s:decorate template="/layout/kEditSpace.xhtml" id="_total3C"  
 												style="width:120px;">
-												<ui:define name="label">Precio oferta calc</ui:define><!-- #{app.producto_prc3}: -->
+												<ui:define name="label">Precio oferta calc  (+IVA)</ui:define><!-- #{app.producto_prc3}: -->
 												<h:inputText value="#{productoHome.instance.prcOfertaCalculado}"
 													 class="qntDec" required="true"  
 													style="width:70%;" readonly="true" >  <!-- Tenian readonly=true -->
@@ -352,7 +394,7 @@
 											</s:decorate>
 											<s:decorate template="/layout/kEditSpace.xhtml" id="_total3"  
 												style="width:120px;">
-												<ui:define name="label">Precio oferta final</ui:define><!-- #{app.producto_prc3}: -->
+												<ui:define name="label">Precio oferta final  (+IVA)</ui:define><!-- #{app.producto_prc3}: -->
 												<h:inputText value="#{productoHome.instance.prcOferta}"
 													 class="qntDec" required="true"  
 													style="width:70%;">  <!-- Tenian readonly=true -->

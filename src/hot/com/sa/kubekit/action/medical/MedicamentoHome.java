@@ -513,6 +513,13 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		
 		cerrarModal=false;
 		
+		if(instance.getInformacionMedicamento().length()>500)
+		{
+			
+			FacesMessages.instance().add(Severity.WARN,"La informacion del medicamento no debe exceder de 500 caracteres");
+			return;
+		}
+		
 		if(save())
 		{
 			

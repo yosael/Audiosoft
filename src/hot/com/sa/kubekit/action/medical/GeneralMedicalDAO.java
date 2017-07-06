@@ -54,6 +54,7 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 	public void agregarMotivoConsulta(MotivoConsulta motivo)
 	{
 		
+		System.out.println("ENTRO a metodo agregar motivo consulta");
 		
 		/*if(motivosAgregados.contains(motivo))
 		{

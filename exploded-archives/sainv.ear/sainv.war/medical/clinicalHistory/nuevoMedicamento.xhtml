@@ -27,54 +27,64 @@
 					<legend>#{app.medicm_legend}</legend> 
 					
 					<h:panelGrid columns="2" >
+						<h:panelGrid columns="2"  >
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
+								<ui:define name="label">#{app.medicm_name}:</ui:define>
+								<h:inputText value="#{medicamentoHome.instance.nombre}" required="true" >
+									<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" ></a:support>
+								</h:inputText>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
+								<ui:define name="label">#{app.medicm_sustancia}:</ui:define>
+								<h:inputText value="#{medicamentoHome.instance.sustanciaAct.nombre}" 
+									readonly="true" required="true" style="width:200px;" />
+								<a:commandButton onclick="#{rich:component('selSustanciaAct')}.show();" ajaxSingle="true"  
+									action="#{medicamentoHome.cargarSustanciasAct()}" reRender="formmedicm,sua,frmSelSus"  eventsQueue="q1"
+									styleClass="modifyBtn" value=" " style="width:30px;">
+								</a:commandButton>
+							</s:decorate>
+							
+							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.medicm_laboratorio}:</ui:define>
+								<h:inputText value="#{medicamentoHome.instance.laboratorio.nombre}" 
+									readonly="true" required="true" style="width:200px;" />
+								<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
+									action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1" 
+									styleClass="modifyBtn" value=" " style="width:30px;">
+								</a:commandButton>
+							</s:decorate> -->
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
+								<ui:define name="label">#{app.medicm_indice}:</ui:define>
+								<h:inputText value="#{medicamentoHome.instance.indiceTer.nombre}" 
+									readonly="true" required="true" style="width:200px;" />
+								<a:commandButton onclick="#{rich:component('selIndiceTer')}.show();" ajaxSingle="true"  
+									action="#{medicamentoHome.cargarListaIndices()}" reRender="idt" eventsQueue="q1" 
+									styleClass="modifyBtn" value=" " style="width:30px;">
+								</a:commandButton>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
+								<ui:define name="label">.....</ui:define>
+								<a:commandLink  ajaxSingle="true" action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm,_table"
+									 styleClass="saveBtnLnk" oncomplete="validar()"
+									value="#{msn.button_save}">
+									<s:conversationPropagation type="join"></s:conversationPropagation>
+								</a:commandLink>
+							</s:decorate>
+							
+					</h:panelGrid>
+					
+					<h:panelGrid>
+						<h:inputTextarea value="#{medicamentoHome.instance.informacionMedicamento}" style="width:362px;height:119px;">
+							<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+						</h:inputTextarea>
 						
-						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
-							<ui:define name="label">#{app.medicm_name}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.nombre}" required="true" >
-								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" ></a:support>
-							</h:inputText>
-						</s:decorate>
-						
-						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
-							<ui:define name="label">#{app.medicm_sustancia}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.sustanciaAct.nombre}" 
-								readonly="true" required="true" style="width:200px;" />
-							<a:commandButton onclick="#{rich:component('selSustanciaAct')}.show();" ajaxSingle="true"  
-								action="#{medicamentoHome.cargarSustanciasAct()}" reRender="formmedicm,sua,frmSelSus"  eventsQueue="q1"
-								styleClass="modifyBtn" value=" " style="width:30px;">
-							</a:commandButton>
-						</s:decorate>
-						
-						<!-- <s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.medicm_laboratorio}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.laboratorio.nombre}" 
-								readonly="true" required="true" style="width:200px;" />
-							<a:commandButton onclick="#{rich:component('selLaboratorio')}.show();" ajaxSingle="true"  
-								action="#{medicamentoHome.cargarListaLabs()}" reRender="lab" eventsQueue="q1" 
-								styleClass="modifyBtn" value=" " style="width:30px;">
-							</a:commandButton>
-						</s:decorate> -->
-						
-						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
-							<ui:define name="label">#{app.medicm_indice}:</ui:define>
-							<h:inputText value="#{medicamentoHome.instance.indiceTer.nombre}" 
-								readonly="true" required="true" style="width:200px;" />
-							<a:commandButton onclick="#{rich:component('selIndiceTer')}.show();" ajaxSingle="true"  
-								action="#{medicamentoHome.cargarListaIndices()}" reRender="idt" eventsQueue="q1" 
-								styleClass="modifyBtn" value=" " style="width:30px;">
-							</a:commandButton>
-						</s:decorate>
-						
-						<s:decorate template="/layout/kEditSpace.xhtml" style="font-size:14px;" >
-							<ui:define name="label">.....</ui:define>
-							<a:commandLink  ajaxSingle="true" action="#{medicamentoHome.agregarSeleccionarMedicamento()}" reRender="formMedic,formmedicm,_table"
-								 styleClass="saveBtnLnk" oncomplete="validar()"
-								value="#{msn.button_save}">
-								<s:conversationPropagation type="join"></s:conversationPropagation>
-							</a:commandLink>
-						</s:decorate>
-						
-				</h:panelGrid> 
+					</h:panelGrid> 
+					
+				</h:panelGrid>	
 				
 				<script type="text/javascript" > 
 					function validar(){

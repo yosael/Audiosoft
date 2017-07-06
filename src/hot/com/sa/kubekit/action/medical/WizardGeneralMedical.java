@@ -181,46 +181,61 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	{
 		System.out.println("Entro a resumen paciente");
 		
-		resumenPaciente="";
 		
-		resumenPaciente+="Paciente ";
+		StringBuilder bl = new StringBuilder();
+		//resumenPaciente="";
+		
+		
 		
 		if(clienteHome.getInstance().getGenero()==1)
 		{
-			resumenPaciente+="Masculino. ";
+			bl.append("Masculino. ");
 		}
 		else
 		{
-			resumenPaciente+="Femenina. ";
+			bl.append("Femenina. ");
 		}
 		
-		resumenPaciente+="De "+clienteHome.calcularEdad()+" años de edad. ";
+		bl.append("De ");
+		bl.append(clienteHome.calcularEdad());
+		bl.append(" años. ");
+		
 		
 		if(clienteHome.getInstance().getOcupacion()!=null)
 		{
-			resumenPaciente+=clienteHome.getInstance().getOcupacion()+". ";
+			bl.append(clienteHome.getInstance().getOcupacion());
+			bl.append(". ");
 		}
 			
 		if(generalMedicalDAO.getInstance().getHeight()!=null)
 		{
-			resumenPaciente+="Estatura: "+generalMedicalDAO.getInstance().getHeight()+"cm. ";
+			bl.append("Estatura ");
+			bl.append(generalMedicalDAO.getInstance().getHeight());
+			bl.append("cm. ");
 		}
 		
 		if(generalMedicalDAO.getInstance().getWeight()!=null)
 		{
-			resumenPaciente+="Peso: "+generalMedicalDAO.getInstance().getWeight()+"kg. ";
+			bl.append("Peso ");
+			bl.append(generalMedicalDAO.getInstance().getWeight());
+			bl.append("kg. ");
 		}
 		
 		if(generalMedicalDAO.getInstance().getConsultationReason()!=null)
 		{
-			resumenPaciente+="Consulta por "+generalMedicalDAO.getInstance().getConsultationReason()+". ";
+			bl.append("Consulta por ");
+			bl.append(generalMedicalDAO.getInstance().getConsultationReason());
+			bl.append(". ");
 		}
 		
 		if(generalMedicalDAO.getInstance().getObservation()!=null)
 		{
-			resumenPaciente+="Tiempo de evolucion: "+generalMedicalDAO.getInstance().getObservation()+". ";
+			bl.append("Evolucion ");
+			bl.append(generalMedicalDAO.getInstance().getObservation());
+			bl.append(". ");
 		}
 		
+		resumenPaciente=bl.toString();
 		
 		System.out.println(resumenPaciente);
 	}
@@ -262,6 +277,11 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	{
 		System.out.println("Id conversation "+idC);
 	}
+	
+	public void metodoPrueba()
+	{
+		System.out.println("Ingreso a metodo prueba");
+	}
 
 	public void init() {
 		
@@ -274,8 +294,20 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 			GeneralInformation gi = new GeneralInformation(clienteHome.getInstance());
 			/*List<GeneralInformation> giLis = new ArrayList<GeneralInformation>();
 			giLis.add(gi);*/
-			entityManager.persist(gi);
-			clienteHome.getInstance().setGeneralInformation(gi);
+			
+			
+			//Nuevo agregado el 05/07/2017
+			List<GeneralInformation> giLisComprobar = entityManager.createQuery("SELECT g FROM GeneralInformation g where g.cliente.id=:idCliente").setParameter("idCliente", clienteHome.getInstance().getId()).getResultList();
+			
+			if(giLisComprobar.size()<=0)
+			{
+				System.out.println("Lista general information VACIA ");
+				
+				entityManager.persist(gi);
+				clienteHome.getInstance().setGeneralInformation(gi);
+			}
+			
+			
 			System.out.println("REgistro el GeneralInformation *********");
 			
 		}

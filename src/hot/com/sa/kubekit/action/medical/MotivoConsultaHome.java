@@ -36,6 +36,7 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 	
 	public void load()
 	{
+		System.out.println("Entro a LOAD motivos consulta");
 		motivosConsulta = getEntityManager().createQuery("SELECT m FROM MotivoConsulta m").getResultList();
 	}
 	
@@ -136,6 +137,11 @@ public class MotivoConsultaHome extends KubeDAO<MotivoConsulta> implements Seria
 		return true;
 	}
 
+	
+	public void eventoPrueba()
+	{
+		System.out.println("Evento prueba");
+	}
 
 
 	@Override

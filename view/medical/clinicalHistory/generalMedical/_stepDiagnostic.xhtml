@@ -229,7 +229,7 @@
 									<a:commandButton onclick="#{rich:component('selMedicm')}.show();" ajaxSingle="true" 
 										rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
 										action="#{medicamentoHome.getMedicamentosList()}" reRender="m1"
-										styleClass="addBtn" value="MEDICAMENTOS SUGERIDOS" style="font-size:14px;width:240px" >
+										styleClass="addBtn" value="MEDICAMENTOS RECETADOS" style="font-size:14px;width:240px" >
 									</a:commandButton><!-- #{app.button_add_medicm} -->
 								</s:decorate>
 								<rich:spacer height="10" />					
@@ -256,16 +256,6 @@
 										</h:selectOneMenu>
 										<h:outputText value="#{res.laboratorio.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;" />
 									</rich:column>
-									<rich:column>
-										<f:facet name="header">#{app.medicm_dosif}</f:facet>
-										<h:selectOneMenu value="#{res.selDosif}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
-											<s:selectItems value="#{res.medicamento.dosificaciones}" var="_dos" 
-												label="#{_dos.dosificacion.nombre}" noSelectionLabel=" " style="font-size:14px;"/>
-											<s:convertEntity />
-											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
-										</h:selectOneMenu>
-										<h:outputText value="#{res.dosificacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;"/>
-									</rich:column>
 									<rich:column >
 										<f:facet name="header">#{app.medicm_presen}</f:facet>
 										<h:selectOneMenu value="#{res.selPresen}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
@@ -276,6 +266,16 @@
 										</h:selectOneMenu>
 										<h:outputText value="#{res.presentacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;" />
 									</rich:column>
+									<rich:column>
+										<f:facet name="header">Concentracion</f:facet>
+										<h:selectOneMenu value="#{res.selDosif}" required="true" rendered="#{not generalMedicalDAO.isManaged()}">
+											<s:selectItems value="#{res.medicamento.dosificaciones}" var="_dos" 
+												label="#{_dos.dosificacion.nombre}" noSelectionLabel=" " style="font-size:14px;"/>
+											<s:convertEntity />
+											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"/>
+										</h:selectOneMenu>
+										<h:outputText value="#{res.dosificacion.nombre}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;"/>
+									</rich:column>
 									<rich:column >
 										<f:facet name="header">Modo de uso</f:facet>
 										<h:inputText value="#{res.observacion}" rendered="#{not generalMedicalDAO.isManaged()}" >
@@ -284,8 +284,15 @@
 										<h:outputText value="#{res.observacion}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:14px;"/>
 									</rich:column>
 									<rich:column >
+										<f:facet name="header">Dias Tratamiento</f:facet>
+										<h:inputText value="#{res.diasTratamiento}" rendered="#{not generalMedicalDAO.isManaged()}"  maxlength="30" style="width:78px;" >
+											<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+										</h:inputText>
+										<h:outputText value="#{res.diasTratamiento}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:12px;"/>
+									</rich:column>
+									<rich:column style="width:78px;" >
 										<f:facet name="header">Cantidad</f:facet>
-										<h:inputText value="#{res.cantidadSt}" rendered="#{not generalMedicalDAO.isManaged()}" >
+										<h:inputText value="#{res.cantidadSt}" rendered="#{not generalMedicalDAO.isManaged()}"  maxlength="30"  style="width:78px;" >
 											<a:support event="onkeyup" ajaxSingle="true" ></a:support>
 										</h:inputText>
 										<h:outputText value="#{res.cantidadSt}" rendered="#{generalMedicalDAO.isManaged()}" style="font-size:12px;"/>

@@ -35,8 +35,10 @@ public class Medicamento implements Serializable {
 	
 	private List<MedicamentoLaboratorios> medicamentosLab = new ArrayList<MedicamentoLaboratorios>();
 	
-	
 	private boolean asociado;
+	
+	//agregado el 05/07/2017
+	private String informacionMedicamento;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -119,6 +121,17 @@ public class Medicamento implements Serializable {
 	public void setMedicamentosLab(List<MedicamentoLaboratorios> medicamentosLab) {
 		this.medicamentosLab = medicamentosLab;
 	}
+	
+	
+	@Column(name = "informacion_medicamento", nullable = true, length=500)
+	public String getInformacionMedicamento() {
+		return informacionMedicamento;
+	}
+	public void setInformacionMedicamento(String informacionMedicamento) {
+		this.informacionMedicamento = informacionMedicamento;
+	}
+	
+	
 	
 	
 	

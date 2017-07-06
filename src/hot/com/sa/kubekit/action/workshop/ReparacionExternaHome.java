@@ -60,6 +60,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	private CodProducto nuevoCodigo;
 	private CodProducto codigoSelectedEntrega;
 	private int contador=1;
+	private boolean ingresarCodigoManualmente;
+	private String codigoNuevoManual;
 	
 	private boolean cerrar;
 
@@ -159,6 +161,13 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		detalleReparacion.add(detalle);*/
 		
+		if(aparato.getCategoria()==null || !aparato.getCategoria().isTieneNumSerie())
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe seleccionar un aparato");
+			return; 
+		}
+		
+		
 		nuevoDetalle.setAparato(aparato);
 		System.out.println("Asigno el aparato");
 	}
@@ -210,6 +219,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		System.out.println("Nombre producto"+aparato.getNombre());
 		listaCodigos = new ArrayList<CodProducto>();
+		
 		
 		//listaCodigos = getEntityManager().createQuery("SELECT c FROM CodProducto c where ")
 		Inventario inv = (Inventario) getEntityManager()
@@ -402,7 +412,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		}
 	}
 	
-	
+
 	public void enviarReparacion()
 	{
 		instance.setEstado("Enviada");
@@ -503,6 +513,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		detalleReparacionExternaHome.setInstance(item);
 		detalleReparacionExternaHome.modify();
+		
+		instance.setEstado(verificarEstadoPostEnvio());
+		
+		modify();
 	}
 	
 	
@@ -1257,6 +1271,40 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 	{
 		
 	}
+	
+	
+	public void registrarCodigoNuevoManual()
+	{
+		
+		
+		if(codigoNuevoManual==null || codigoNuevoManual.equals(""))
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe ingresar el codigo");
+			return;
+		}
+		
+		if(nuevoDetalle.getAparato()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe seleccionar un aparato previamente");
+			return;
+		}
+		
+		CodProducto codigo = new CodProducto();
+		
+		//codigo.set
+		codigo.setNumSerie(codigoNuevoManual);
+		codigo.setEstado("USD");
+		codigo.setInventario(cargarInventarioProducto(nuevoDetalle.getAparato()));
+		
+		
+		getEntityManager().persist(codigo);
+		
+		nuevoDetalle.setCodigo(codigo);
+		
+		codigoNuevoManual = "";
+		ingresarCodigoManualmente=false;
+		
+	}
 
 	@Override
 	public boolean preModify() {
@@ -1305,6 +1353,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 
 	public List<DetalleReparacionExterna> getDetalleReparacion() {
 		return detalleReparacion;
@@ -1428,6 +1478,28 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		this.cerrar = cerrar;
 	}
 
+
+	public boolean isIngresarCodigoManualmente() {
+		return ingresarCodigoManualmente;
+	}
+
+
+	public void setIngresarCodigoManualmente(boolean ingresarCodigoManualmente) {
+		this.ingresarCodigoManualmente = ingresarCodigoManualmente;
+	}
+
+
+	public String getCodigoNuevoManual() {
+		return codigoNuevoManual;
+	}
+
+
+	public void setCodigoNuevoManual(String codigoNuevoManual) {
+		this.codigoNuevoManual = codigoNuevoManual;
+	}
+
+
+	
 	
 	
 	

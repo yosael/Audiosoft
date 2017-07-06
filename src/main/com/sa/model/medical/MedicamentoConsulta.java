@@ -41,6 +41,10 @@ public class MedicamentoConsulta implements Serializable {
 	private String cantidadSt;
 	
 	
+	//agregado el 05/07/2017
+	private String diasTratamiento;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -153,6 +157,14 @@ public class MedicamentoConsulta implements Serializable {
 	}
 	public void setCantidadSt(String cantidadSt) {
 		this.cantidadSt = cantidadSt;
+	}
+	
+	@Column(name = "dias_tratamiento", nullable = true,length=30)
+	public String getDiasTratamiento() {
+		return diasTratamiento;
+	}
+	public void setDiasTratamiento(String diasTratamiento) {
+		this.diasTratamiento = diasTratamiento;
 	}
 	
 	

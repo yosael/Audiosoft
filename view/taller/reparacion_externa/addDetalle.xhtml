@@ -52,7 +52,7 @@
 							<a:commandButton onclick="#{rich:component('selCode')}.show();"
 								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
 								ajaxSingle="true"
-								reRender="mCode" styleClass="addBtn"
+								reRender="mCode,frmSelCod" styleClass="addBtn"
 								value="# Serie" >
 							</a:commandButton>
 							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" />

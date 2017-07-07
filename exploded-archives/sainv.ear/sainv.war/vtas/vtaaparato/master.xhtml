@@ -14,7 +14,7 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{ventaComboHome.managed?sainv_view_messages.get('combapa_head_edit'):sainv_view_messages.get('combapa_head_register')}" styleClass="marginhead" />
+					value="Venta de combos de aparatos" styleClass="marginhead" /><!-- #{ventaComboHome.managed?sainv_view_messages.get('combapa_head_edit'):sainv_view_messages.get('combapa_head_register')} -->
 			</f:facet>
 			<rich:spacer height="10" />
 			<rich:tabPanel switchType="ajax" id="tabsCmbAparato" width="1000px;" style="margin:0 auto;">
@@ -35,7 +35,8 @@
 													<ui:define name="label">#{app.repcli_cliente}:</ui:define><!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') }" -->
 													<h:inputText id="patSearch" styleClass="busProd"
 														rendered="#{empty ventaComboHome.cotizacion}"
-														style="width:200px;"> <a:support ajaxSingle="true" event="onblur" reRender="formapacli"> </a:support></h:inputText>
+														style="width:200px;"> <a:support ajaxSingle="true" event="onblur" reRender="formapacli"> </a:support>
+													</h:inputText>
 													<p:watermark for="patSearch"
 														value="#{app.sched_new_searchpat}" id="watermark" />
 													<rich:suggestionbox immediate="true" ajaxSingle="true"
@@ -200,6 +201,26 @@
 											</h:panelGrid></td>
 									</tr>
 									
+									
+									<tr>
+										<td>
+											<h:outputLabel value="Precios con iva: " rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }" />
+											<rich:spacer width="5" height="0" ></rich:spacer>
+											<h:selectBooleanCheckbox value="#{ventaComboHome.incluyeIva}" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }"  >
+												<a:support event="onclick" action="#{ventaComboHome.aplicarIva()}" reRender="formapacli" ></a:support>
+											</h:selectBooleanCheckbox> 
+										</td>
+										<td>
+											<h:outputLabel value="Forma de pago: " style="font-size:14px;"  rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.habilitarOpcionesPago}" />
+											<rich:spacer width="5" height="0" ></rich:spacer>
+											<h:selectOneMenu value="#{ventaComboHome.formaPagoSelected}" id="slcFormaPago"  rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.habilitarOpcionesPago}" >
+												<s:selectItems value="#{ventaComboHome.listFormasPago}"  var="_fPago" label="#{_fPago.nombre}" ></s:selectItems>
+												<s:convertEntity />
+												<a:support event="onchange" action="#{ventaComboHome.aplicarFormaPago()}" reRender="_table" eventsQueue="q1" ></a:support>
+											</h:selectOneMenu>
+										</td>
+									</tr>
+									
 									<tr> <td> <hr style="border:0.01em dashed #333; box-shadow: 0px 0px 10px #666;"></hr></td></tr>
 									
 									<tr>
@@ -208,17 +229,17 @@
 										<h:outputText rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion.estado=='PEN'}" value="combo venta:" style="margin-right:5px;" />
 										
 										
-										<h:selectOneMenu
-												value="#{ventaComboHome.selectedComboVta}"
-												rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion.estado=='PEN'}">
-												<s:selectItems value="#{ventaComboHome.selCmbsList}"
-													var="combo" label="#{combo.nombre}" itemValue="#{combo.id}"
-													noSelectionLabel="Seleccione combo..."
-													hideNoSelectionLabel="true" />
-												<a:support event="onchange" ajaxSingle="true"
-													eventsQueue="q1"
-													reRender="_clPrecio,_tblItemsCmb, _dgCombos, boolTieneGar, _tmGar, _totMag1,crearOrden,comentOrden,lblReqMolde,formapacli,lblReqEnsam"
-													action="#{ventaComboHome.setComboVender()}" update="growl" />
+											<h:selectOneMenu
+													value="#{ventaComboHome.selectedComboVta}"
+													rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion.estado=='PEN'}">
+													<s:selectItems value="#{ventaComboHome.selCmbsList}"
+														var="combo" label="#{combo.nombre}" itemValue="#{combo.id}"
+														noSelectionLabel="Seleccione combo..."
+														hideNoSelectionLabel="true" />
+													<a:support event="onchange" ajaxSingle="true"
+														eventsQueue="q1"
+														reRender="_clPrecio,_tblItemsCmb, _dgCombos, boolTieneGar, _tmGar, _totMag1,crearOrden,comentOrden,lblReqMolde,formapacli,lblReqEnsam"
+														action="#{ventaComboHome.setComboVender()}" update="growl" />
 											</h:selectOneMenu>
 											
 											<rich:spacer width="10px;"></rich:spacer>

@@ -47,6 +47,7 @@ import com.sa.model.sales.CotizacionPrdSvcAdicionales;
 import com.sa.model.sales.DetVentaProdServ;
 import com.sa.model.sales.ItemComboApa;
 import com.sa.model.sales.Service;
+import com.sa.model.sales.TasaTarjetaCred;
 import com.sa.model.sales.VentaProdServ;
 import com.sa.model.security.Sucursal;
 import com.sa.model.workshop.AparatoCliente;
@@ -146,6 +147,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	
 	private ReparacionCliente reparacionCombo1;
 	private ReparacionCliente reparacionCombo2;
+	
+	//Nuevo agregado el 06/07/2017
+	private TasaTarjetaCred formaPagoSelected = new  TasaTarjetaCred();
+	private List<TasaTarjetaCred> listFormasPago = new ArrayList<TasaTarjetaCred>();
+	private Float porcentajeIVA;
+	private boolean habilitarOpcionesPago=true;
+	private boolean incluyeIva;
+	
 
 	@Override
 	public void create() {
@@ -316,9 +325,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 					// Calculamos los totales
 
-					if (comboVta != null
-							&& comboVta.getPeriodoGarantia() != null
-							&& comboVta.getPeriodoGarantia() > 0) {
+					if (comboVta != null && comboVta.getPeriodoGarantia() != null && comboVta.getPeriodoGarantia() > 0) {
 						setTieneGarantia(true);
 						System.out.println("# ITEMS DE LA COTIZACION: "
 								+ tmpCotiz.getItemsCotizacion().size());
@@ -345,14 +352,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					e.printStackTrace();
 				}
 
-				System.out.println("Tiene hijo BIN? "
-						+ tmpCotiz.getHijoBin().size());
-				if (tmpCotiz.getHijoBin() != null
-						&& tmpCotiz.getHijoBin().size() > 0) {
+				System.out.println("Tiene hijo BIN? "+ tmpCotiz.getHijoBin().size());
+				
+				if (tmpCotiz.getHijoBin() != null && tmpCotiz.getHijoBin().size() > 0) 
+				{
 					CotizacionComboApa tmpBin = tmpCotiz.getHijoBin().get(0);
 					setBinaural(true);
-					aparatoClienteHome.getInstance().setLadoAparatoBin(
-							tmpBin.getLadoAparato());
+					aparatoClienteHome.getInstance().setLadoAparatoBin(tmpBin.getLadoAparato());
 					// Cargamos la lista de combos Binaurales cotizados
 					// (CotizacionCombos)
 
@@ -485,13 +491,53 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 			
 		} catch (Exception e) {
+			
 			clearInstance();
+			
+			
+			//nuevo agregado el 06/07/2017
+			incluyeIva=true;
+			
+			//nuevo agregado el 06/07/2017
+			porcentajeIVA=13F;
+			
+			//nuevo agregado el 06/07/2017
+			listFormasPago = getEntityManager().createQuery("SELECT d FROM TasaTarjetaCred d ORDER BY d.porcentaje DESC ").getResultList();
+			
+			//nuevo agregado el 06/07/2017
+			formaPagoSelected=listFormasPago.get(0);
+			
+			
+			
 			aparatoClienteHome.setInstance(new AparatoCliente());
 			aparatoClienteHome.getInstance().setLadoAparato("IZQ");
 			setInstance(new VentaProdServ());
 			
 		}
 		System.out.println("Tamanio de los items cotizados "+ selCmbsList.size());
+	}
+	
+	
+	public void aplicarIva()
+	{
+		if(incluyeIva)
+		{
+			//recalcularTotalVenta();
+			calcularPrecios();
+		}
+		else
+		{
+			for(TasaTarjetaCred formaP: listFormasPago)
+			{
+				if(formaP.getId()==3)
+				{
+					formaPagoSelected=formaP;
+					habilitarOpcionesPago=false;
+				}
+			}
+			
+			calcularPrecios();
+		}
 	}
 
 	public void getCotizacionesPend() {
@@ -503,6 +549,17 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								+ "	WHERE c.estado = 'PEN'  AND c.cotizacionComboBin = NULL AND c.sucursal = :suc ORDER BY c.fechaIngreso DESC ")
 				.setParameter("suc", sucursalFlt).getResultList();
 
+	}
+	
+	public void aplicarFormaPago()
+	{
+		
+		System.out.println("Entro a aplicarFormaPago *******");
+		System.out.println("Forma de pago seleccionada **** "+formaPagoSelected.getNombre());
+		
+		//cotizacion.setFormaPago(formaPagoSelected);
+		
+		calcularPrecios();
 	}
 	
 	public void getCotizacionPendByDateN()
@@ -659,7 +716,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("vtaitm_addcmblimit"));
 		} else if (selCmbsList.size() < 3) {
-			if (selCmbsList.size() > 0) {
+			if (selCmbsList.size() > 0) {//Para ver si el combo ya existe. Pero si ya hay al menos uno en la lista
 				for (ComboAparato tmpCmb : selCmbsList) {
 					if (tmpCmb.equals(combo)) {
 						FacesMessages.instance().add(Severity.WARN,
@@ -1889,7 +1946,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	/***** APARATO BINAURAL METODOS ******/
 
 	public boolean cotizarVenta() {
-		if (selCmbsList.isEmpty()){
+		
+		
+		if (selCmbsList.isEmpty())
+		{
 			nombreCompleto=instance.getCliente();
 			instance.setCliente(nombreCompleto);
 			
@@ -1897,7 +1957,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("vtaitm_error_save3"));
 			return false;
-		}else if (isBinaural() && selCmbsListBin.isEmpty()){
+		}
+		else if (isBinaural() && selCmbsListBin.isEmpty())
+		{
 			nombreCompleto=instance.getCliente();
 			instance.setCliente(nombreCompleto);
 			FacesMessages.instance().clear();
@@ -1928,12 +1990,15 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		CotizacionComboApa cot = genCotizacionApa(false, null);
 
 		List<CotizacionCombos> ctcmbs = genCotizacionCombos(cot, selCmbsList);
-		for (CotizacionCombos tmpCtCmbs : ctcmbs) {
+		
+		for (CotizacionCombos tmpCtCmbs : ctcmbs) 
+		{
 			getEntityManager().persist(tmpCtCmbs);
 			System.out.println("Persistí el combo con ID: "
 					+ tmpCtCmbs.getCombo().getNombre());
 			getEntityManager().flush();
-			for (ItemComboApa itm : tmpCtCmbs.getCombo().getItemsCombo()) {
+			for (ItemComboApa itm : tmpCtCmbs.getCombo().getItemsCombo()) 
+			{
 				CotCmbsItems ctcmit = new CotCmbsItems();
 				ctcmit.setItem(itm);
 				ctcmit.setCtCmbs(tmpCtCmbs);
@@ -1945,7 +2010,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						ctcmit.setPrecioCotizado(itm.getProducto().getPrcMinimo());
 					else if (itm.getProducto()!=null && itm.getTipoPrecio().equals("OFE"))
 						ctcmit.setPrecioCotizado(itm.getProducto().getPrcOferta());
-					else{
+					else
+					{
 						FacesMessages.instance().clear();
 						FacesMessages.instance().add(Severity.WARN,
 								sainv_messages.get("cotitm_calctot_faltitm2"));
@@ -3176,6 +3242,23 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					}
 					ca.setTotal(0.0f); // reiniciamos el total a 0 para forzar recalculacion
 					ca.getTotal(); // hacemos que se calcule 
+					
+					
+					//////////////////////////////////////////////////
+					//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
+					//Verificando IVA
+						if(!incluyeIva)
+						{
+						//totalFinal-=(totalFinal*porcentajeIVA/100);
+							ca.setTotal(ca.getTotal()-(ca.getTotal()/(1+(porcentajeIVA/100))));
+						}
+						
+						//Aplicando porcentajes de targeta de credito
+						//totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+						ca.setTotal(ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));
+					
+					///////////////////////////////////////////////////
+					
 				}
 				if (selCmbsListBin != null && selCmbsListBin.size() > 0) {
 					// iteramos por cada combo de la lista binaural
@@ -3822,9 +3905,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	}
 
 	public void recalcularTotalVenta() {
+		
 		System.out.println("SELBINAURAL=" +getSelBinaural());
-		if (cotizacion!=null){
-		actualizarPreCotizados();}
+		
+		if(cotizacion!=null)//significa que ya se guardo la cotizacion y se cotizaron precios
+		{
+			actualizarPreCotizados();
+		}
+		
 		// Sacamos el total de los items
 		Float totalItems = 0f, totalFinal = 0f;
 		List<ItemComboApa> tmpItmLst = new ArrayList<ItemComboApa>();
@@ -3836,11 +3924,11 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		}
 		else if (cotizacion!=null && cotizacion.getEstado().equals("PEN")){
 			if (selBinaural == 1 && comboVta!=null)
-				tmpItmLst = comboVta.getItemsCombo();
+				tmpItmLst = comboVta.getItemsCombo();// <<--Revisar si pasar Lista itemsComboApa como en la condicion anterios
 			else if (selBinaural == 2 && comboVtaBin!=null)
 				tmpItmLst = comboVtaBin.getItemsCombo();
 		}
-		else if (cotizacion!=null && cotizacion.getEstado().equals("TFN")){
+		else if (cotizacion!=null && cotizacion.getEstado().equals("TFN")){ // <<--Revisar si pasar Lista itemsComboApa como en la condicion anterios
 			if (selBinaural == 1 && comboVta!=null)
 				tmpItmLst = comboVta.getItemsCombo();
 			else if (selBinaural == 2 && comboVtaBin!=null)
@@ -3855,6 +3943,24 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 		// En base al total de los costos, sacamos el detalle de costos
 		totalFinal += totalItems;
+		
+		
+		//////////////////////////////////////////////////
+		//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
+		//Verificando IVA
+		if(!incluyeIva)
+		{
+			//totalFinal-=(totalFinal*porcentajeIVA/100);
+			totalFinal=totalFinal/(1+(porcentajeIVA/100));
+		}
+		
+		//Aplicando porcentajes de targeta de credito
+		totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+		
+		///////////////////////////////////////////////////
+		
+		
+		
 		if (selBinaural == 1 && comboVta != null) {
 			for (CostoServicio tmpCst : comboVta.getCostosCombo()) {
 				totalFinal += tmpCst.getServicio().getCosto().floatValue();
@@ -5464,7 +5570,52 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		this.comentarioOrdenLabBin = comentarioOrdenLabBin;
 	}
 
+	
+	
+	public TasaTarjetaCred getFormaPagoSelected() {
+		return formaPagoSelected;
+	}
 
+	public void setFormaPagoSelected(TasaTarjetaCred formaPagoSelected) {
+		this.formaPagoSelected = formaPagoSelected;
+	}
+
+	public List<TasaTarjetaCred> getListFormasPago() {
+		return listFormasPago;
+	}
+
+	public void setListFormasPago(List<TasaTarjetaCred> listFormasPago) {
+		this.listFormasPago = listFormasPago;
+	}
+
+	public Float getPorcentajeIVA() {
+		return porcentajeIVA;
+	}
+
+	public void setPorcentajeIVA(Float porcentajeIVA) {
+		this.porcentajeIVA = porcentajeIVA;
+	}
+
+	public boolean isHabilitarOpcionesPago() {
+		return habilitarOpcionesPago;
+	}
+
+	public void setHabilitarOpcionesPago(boolean habilitarOpcionesPago) {
+		this.habilitarOpcionesPago = habilitarOpcionesPago;
+	}
+
+	public boolean isIncluyeIva() {
+		return incluyeIva;
+	}
+
+	public void setIncluyeIva(boolean incluyeIva) {
+		this.incluyeIva = incluyeIva;
+	}
+
+	
+	
+	
+	
 	
 	
 	

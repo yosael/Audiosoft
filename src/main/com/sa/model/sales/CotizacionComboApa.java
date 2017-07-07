@@ -56,6 +56,10 @@ public class CotizacionComboApa implements Serializable {
 	
 	private VentaProdServ venta= new VentaProdServ();
 	
+	//Nuevo agregado el 06/07/2017
+	private TasaTarjetaCred formaPago;
+	private boolean incluyeIva; 
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -274,6 +278,28 @@ public class CotizacionComboApa implements Serializable {
 	public void setVenta(VentaProdServ venta) {
 		this.venta = venta;
 	}
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "forma_pago", nullable = true)
+	@ForeignKey(name = "fk_cot_forma_pago")
+	public TasaTarjetaCred getFormaPago() {
+		return formaPago;
+	}
+	public void setFormaPago(TasaTarjetaCred formaPago) {
+		this.formaPago = formaPago;
+	}
+	
+	
+	@Column(name = "incluye_iva", nullable = false)
+	public boolean isIncluyeIva() {
+		return incluyeIva;
+	}
+	public void setIncluyeIva(boolean incluyeIva) {
+		this.incluyeIva = incluyeIva;
+	}
+	
+	
 	
 	
 	

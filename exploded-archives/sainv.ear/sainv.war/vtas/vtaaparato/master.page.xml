@@ -4,6 +4,7 @@
 	
 	<param name="isCot" value="#{ventaComboHome.cotizId}" required="false" />
 	<action execute="#{ventaComboHome.load()}" on-postback="false" />
+	<action execute="#{tasaTarjetaCredHome.getTasasList()}" on-postback="false" if="#{ventaComboHome.cotizId==null}" />
 	
 	<navigation from-action="#{ventaComboHome.save()}">
 		<rule if-outcome="true">

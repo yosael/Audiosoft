@@ -69,6 +69,10 @@ public class VentaProdServ implements Serializable {
 	//Nuevo el 17/02/2017
 	private Float totalDescuentoCorp;
 	
+	//Nuevo agregado el 10/07/2017
+	private boolean incluyeIva;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "vtaprsv_id", nullable = false)
@@ -327,6 +331,14 @@ public class VentaProdServ implements Serializable {
 	}
 	public void setTotalDescuentoCorp(Float totalDescuentoCorp) {
 		this.totalDescuentoCorp = totalDescuentoCorp;
+	}
+	
+	@Column(name="incluye_iva",nullable=true)
+	public boolean isIncluyeIva() {
+		return incluyeIva;
+	}
+	public void setIncluyeIva(boolean incluyeIva) {
+		this.incluyeIva = incluyeIva;
 	}
 
 	

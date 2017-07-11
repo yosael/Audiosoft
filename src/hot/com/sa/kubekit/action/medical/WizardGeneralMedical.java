@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -20,7 +19,6 @@ import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.GeneralInformation;
 import com.sa.model.medical.GeneralMedical;
 import com.sa.model.medical.MedicalAppointmentService;
-import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.id.MedicalAppointmentServiceId;
 import com.sa.model.sales.DetVentaProdServ;

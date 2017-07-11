@@ -1217,7 +1217,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	public void actualizarMontoPrd(Producto prd) {
 		setInstance(prd);
-		actualizarMontos();
+		//actualizarMontos(); comentado el 10/07/2017
+		actualizarMontosLoad(); //agregado el 10/07/2017
 	}
 
 	public void actualizarMontos() {

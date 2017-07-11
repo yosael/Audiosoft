@@ -151,7 +151,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	//Nuevo agregado el 06/07/2017
 	private TasaTarjetaCred formaPagoSelected = new  TasaTarjetaCred();
 	private List<TasaTarjetaCred> listFormasPago = new ArrayList<TasaTarjetaCred>();
-	private Float porcentajeIVA;
+	private Float porcentajeIVA=13F;
 	private boolean habilitarOpcionesPago=true;
 	private boolean incluyeIva;
 	
@@ -197,6 +197,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						+ tmpCotiz.getCliente().getNombreCompleto());
 				setCotizacion(tmpCotiz);
 				instance.setDetalle(tmpCotiz.getDetalleAparato());
+				//nuevo agregado el 07/07/2017
+				formaPagoSelected=cotizacion.getFormaPago();
+				incluyeIva=cotizacion.isIncluyeIva();
+				
+				System.out.println("FORMA PAGO SELECCIONADA LOAD "+formaPagoSelected.getNombre());
+				System.out.println("INCLUYE IVA LOAD: "+incluyeIva);
+				
 				System.out.println("tmpCotiz: "+ tmpCotiz.getDetalleAparato());
 				System.out.println("instance: "+ instance.getDetalle() );
 				aparatoClienteHome.getInstance().setRetroAuricular(
@@ -304,8 +311,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								}
 							}
 						}
-						System.out.println("SiZE de preciosCotizados normal (items): "
-								+ preciosCotizados.size());
+						System.out.println("SiZE de preciosCotizados normal (items): "+ preciosCotizados.size());
 						// asignamos los precios cotizados
 						combo.setItemsCombo(preciosCotizados);
 						combo.setDescripcion(tmpCmb.getCombo().getDescripcion());
@@ -485,7 +491,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					recalcularTotalVenta();
 					setSelBinaural((short) 1);
 				}
-				recalcularTotalVenta();
+				calcularPrecios();
+				//recalcularTotalVenta(); comentado el 10/07/2017
 			} else
 				setInstance(getEntityManager().find(VentaProdServ.class, vtcId));
 			
@@ -511,6 +518,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 			aparatoClienteHome.setInstance(new AparatoCliente());
 			aparatoClienteHome.getInstance().setLadoAparato("IZQ");
+			aparatoClienteHome.getInstance().setLadoAparatoBin("DER");
 			setInstance(new VentaProdServ());
 			
 		}
@@ -522,11 +530,15 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	{
 		if(incluyeIva)
 		{
+			System.out.println("Incluye IVA");
 			//recalcularTotalVenta();
 			calcularPrecios();
 		}
 		else
 		{
+			
+			System.out.println("No incluye iva");
+			
 			for(TasaTarjetaCred formaP: listFormasPago)
 			{
 				if(formaP.getId()==3)
@@ -725,9 +737,24 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					}
 				}
 			}
+			
+			asignarItemsCategoriaCombo(combo);
+			
 			selCmbsList.add(combo);
 			FacesMessages.instance().add(Severity.INFO,
 					sainv_messages.get("vtaitm_addcmbok"));
+		}
+	}
+	
+	public void asignarItemsCategoriaCombo(ComboAparato combo)
+	{
+		for(ItemComboApa item: combo.getItemsCombo())
+		{
+			if(item.getProducto()==null)
+			{
+				List<Producto> productoItem = getEntityManager().createQuery("SELECT p FROM Producto p where p.prcNormal=(SELECT MAX(pr.prcNormal) FROM Producto pr where pr.categoria.id="+item.getCategoria().getId()+") and p.categoria.id="+item.getCategoria().getId()+" ").getResultList();
+				item.setProducto(productoItem.get(0));
+			}
 		}
 	}
 
@@ -747,6 +774,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					}
 				}
 			}
+			
+			asignarItemsCategoriaCombo(combo);
+			
 			selCmbsListBin.add(combo);
 			FacesMessages.instance().add(Severity.INFO,
 					sainv_messages.get("vtaitm_addcmbok"));
@@ -1425,20 +1455,35 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					
 					System.out.println("Etapa acepta requisiciones");
 					
+					boolean comboRequiereRequisicion=false;
+					
+					for(ItemComboApa itemCmb: comboVta.getItemsCombo())
+					{
+						if(itemCmb.isGeneraRequisicion())
+						{
+							comboRequiereRequisicion=true;
+							break;
+						}
+					}
+					
 					RequisicionEtapaRep requisicion = new RequisicionEtapaRep();
-					
-					requisicion.setDescripcion("Requisicion: "+comboVta.getDescripcion());
-					requisicion.setEtapaRepCli(etarep);
-					requisicion.setFechaIngreso(new Date());
-					Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
-					requisicion.setSucursalSol(sucursalReq);
-					
-					requisicion.setEstado("COT");
-					
-					getEntityManager().persist(requisicion);
-					
-					System.out.println("TAMANIO de los ITEMS del combo "+comboVta.getItemsCombo().size());
-					System.out.println("Nombre del combo "+comboVta.getNombre());
+					if(comboRequiereRequisicion)
+					{
+						
+						
+						requisicion.setDescripcion("Requisicion: "+comboVta.getDescripcion());
+						requisicion.setEtapaRepCli(etarep);
+						requisicion.setFechaIngreso(new Date());
+						Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
+						requisicion.setSucursalSol(sucursalReq);
+						
+						requisicion.setEstado("COT");
+						
+						getEntityManager().persist(requisicion);
+						
+						System.out.println("TAMANIO de los ITEMS del combo "+comboVta.getItemsCombo().size());
+						System.out.println("Nombre del combo "+comboVta.getNombre());
+					}
 					
 					/*List<ItemComboApa> itemsCombo = getEntityManager().createQuery("SELECT i FROM ItemComboApa i where i.combo.id=:idCombo").setParameter("idCombo", comboVta.getId()).getResultList();
 					System.out.println("TAmanio combos encontrados: "+itemsCombo.size());*/
@@ -1451,6 +1496,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						
 						if(itemCmb.isGeneraRequisicion())
 						{
+
 							System.out.println("GENERA REQUISICION");
 							ItemRequisicionEta itemRequi = new ItemRequisicionEta();
 							
@@ -1521,20 +1567,36 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				
 				if(etarep.getEtapaRep().isAceptaReqs())
 				{
+					boolean requiereRequisicionCm2=false;
+					
+					for(ItemComboApa itemCmb:comboVtaBin.getItemsCombo())
+					{
+						if(itemCmb.isGeneraRequisicion())
+						{
+							requiereRequisicionCm2=true;
+							break;
+						}
+					}
 					
 					RequisicionEtapaRep requisicion = new RequisicionEtapaRep();
 					
-					requisicion.setDescripcion("Requisicion: "+comboVtaBin.getDescripcion());
-					requisicion.setEtapaRepCli(etarep);
-					requisicion.setFechaIngreso(new Date());
-					Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
-					requisicion.setSucursalSol(sucursalReq);
+					if(requiereRequisicionCm2)
+					{
+						requisicion.setDescripcion("Requisicion: "+comboVtaBin.getDescripcion());
+						requisicion.setEtapaRepCli(etarep);
+						requisicion.setFechaIngreso(new Date());
+						Sucursal sucursalReq = (Sucursal) getEntityManager().createQuery("Select s FROM Sucursal s where s.id=:idSuc").setParameter("idSuc",101).getResultList().get(0);
+						requisicion.setSucursalSol(sucursalReq);
+						
+						requisicion.setEstado("COT");
+						
+						getEntityManager().persist(requisicion);
+					}
 					
-					requisicion.setEstado("COT");
 					
-					getEntityManager().persist(requisicion);
 					
-					for (ItemComboApa itemCmb : itemsComboApaBin)
+					
+					for (ItemComboApa itemCmb : comboVtaBin.getItemsCombo())
 					{
 						
 						if(itemCmb.isGeneraRequisicion())
@@ -1997,6 +2059,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			System.out.println("Persistí el combo con ID: "
 					+ tmpCtCmbs.getCombo().getNombre());
 			getEntityManager().flush();
+			
 			for (ItemComboApa itm : tmpCtCmbs.getCombo().getItemsCombo()) 
 			{
 				CotCmbsItems ctcmit = new CotCmbsItems();
@@ -2005,11 +2068,11 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				ctcmit.setTipoPrecio(itm.getTipoPrecio());
 				if (itm != null) {
 					if (itm.getProducto()!=null && itm.getTipoPrecio().equals("NRM"))
-						ctcmit.setPrecioCotizado(itm.getProducto().getPrcNormal());
+						ctcmit.setPrecioCotizado(itm.getProducto().getPrcNormal()*itm.getCantidad());
 					else if (itm.getProducto()!=null && itm.getTipoPrecio().equals("MIN"))
-						ctcmit.setPrecioCotizado(itm.getProducto().getPrcMinimo());
+						ctcmit.setPrecioCotizado(itm.getProducto().getPrcMinimo()*itm.getCantidad());
 					else if (itm.getProducto()!=null && itm.getTipoPrecio().equals("OFE"))
-						ctcmit.setPrecioCotizado(itm.getProducto().getPrcOferta());
+						ctcmit.setPrecioCotizado(itm.getProducto().getPrcOferta()*itm.getCantidad());
 					else
 					{
 						FacesMessages.instance().clear();
@@ -2071,7 +2134,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		if (cot == null)
 			return false;
 
-		if (isBinaural()) {
+		if (isBinaural()) 
+		{
 			cotBin = genCotizacionApa(true, cot);
 			List<CotizacionCombos> ctcmbsBin = genCotizacionCombos(cotBin,
 					selCmbsListBin);
@@ -2080,27 +2144,28 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				System.out.println("Persistí el comboBin con ID: "
 						+ tmpCtCmbsBin.getCombo().getNombre());
 				getEntityManager().flush();
-				for (ItemComboApa itm : tmpCtCmbsBin.getCombo().getItemsCombo()) {
+				for (ItemComboApa itm : tmpCtCmbsBin.getCombo().getItemsCombo()) 
+				{
 					CotCmbsItems ctcmit = new CotCmbsItems();
 					ctcmit.setItem(itm);
 					ctcmit.setCtCmbs(tmpCtCmbsBin);
 					ctcmit.setTipoPrecio(itm.getTipoPrecio());
-					if (itm != null) {
+					if (itm != null) 
+					{
 						if (itm.getTipoPrecio().equals("NRM"))
-							ctcmit.setPrecioCotizado(itm.getProducto()
-									.getPrcNormal());
+							ctcmit.setPrecioCotizado(itm.getProducto().getPrcNormal()*itm.getCantidad());
 						else if (itm.getTipoPrecio().equals("MIN"))
-							ctcmit.setPrecioCotizado(itm.getProducto()
-									.getPrcMinimo());
+							ctcmit.setPrecioCotizado(itm.getProducto().getPrcMinimo()*itm.getCantidad());
 						else if (itm.getTipoPrecio().equals("OFE"))
-							ctcmit.setPrecioCotizado(itm.getProducto()
-									.getPrcOferta());
+							ctcmit.setPrecioCotizado(itm.getProducto().getPrcOferta()*itm.getCantidad());
 					}
 					getEntityManager().persist(ctcmit);
 					getEntityManager().flush();
 				}
 			}
-		} else {
+		} 
+		else 
+		{
 			setComboVtaBin(null);
 			setItemsComboApaBin(new ArrayList<ItemComboApa>());
 		}
@@ -2124,18 +2189,23 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		return tmpCtCmbs;
 	}
 
-	private CotizacionComboApa genCotizacionApa(boolean esBinaural,
-			CotizacionComboApa cotizPadre) {
+	private CotizacionComboApa genCotizacionApa(boolean esBinaural,CotizacionComboApa cotizPadre) 
+	{
 		List<CotizacionComboItem> itemsCotizacion = new ArrayList<CotizacionComboItem>();
 		List<ItemComboApa> tmpLstIt;
-		if (esBinaural) {
+		
+		if (esBinaural) 
+		{
 			System.out.println("Entre al if thus esBinaural true");
 			tmpLstIt = itemsComboApaBin;
-		} else
+		} 
+		else
 			tmpLstIt = itemsComboApa;
-		System.out.println("Tamaño de tmpLstIt dentro de genCotizacionApa "
-				+ tmpLstIt.size());
-		for (ItemComboApa tmpItm : tmpLstIt) {
+		
+		System.out.println("Tamaño de tmpLstIt dentro de genCotizacionApa "+ tmpLstIt.size());
+		
+		for (ItemComboApa tmpItm : tmpLstIt) 
+		{
 			if (tmpItm.getProducto() == null) {
 				FacesMessages.instance().add(
 						sainv_messages.get("vtaitm_error_noitm"));
@@ -2163,20 +2233,22 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			itm.setInventario(tmpItm.getInventario());
 			itm.setTipoPrecio(tmpItm.getTipoPrecio());
 			if (tmpItm.getTipoPrecio().equals("NRM"))
-				itm.setMonto(tmpItm.getProducto().getPrcNormal().doubleValue());
+				itm.setMonto(tmpItm.getProducto().getPrcNormal().doubleValue()*tmpItm.getCantidad());
 			else if (tmpItm.getTipoPrecio().equals("MIN"))
-				itm.setMonto(tmpItm.getProducto().getPrcMinimo().doubleValue());
+				itm.setMonto(tmpItm.getProducto().getPrcMinimo().doubleValue()*tmpItm.getCantidad());
 			else if (tmpItm.getTipoPrecio().equals("OFE"))
-				itm.setMonto(tmpItm.getProducto().getPrcOferta().doubleValue());
+				itm.setMonto(tmpItm.getProducto().getPrcOferta().doubleValue()*tmpItm.getCantidad());
 			itm.setPrincipal(tmpItm.isPrincipal());
 			itm.setProducto(tmpItm.getProducto());
 			System.out.println("Longitud de items cotizacion antes de add: " + itemsCotizacion.size());
 			itemsCotizacion.add(itm);
 			System.out.println("Longitud de items cotizacion despues de add: " + itemsCotizacion.size());
 		}
+		
 		CotizacionComboApa cotizacion = new CotizacionComboApa();
 		cotizacion.setCliente(instance.getCliente());
 		cotizacion.setValidez(getValidez());
+		
 		if (esBinaural) {
 			cotizacion.setCombo(comboVtaBin);
 			if (tieneGarantiaBin)
@@ -2185,10 +2257,18 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			cotizacion.setCombo(comboVta);
 			if (tieneGarantia)
 				cotizacion.setPeriodoGarantia(comboVta.getPeriodoGarantia());
-		}System.out.println("Lado aparato ********"+aparatoClienteHome.getInstance().getLadoAparato());
+		}
+		
+		System.out.println("Lado aparato ********"+aparatoClienteHome.getInstance().getLadoAparato());
+		
 		cotizacion.setDetalleAparato(instance.getDetalle());
 		cotizacion.setEstado("PEN");
 		cotizacion.setFechaIngreso(new Date());
+		
+		//Nuevo agregado el 07/07/2017
+		cotizacion.setIncluyeIva(incluyeIva);
+		cotizacion.setFormaPago(formaPagoSelected);
+		
 		if (esBinaural)
 			cotizacion.setLadoAparato(aparatoClienteHome.getInstance()
 					.getLadoAparatoBin());
@@ -2271,7 +2351,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		
 		//Se registra la venta
 		instance.setEstado("ABF");
-		instance.setMonto(0f);
+		//instance.setMonto(0f); comentado el 10/07/2017
 		getEntityManager().persist(instance);
 		
 		
@@ -3010,6 +3090,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		instance.setUsrEfectua(loginUser.getUser());
 		instance.setCliente(cotizacion.getCliente());
 		instance.setCotizacion(cotizacion);
+		
+		//nuevo agregado el 10/07/2017
+		instance.setFormaPago(formaPagoSelected);
+		instance.setIncluyeIva(cotizacion.isIncluyeIva());
 
 		if ((ventaItemHome.getItemsAgregados() != null && ventaItemHome
 				.getItemsAgregados().size() > 0)
@@ -3229,11 +3313,12 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	}
 
 	public void calcularPrecios() {
-		Float totalItems = 0f, totalFinal = 0f;
+		Float totalItems = 0f, totalFinal = 0f, totalConFormaPago=0f, totalCombo=0f;
 		try {
 			if (selCmbsList != null && selCmbsList.size() > 0) {
 				// iteramos por cada combo de la lista normal
-				for (ComboAparato ca : selCmbsList) {
+				for (ComboAparato ca : selCmbsList) 
+				{
 					for (ItemComboApa item : ca.getItemsCombo()) {
 						if (item.getProducto() == null) {
 							FacesMessages.instance().add(Severity.ERROR,sainv_messages.get("cotitm_calctot_faltitm"));
@@ -3241,26 +3326,31 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						}
 					}
 					ca.setTotal(0.0f); // reiniciamos el total a 0 para forzar recalculacion
-					ca.getTotal(); // hacemos que se calcule 
-					
+					ca.getTotal(); // hacemos que se calcule  comentado el 10/07/2017
+					//totalCombo= ca.getTotal(); // nuevo agregado el 10/07/2017
 					
 					//////////////////////////////////////////////////
 					//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
-					//Verificando IVA
-						if(!incluyeIva)
-						{
-						//totalFinal-=(totalFinal*porcentajeIVA/100);
-							ca.setTotal(ca.getTotal()-(ca.getTotal()/(1+(porcentajeIVA/100))));
-						}
-						
 						//Aplicando porcentajes de targeta de credito
 						//totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
-						ca.setTotal(ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));
+						ca.setTotal(ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));//este total se aplica con todo y servicios
+						//totalConFormaPago = totalCombo+(totalCombo*formaPagoSelected.getPorcentaje()/100);// agregado el 10/07/2017
+						
+						//Verificando IVA
+						if(!incluyeIva)
+						{
+							//totalFinal-=(totalFinal*porcentajeIVA/100);
+							
+							System.out.println("----->IVA "+(1+(porcentajeIVA/100)));
+							
+							ca.setTotal(ca.getTotal()/(1+(porcentajeIVA/100)));
+						}
 					
 					///////////////////////////////////////////////////
 					
 				}
-				if (selCmbsListBin != null && selCmbsListBin.size() > 0) {
+				if (selCmbsListBin != null && selCmbsListBin.size() > 0) 
+				{
 					// iteramos por cada combo de la lista binaural
 					for (ComboAparato ca : selCmbsListBin) {
 						for(ItemComboApa item:ca.getItemsCombo()){
@@ -3271,6 +3361,28 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						}
 						ca.setTotal(0.0f); // reiniciamos el total a 0 para forzar recalculacion
 						ca.getTotal(); // hacemos que se calcule
+						
+						
+						//////////////////////////////////////////////////
+						//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
+						//Aplicando porcentajes de targeta de credito
+						//totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+						ca.setTotal(ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));//este total se aplica con todo y servicios
+						//totalConFormaPago = totalCombo+(totalCombo*formaPagoSelected.getPorcentaje()/100);// agregado el 10/07/2017
+						
+						//Verificando IVA
+						if(!incluyeIva)
+						{
+							//totalFinal-=(totalFinal*porcentajeIVA/100);
+							
+							System.out.println("----->IVA "+(1+(porcentajeIVA/100)));
+							
+							ca.setTotal(ca.getTotal()/(1+(porcentajeIVA/100)));
+						}
+						
+						///////////////////////////////////////////////////
+						
+						
 					}
 				}
 				setShowTotal(true);
@@ -3279,7 +3391,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 				}
 			}
-		} catch (NullPointerException npe) {
+		} catch (NullPointerException npe) 
+		{
 			npe.printStackTrace();
 			FacesMessages.instance().add(Severity.ERROR,
 					sainv_messages.get("cotitm_calctot_faltitm"));
@@ -3299,6 +3412,41 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 		}
 
+	}
+	
+	public Float calcularTotalCombo(ComboAparato ca)
+	{
+		
+		Float total=0F;
+		
+		for(ItemComboApa itm: ca.getItemsCombo())
+		{
+			if (itm != null && itm.getPrecioCotizado() > 0)
+				total += (itm.getPrecioCotizado());
+			else if (itm != null)
+			{
+				if (itm.getTipoPrecio().equals("NRM"))
+					total += (itm.getProducto().getPrcNormal()*itm.getCantidad());
+				else if (itm.getTipoPrecio().equals("MIN"))
+					total += (itm.getProducto().getPrcMinimo()*itm.getCantidad());
+				else if (itm.getTipoPrecio().equals("OFE"))
+					total += (itm.getProducto().getPrcOferta()*itm.getCantidad()); 
+			}
+		}
+		
+		if(!incluyeIva)
+		{
+			//totalFinal-=(totalFinal*porcentajeIVA/100);
+			total=total/(1+(porcentajeIVA/100));
+		}
+		
+
+		
+		//Aplicando porcentajes de targeta de credito
+		//totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+		ca.setTotal(ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));
+		
+		return (ca.getTotal()+(ca.getTotal()*formaPagoSelected.getPorcentaje()/100));
 	}
 
 	public float calcPreReporte(ComboAparato combo) {
@@ -3390,7 +3538,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			//apaCli.setCliente(instance.getCliente());
 			apaCli.setCliente(cotizacion.getCliente());
 			apaCli.setActivo(true);
-			apaCli.setCostoVenta(getTotalCostos());
+			apaCli.setCostoVenta(getTotalCostos());//revisar 10/07/2017
 			apaCli.setCustomApa(false);
 			apaCli.setEstado("PNP");
 			if (tieneGarantia)
@@ -3576,7 +3724,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					else*/
 						apaCliBin.setCliente(cotizacion.getCliente());
 					
-					apaCliBin.setCostoVenta(getTotalCostosBin());
+					apaCliBin.setCostoVenta(getTotalCostosBin());//Revisar 10/07/2017
 					apaCliBin.setActivo(true);
 					apaCliBin.setCustomApa(false);
 					apaCliBin.setEstado("PNP");
@@ -3853,16 +4001,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 					if (tmpItm.getProducto() != null) {
 						if (tmpItm.getTipoPrecio().equals("NRM")) {
-							tmpItm.setPrecioCotizado(tmpItm.getProducto()
-									.getPrcNormal());
+							tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcNormal()*tmpItm.getCantidad());
 							tmpItm.setTipPreCotizado("NRM");
 						} else if (tmpItm.getTipoPrecio().equals("MIN")) {
-							tmpItm.setPrecioCotizado(tmpItm.getProducto()
-									.getPrcMinimo());
+							tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcMinimo()*tmpItm.getCantidad());
 							tmpItm.setTipPreCotizado("MIN");
 						} else if (tmpItm.getTipoPrecio().equals("OFE")) {
-							tmpItm.setPrecioCotizado(tmpItm.getProducto()
-									.getPrcOferta());
+							tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcOferta()*tmpItm.getCantidad());
 							tmpItm.setTipPreCotizado("OFE");
 						}
 						itemsCotizados.add(tmpItm);
@@ -3881,16 +4026,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 				if (tmpItm.getProducto() != null) {
 					if (tmpItm.getTipoPrecio().equals("NRM")) {
-						tmpItm.setPrecioCotizado(tmpItm.getProducto()
-								.getPrcNormal());
+						tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcNormal()*tmpItm.getCantidad());
 						tmpItm.setTipPreCotizado("NRM");
 					} else if (tmpItm.getTipoPrecio().equals("MIN")) {
-						tmpItm.setPrecioCotizado(tmpItm.getProducto()
-								.getPrcMinimo());
+						tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcMinimo()*tmpItm.getCantidad());
 						tmpItm.setTipPreCotizado("MIN");
 					} else if (tmpItm.getTipoPrecio().equals("OFE")) {
-						tmpItm.setPrecioCotizado(tmpItm.getProducto()
-								.getPrcOferta());
+						tmpItm.setPrecioCotizado(tmpItm.getProducto().getPrcOferta()*tmpItm.getCantidad());
 						tmpItm.setTipPreCotizado("OFE");
 					}
 					itemsCotizados.add(tmpItm);
@@ -3938,45 +4080,72 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	
 		for (ItemComboApa tmpItm : tmpItmLst)
 			if (tmpItm.getProducto() != null) {
-				totalItems += tmpItm.getPrecioCotizado();
+				totalItems += (tmpItm.getPrecioCotizado());
+				System.out.println("PRECIO COTIZADO "+tmpItm.getPrecioCotizado());
 			}
 
 		// En base al total de los costos, sacamos el detalle de costos
 		totalFinal += totalItems;
 		
+		System.out.println("TOTAL ITEMS "+totalItems);
+		
+		System.out.println("");
+		
+		
+		
+		
+		if (selBinaural == 1 && comboVta != null) 
+		{
+			for (CostoServicio tmpCst : comboVta.getCostosCombo()) {
+				totalFinal += tmpCst.getServicio().getCosto().floatValue();
+				System.out.println(tmpCst.getServicio().getCosto().floatValue());
+			}
+		} else 
+		{
+			if (selBinaural==2 && comboVtaBin != null)
+				for (CostoServicio tmpCst : comboVtaBin.getCostosCombo())
+					totalFinal += tmpCst.getServicio().getCosto().floatValue();
+		}
+		
+		
 		
 		//////////////////////////////////////////////////
 		//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
+		System.out.println("Total final antes de aplicar porcentaje "+totalFinal);
+		//Aplicando porcentajes de targeta de credito
+		System.out.println("Porcentaje calculado de targeta: "+(totalFinal*formaPagoSelected.getPorcentaje()/100));
+		
+		totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+		
 		//Verificando IVA
 		if(!incluyeIva)
 		{
+			System.out.println("RECALCULAR VENTA No incluye iva ");
 			//totalFinal-=(totalFinal*porcentajeIVA/100);
 			totalFinal=totalFinal/(1+(porcentajeIVA/100));
 		}
 		
-		//Aplicando porcentajes de targeta de credito
-		totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
-		
 		///////////////////////////////////////////////////
+		System.out.println("TOTAL FINAL CON  PORCENTAJE:"+totalFinal);
 		
 		
 		
-		if (selBinaural == 1 && comboVta != null) {
-			for (CostoServicio tmpCst : comboVta.getCostosCombo()) {
-				totalFinal += tmpCst.getServicio().getCosto().floatValue();
-				System.out
-						.println(tmpCst.getServicio().getCosto().floatValue());
-			}
+		
+		System.out.println("TOTAL FINAL VAR2:"+totalFinal);
+		
+		
+		
+		if (selBinaural == 1 && comboVta != null) 
+		{
 			setTotalCostos(totalFinal);
 			setTotalItems(totalItems);
-		} else {
-			if (selBinaural==2 && comboVtaBin != null)
-				for (CostoServicio tmpCst : comboVtaBin.getCostosCombo())
-					totalFinal += tmpCst.getServicio().getCosto().floatValue();
-
+		}
+		else if (selBinaural==2 && comboVtaBin != null)
+		{
 			setTotalCostosBin(totalFinal);
 			setTotalItemsBin(totalItems);
 		}
+		
 
 		totalMagnanime = 0f;
 		System.out.println("TotalCostos: " + totalCostos);

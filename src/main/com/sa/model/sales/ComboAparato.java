@@ -124,21 +124,21 @@ public class ComboAparato implements Serializable {
 	}
 	
 	@Transient
-	public float getTotal(){
+	public float getTotal(){//NOTA: SE AGREGO LA MULTIMPLICACION POR LA CANTIDAD. 07/07/2017
 		// obtener los costos de los diferentes items del combo
 		try{
 			if (total == 0){
 				float subtotal = 0.0f;	
 				for (ItemComboApa tmpItem: this.getItemsCombo()){
 					if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
-						subtotal += tmpItem.getPrecioCotizado();
+						subtotal += (tmpItem.getPrecioCotizado());
 						else if (tmpItem != null){
 						if (tmpItem.getTipoPrecio().equals("NRM"))
-							subtotal += tmpItem.getProducto().getPrcNormal();
+							subtotal += (tmpItem.getProducto().getPrcNormal()*tmpItem.getCantidad());
 						else if (tmpItem.getTipoPrecio().equals("MIN"))
-							subtotal += tmpItem.getProducto().getPrcMinimo();
+							subtotal += (tmpItem.getProducto().getPrcMinimo()*tmpItem.getCantidad());
 						else if (tmpItem.getTipoPrecio().equals("OFE"))
-							subtotal += tmpItem.getProducto().getPrcOferta(); 
+							subtotal += (tmpItem.getProducto().getPrcOferta()*tmpItem.getCantidad()); 
 					}
 				}
 				total += subtotal;

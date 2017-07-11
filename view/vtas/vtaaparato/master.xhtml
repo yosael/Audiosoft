@@ -29,7 +29,8 @@
 							<center>
 								<table style="width: 950px;">
 									<tr>
-										<td style="width: 40%;"><h:panelGrid columns="2">
+										<td style="width: 40%;">
+											<h:panelGrid columns="2">
 												<s:decorate template="/layout/kEditSpace.xhtml"
 													style="width:250px;">
 													<ui:define name="label">#{app.repcli_cliente}:</ui:define><!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') }" -->
@@ -197,27 +198,43 @@
 															eventsQueue="q1" />
 													</h:selectOneMenu>
 												</s:decorate>
-
-											</h:panelGrid></td>
+											</h:panelGrid>
+										</td>
 									</tr>
 									
 									
 									<tr>
-										<td>
-											<h:outputLabel value="Precios con iva: " rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }" />
-											<rich:spacer width="5" height="0" ></rich:spacer>
-											<h:selectBooleanCheckbox value="#{ventaComboHome.incluyeIva}" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }"  >
-												<a:support event="onclick" action="#{ventaComboHome.aplicarIva()}" reRender="formapacli" ></a:support>
-											</h:selectBooleanCheckbox> 
-										</td>
-										<td>
-											<h:outputLabel value="Forma de pago: " style="font-size:14px;"  rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.habilitarOpcionesPago}" />
-											<rich:spacer width="5" height="0" ></rich:spacer>
-											<h:selectOneMenu value="#{ventaComboHome.formaPagoSelected}" id="slcFormaPago"  rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.habilitarOpcionesPago}" >
-												<s:selectItems value="#{ventaComboHome.listFormasPago}"  var="_fPago" label="#{_fPago.nombre}" ></s:selectItems>
-												<s:convertEntity />
-												<a:support event="onchange" action="#{ventaComboHome.aplicarFormaPago()}" reRender="_table" eventsQueue="q1" ></a:support>
-											</h:selectOneMenu>
+										<td style="width: 40%;" >
+											<h:panelGrid columns="2" >
+												<s:decorate template="/layout/kEditSpace.xhtml"
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }" >
+													<ui:define name="label">Precios con iva: </ui:define>
+													<h:selectBooleanCheckbox value="#{ventaComboHome.incluyeIva}" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }"  >
+														<a:support event="onclick" action="#{ventaComboHome.aplicarIva()}" reRender="formapacli" ></a:support>
+													</h:selectBooleanCheckbox> 
+												</s:decorate>
+												<s:decorate template="/layout/kEditSpace.xhtml"
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null }" >
+													<ui:define name="label">Precios incluyen iva: </ui:define>
+													<h:outputText value="Iva incluido" rendered="#{ventaComboHome.cotizacion.incluyeIva}" />
+													<h:outputText value="No Incluye iva" rendered="#{not ventaComboHome.cotizacion.incluyeIva}" />
+												</s:decorate>
+												
+												<s:decorate template="/layout/kEditSpace.xhtml"
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.incluyeIva}"  >
+													<ui:define name="label">Forma de pago: </ui:define>
+													<h:selectOneMenu value="#{ventaComboHome.formaPagoSelected}" id="slcFormaPago"   >
+														<s:selectItems value="#{ventaComboHome.listFormasPago}"  var="_fPago" label="#{_fPago.nombre}" ></s:selectItems>
+														<s:convertEntity />
+														<a:support event="onchange" action="#{ventaComboHome.aplicarFormaPago()}" reRender="formapacli" eventsQueue="q1" ></a:support>
+													</h:selectOneMenu>		
+												</s:decorate>
+												<s:decorate template="/layout/kEditSpace.xhtml"
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null}"  >
+													<ui:define name="label">Forma de pago: </ui:define>
+													<h:outputText value="#{ventaComboHome.cotizacion.formaPago.nombre}" />
+												</s:decorate>
+											</h:panelGrid>
 										</td>
 									</tr>
 									
@@ -264,7 +281,7 @@
 												border="0" id="_dgCombos">
 												<!-- Panel de los combos cotizados que no se han vendido  -->
 												<rich:panel id="_cmbDet"
-													rendered="#{not (ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.estado=='APL' and combo.id==ventaComboHome.cotizacion.selComboId)}">
+													rendered="#{not (ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.estado=='APL' or ventaComboHome.cotizacion.estado=='PRE' or ventaComboHome.cotizacion.estado=='TFN' and combo.id==ventaComboHome.cotizacion.selComboId)}">
 													<f:facet name="header">
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
@@ -398,13 +415,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -419,13 +437,13 @@
 													</rich:dataTable>
 												</rich:panel>
 												<rich:panel id="_cmbDet2"
-													rendered="#{ventaComboHome.cotizacion.estado=='COT' and combo.id==ventaComboHome.cotizacion.selComboId}"
+													rendered="#{(ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.estado=='PRE' or ventaComboHome.cotizacion.estado=='TFN') and combo.id==ventaComboHome.cotizacion.selComboId}"
 													headerClass="dr-pnl-h-custom">
 													<f:facet name="header">
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
 															<h:outputText
-																rendered="#{combo.total > 0 and (ventaComboHome.cotizacion.estado =='COT' or ventaComboHome.showTotal)}"
+																rendered="#{combo.total > 0 and (ventaComboHome.cotizacion.estado =='COT' or ventaComboHome.cotizacion.estado=='PRE' or ventaComboHome.cotizacion.estado=='TFN' or ventaComboHome.showTotal)}"
 																value="#{combo.total}" style="float:right; clear:both;">
 																<f:convertNumber currencySymbol="$" groupingUsed="true"
 																	integerOnly="true" type="currency" locale="en-US"
@@ -532,13 +550,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -666,13 +685,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -923,7 +943,7 @@
 												border="0" id="_dgCombosBin">
 
 												<rich:panel id="_cmbDetBin"
-													rendered="#{not (ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.estado=='APL'  and combo.id==ventaComboHome.selectedComboVtaBin)}">
+													rendered="#{not (ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.estado=='APL' or ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()=='PRE' or ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()=='TFN' and combo.id==ventaComboHome.selectedComboVtaBin)}">
 													<f:facet name="header">
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
@@ -1043,14 +1063,17 @@
 														
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
+															<!-- rendered="#{res.producto==null}" -->
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" 
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -1065,7 +1088,7 @@
 													</rich:dataTable>
 												</rich:panel>
 												<rich:panel id="_cmbDetBin2"
-													rendered="#{ventaComboHome.cotizacion.estado=='COT' and combo.id==ventaComboHome.selectedComboVtaBin}"
+													rendered="#{(ventaComboHome.cotizacion.estado=='COT' or ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()=='PRE' or ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()=='TFN') and combo.id==ventaComboHome.selectedComboVtaBin}"
 													headerClass="dr-pnl-h-custom">
 													<f:facet name="header">
 														<h:panelGroup>
@@ -1188,13 +1211,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -1332,7 +1356,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.producto==null}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"

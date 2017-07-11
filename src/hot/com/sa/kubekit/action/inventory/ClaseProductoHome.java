@@ -88,6 +88,7 @@ public class ClaseProductoHome extends KubeDAO<ClaseProducto>{
 		List<Producto> lstPrds = getEntityManager()
 				.createQuery("SELECT p FROM Producto p ")
 				.getResultList();
+		System.out.println("Tamabbio de items de los montos actualizados "+lstPrds.size());
 		for(Producto tmpPrd : lstPrds) {
 			productoHome.actualizarMontoPrd(tmpPrd);
 			getEntityManager().merge(tmpPrd);

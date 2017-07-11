@@ -294,11 +294,23 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 				getEntityManager().merge(tmpCst);
 			
 		for(ItemComboApa tmpItm : items) 
-			if(!instance.getItemsCombo().contains(tmpItm)) {
+			if(!instance.getItemsCombo().contains(tmpItm)) 
+			{
+				if(tmpItm.getProducto()==null)
+					tmpItm.setSelCategoria("si");
+				else
+					tmpItm.setSelCategoria("no");
+				
 				tmpItm.setCombo(instance);
 				getEntityManager().persist(tmpItm);
 			} else
+			{
+				if(tmpItm.getProducto()==null)
+					tmpItm.setSelCategoria("si");
+				else
+					tmpItm.setSelCategoria("no");
 				getEntityManager().merge(tmpItm);
+			}
 		
 		//Si estamos actualizando y no insertando, verificamos si eliminaron alguno
 		if(instance.getId() != null && instance.getId() > 0) {

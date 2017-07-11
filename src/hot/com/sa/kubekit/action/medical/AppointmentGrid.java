@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
-import javax.annotation.PostConstruct;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
@@ -17,12 +16,10 @@ import javax.persistence.EntityManager;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.End;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Out;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.richfaces.model.selection.Selection;
@@ -31,7 +28,6 @@ import com.sa.kubekit.action.i18n.KubeBundle;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.model.medical.Doctor;
 import com.sa.model.medical.MedicalAppointment;
-import com.sa.model.security.Sucursal;
 
 @Name("appointmentGrid")
 @Scope(ScopeType.CONVERSATION)//@Scope(ScopeType.SESSION)

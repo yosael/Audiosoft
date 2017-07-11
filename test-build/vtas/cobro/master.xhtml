@@ -159,13 +159,17 @@
 										
 										<tr>
 											<td>
-												<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.estado!='PDS' and ventaProdServHome.instance.estado!='APR'}">
+												<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.estado!='PDS' and ventaProdServHome.instance.estado!='APR' and ventaProdServHome.instance.formaPago==null}">
 													<ui:define name="label">#{app.vtaprs_formapago}:</ui:define>
 													<h:selectOneMenu value="#{ventaProdServHome.formaPago}">
 														<s:selectItems value="#{tasaTarjetaCredHome.resultList}" var="_frp" label="#{_frp.nombre}" />
 														<s:convertEntity />
 														<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{ventaProdServHome.calcCargosTarjeta()}" reRender="formvta,_mntTOtal" />
 													</h:selectOneMenu>
+												</s:decorate>
+												<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" rendered="#{ventaProdServHome.instance.formaPago!=null}">
+													<ui:define name="label">#{app.vtaprs_formapago}:</ui:define>
+													<h:outputText value="#{ventaProdServHome.instance.formaPago.nombre}" />
 												</s:decorate>
 											</td>
 											<td>

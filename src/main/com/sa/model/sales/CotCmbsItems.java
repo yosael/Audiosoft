@@ -41,7 +41,7 @@ public class CotCmbsItems {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "itcbap_id", nullable = false)
+	@JoinColumn(name = "itcbap_id", nullable = true)
 	@ForeignKey(name = "fk_ctcbitm_itcbap")
 	public ItemComboApa getItem() {
 		return item;

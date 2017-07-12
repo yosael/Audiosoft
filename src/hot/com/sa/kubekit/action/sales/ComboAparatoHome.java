@@ -30,7 +30,9 @@ import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.inventory.Categoria;
 import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
+import com.sa.model.sales.AdaptacionCombo;
 import com.sa.model.sales.ComboAparato;
+import com.sa.model.sales.ComboAparatoAdaptacion;
 import com.sa.model.sales.CostoServicio;
 import com.sa.model.sales.CotizacionComboApa;
 import com.sa.model.sales.CotizacionComboItem;
@@ -52,6 +54,8 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 	private String nomCoinci="";
 	private String filterEstado;
 	private Float costoEstimado;
+	
+	private List<ComboAparatoAdaptacion> adaptaciones = new ArrayList<ComboAparatoAdaptacion>();
 
 	/*
 	@In(required=false,create=true)
@@ -95,6 +99,27 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 		}
 	}
 	
+	public void agregarAdaptacion(AdaptacionCombo adaptacion)
+	{
+		ComboAparatoAdaptacion comboAdaptacion = new ComboAparatoAdaptacion();
+		comboAdaptacion.setAdaptacion(adaptacion);
+		comboAdaptacion.setComboAparato(instance);
+		
+		adaptaciones.add(comboAdaptacion);
+	}
+	
+	public void quitarAdaptacion(ComboAparatoAdaptacion adap)
+	{
+		if(adap.getId()!=null)
+		{
+			adaptaciones.remove(adap);
+			getEntityManager().remove(adap);
+		}
+		else
+		{
+			adaptaciones.remove(adap);
+		}
+	}
 	
 		
 	public void getCombosList() {
@@ -630,16 +655,32 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 		
 		return true;
 	}
+	
+	public void guardarAdaptaciones()
+	{
+		if(adaptaciones.size()>0)
+		{
+			for(ComboAparatoAdaptacion cmbAdaptacion: adaptaciones)
+			{
+				if(cmbAdaptacion.getId()==null)
+				{
+					getEntityManager().persist(cmbAdaptacion);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void posSave() {
 		guardarDetalleCombo();
+		guardarAdaptaciones();
 		
 	}
 
 	@Override
 	public void posModify() {
 		guardarDetalleCombo();
+		guardarAdaptaciones();
 	}
 
 	@Override
@@ -736,6 +777,18 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 	public void setCostoEstimado(Float costoEstimado) {
 		this.costoEstimado = costoEstimado;
 	}
+
+
+
+	public List<ComboAparatoAdaptacion> getAdaptaciones() {
+		return adaptaciones;
+	}
+
+	public void setAdaptaciones(List<ComboAparatoAdaptacion> adaptaciones) {
+		this.adaptaciones = adaptaciones;
+	}
+	
+	
 	
 	
 	

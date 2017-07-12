@@ -189,7 +189,48 @@
 						</rich:dataTable>
 						</td>
 					</tr>
-					</table>
+					<tr>
+						<td colspan="2">
+							<center>
+								<s:decorate template="/layout/kActions.xhtml">
+									<a:commandButton onclick="#{rich:component('adapsList')}.show();" ajaxSingle="true" 
+										reRender="mAdap" styleClass="addBtn" action="#{adaptacionComboHome.buscarTodos()}" value="Agregar adaptacion para combo" >  
+									</a:commandButton>
+								</s:decorate>
+								<br />
+							</center>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<rich:dataTable var="res" value="#{comboAparatoHome.adaptaciones}" id="_tblAdapsCmb"  rows="10"
+								align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+								headerClass="tablaHeader" footerClass="tableScroll">
+								<f:facet name="header">Adaptaciones para el combo</f:facet>
+								
+								<rich:column>
+									<f:facet name="header">Nombre</f:facet>
+									<h:outputText value="#{res.adaptacion.nombre}" />
+								</rich:column>
+																
+								<rich:column>
+									<f:facet name="header">#{msn.col_actions}</f:facet>
+									<a:commandLink title="Quitar adaptacion" eventsQueue="q1" 
+										action="#{comboAparatoHome.quitarAdaptacion(res)}" ajaxSingle="true" reRender="formcombo" >
+										<h:graphicImage value="/kubeImg/table_delete16.png" />
+									</a:commandLink>
+									
+									<a:commandLink title="Ver contenido" eventsQueue="q1" 
+										action="#{comboAparatoHome.quitarAdaptacion(res)}" ajaxSingle="true" reRender="formcombo" value="Ver contenido" >
+									</a:commandLink>
+								</rich:column>
+								<f:facet name="footer">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</f:facet>
+							</rich:dataTable>
+						</td>
+					</tr>
+				</table>
 				
 				<s:decorate template="/layout/kActions.xhtml">
 					<s:button view="/vtas/combo/list.xhtml" propagation="begin"
@@ -251,6 +292,19 @@
 					</h:panelGroup>
 				</f:facet>
 				<s:div id="mCat"><ui:include  src="addCatCmb.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="adapsList" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('adapsList')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('adapsList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls" >
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('adapsList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mAdap"><ui:include  src="addAdapCmb.xhtml" /></s:div>
 			</rich:modalPanel>
 			
 			<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"

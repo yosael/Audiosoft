@@ -37,7 +37,9 @@ import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Movimiento;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.id.ItemId;
+import com.sa.model.sales.AdaptacionCombo;
 import com.sa.model.sales.ComboAparato;
+import com.sa.model.sales.ComboAparatoAdaptacion;
 import com.sa.model.sales.CostoServicio;
 import com.sa.model.sales.CotCmbsItems;
 import com.sa.model.sales.CotizacionComboApa;
@@ -45,6 +47,7 @@ import com.sa.model.sales.CotizacionComboItem;
 import com.sa.model.sales.CotizacionCombos;
 import com.sa.model.sales.CotizacionPrdSvcAdicionales;
 import com.sa.model.sales.DetVentaProdServ;
+import com.sa.model.sales.ItemAdaptacion;
 import com.sa.model.sales.ItemComboApa;
 import com.sa.model.sales.Service;
 import com.sa.model.sales.TasaTarjetaCred;
@@ -155,6 +158,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	private boolean habilitarOpcionesPago=true;
 	private boolean incluyeIva;
 	
+	private ComboAparatoAdaptacion adaptacionComboSeleccionada;
+	private List<ComboAparatoAdaptacion> lstAparatoAdaptacionSel = new ArrayList<ComboAparatoAdaptacion>();
+	private ComboAparato comboAdaptacionSel = new ComboAparato();
+	
 
 	@Override
 	public void create() {
@@ -217,8 +224,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								"SELECT cc FROM CotizacionCombos cc WHERE cc.cotizacion.id = :cot")
 						.setParameter("cot", getCotizId()).getResultList();
 				// seteamos el valor del combo seleccionado por el médico
-				System.out.println("EL COMBO seleccionado ES: "
-						+ cotizacion.getSelComboId());
+				System.out.println("EL COMBO seleccionado ES: "+ cotizacion.getSelComboId());
+				
 				if (cotizacion.getSelComboId() != null) {
 					setSelectedComboVta(cotizacion.getSelComboId());
 				}
@@ -293,6 +300,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							//tmpNItem.setTipPreCotizado(tmpItm.getTipPreCotizado());
 							tmpNItem.setInventario(tmpItm.getInventario());
 							tmpNItem.setIdRd(generarEntero());
+							tmpNItem.setSelCategoria(tmpItm.getSelCategoria()); //nuevo agregado el 11/07/2017
 							
 							// ...luego iteramos la lista de items que se
 							// cotizaron y que contienen los precios y tipos
@@ -350,6 +358,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							nwItm.setPrecioCotizado(tmpItm.getPrecioCotizado());
 							nwItm.setTipPreCotizado(tmpItm.getTipPreCotizado());
 							nwItm.setIdRd(generarEntero());
+							nwItm.setSelCategoria(tmpItm.getSelCategoria());// nuevo el 11/07/2017
 							itemsComboApa.add(nwItm);
 						}
 					}
@@ -412,6 +421,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								//tmpNItem.setTipPreCotizado(tmpItm.getTipPreCotizado());
 								tmpNItem.setInventario(tmpItmBin.getInventario());
 								tmpNItem.setIdRd(generarEntero());
+								tmpNItem.setSelCategoria(tmpNItem.getSelCategoria());// nuevo el 11/07/2017
 								
 								// ...luego iteramos la lista de items que se
 								// cotizaron y que contienen los precios y tipos
@@ -485,13 +495,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						nwItm.setPrecioCotizado(tmpItm.getPrecioCotizado());
 						nwItm.setTipPreCotizado(tmpItm.getTipPreCotizado());
 						nwItm.setIdRd(generarEntero());
+						nwItm.setSelCategoria(tmpItm.getSelCategoria());// nuevo el 11/07/2017
 						itemsComboApaBin.add(nwItm);
 					}
 					setSelBinaural((short) 2);
 					recalcularTotalVenta();
 					setSelBinaural((short) 1);
 				}
-				calcularPrecios();
+				calcularPrecios(); //agregado el 10/07/2017
 				//recalcularTotalVenta(); comentado el 10/07/2017
 			} else
 				setInstance(getEntityManager().find(VentaProdServ.class, vtcId));
@@ -523,6 +534,12 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 		}
 		System.out.println("Tamanio de los items cotizados "+ selCmbsList.size());
+	}
+	
+	
+	public void seleccionarCliente(Cliente cliente)
+	{
+		instance.setCliente(cliente);
 	}
 	
 	
@@ -2060,8 +2077,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					+ tmpCtCmbs.getCombo().getNombre());
 			getEntityManager().flush();
 			
+			System.out.println("TAMANIO de Los items del combo "+tmpCtCmbs.getCombo().getItemsCombo().size());
 			for (ItemComboApa itm : tmpCtCmbs.getCombo().getItemsCombo()) 
 			{
+				
+				System.out.println("NOMBRE DEL COMBO "+itm.getCombo().getNombre());
+				System.out.println("ITEM CATEGORIA"+itm.getCategoria().getNombre());
+				System.out.println("ITEM PRODUCTO"+itm.getProducto().getNombre());
+				
 				CotCmbsItems ctcmit = new CotCmbsItems();
 				ctcmit.setItem(itm);
 				ctcmit.setCtCmbs(tmpCtCmbs);
@@ -4059,10 +4082,16 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		Float totalItems = 0f, totalFinal = 0f;
 		List<ItemComboApa> tmpItmLst = new ArrayList<ItemComboApa>();
 		if (cotizacion!= null && cotizacion.getEstado().equals("COT")){
-		if (selBinaural == 1)
-			tmpItmLst = itemsComboApa;
-		else
-			tmpItmLst = itemsComboApaBin;
+			if (selBinaural == 1)
+			{
+				//tmpItmLst = itemsComboApa; comentado el 11/07/2017
+				tmpItmLst = comboVta.getItemsCombo(); // nuevo el 11/07/2017
+			}
+			else
+			{
+				//tmpItmLst = itemsComboApaBin; comentado el 11/07/2017
+				tmpItmLst = comboVtaBin.getItemsCombo(); // nuevo el 11/07/2017
+			}
 		}
 		else if (cotizacion!=null && cotizacion.getEstado().equals("PEN")){
 			if (selBinaural == 1 && comboVta!=null)
@@ -5302,6 +5331,74 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		}
 
 	}
+	
+	
+	
+	public void adaptarCombo()
+	{
+		
+		List<ItemComboApa> lsItems = new ArrayList<ItemComboApa>();
+		List<CostoServicio> lsService = new ArrayList<CostoServicio>();
+		lsItems = comboAdaptacionSel.getItemsCombo();
+		lsService = comboAdaptacionSel.getCostosCombo();
+		
+		for(ComboAparatoAdaptacion adaptacionCmb: lstAparatoAdaptacionSel)
+		{
+		
+			for(ItemAdaptacion itemAdap: adaptacionCmb.getAdaptacion().getItemsAdaptacion())
+			{
+				
+				if(itemAdap.getCategoria()!=null && itemAdap.getProducto()==null)
+				{
+					ItemComboApa itemCombo = new ItemComboApa();
+					itemCombo.setCategoria(itemAdap.getCategoria());
+					itemCombo.setCombo(comboAdaptacionSel);
+					itemCombo.setCantidad(Short.valueOf("1"));
+					itemCombo.setSelCategoria("si");
+					
+					lsItems.add(itemCombo);
+				}
+				else if(itemAdap.getProducto()!=null)
+				{
+					ItemComboApa itemCombo = new ItemComboApa();
+					itemCombo.setCategoria(itemAdap.getProducto().getCategoria());
+					itemCombo.setProducto(itemAdap.getProducto());
+					itemCombo.setCombo(comboAdaptacionSel);
+					itemCombo.setCantidad(Short.valueOf("1"));
+					itemCombo.setSelCategoria("no");
+					
+					lsItems.add(itemCombo);
+				}
+				else if(itemAdap.getServicio()!=null)
+				{
+					CostoServicio costo = new CostoServicio();
+					costo.setCombo(comboAdaptacionSel);
+					costo.setServicio(itemAdap.getServicio());
+					costo.setValor(itemAdap.getServicio().getCosto().floatValue());
+					
+					lsService.add(costo);
+				}
+							
+			}
+			
+		}
+		
+		comboAdaptacionSel.setItemsCombo(lsItems);// es posible que borre la lista anterior
+		comboAdaptacionSel.setCostosCombo(lsService);
+	}
+	
+	
+	public void seleccionarComboParaAdaptar(ComboAparato combo)
+	{
+		comboAdaptacionSel = combo;
+	}
+	
+	public void seleccionarAdaptacionCombo(ComboAparatoAdaptacion adaptacion)
+	{
+		lstAparatoAdaptacionSel.add(adaptacion);
+	}
+	
+	
 
 	public Image getImgApaPrincipal(ComboAparato combo) {
 		try {
@@ -5781,6 +5878,36 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		this.incluyeIva = incluyeIva;
 	}
 
+	public ComboAparatoAdaptacion getAdaptacionComboSeleccionada() {
+		return adaptacionComboSeleccionada;
+	}
+
+	public void setAdaptacionComboSeleccionada(
+			ComboAparatoAdaptacion adaptacionComboSeleccionada) {
+		this.adaptacionComboSeleccionada = adaptacionComboSeleccionada;
+	}
+
+	
+	public List<ComboAparatoAdaptacion> getLstAparatoAdaptacionSel() {
+		return lstAparatoAdaptacionSel;
+	}
+
+	public void setLstAparatoAdaptacionSel(
+			List<ComboAparatoAdaptacion> lstAparatoAdaptacionSel) {
+		this.lstAparatoAdaptacionSel = lstAparatoAdaptacionSel;
+	}
+
+	public ComboAparato getComboAdaptacionSel() {
+		return comboAdaptacionSel;
+	}
+
+	public void setComboAdaptacionSel(ComboAparato comboAdaptacionSel) {
+		this.comboAdaptacionSel = comboAdaptacionSel;
+	}
+
+	
+	
+	
 	
 	
 	

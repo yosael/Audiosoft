@@ -78,7 +78,7 @@
 															<!-- reRender="lblSelPat, lblSelPat1" -->
 														<a:support event="onselect" reRender="formapacli,_selLadoNrml"
 															eventsQueue="q1" ajaxSingle="true"
-															action="#{ventaComboHome.instance.setCliente(val[4])}"
+															action="#{ventaComboHome.seleccionarCliente(val[4])}"
 															focus="patSearch" />
 															
 													</rich:suggestionbox>
@@ -94,7 +94,8 @@
 														rendered="#{not empty ventaComboHome.cotizacion.cliente and empty ventaComboHome.instance.cliente.nombres}"
 														value="#{ventaComboHome.cotizacion.cliente.nombreCompleto}"
 														readonly="#{facesContext.renderResponse}" required="false" disabled="true"
-														style="width:200px;"> <a:support ajaxSingle="true"  event="onblur"></a:support> </h:inputText>
+														style="width:200px;"> <a:support ajaxSingle="true"  event="onblur"></a:support> 
+													</h:inputText>
 													<a:commandButton
 														rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') }"
 														onclick="#{rich:component('selClient')}.show();"
@@ -269,7 +270,7 @@
 													<rich:spacer width="12px" ></rich:spacer>
 													<h:inputTextarea value="#{ventaComboHome.comentarioOrdenLab}"  id="comentOrden" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" />
 													<rich:spacer width="12px" ></rich:spacer> 
-													<h:commandButton style="padding" action="#{ventaComboHome.preVenta()}" value="Preventa" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" >
+													<h:commandButton style="padding" action="#{ventaComboHome.preVenta()}" value="Solicitar orden de laboratorio" rendered="#{(ventaComboHome.crearOrden) and (ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN')}" >
 														<a:support event="onclick" ajaxSingle="true" reRender="formapacli" ></a:support>
 													</h:commandButton>
 													<s:label rendered="#{ventaComboHome.cotizacion.estado=='PRE'}" id="lblProceso" >Trabajo de taller en proceso</s:label>
@@ -285,6 +286,10 @@
 													<f:facet name="header">
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
+															<rich:spacer width="40" height="0" ></rich:spacer>	 
+															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo)}" rendered="#{combo.adaptaciones.size()>0}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdap"
+															 onclick="#{rich:component('selAdaptacion')}.show();"	 
+															/>
 															<h:outputText
 																rendered="#{combo.total > 0 and (ventaComboHome.cotizacion.estado =='COT' or ventaComboHome.showTotal)}"
 																value="#{combo.total}" style="float:right; clear:both;">
@@ -415,7 +420,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion==null)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
@@ -550,7 +555,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion==null)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
@@ -685,13 +690,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion==null)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -930,7 +936,7 @@
 											<rich:spacer width="12px" ></rich:spacer>
 											<h:inputTextarea value="#{ventaComboHome.comentarioOrdenLabBin}"  id="comentOrdenBin" rendered="#{(ventaComboHome.crearOrdenBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" />
 											<rich:spacer width="12px" ></rich:spacer>
-											<h:commandButton action="#{ventaComboHome.preVentaBin()}" value="Preventa" rendered="#{(ventaComboHome.crearOrdenBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" >
+											<h:commandButton action="#{ventaComboHome.preVentaBin()}" value="Solicitar orden de laboratorio" rendered="#{(ventaComboHome.crearOrdenBin) and (ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='COT' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN')}" >
 												<a:support event="onclick" ajaxSingle="true" reRender="formapacli2" ></a:support>
 											</h:commandButton>
 											<s:label rendered="#{ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()=='PRE'}" id="lblProcesoBin" >Trabajo de taller en proceso</s:label>
@@ -1064,7 +1070,7 @@
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<!-- rendered="#{res.producto==null}" -->
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion.getHijoBin().get(0)==null)}"
 																reRender="itm" 
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -1072,6 +1078,7 @@
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -1209,13 +1216,14 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion.getHijoBin().get(0)==null)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
+															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -1353,7 +1361,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion.getHijoBin().get(0)==null)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
@@ -1737,6 +1745,18 @@
 				</f:facet>
 				<s:div id="cmb">
 					<ui:include src="selCombo.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selAdaptacion" width="750" moveable="true" autosized="true"
+				top="40" 
+				onbeforeshow="activeModal.setActiveModalPanel('selAdaptacion');">
+				<f:facet name="header">Opciones de adaptacion para combo</f:facet>
+				<f:facet name="controls">
+					
+				</f:facet>
+				<s:div id="dvAdap">
+					<ui:include src="addAdapCmb.xhtml" />
 				</s:div>
 			</rich:modalPanel>
 

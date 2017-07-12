@@ -1,0 +1,106 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmAddAdap">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+						<s:span styleClass="busHead">Seleccionar adaptacion:</s:span>
+						<rich:spacer width="0" /> <s:decorate></s:decorate>
+						<a:commandButton action="#{ventaComboHome.adaptarCombo()}" value="Aceptar" reRender="frmAddAdap,formapacli" onclick="#{rich:component('selAdaptacion')}.hide();" ></a:commandButton>
+						
+					</center>
+				<rich:dataTable var="res" value="#{ventaComboHome.comboAdaptacionSel.adaptaciones}"  width="700" id="_tablaAdap"
+					 rows="10"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Adaptaciones para combo</f:facet>
+					
+					<rich:column width="380" >
+						<f:facet name="header">Nombre</f:facet>
+						<h:outputText value="#{res.adaptacion.nombre}" />
+					</rich:column>
+					
+					<rich:column >
+						<f:facet name="header">#{msn.col_actions}</f:facet><!--  -->
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="adapDet"
+							action="#{ventaComboHome.seleccionarAdaptacionCombo(res)}" ajaxSingle="true" eventsQueue="q1" >
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+		<rich:dataGrid id="adapDet" value="#{ventaComboHome.lstAparatoAdaptacionSel}" var="adaptacion" columns="1" elements="3" border="0" >
+			<rich:panel>
+				<f:facet name="header">
+					<h:panelGroup>
+						<a:commandLink title="Quitar" reRender="adapDet"
+						eventsQueue="q1" action="#{ventaComboHome.lstAparatoAdaptacionSel.remove(adaptacion)}"
+						ajaxSingle="true">
+							<h:graphicImage value="/kubeImg/remove-icon.png" />
+							<rich:spacer width="5px"> </rich:spacer>
+						</a:commandLink>
+						<h:outputText value="#{adaptacion.adaptacion.nombre}" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="cmbDet" style="margin:0 auto" >
+					<table style="margin:0 auto;width:500px" >
+						<tr>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">Adaptacion:</ui:define>
+									<h:inputText value="#{adaptacion.adaptacion.nombre}"
+										rendered="#{ventaComboHome.lstAparatoAdaptacionSel!=null}" readonly="true" />
+								</s:decorate>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<rich:dataTable var="res"
+									value="#{adaptacion.adaptacion.itemsAdaptacion}"
+									id="_tblItemsAdapCmbSel" rows="10" align="center"
+									rowClasses="tblEven,tblOdd"
+									onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+									onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+									rendered="#{ventaComboHome.lstAparatoAdaptacionSel!=null}"
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header">Items</f:facet>
+		
+									<rich:column>
+										<f:facet name="header">#{app.productomast_category}</f:facet>
+										<h:outputText value="#{res.categoria.nombre}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Producto</f:facet>
+										<h:outputText value="#{res.producto.nombre}" rendered="#{res.producto!=null}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Servicio</f:facet>
+										<h:outputText value="#{res.servicio.name}" rendered="#{res.servicio!=null}" />
+									</rich:column>
+									<f:facet name="footer">
+										<rich:datascroller id="ds1" renderIfSinglePage="true" />
+									</f:facet>
+								</rich:dataTable>
+							</td>
+						</tr>
+					</table>
+				</s:div>
+			</rich:panel>
+		</rich:dataGrid>
+				
+			</h:form>
+	
+</ui:composition>

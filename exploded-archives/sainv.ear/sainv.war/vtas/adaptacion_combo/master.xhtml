@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">
+				<h:outputText
+					value="Gestionar adaptacion para combos" styleClass="marginhead" />
+			</f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formcombo" >
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<fieldset>
+					<legend>Datos de la adaptacion</legend> 
+					<center>
+						<table>
+							<tr>
+								<td >
+									<h:panelGrid columns="2" cellpadding="5" cellspacing="2" >
+										
+										<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+											<ui:define name="label">#{app.combapa_nombre}:</ui:define>
+											<h:inputText value="#{adaptacionComboHome.instance.nombre}" required="true" maxlength="30" style="width:180px;" >
+												<a:support event="onblur" ajaxSingle="true" eventsQueue="q1" />
+											</h:inputText>
+										</s:decorate>
+																	
+										<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
+											<ui:define name="label">#{app.combapa_estado}:</ui:define>
+											<h:selectOneMenu value="#{adaptacionComboHome.instance.estado}" required="true" style="width:160px;">
+												<f:selectItem itemLabel="#{msn.status_active}" itemValue="ACT" />
+												<f:selectItem itemLabel="#{msn.status_inactive}" itemValue="INA" />
+											</h:selectOneMenu>
+										</s:decorate>
+										
+										
+										
+									</h:panelGrid> 
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<center>
+										<s:decorate template="/layout/kActions.xhtml">
+										
+											<a:commandButton onclick="#{rich:component('catsList')}.show();" ajaxSingle="true" 
+												reRender="mCat" styleClass="addBtn" value="#{app.ca_button_add_cat}" >  
+											</a:commandButton>
+											<rich:spacer width="20" />
+											<a:commandButton onclick="#{rich:component('itemsList')}.show();" ajaxSingle="true" 
+												reRender="mItm" styleClass="addBtn" value="#{app.ca_button_add_itm}" >  
+											</a:commandButton>
+											<rich:spacer width="20" />
+											<a:commandButton onclick="#{rich:component('costosList')}.show();" ajaxSingle="true" 
+												reRender="mCst" styleClass="addBtn" value="#{app.ca_button_add_cst}" >  
+											</a:commandButton>
+									
+										</s:decorate>
+										<br />
+									</center>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<rich:dataTable var="res" value="#{adaptacionComboHome.itemsAdaptacion}" id="_tblItemsCmb"  rows="10"
+										align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+										headerClass="tablaHeader" footerClass="tableScroll">
+										<f:facet name="header">#{app.combapa_listitems}</f:facet>
+										
+										<rich:column>
+											<f:facet name="header">#{app.productomast_category}</f:facet>
+											<h:outputText value="#{res.categoria.nombre}" />
+										</rich:column>
+										<rich:column >
+											<f:facet name="header">Producto</f:facet>
+											<h:outputText value="#{res.producto.nombre}"  />
+										</rich:column>
+										<rich:column >
+											<f:facet name="header">Servicio</f:facet>
+											<h:outputText value="#{res.servicio.name}" />
+										</rich:column>
+										<rich:column>
+											<f:facet name="header">#{msn.col_actions}</f:facet>
+											<a:commandLink title="#{app.combapa_delitm}" eventsQueue="q1" 
+												action="#{adaptacionComboHome.quitarItem(res)}" ajaxSingle="true" reRender="formcombo" >
+												<h:graphicImage value="/kubeImg/table_delete16.png" />
+											</a:commandLink>
+										</rich:column>
+										<f:facet name="footer">
+											<rich:datascroller id="ds1" renderIfSinglePage="true" />
+										</f:facet>
+									</rich:dataTable>
+								</td>
+							</tr>
+						</table>
+					
+						<s:decorate template="/layout/kActions.xhtml">
+							<s:button view="/vtas/adaptacion_combo/list.xhtml" propagation="begin"
+								styleClass="listBtn" value="#{msn.button_list}">
+							</s:button>
+							<s:button view="/vtas/adaptacion_combo/master.xhtml" propagation="begin"
+								styleClass="newBtn" value="#{msn.button_new}">
+								<f:param name="id" value="" />
+							</s:button>
+							<a:commandButton action="#{adaptacionComboHome.save()}" reRender="formcombo"
+								rendered="#{not adaptacionComboHome.managed}" styleClass="saveBtn" ignoreDupResponses="true"
+								onclick="upperCaseAllInputs();" value="#{msn.button_save}"/>
+								
+							<a:commandButton action="#{adaptacionComboHome.modify()}" reRender="formcombo"
+								rendered="#{adaptacionComboHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true"
+								onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
+								
+							<a:commandButton reRender="formcombo"
+								rendered="#{adaptacionComboHome.managed and loginUser.user.accionEspecial==true}" styleClass="deleteBtn" ignoreDupResponses="true"
+								 ajaxSingle="true" eventsQueue="q1"
+									onclick="#{rich:component('confirmation')}.show();" value="#{msn.button_delete}" />
+						</s:decorate>
+					</center>
+				</fieldset>
+			</h:form>
+			
+			<rich:modalPanel id="costosList" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('costosList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('costosList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCst"><ui:include  src="addCstCmb.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="itemsList" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('itemsList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('itemsList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mItm"><ui:include  src="addItmCmb.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="catsList" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('catsList')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('catsList');">
+				<f:facet name="header">#{app.general_lov}</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" 
+							onclick="#{rich:component('catsList')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="mCat"><ui:include  src="addCatCmb.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="confirmation" width="400" moveable="true" autosized="true"  top="40"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.combapa_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.combapa_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn"
+						value="#{msn.button_cancel}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{adaptacionComboHome.delete()}" reRender="formcombo"
+						rendered="#{adaptacionComboHome.managed}" styleClass="deleteBtn"
+						value="#{msn.button_delete}"
+						onclick="#{rich:component('confirmation')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+		</rich:panel>
+		<a:status id="stateStatus" startText="#{app.general_espere}"
+			startStyle="background-color: #c0c7d1;
+   			border-style: groove;
+			border-width:15px;
+			border-color: #818fa3 #5a687b #465160 #323a44;
+		   font-weight:bold;
+		   font-size: 12px;
+		   text-align: center;
+		   position:absolute; 
+		   right: 50%; 
+		   top: 1px; 
+		   width: auto;" />
+	</ui:define>
+</ui:composition>

@@ -36,6 +36,7 @@ public class ComboAparato implements Serializable {
 	private List<CostoServicio> costosCombo = new ArrayList<CostoServicio>();
 	private List<CotizacionCombos> cmbCotizados = new ArrayList<CotizacionCombos>(); 
 	
+	private List<ComboAparatoAdaptacion> adaptaciones = new ArrayList<ComboAparatoAdaptacion>();
 	
 		
 	@Id
@@ -159,7 +160,13 @@ public class ComboAparato implements Serializable {
 	
 	
 	
-	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "comboAparato")
+	public List<ComboAparatoAdaptacion> getAdaptaciones() {
+		return adaptaciones;
+	}
+	public void setAdaptaciones(List<ComboAparatoAdaptacion> adaptaciones) {
+		this.adaptaciones = adaptaciones;
+	}
 	
 	
 	

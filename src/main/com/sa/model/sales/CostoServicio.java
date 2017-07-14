@@ -26,6 +26,9 @@ public class CostoServicio implements Serializable {
 	private Float valor;
 	private boolean showCotizacion;
 	
+	
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cscmbap_id", nullable = false)
@@ -37,7 +40,7 @@ public class CostoServicio implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "combo_id", nullable = false)
+	@JoinColumn(name = "combo_id", nullable = true)
 	@ForeignKey(name = "fk_cmb_cscmba")
 	public ComboAparato getCombo() {
 		return combo;
@@ -63,6 +66,8 @@ public class CostoServicio implements Serializable {
 	public void setValor(Float valor) {
 		this.valor = valor;
 	}
+	
+	
 	
 	@Transient
 	public boolean isShowCotizacion() {

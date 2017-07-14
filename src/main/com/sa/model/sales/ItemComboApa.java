@@ -40,7 +40,7 @@ public class ItemComboApa implements Serializable {
 	private CodProducto codProducto;
 	private Inventario inventario;
 	private String tipoPrecio = "NRM";
-	private List<CotCmbsItems> itemsCotizados = new ArrayList<CotCmbsItems>();
+	//private List<CotCmbsItems> itemsCotizados = new ArrayList<CotCmbsItems>();
 	private float precioCotizado= 0f;
 	private String tipPreCotizado;
 	
@@ -64,7 +64,7 @@ public class ItemComboApa implements Serializable {
 	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "combo_id", nullable = false)
+	@JoinColumn(name = "combo_id", nullable = true)
 	@ForeignKey(name = "fk_cmb_itmcmb")
 	public ComboAparato getCombo() {
 		return combo;
@@ -142,13 +142,13 @@ public class ItemComboApa implements Serializable {
 		this.tipoPrecio = tipoPrecio;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.REMOVE)
+/*	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.REMOVE)//
 	public List<CotCmbsItems> getItemsCotizados() {
 		return itemsCotizados;
 	}
 	public void setItemsCotizados(List<CotCmbsItems> itemsCotizados) {
 		this.itemsCotizados = itemsCotizados;
-	}
+	}*/
 	
 	@Transient
 	public float getPrecioCotizado() {

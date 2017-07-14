@@ -38,6 +38,8 @@ public class ComboAparato implements Serializable {
 	
 	private List<ComboAparatoAdaptacion> adaptaciones = new ArrayList<ComboAparatoAdaptacion>();
 	
+	private List<ItemComboApa> itemsCotizados =  new ArrayList<ItemComboApa>();
+	
 		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,8 +86,9 @@ public class ComboAparato implements Serializable {
 		this.estado = estado;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "combo", cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "combo", cascade = CascadeType.REMOVE)//
 	public List<ItemComboApa> getItemsCombo() {
+		//System.out.println("ENTRO AAAAAAAAAAa GET ITEMS COMBO BBBBBBBBBBBBBBBBBBBB");
 		return itemsCombo;
 	}
 	public void setItemsCombo(List<ItemComboApa> itemsCombo) {
@@ -130,18 +133,38 @@ public class ComboAparato implements Serializable {
 		try{
 			if (total == 0){
 				float subtotal = 0.0f;	
-				for (ItemComboApa tmpItem: this.getItemsCombo()){
-					if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
-						subtotal += (tmpItem.getPrecioCotizado());
-						else if (tmpItem != null){
-						if (tmpItem.getTipoPrecio().equals("NRM"))
-							subtotal += (tmpItem.getProducto().getPrcNormal()*tmpItem.getCantidad());
-						else if (tmpItem.getTipoPrecio().equals("MIN"))
-							subtotal += (tmpItem.getProducto().getPrcMinimo()*tmpItem.getCantidad());
-						else if (tmpItem.getTipoPrecio().equals("OFE"))
-							subtotal += (tmpItem.getProducto().getPrcOferta()*tmpItem.getCantidad()); 
+				
+				if(this.getItemsCotizados().size()>0)
+				{
+					for (ItemComboApa tmpItem: this.getItemsCotizados()){
+						if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
+							subtotal += (tmpItem.getPrecioCotizado());
+							else if (tmpItem != null){
+							if (tmpItem.getTipoPrecio().equals("NRM"))
+								subtotal += (tmpItem.getProducto().getPrcNormal()*tmpItem.getCantidad());
+							else if (tmpItem.getTipoPrecio().equals("MIN"))
+								subtotal += (tmpItem.getProducto().getPrcMinimo()*tmpItem.getCantidad());
+							else if (tmpItem.getTipoPrecio().equals("OFE"))
+								subtotal += (tmpItem.getProducto().getPrcOferta()*tmpItem.getCantidad()); 
+						}
 					}
 				}
+				else
+				{
+					for (ItemComboApa tmpItem: this.getItemsCombo()){
+						if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
+							subtotal += (tmpItem.getPrecioCotizado());
+							else if (tmpItem != null){
+							if (tmpItem.getTipoPrecio().equals("NRM"))
+								subtotal += (tmpItem.getProducto().getPrcNormal()*tmpItem.getCantidad());
+							else if (tmpItem.getTipoPrecio().equals("MIN"))
+								subtotal += (tmpItem.getProducto().getPrcMinimo()*tmpItem.getCantidad());
+							else if (tmpItem.getTipoPrecio().equals("OFE"))
+								subtotal += (tmpItem.getProducto().getPrcOferta()*tmpItem.getCantidad()); 
+						}
+					}
+				}
+					
 				total += subtotal;
 				//obtener los costos de los diferentes servicios del combo
 				for (CostoServicio tmpCst : this.getCostosCombo()) {
@@ -160,13 +183,25 @@ public class ComboAparato implements Serializable {
 	
 	
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "comboAparato")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "comboAparato",cascade = CascadeType.REMOVE)
 	public List<ComboAparatoAdaptacion> getAdaptaciones() {
 		return adaptaciones;
 	}
 	public void setAdaptaciones(List<ComboAparatoAdaptacion> adaptaciones) {
 		this.adaptaciones = adaptaciones;
 	}
+	
+	@Transient
+	public List<ItemComboApa> getItemsCotizados() {
+		System.out.println("ENTRO AAAAAAAAAAa GET ITEMS COMBO COTIZADOS");
+		return itemsCotizados;
+	}
+	public void setItemsCotizados(List<ItemComboApa> itemsCotizados) {
+		this.itemsCotizados = itemsCotizados;
+	}
+	
+	
+	
 	
 	
 	

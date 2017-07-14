@@ -20,6 +20,10 @@ public class CotCmbsItems {
 	private String tipoPrecio;
 	private Float precioCotizado;
 	
+	// nuevo agregado el 13/07/2017 .. Aqui se guardaran SOLO los servicios que se han agregado desde la adaptacion del combo. Debido a que no estan asociados directamnte al combo. solo cuando se requiera
+	private Service servicioCotizado;
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ctcbitm_id", nullable = false)
@@ -66,5 +70,19 @@ public class CotCmbsItems {
 	public void setPrecioCotizado(Float precioCotizado) {
 		this.precioCotizado = precioCotizado;
 	}
+	
+	
+	@ManyToOne
+	@JoinColumn(name = "id_servicio", nullable = true)
+	@ForeignKey(name = "fk_servicio_itcbap")
+	public Service getServicioCotizado() {
+		return servicioCotizado;
+	}
+	public void setServicioCotizado(Service servicioCotizado) {
+		this.servicioCotizado = servicioCotizado;
+	}
+	
+	
+	
 
 }

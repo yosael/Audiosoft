@@ -23,7 +23,7 @@ public class CotizacionCombos {
 	private CotizacionComboApa cotizacion;
 	private ComboAparato combo;
 	private String lado;
-	private List<CotCmbsItems> itemsCotizados = new ArrayList<CotCmbsItems>();
+	//private List<CotCmbsItems> itemsCotizados = new ArrayList<CotCmbsItems>();
 	
 	
 	@Id
@@ -64,11 +64,11 @@ public class CotizacionCombos {
 		this.lado = lado;
 	}
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "ctCmbs", cascade = CascadeType.REMOVE)
+	/*@OneToMany(fetch = FetchType.LAZY, mappedBy = "ctCmbs", cascade = CascadeType.REMOVE)
 	public List<CotCmbsItems> getItemsCotizados() {
 		return itemsCotizados;
 	}
 	public void setItemsCotizados(List<CotCmbsItems> itemsCotizados) {
 		this.itemsCotizados = itemsCotizados;
-	}
+	}*/
 }

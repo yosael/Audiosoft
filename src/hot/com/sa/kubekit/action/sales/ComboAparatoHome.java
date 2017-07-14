@@ -83,6 +83,8 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 			//Cargamos lista de items y costos
 			items = instance.getItemsCombo();
 			costos = instance.getCostosCombo();
+			adaptaciones = instance.getAdaptaciones();
+			
 			if(instance.getPeriodoGarantia() != null && instance.getPeriodoGarantia() > 0)
 				setTieneGarantia(true);
 			else

@@ -470,24 +470,39 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								//Generamos un detalle de la venta
 								Double totalReparacion = 0d;
 								VentaProdServ vta = new VentaProdServ();
-								vta.setCliente(clienteHome.getInstance());
-								vta.setDetalle("Servicios medicos - " + medicalAppointmentDAO.getInstance().getComment());
-								vta.setEmpresa(medicalAppointmentDAO.getLoginUser().getUser().getSucursal().getEmpresa());
 								
-								vta.setEstado("PEN");
-								vta.setFechaVenta(new Date());
-								vta.setIdDetalle(medicalAppointmentDAO.getInstance().getId());
-								vta.setMonto(0.0f);
-								//vta.setSucursal(medicalAppointmentDAO.getLoginUser().getUser().getSucursal()); //Cambiar para que al gaurdar reparacion guarde la sucursal
-								vta.setSucursal(medicalAppointmentDAO.getInstance().getSucursal());//Se cambio a que la venta sera tomada en cuenta segun la sucursal especificada en la cita, esta sera espeficiada por la persona que la prog
-								System.out.println("*******************1111 sucursal "+ medicalAppointmentDAO.getInstance().getSucursal());
-								vta.setTipoVenta("CST");
-								vta.setUsrEfectua(medicalAppointmentDAO.getLoginUser().getUser());
 								
-								//Agregado el 09/02/2017
-								vta.setObservacion(observacionVenta);
+								//nuevo el 17/07/2017
+								//Verificar si no existe una venta existente
+								List<VentaProdServ> vtaExis = entityManager.createQuery("SELECT v FROM VentaProdServ v where v.cliente.id=:idCliente and DATE(v.fechaVenta)=:fechaHoy and v.tipoVenta<>'CMB' and v.estado='PEN'").setParameter("idCliente", clienteHome.getInstance().getId()).setParameter("fechaHoy", new Date()).getResultList();
 								
-								entityManager.persist(vta);
+								if(vtaExis.size()>0)
+								{
+									vta = vtaExis.get(0);
+									vta.setObservacion(observacionVenta);
+								}
+								else
+								{
+									vta.setCliente(clienteHome.getInstance());
+									vta.setDetalle("Servicios medicos - " + medicalAppointmentDAO.getInstance().getComment());
+									vta.setEmpresa(medicalAppointmentDAO.getLoginUser().getUser().getSucursal().getEmpresa());
+									
+									vta.setEstado("PEN");
+									vta.setFechaVenta(new Date());
+									vta.setIdDetalle(medicalAppointmentDAO.getInstance().getId());
+									vta.setMonto(0.0f);
+									//vta.setSucursal(medicalAppointmentDAO.getLoginUser().getUser().getSucursal()); //Cambiar para que al gaurdar reparacion guarde la sucursal
+									vta.setSucursal(medicalAppointmentDAO.getInstance().getSucursal());//Se cambio a que la venta sera tomada en cuenta segun la sucursal especificada en la cita, esta sera espeficiada por la persona que la prog
+									System.out.println("*******************1111 sucursal "+ medicalAppointmentDAO.getInstance().getSucursal());
+									vta.setTipoVenta("CST");
+									vta.setUsrEfectua(medicalAppointmentDAO.getLoginUser().getUser());
+									
+									//Agregado el 09/02/2017
+									vta.setObservacion(observacionVenta);
+									entityManager.persist(vta);
+								
+								}
+								
 								//Servicios registrados 
 								entityManager.flush();
 								entityManager.refresh(medicalAppointmentDAO.getInstance());
@@ -510,6 +525,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									dtVta.setDetalle(bld.toString());
 									dtVta.setMonto(tmpSrv.getService().getCosto().floatValue());
 									dtVta.setVenta(vta);
+									dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
 									totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 									entityManager.persist(dtVta);
 								}
@@ -528,6 +544,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 										dtVta.setDetalle(bld.toString());
 										dtVta.setMonto(tmpSrv.getExamen().getCosto().floatValue());
 										dtVta.setVenta(vta);
+										dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
+										
 										totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 										entityManager.persist(dtVta);
 									}
@@ -535,7 +553,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								
 								//Actualizamos el monto de la venta
 								entityManager.refresh(vta);
-								vta.setMonto(new VentaProdServHome().moneyDecimal(totalReparacion).floatValue());
+								vta.setMonto(vta.getMonto()+(new VentaProdServHome().moneyDecimal(totalReparacion).floatValue()));
 								entityManager.merge(vta);
 								
 								motivoConsultaHome.persistirMotivosLista();

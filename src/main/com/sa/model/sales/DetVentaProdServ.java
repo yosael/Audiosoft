@@ -44,6 +44,9 @@ public class DetVentaProdServ implements Serializable{
 	//nuevo el 17/02/2017
 	private Float descuentoCorp;
 	
+	// nuevo el 17/07/2017
+	private String tipoVenta; // TLL,CMB, ITM, CST
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "vtaprsv_id", nullable = false)
@@ -189,6 +192,15 @@ public class DetVentaProdServ implements Serializable{
 	}
 	public void setDescuentoCorp(Float descuentoCorp) {
 		this.descuentoCorp = descuentoCorp;
+	}
+	
+	
+	@Column(name = "tipo_venta", nullable = true,length=3)
+	public String getTipoVenta() {
+		return tipoVenta;
+	}
+	public void setTipoVenta(String tipoVenta) {
+		this.tipoVenta = tipoVenta;
 	}
 	
 	

@@ -23,16 +23,6 @@
 								<f:param name="id" value="" />
 							</s:button>
 						</s:decorate>
-						<s:decorate template="/layout/kActions.xhtml">
-							<a:commandButton value="#{app.bt_rep_cmb_cat}" oncomplete="showReport('/sainv/rep/adaptacion_combo/catCombosPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
-						</s:decorate>
-						
-						<s:decorate template="/layout/kActions.xhtml">
-							<s:button action="#{adaptacionComboHome.exportarExcel()}" ajax="false"  propagation="join"
-								styleClass="excBtn" value="#{msn.button_excel}" >
-								<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true" />
-							</s:button>
-						</s:decorate>
 						
 					</h:panelGrid>
 				</center>

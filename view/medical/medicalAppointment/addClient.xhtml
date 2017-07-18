@@ -107,13 +107,39 @@
 											eventsQueue="q1" reRender="formAC" />
 									</rich:calendar>
 									 -->
-									<h:inputText value="#{clienteHome.instance.fechaNacimiento}"  >
+									<!-- ultimo come <h:inputText value="#{clienteHome.instance.fechaNacimiento}"  >
 										<a:support event="onblur" ajaxSingle="true"
 											eventsQueue="q1" reRender="calEdad" />
-									</h:inputText><rich:spacer height="8px;"></rich:spacer>
+									</h:inputText>-->
+									
+									<h:inputText value="#{clienteHome.diaEdad}"   style="width:40px" maxlength="2"  >
+										<a:support event="onblur" ajaxSingle="true"
+											eventsQueue="q1" reRender="calEdad" />
+									</h:inputText>
+									
+									<rich:spacer width="3px"></rich:spacer>
+									<h:outputLabel value="/" style="width:8px" />
+									<rich:spacer width="5px"></rich:spacer>
+									
+									<h:inputText value="#{clienteHome.mesEdad}"  style="width:40px" maxlength="2"  >
+										<a:support event="onblur" ajaxSingle="true"
+											eventsQueue="q1" reRender="calEdad" />
+									</h:inputText>
+									
+									<rich:spacer width="3px"></rich:spacer>
+									<h:outputLabel value="/" style="width:8px" />
+									<rich:spacer width="5px"></rich:spacer>
+									
+									<h:inputText value="#{clienteHome.anioEdad}" style="width:70px" maxlength="4" >
+										<a:support event="onblur" ajaxSingle="true"
+											eventsQueue="q1" reRender="calEdad" />
+									</h:inputText>
+									
+									<rich:spacer height="8px;"></rich:spacer>
 									<!-- <h:graphicImage value="/kubeImg/accept16.png" /> -->
 									<s:div ><!-- rendered="#{not empty clienteHome.instance.fechaNacimiento}" -->
-										<h:outputLabel value="Edad:" /> <h:inputText value="#{clienteHome.calcularEdad()}" id="calEdad" disabled="true" />
+										<!-- new coment 2 <h:outputLabel value="Edad:" /> <h:inputText value="#{clienteHome.calcularEdad()}" id="calEdad" disabled="true" />-->
+										<h:outputLabel value="Edad:" /> <h:inputText value="#{clienteHome.calcularEdadReal()}" id="calEdad" disabled="true" />
 										</s:div>
 								</s:decorate>
 								<s:decorate template="/layout/kEditSpace.xhtml">
@@ -323,6 +349,25 @@
 								}
 													
 							}
+
+							/*
+							function validarDiaEdad() {
+								
+								var diaEdad = document.getElementById("txtDiaEdad");
+								var mesEdad = document.getElementById("txtMesEdad");
+
+								alert('Entro a validar Dia Edad');
+								
+								if(diaEdad.lenght==2)
+								{
+									mesEdad.focus();					
+								}
+							}
+
+							function validarMesEdad()
+							{
+							}*/
+							
 						</script>
 					</s:div>		
 								<!-- 

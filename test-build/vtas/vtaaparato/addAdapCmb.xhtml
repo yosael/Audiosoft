@@ -17,9 +17,8 @@
 				<center>
 						<s:span styleClass="busHead">Seleccionar adaptacion:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
-						<a:commandButton action="#{ventaComboHome.adaptarCombo()}" value="Aceptar" reRender="frmAddAdap,formapacli" onclick="#{rich:component('selAdaptacion')}.hide();" ></a:commandButton>
-						
-					</center>
+						<a:commandButton action="#{ventaComboHome.adaptarCombo()}" value="Aceptar" reRender="frmAddAdap,formapacli,formapacli2" onclick="#{rich:component('selAdaptacion')}.hide();" ></a:commandButton>
+				</center>
 				<rich:dataTable var="res" value="#{ventaComboHome.comboAdaptacionSel.adaptaciones}"  width="700" id="_tablaAdap"
 					 rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 

@@ -40,6 +40,8 @@ public class ComboAparato implements Serializable {
 	
 	private List<ItemComboApa> itemsCotizados =  new ArrayList<ItemComboApa>();
 	
+	private Integer numCombo;
+	
 		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -193,11 +195,43 @@ public class ComboAparato implements Serializable {
 	
 	@Transient
 	public List<ItemComboApa> getItemsCotizados() {
-		System.out.println("ENTRO AAAAAAAAAAa GET ITEMS COMBO COTIZADOS");
 		return itemsCotizados;
 	}
 	public void setItemsCotizados(List<ItemComboApa> itemsCotizados) {
 		this.itemsCotizados = itemsCotizados;
+	}
+	
+	@Transient
+	public Integer getNumCombo() {
+		return numCombo;
+	}
+	public void setNumCombo(Integer numCombo) {
+		this.numCombo = numCombo;
+	}
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ComboAparato other = (ComboAparato) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 	
 	

@@ -34,6 +34,7 @@ import com.sa.model.sales.AdaptacionCombo;
 import com.sa.model.sales.ComboAparato;
 import com.sa.model.sales.ComboAparatoAdaptacion;
 import com.sa.model.sales.CostoServicio;
+import com.sa.model.sales.CotCmbsItems;
 import com.sa.model.sales.CotizacionComboApa;
 import com.sa.model.sales.CotizacionComboItem;
 import com.sa.model.sales.ItemComboApa;
@@ -56,6 +57,7 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 	private Float costoEstimado;
 	
 	private List<ComboAparatoAdaptacion> adaptaciones = new ArrayList<ComboAparatoAdaptacion>();
+	private ComboAparatoAdaptacion comboAdaptacionSel = new ComboAparatoAdaptacion();
 
 	/*
 	@In(required=false,create=true)
@@ -228,8 +230,38 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 	}
 	
 	public void delItem(ItemComboApa itm) {
-		items.remove(itm);
+		
+		if(itm.getId()!=null)
+		{
+			items.remove(itm);
+			eliminiarItem(itm);
+		}
+		else
+		{
+			items.remove(itm);
+		}
+		
+		
 		calcularCostoEstimado();
+	}
+	
+	public void eliminiarItem(ItemComboApa item)
+	{
+		List<CotCmbsItems> lsItemsCotizados = getEntityManager().createQuery("SELECT c FROM CotCmbsItems c where c.item.id=:idItem").setParameter("idItem", item.getId()).getResultList();
+		if(lsItemsCotizados.size()>0)
+		{
+			for(CotCmbsItems itemCot: lsItemsCotizados)
+			{
+				getEntityManager().remove(itemCot);
+			}
+			
+			System.out.println("Elimino los items cotizados");
+		}
+		
+		
+		getEntityManager().remove(item);
+		System.out.println("Elimino los items");
+		
 	}
 	
 	public void delCosto(CostoServicio cst) {
@@ -671,6 +703,11 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 			}
 		}
 	}
+	
+	public void verContenidoAdaptacion(ComboAparatoAdaptacion adap)
+	{
+		comboAdaptacionSel = adap;
+	}
 
 	@Override
 	public void posSave() {
@@ -788,6 +825,14 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 
 	public void setAdaptaciones(List<ComboAparatoAdaptacion> adaptaciones) {
 		this.adaptaciones = adaptaciones;
+	}
+
+	public ComboAparatoAdaptacion getComboAdaptacionSel() {
+		return comboAdaptacionSel;
+	}
+
+	public void setComboAdaptacionSel(ComboAparatoAdaptacion comboAdaptacionSel) {
+		this.comboAdaptacionSel = comboAdaptacionSel;
 	}
 	
 	

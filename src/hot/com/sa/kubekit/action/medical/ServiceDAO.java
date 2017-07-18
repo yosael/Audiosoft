@@ -144,14 +144,22 @@ public class ServiceDAO extends KubeDAO<Service> {
 	}
 	
 	public List<Object[]> findServiciosByName(Object o){
-		System.out.println("entré a a findServiciosByName y o.tostring es: "+ o.toString());  
-		return getEntityManager()
-			.createQuery("SELECT s.codigo, s.name,s FROM Service s WHERE (s.tipoServicio = :tps1 OR s.tipoServicio = :tps2)" +
-					" AND s.estado = 'ACT' AND (UPPER(s.name) LIKE UPPER(:nom) OR UPPER(s.codigo) LIKE UPPER(:nom)) and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
-			.setParameter("tps1", "EXA")
-			.setParameter("tps2", "MED")
-			.setParameter("nom","%"+o.toString()+"%")
-			.getResultList();
+		
+		List<Object[]> servicios = new ArrayList<Object[]>();
+		
+		if(o!=null)
+		{
+			System.out.println("entré a a findServiciosByName y o.tostring es: "+ o.toString());  
+			servicios = getEntityManager()
+				.createQuery("SELECT s.codigo, s.name,s FROM Service s WHERE (s.tipoServicio = :tps1 OR s.tipoServicio = :tps2)" +
+						" AND s.estado = 'ACT' AND (UPPER(s.name) LIKE UPPER(:nom) OR UPPER(s.codigo) LIKE UPPER(:nom)) and (s.eliminado is null or s.eliminado<>'ELIM') ORDER BY s.codigo ASC")
+				.setParameter("tps1", "EXA")
+				.setParameter("tps2", "MED")
+				.setParameter("nom","%"+o.toString()+"%")
+				.getResultList();
+		}
+		
+		return servicios;
 		
 	}
 	

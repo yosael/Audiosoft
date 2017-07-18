@@ -1,5 +1,7 @@
 package com.sa.kubekit.action.medical;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -77,6 +79,9 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	private Date fechaVtasUs2;
 	
 	private List<AparatoCliente> listaAparatosCliente;
+	
+	private String diaEdad,mesEdad,anioEdad;
+	
 	
 	@In(required=false, create=true)
 	MedicalAppointmentDAO medicalAppointmentDAO;
@@ -350,25 +355,133 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	
 	public Integer calcularEdad(){
 		
-		if (instance != null && instance.getFechaNacimiento() != null){
-		Calendar dob = Calendar.getInstance();  
-		dob.setTime(instance.getFechaNacimiento());  
-		Calendar today = Calendar.getInstance();  
-		int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);  
-		if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) {
-		  age--;  
-		} else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH)
-		    && today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) {
-		  age--;  
-		}
-		if (age < 0 ){
-			FacesMessages.instance().add(
-					sainv_messages.get("clienteHome_fecNa_invalida"));
-					return 0;
-		}else 			
-			return age;
+		if (instance != null && instance.getFechaNacimiento() != null)
+		{
+			Calendar dob = Calendar.getInstance();  
+			dob.setTime(instance.getFechaNacimiento());  
+			Calendar today = Calendar.getInstance();  
+			
+			int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+			
+			if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH)) 
+			{
+			  age--;  
+			} 
+			else if (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH) && today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH)) 
+			{
+			  age--;  
+			}
+			if (age < 0 )
+			{
+				FacesMessages.instance().add(
+						sainv_messages.get("clienteHome_fecNa_invalida"));
+						return 0;
+			}else 			
+				return age;
 		}
 		return 0;
+	}
+	
+	
+	public String calcularEdadReal()
+	{
+		
+		StringBuilder edadReal = new StringBuilder();
+		
+		if(diaEdad!=null && mesEdad!=null && anioEdad!=null)
+		{
+			//calcular edad
+			
+			try {
+				
+				StringBuilder edadStr = new StringBuilder();
+				edadStr.append(anioEdad).append("-").append(mesEdad).append("-").append(diaEdad);
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date fechaNacimiento = sdf.parse(edadStr.toString());
+				
+				instance.setFechaNacimiento(fechaNacimiento);
+				
+				Calendar fechaNaci = Calendar.getInstance();
+				fechaNaci.setTime(fechaNacimiento);
+				Calendar fechaActual = Calendar.getInstance();
+				
+				Integer anios=0;
+				Integer meses=0;
+				Integer dias=0;
+						
+				anios = fechaActual.get(Calendar.YEAR) - fechaNaci.get(Calendar.YEAR);
+				
+								
+				if (anios>0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH)) 
+				{				
+					meses =12- (fechaNaci.get(Calendar.MONTH) - fechaActual.get(Calendar.MONTH));
+					anios--;  
+				}
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) > fechaNaci.get(Calendar.MONTH))
+				{
+					meses =12- (fechaActual.get(Calendar.MONTH) - fechaNaci.get(Calendar.MONTH));
+					
+				}
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =365-(fechaActual.get(Calendar.DAY_OF_MONTH) -fechaNaci.get(Calendar.DAY_OF_MONTH));
+					
+				}
+				else if (fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =365-(fechaNaci.get(Calendar.DAY_OF_MONTH) - fechaActual.get(Calendar.DAY_OF_MONTH));
+					anios--;  
+				}
+				
+				System.out.println("ANios "+anios);
+				System.out.println("Meses "+meses);
+				System.out.println("Dias "+dias);
+				
+				if(anios>0 && meses==0 && dias==0)
+				{
+					edadReal.append(anios).append(" años");
+				}
+				else if(anios>0 && meses>0 && dias==0)
+				{
+					edadReal.append(anios).append(" años con ").append(meses).append(" meses");
+				}
+				else if(anios>0 && meses==0 && dias>0)
+				{
+					edadReal.append(anios).append(" años con ").append(dias).append(" dias");
+				}
+				else if(anios==0 && meses>0 && dias==0)
+				{
+					edadReal.append(meses).append(" meses");
+				}
+				else if(anios==0 && meses==0 && dias>0)
+				{
+					edadReal.append(dias).append(" dias");
+				}
+				else
+				{
+					edadReal.append("");
+				}
+					
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				FacesMessages.instance().add(Severity.WARN,"Formato de fecha incorrecto");
+				return "";
+				
+			}
+				
+			
+		}
+		else
+		{
+			edadReal.append("");
+		}
+		
+		
+		
+		return edadReal.toString();
 	}
 	
 	public void loadAntecendentes() {
@@ -1004,16 +1117,20 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			return false;
 		}
 		
-		if(instance.getDepto()==null)
+		if(instance.getPais().getCodIso2().equals("SV"))
 		{
-			FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
-			return false;
-		}
 		
-		if(instance.getMunicipio()==null)
-		{
-			FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
-			return false;
+			if(instance.getDepto()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
+				return false;
+			}
+			
+			if(instance.getMunicipio()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
+				return false;
+			}
 		}
 		
 		if(instance.getMdif()==null && instance.getDoctorRef()==null && instance.getReferidoPor()==null)
@@ -1139,17 +1256,20 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		}
 		
 		
-		if(instance.getDepto()==null)
+		if(instance.getPais().getCodIso2().equals("SV"))
 		{
-			FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
-			return false;
-		}
-		
-		
-		if(instance.getMunicipio()==null)
-		{
-			FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
-			return false;
+			if(instance.getDepto()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Ingrese el departamento");
+				return false;
+			}
+			
+			
+			if(instance.getMunicipio()==null)
+			{
+				FacesMessages.instance().add(Severity.WARN,"Ingrese el municipio");
+				return false;
+			}
 		}
 		
 		if(instance.getMdif()==null && instance.getDoctorRef()==null && instance.getReferidoPor()==null)
@@ -1517,6 +1637,33 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	public void setListaAparatosCliente(List<AparatoCliente> listaAparatosCliente) {
 		this.listaAparatosCliente = listaAparatosCliente;
 	}
+
+	
+	
+	public String getDiaEdad() {
+		return diaEdad;
+	}
+
+	public void setDiaEdad(String diaEdad) {
+		this.diaEdad = diaEdad;
+	}
+
+	public String getMesEdad() {
+		return mesEdad;
+	}
+
+	public void setMesEdad(String mesEdad) {
+		this.mesEdad = mesEdad;
+	}
+
+	public String getAnioEdad() {
+		return anioEdad;
+	}
+
+	public void setAnioEdad(String anioEdad) {
+		this.anioEdad = anioEdad;
+	}
+	
 	
 	
 	

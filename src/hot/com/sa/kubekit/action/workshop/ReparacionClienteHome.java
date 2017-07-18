@@ -1298,19 +1298,34 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				// pantalla de cobros (incluir requi y costos)
 				Double totalReparacion = 0d;
 				VentaProdServ vta = new VentaProdServ();
-				vta.setCliente(etapaRepCliHome.getInstance().getReparacionCli().getCliente());
-				vta.setDetalle(etapaRepCliHome.getInstance().getReparacionCli().getDescripcion());
-				vta.setEmpresa(loginUser.getUser().getSucursal().getEmpresa());
-				vta.setEstado("PEN");
-				vta.setFechaVenta(new Date());
-				vta.setIdDetalle(etapaRepCliHome.getInstance().getReparacionCli().getId());
-				vta.setMonto(0.0f);
-				vta.setSucursal(instance.getSucursal());
-				//vta.setSucursal(loginUser.getUser().getSucursal()); // Cambiar para que al guardar reparacion guarde la sucursal
-				vta.setCodTipoVenta(instance.getProceso().getPrcCode()+""+instance.getId());
-				vta.setTipoVenta("TLL");
-				vta.setUsrEfectua(loginUser.getUser());
-				getEntityManager().persist(vta);
+				
+				//nuevo el 17/07/2017
+				//Verificar si no existe una venta existente
+				List<VentaProdServ> vtaExis = getEntityManager().createQuery("SELECT v FROM VentaProdServ v where v.cliente.id=:idCliente and DATE(v.fechaVenta)=:fechaHoy and v.tipoVenta<>'CMB' and v.estado='PEN'").setParameter("idCliente", instance.getCliente().getId()).setParameter("fechaHoy", new Date()).getResultList();
+				
+				if(vtaExis.size()>0)
+				{
+					vta = vtaExis.get(0);
+				}
+				else
+				{
+				
+					vta.setCliente(etapaRepCliHome.getInstance().getReparacionCli().getCliente());
+					vta.setDetalle(etapaRepCliHome.getInstance().getReparacionCli().getDescripcion());
+					vta.setEmpresa(loginUser.getUser().getSucursal().getEmpresa());
+					vta.setEstado("PEN");
+					vta.setFechaVenta(new Date());
+					vta.setIdDetalle(etapaRepCliHome.getInstance().getReparacionCli().getId());
+					vta.setMonto(0.0f);
+					vta.setSucursal(instance.getSucursal());
+					//vta.setSucursal(loginUser.getUser().getSucursal()); // Cambiar para que al guardar reparacion guarde la sucursal
+					vta.setCodTipoVenta(instance.getProceso().getPrcCode()+""+instance.getId());
+					vta.setTipoVenta("TLL");
+					vta.setUsrEfectua(loginUser.getUser());
+					getEntityManager().persist(vta);
+				}
+				
+				
 				// Requisiciones
 				List<ItemRequisicionEta> itemsRequis = getEntityManager()
 						.createQuery(
@@ -1346,6 +1361,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 							//totalRepa+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
 						}
 						
+						dtVta.setTipoVenta("TLL");// nuevo 17/07/2017
 						dtVta.setVenta(vta);
 						dtVta.setCodExacto(tmpItr.getProducto().getReferencia());
 						dtVta.setCodClasifVta("PRD");
@@ -1376,6 +1392,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						
 						totalReparacion+=dtVta.getMonto();
 						
+						dtVta.setTipoVenta("TLL"); // nuevo el 17/07/2017
 						dtVta.setVenta(vta);
 						dtVta.setCodExacto(srv.getServicio().getCodigo());
 						dtVta.setCodClasifVta("SRV");
@@ -1394,12 +1411,12 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				
 				if(instance.getAdelanto()!=null)
 				{	
-					vta.setMonto(super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(vta.getMonto()+super.moneyDecimal(totalReparacion-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 					//vta.setMonto(super.moneyDecimal(totalRepa-instance.getAdelanto()).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				else
 				{
-					vta.setMonto(super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
+					vta.setMonto(vta.getMonto()+super.moneyDecimal(totalReparacion).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 					//vta.setMonto(super.moneyDecimal(totalRepa).floatValue()); //Restar el adelanto nuevo agregado el 15/06/2017
 				}
 				
@@ -1407,7 +1424,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				getEntityManager().merge(vta);
 				
 				
-				//Si no existe el aparato no se ejecuta el siguiente bloque
+				//Si existe un aparato se ejecuta el siguiente bloque
 				if(instance.getAparatoRep()!=null)
 				{
 						//------En este bloque considerar si la reparacion no debe de aplicarse ningun descuento ya sea que tengo o no
@@ -1423,7 +1440,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						{
 							ventaProdServHome.select(vta);
 							ventaProdServHome.setLlevaDescuento(true);
-							ventaProdServHome.getInstance().setCantidadDescuento(new Long(Math.round(vta.getMonto()*100))/100.0);
+							//ventaProdServHome.getInstance().setCantidadDescuento(new Long(Math.round(vta.getMonto()*100))/100.0);
+							ventaProdServHome.getInstance().setCantidadDescuento(new Long(Math.round(totalReparacion*100))/100.0);
 							ventaProdServHome.getInstance().setTipoDescuento("M");
 							ventaProdServHome.getInstance().setDetalle("Cobro con descuento del 100% por cobertura de garantia");
 							ventaProdServHome.getInstance().setEstado("PDS");

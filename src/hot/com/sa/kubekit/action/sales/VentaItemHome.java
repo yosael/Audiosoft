@@ -294,10 +294,6 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 	@Override
 	public boolean preSave() {
 		try {
-			instance.setEstado("PEN");
-			instance.setMonto(getSubTotal());
-			instance.setIdDetalle(0);
-			instance.setTipoVenta("ITM");
 
 			if (instance.getSucursal() == null) {
 				FacesMessages.instance().add(Severity.WARN,
@@ -368,7 +364,27 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 					return false;
 				}
 			}
-			instance.setDetalle("Venta de productos - " + instance.getDetalle());
+			
+			//nuevo el 17/07/2017
+			//Verificar si no existe una venta existente
+			List<VentaProdServ> vtaExis = getEntityManager().createQuery("SELECT v FROM VentaProdServ v where v.cliente.id=:idCliente and DATE(v.fechaVenta)=:fechaHoy and v.tipoVenta<>'CMB' and v.estado='PEN'").setParameter("idCliente", instance.getCliente().getId()).setParameter("fechaHoy", new Date()).getResultList();
+			
+			if(vtaExis.size()>0)
+			{
+				instance = vtaExis.get(0);
+				instance.setMonto(instance.getMonto()+getSubTotal());// nuevo agregado el 17/07/2017
+			}
+			else
+			{
+			
+				instance.setEstado("PEN");
+				instance.setMonto(getSubTotal());
+				instance.setIdDetalle(0);
+				instance.setTipoVenta("ITM");
+				
+				instance.setDetalle("Venta de productos - " + instance.getDetalle());
+			}
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -541,6 +557,9 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 				}
 			detVta.setNumSerie(detVta.getNumSerie().concat(numsSeries));
 			detVta.setNumLote(detVta.getNumLote().concat(numsLotes));
+			
+			
+			detVta.setTipoVenta("ITM");// nuevo el 17/07/2017
 			
 
 			// Formamos el detalle

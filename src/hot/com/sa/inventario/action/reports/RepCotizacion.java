@@ -35,6 +35,7 @@ import com.sa.model.sales.ComboAparato;
 import com.sa.model.sales.CostoServicio;
 import com.sa.model.sales.CotCmbsItems;
 import com.sa.model.sales.CotizacionComboApa;
+import com.sa.model.sales.CotizacionCombos;
 import com.sa.model.sales.DetVentaProdServ;
 import com.sa.model.sales.ItemComboApa;
 import com.sa.model.sales.PojoVentasApa;
@@ -174,7 +175,9 @@ public class RepCotizacion extends MasterRep implements Serializable {
 		if (total == 0){
 			
 			float subtotal = 0.0f;	
-			for (CotCmbsItems tmpItem: cotizacion.getCmbCotizados().get(0).getItemsCotizados()){
+			List<CotCmbsItems> lsItemsCots = entityManager.createQuery("SELECT c FROM CotCmbsItems c where c.ctCmbs.id="+combo.getCmbCotizados().get(0).getId()+" ").getResultList();
+			//for (CotCmbsItems tmpItem: cotizacion.getCmbCotizados().get(0).getItemsCotizados()){
+			for (CotCmbsItems tmpItem: lsItemsCots){
 				if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
 					subtotal += tmpItem.getPrecioCotizado();
 					else if (tmpItem != null){
@@ -199,8 +202,11 @@ public class RepCotizacion extends MasterRep implements Serializable {
 				{
 					
 					
-					subtotal = 0.0f;	
-					for (CotCmbsItems tmpItem: cotizacion.getHijoBin().get(0).getCmbCotizados().get(0).getItemsCotizados()){
+					subtotal = 0.0f;
+					CotizacionCombos cmBin = cotizacion.getHijoBin().get(0).getCmbCotizados().get(0);
+					List<CotCmbsItems> lsItemsCotsBin = entityManager.createQuery("SELECT c FROM CotCmbsItems c where c.ctCmbs.id="+cmBin.getId()+" ").getResultList();
+					//for (CotCmbsItems tmpItem: cotizacion.getHijoBin().get(0).getCmbCotizados().get(0).getItemsCotizados()){
+					for (CotCmbsItems tmpItem: lsItemsCotsBin){
 						if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
 							subtotal += tmpItem.getPrecioCotizado();
 							else if (tmpItem != null){

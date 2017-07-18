@@ -440,7 +440,7 @@
 														<rich:column>
 															<f:facet name="header">Quitar</f:facet>
 															<a:commandLink title="Quitar" eventsQueue="q1" 
-																action="#{ventaComboHome.quitarItemCombo(combo,res)}" ajaxSingle="true" reRender="_tblItemsCmb" rendered="#{not res.principal}" >
+																action="#{ventaComboHome.quitarItemCombo(combo,res)}" ajaxSingle="true" reRender="_tblItemsCmb" rendered="#{(not res.principal) and ventaComboHome.cotizacion==null}" >
 																<h:graphicImage value="/kubeImg/table_delete16.png" />
 															</a:commandLink>
 														</rich:column>
@@ -962,6 +962,10 @@
 													<f:facet name="header">
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
+															<rich:spacer width="40" height="0" ></rich:spacer>	 
+															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo)}" rendered="#{combo.adaptaciones.size()>0 and ventaComboHome.cotizacion==null}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdap"
+															 onclick="#{rich:component('selAdaptacion')}.show();"	 
+															/>	
 															<h:outputText rendered="#{combo.total > 0}"
 																value="#{combo.total}" style="float:right; clear:both;">
 																<f:convertNumber currencySymbol="$" groupingUsed="true"
@@ -970,7 +974,7 @@
 															</h:outputText>
 														</h:panelGroup>
 													</f:facet>
-													<rich:dataTable var="res" value="#{combo.itemsCombo}"
+													<rich:dataTable var="res" value="#{combo.itemsCotizados}"
 														id="_tblItemsCmb" rows="10" align="center"
 														rowClasses="tblEven,tblOdd"
 														onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
@@ -1098,6 +1102,13 @@
 																<h:graphicImage value="/kubeImg/table_detail3.png" />
 															</a:commandLink>
 														</rich:column>
+														<rich:column>
+															<f:facet name="header">Quitar</f:facet>
+															<a:commandLink title="Quitar" eventsQueue="q1" 
+																action="#{ventaComboHome.quitarItemCombo(combo,res)}" ajaxSingle="true" reRender="_tblItemsCmb" rendered="#{(not res.principal) and ventaComboHome.cotizacion.getHijoBin()==null}" >
+																<h:graphicImage value="/kubeImg/table_delete16.png" />
+															</a:commandLink>
+														</rich:column>
 														<f:facet name="footer">
 														</f:facet>
 													</rich:dataTable>
@@ -1116,7 +1127,7 @@
 															</h:outputText>
 														</h:panelGroup>
 													</f:facet>
-													<rich:dataTable var="res" value="#{combo.itemsCombo}"
+													<rich:dataTable var="res" value="#{combo.itemsCotizados}"
 														id="_tblItemsCmb2" rows="10" align="center"
 														rowClasses="tblEven,tblOdd"
 														onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
@@ -1261,7 +1272,7 @@
 															</h:outputText>
 														</h:panelGroup>
 													</f:facet>
-													<rich:dataTable var="res" value="#{combo.itemsCombo}"
+													<rich:dataTable var="res" value="#{combo.itemsCotizados}"
 														id="_tblItemsCmb3" rows="10" align="center"
 														rowClasses="tblEven,tblOdd"
 														onRowMouseOver="this.style.backgroundColor='#A3CAF1'"

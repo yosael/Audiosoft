@@ -787,8 +787,9 @@
 				</rich:modalPanel>
 				
 				
-				<rich:modalPanel id="addDetalle" width="900" moveable="false"
+				<rich:modalPanel id="addDetalle" width="900" moveable="true"
 					autosized="true" top="50px"
+					onmaskclick="#{rich:component('addDetalle')}.hide();"
 					onbeforeshow="activeModal.setActiveModalPanel('addDetalle');">
 					<f:facet name="header">Detalle Reparacion Externa</f:facet>
 					<f:facet name="controls">

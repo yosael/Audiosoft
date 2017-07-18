@@ -121,9 +121,9 @@
 							<h:outputText value="#{app.sched_absence}"
 								rendered="#{res.status==3}" style="font-size:15px;" />
 						</rich:column>
-						<a:support reRender="action,renderImp,action2" immediate="true"
+						<a:support reRender="action,renderImp,action2,dvActionBtn" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
-							event="onselectionchange" ajaxSingle="true" />
+							event="onselectionchange" ajaxSingle="true"  oncomplete="mostrarAcciones()"  />
 					</rich:extendedDataTable>
 					<rich:spacer height="10" />
 					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">
@@ -191,9 +191,97 @@
 							
 					</s:decorate>
 				</s:div>
+					<s:div id="val" >
+						<script type="text/javascript"> 
+							function mostrarAcciones(){
+								/*alert('Numero'+#{appointmentGrid.selection.size()});
+								if(#{(appointmentGrid.selection.size())} == 1)
+								{*/
+									#{rich:component('modActionBtn')}.show();
+									/*alert('Entro');					
+								}
+								else
+								{
+									alert('No entro');
+								}
+								*/					
+							}
+						</script>
+					</s:div>	
+					
+				
+					<rich:modalPanel   id="modActionBtn" width="500" moveable="true"
+					autosized="true" top="250" left="826"
+					onmaskclick="#{rich:component('modActionBtn')}.hide();"
+					onbeforeshow="activeModal.setActiveModalPanel('modActionBtn');">
+					<f:facet name="header"><span class="letra15" >Acciones</span></f:facet>
+					<s:div id="dvActionBtn">
+						<s:decorate template="/layout/kActions.xhtml" id="actionMod" >
+						
+								<!-- Se cambio pagina de step1 a stepHistorialApp -->
+								<s:button propagation="begin"
+									view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
+									rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+									(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+									styleClass="detailBtn" value="#{app.sched_detail}"  style="font-size:15px;" >
+									<f:param name="id" value="#{medicalAppointmentDAO.instance.id}"  />
+									<f:param name="historyId"
+										value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
+								</s:button>
+								<!--  atender la cita solo debe ser visto por el doctor que va a atender la cita-->
+								<s:button propagation="join"
+									view="/medical/scheddoc/attend.xhtml"
+									rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+									(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
+									(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
+									styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;" >
+									<f:param name="back" value="#{conversation.viewId}" />
+								</s:button>
+								<!--  cambiar estados-->
+								<a:commandButton value="#{app.sched_state}" reRender="fm2"
+									rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+									(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)}"
+									styleClass="cancelBtn" ajaxSingle="true"
+									onclick="#{rich:component('modActionBtn')}.hide();#{rich:component('modalState')}.show();"
+									 style="font-size:15px;" /><!-- oncomplete="#{rich:component('modalState')}.show();" -->
+									
+								<!--  crear nueva cita-->
+									
+									<a:commandButton
+										rendered="#{(not medicalAppointmentDAO.managed) and (medicalAppointmentDAO.instance.status ne 5) and appointmentGrid.selection.size() eq 1 and 
+										(appointmentGrid.validateDate()) and not empty appointmentGrid.listAppointments}"
+										onclick="#{rich:component('newAppointment')}.show();#{rich:component('modActionBtn')}.hide();"
+										ajaxSingle="true" reRender="nApp, formApp," styleClass="newBtn" action="#{medicalAppointmentDAO.clearServices()}"
+										value="#{app.sched_new}" style="width:auto;font-size:15px;" >
+									</a:commandButton>
+									
+								<!-- 
+								<s:button propagation="join"
+									view="/medical/medicalAppointment/new.xhtml"
+									rendered="#{(not medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+									(appointmentGrid.validateDate())}"
+									styleClass="newBtn" value="#{app.sched_new}"
+									action="#{medicalAppointmentDAO.cleanForNew()}" />
+								 -->
+								 
+									<!-- Ver CRM del paciente -->
+									<s:button propagation="begin"
+												view="/medical/patient/show.xhtml"
+												rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1)}"
+												styleClass="detailBtn" value="#{app.sched_pat_crm}" style="font-size:15px;">
+												<f:param name="numId"
+													value="#{medicalAppointmentDAO.instance.cliente.id}" />
+									</s:button>
+						</s:decorate>
+					</s:div>
+					
+				</rich:modalPanel>	
+					
+					
+					
 				</h:form>
 				
-				<rich:modalPanel id="newAppointment" width="800" moveable="true"
+				<rich:modalPanel  id="newAppointment" width="800" moveable="true"
 					autosized="true" top="100" left="335"
 					onshow="#{sucursalHome.cargarSucursales()}"
 					onbeforeshow="activeModal.setActiveModalPanel('newAppointment');">

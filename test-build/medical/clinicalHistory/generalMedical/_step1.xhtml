@@ -98,8 +98,10 @@
 							
 							<h:panelGroup>
 								<h:outputLabel value="Edad: " style="font-weight:bold;" />	
+								<!-- <h:outputText
+									value="#{clienteHome.calcularEdad()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  /> -->
 								<h:outputText
-									value="#{clienteHome.calcularEdad()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+								value="#{clienteHome.calcularEdadRealAlmacenada()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
 								<h:outputText
 									value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
 							</h:panelGroup>		
@@ -165,7 +167,7 @@
 								
 							<h:panelGroup>	
 								<h:outputLabel value="Pais: " style="font-weight:bold;" />
-								<h:outputText value="El Salvador"
+								<h:outputText value="#{clienteHome.instance.pais.nombreEsp}"
 									disabled="true" />
 							</h:panelGroup>		
 							

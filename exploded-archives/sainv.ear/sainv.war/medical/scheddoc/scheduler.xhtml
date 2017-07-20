@@ -11,14 +11,14 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="head">
 		<style type="text/css">
-.schedForm1 {
-	width: 200px;
-}
-.selectRow {
-	background-color: #A3CAF1;
-	color:white;
-}
-</style>
+			.schedForm1 {
+				width: 200px;
+			}
+			.selectRow {
+				background-color: #A3CAF1;
+				color:white;
+			}
+		</style>
 	</ui:define>
 	<ui:define name="body">
 		<rich:panel>
@@ -123,8 +123,8 @@
 						</rich:column>
 						<a:support reRender="action,renderImp,action2,dvActionBtn" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
-							event="onselectionchange" ajaxSingle="true"  oncomplete="mostrarAcciones()"  />
-					</rich:extendedDataTable>
+							event="onselectionchange" ajaxSingle="true"    />
+					</rich:extendedDataTable><!-- oncomplete="mostrarAcciones()" -->
 					<rich:spacer height="10" />
 					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">
 						<!--  ver el modal de detalle de las citas

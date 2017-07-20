@@ -14,6 +14,7 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
+				<!-- 
 				<center>
 						<s:span styleClass="busHead">#{app.categorialist_find}:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
@@ -25,6 +26,7 @@
 							ajaxSingle="true" action="#{adaptacionComboHome.buscarAdaptacion()}" />
 					</h:inputText>
 					</center>
+				 -->	
 				<rich:dataTable var="res" value="#{adaptacionComboHome.resultList}" id="_tabla"
 					 rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 

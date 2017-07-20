@@ -163,6 +163,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	private ComboAparato comboAdaptacionSel = new ComboAparato();
 	private List<ItemComboApa> itemsSeleccionados = new ArrayList<ItemComboApa>();
 	private Integer contadorCombo;
+	private Map<Integer, List<ComboAparatoAdaptacion>> lsAdaptacionesPorComboSel = new HashMap<Integer, List<ComboAparatoAdaptacion>>();
+	private Map<Integer,List<ComboAparatoAdaptacion>> lsAdaptacionesPorComboBinSel = new HashMap<Integer, List<ComboAparatoAdaptacion>>();
 	
 
 	@Override
@@ -687,6 +689,19 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	}
 	
 	
+	public String verificarIva()
+	{
+		if(incluyeIva)
+		{
+			return "Precios incluyen iva";
+		}
+		else
+		{
+			return "Precios sin iva";
+		}
+	}
+	
+	
 	public void aplicarIva()
 	{
 		if(incluyeIva)
@@ -897,7 +912,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				}
 			}
 			
-			/*ComboAparato comboAdd = new ComboAparato(); // nuevo
+			/*
+			ComboAparato comboAdd = new ComboAparato(); // nuevo
 			comboAdd.setId(combo.getId());
 			comboAdd.setCodigo(combo.getCodigo());
 			comboAdd.setNombre(combo.getNombre());
@@ -934,7 +950,10 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			if(item.getProducto()==null)
 			{
 				List<Producto> productoItem = getEntityManager().createQuery("SELECT p FROM Producto p where p.prcNormal=(SELECT MAX(pr.prcNormal) FROM Producto pr where pr.categoria.id="+item.getCategoria().getId()+") and p.categoria.id="+item.getCategoria().getId()+" ").getResultList();
-				item.setProducto(productoItem.get(0));
+				if(productoItem.size()>0)
+				{
+					item.setProducto(productoItem.get(0));
+				}
 			}
 		}
 	}
@@ -2222,6 +2241,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	public void quitarItemCombo(ComboAparato combo, ItemComboApa item)
 	{
 		combo.getItemsCotizados().remove(item);
+		calcularPrecios();
 	}
 	
 
@@ -3732,6 +3752,26 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	public float calcPreReporte(ComboAparato combo) {
 		combo.setTotal(0.0f); // reiniciamos el total a 0 para forzar
 								// recalculacion
+		
+		//Nuevo agregado el 06/07/2017   NOTA: Revisar donde se aplica el totalFinal
+		//Aplicando porcentajes de targeta de credito
+		//totalFinal+=(totalFinal*formaPagoSelected.getPorcentaje()/100);
+		combo.setTotal(combo.getTotal()+(combo.getTotal()*formaPagoSelected.getPorcentaje()/100));//este total se aplica con todo y servicios
+		//totalConFormaPago = totalCombo+(totalCombo*formaPagoSelected.getPorcentaje()/100);// agregado el 10/07/2017
+		
+		//Verificando IVA
+		if(!incluyeIva)
+		{
+			//totalFinal-=(totalFinal*porcentajeIVA/100);
+			
+			System.out.println("----->IVA "+(1+(porcentajeIVA/100)));
+			
+			combo.setTotal(combo.getTotal()/(1+(porcentajeIVA/100)));
+		}
+	
+	///////////////////////////////////////////////////
+		
+		
 		return combo.getTotal(); // hacemos que se calcule
 	}
 
@@ -5594,68 +5634,245 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	
 	
 	
-	public void adaptarCombo()
+	public void adaptarCombo(ComboAparatoAdaptacion adaptacionCmb)
 	{
 		
-		
-		for(ComboAparatoAdaptacion adaptacionCmb: lstAparatoAdaptacionSel)
+		//tipo=false -> primer combo
+		//tipo=true -> combo binaural
+
+		for(ItemAdaptacion itemAdap: adaptacionCmb.getAdaptacion().getItemsAdaptacion())
 		{
-		
-			for(ItemAdaptacion itemAdap: adaptacionCmb.getAdaptacion().getItemsAdaptacion())
-			{
-				
-				if(itemAdap.getCategoria()!=null && itemAdap.getProducto()==null)
-				{
-					ItemComboApa itemCombo = new ItemComboApa();
-					itemCombo.setCategoria(itemAdap.getCategoria());
-					//itemCombo.setCombo(comboAdaptacionSel);
-					itemCombo.setCantidad(Short.valueOf("1"));
-					itemCombo.setSelCategoria("si");
-					
-					comboAdaptacionSel.getItemsCotizados().add(itemCombo);
-				}
-				else if(itemAdap.getProducto()!=null)
-				{
-					ItemComboApa itemCombo = new ItemComboApa();
-					itemCombo.setCategoria(itemAdap.getProducto().getCategoria());
-					itemCombo.setProducto(itemAdap.getProducto());
-					//itemCombo.setCombo(comboAdaptacionSel);
-					itemCombo.setCantidad(Short.valueOf("1"));
-					itemCombo.setSelCategoria("no");
-					
-					comboAdaptacionSel.getItemsCotizados().add(itemCombo);
-				}
-				else if(itemAdap.getServicio()!=null)
-				{
-					CostoServicio costo = new CostoServicio();
-					//costo.setCombo(comboAdaptacionSel);
-					costo.setServicio(itemAdap.getServicio());
-					costo.setValor(itemAdap.getServicio().getCosto().floatValue());
-					
-					comboAdaptacionSel.getCostosCombo().add(costo);
-				}
-							
-			}
 			
+			if(itemAdap.getCategoria()!=null && itemAdap.getProducto()==null)
+			{
+				ItemComboApa itemCombo = new ItemComboApa();
+				itemCombo.setCategoria(itemAdap.getCategoria());
+				//itemCombo.setCombo(comboAdaptacionSel);
+				itemCombo.setGeneraRequisicion(itemAdap.isGeneraRequisicion());
+				itemCombo.setCantidad(Short.valueOf("1"));
+				itemCombo.setSelCategoria("si");
+				
+				comboAdaptacionSel.getItemsCotizados().add(itemCombo);
+			}
+			else if(itemAdap.getProducto()!=null)
+			{
+				ItemComboApa itemCombo = new ItemComboApa();
+				itemCombo.setCategoria(itemAdap.getProducto().getCategoria());
+				itemCombo.setProducto(itemAdap.getProducto());
+				//itemCombo.setCombo(comboAdaptacionSel);
+				itemCombo.setGeneraRequisicion(itemAdap.isGeneraRequisicion());
+				itemCombo.setCantidad(Short.valueOf("1"));
+				itemCombo.setSelCategoria("no");
+				
+				comboAdaptacionSel.getItemsCotizados().add(itemCombo);
+			}
+			else if(itemAdap.getServicio()!=null)
+			{
+				CostoServicio costo = new CostoServicio();
+				//costo.setCombo(comboAdaptacionSel);
+				costo.setServicio(itemAdap.getServicio());
+				costo.setValor(itemAdap.getServicio().getCosto().floatValue());
+				
+				comboAdaptacionSel.getCostosCombo().add(costo);
+			}
+						
 		}
+		
+		asignarItemsCategoriaCombo(comboAdaptacionSel);
+		
+		
+		calcularPrecios();
+		
+		//lsAdaptacionesPorComboSel.put(comboAdaptacionSel.getId(),)
 		
 		//comboAdaptacionSel.setItemsCombo(lsItems);// es posible que borre la lista anterior
 		//comboAdaptacionSel.setCostosCombo(lsService);
 	}
 	
 	
-	public void seleccionarComboParaAdaptar(ComboAparato combo)
+	
+	
+	public void seleccionarComboParaAdaptar(ComboAparato combo,boolean tipo)
 	{
-		lstAparatoAdaptacionSel = new ArrayList<ComboAparatoAdaptacion>();
+		
+		//Tipo = false -> primer combo
+		//Tipo = true -> binaural
+		
+		//lstAparatoAdaptacionSel = new ArrayList<ComboAparatoAdaptacion>();
+		//Primero verificar si hay items seleccionados, para cargarlos
+		/*if(lsAdaptacionesPorComboSel.get(combo.getId())!=null)
+		{
+			lstAparatoAdaptacionSel = lsAdaptacionesPorComboSel.get(combo.getId());
+		}*/
+		
+		
 		comboAdaptacionSel = new ComboAparato(); 
 		comboAdaptacionSel = combo;
+		
+		if(!tipo)
+		{
+			if(lsAdaptacionesPorComboSel.get(combo.getId())==null)
+			{
+				lsAdaptacionesPorComboSel.put(combo.getId(), new ArrayList<ComboAparatoAdaptacion>());
+			}
+		}
+		else
+		{
+			if(lsAdaptacionesPorComboBinSel.get(combo.getId())==null)
+			{
+				lsAdaptacionesPorComboBinSel.put(combo.getId(), new ArrayList<ComboAparatoAdaptacion>());
+			}
+		}
 	}
+	
 	
 	public void seleccionarAdaptacionCombo(ComboAparatoAdaptacion adaptacion)
 	{
-		lstAparatoAdaptacionSel.add(adaptacion);
+		//lstAparatoAdaptacionSel.add(adaptacion);
+		
+		if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacion))
+		{
+			FacesMessages.instance().add(Severity.WARN,"La adaptacion ya fue seleccionada");
+			return;
+		}
+		
+		adaptarCombo(adaptacion);
+		
+		
+		lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).add(adaptacion);
+		
+		//nuevo
+		if(selCmbsListBin.size()>0 && selCmbsListBin.contains(comboAdaptacionSel))
+		{
+			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId())==null)
+			{
+				lsAdaptacionesPorComboBinSel.put(comboAdaptacionSel.getId(), new ArrayList<ComboAparatoAdaptacion>());
+			}
+			
+			lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).add(adaptacion);
+		}
+			
+		
+		FacesMessages.instance().add(Severity.INFO,"Se agrego la adaptacion");
+		
 	}
 	
+	public void seleccionarAdaptacionComboBin(ComboAparatoAdaptacion adaptacion)
+	{
+		//lstAparatoAdaptacionSel.add(adaptacion);
+		
+		if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacion))
+		{
+			FacesMessages.instance().add(Severity.WARN,"La adaptacion ya fue seleccionada");
+			return;
+		}
+		
+		adaptarCombo(adaptacion);
+		
+		lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).add(adaptacion);
+		
+		//nuevo
+		if(selCmbsList.size()>0 && selCmbsList.contains(comboAdaptacionSel))
+		{
+			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId())==null)
+			{
+				lsAdaptacionesPorComboSel.put(comboAdaptacionSel.getId(), new ArrayList<ComboAparatoAdaptacion>());
+			}
+			
+			lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).add(adaptacion);
+		}
+		
+		
+		FacesMessages.instance().add(Severity.INFO,"Se agrego la adaptacion");
+	}
+	
+	
+	public void quitarAdaptacion(ComboAparatoAdaptacion adaptacionCmb,boolean tipo)
+	{
+		try {
+			
+		
+			for(ItemAdaptacion itemAdap: adaptacionCmb.getAdaptacion().getItemsAdaptacion())
+			{
+				
+				//CostoServicio ctRemove=null;
+				if(itemAdap.getServicio()!=null)
+				{
+					int indice=0;
+					boolean eliminar=false;
+					for(CostoServicio ct:comboAdaptacionSel.getCostosCombo())
+					{
+						if(ct.getServicio().getId()==itemAdap.getServicio().getId() && ct.getId()==null)
+						{
+							System.out.println("REMOVER SERVICIO "+ct.getServicio().getName());
+							//ctRemove=ct;
+							eliminar=true;
+							break;
+						}
+						
+						indice++;
+					}
+					
+					//if(ctRemove!=null)
+					if(eliminar)
+						comboAdaptacionSel.getCostosCombo().remove(indice);
+				}
+				else
+				{
+					
+					int indice=0;
+					boolean eliminar=false;
+					
+					for(ItemComboApa itm:comboAdaptacionSel.getItemsCotizados())
+					{
+						if(itemAdap.getProducto()!=null)
+						{
+							if(itemAdap.getProducto().getId()==itm.getProducto().getId() && itm.getId()==null)
+							{
+								System.out.println("REMOVER ITEM DE PRODUCTO "+itm.getProducto().getNombre());
+								eliminar=true;
+								break;
+							}
+						}
+						else
+						{
+							if(itemAdap.getCategoria().getId()==itm.getCategoria().getId() && itm.isPrincipal()==false && itm.getId()==null)
+							{
+								System.out.println("REMOVER ITEM DE CATEGORIA "+itm.getProducto().getNombre());
+								eliminar=true;
+								break;
+							}
+						}
+						
+						indice++;
+					}
+					
+					if(eliminar)
+						comboAdaptacionSel.getItemsCotizados().remove(indice);
+				}
+							
+			}
+			
+			/*if(!tipo)
+			{*/
+			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+				lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			/*}
+			else
+			{*/
+			
+			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+				lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			//}
+			
+			calcularPrecios();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesMessages.instance().add(Severity.WARN,"No se pudo quitar la adaptacion");
+		}	
+		
+	}
 	
 
 	public Image getImgApaPrincipal(ComboAparato combo) {
@@ -6169,6 +6386,24 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 	public void setItemsSeleccionados(List<ItemComboApa> itemsSeleccionados) {
 		this.itemsSeleccionados = itemsSeleccionados;
+	}
+
+	public Map<Integer, List<ComboAparatoAdaptacion>> getLsAdaptacionesPorComboSel() {
+		return lsAdaptacionesPorComboSel;
+	}
+
+	public void setLsAdaptacionesPorComboSel(
+			Map<Integer, List<ComboAparatoAdaptacion>> lsAdaptacionesPorComboSel) {
+		this.lsAdaptacionesPorComboSel = lsAdaptacionesPorComboSel;
+	}
+
+	public Map<Integer, List<ComboAparatoAdaptacion>> getLsAdaptacionesPorComboBinSel() {
+		return lsAdaptacionesPorComboBinSel;
+	}
+
+	public void setLsAdaptacionesPorComboBinSel(
+			Map<Integer, List<ComboAparatoAdaptacion>> lsAdaptacionesPorComboBinSel) {
+		this.lsAdaptacionesPorComboBinSel = lsAdaptacionesPorComboBinSel;
 	}
 
 	

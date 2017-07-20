@@ -1,0 +1,94 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formFinalizar">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				
+				<center>
+					<h:panelGrid columns="2">
+					
+						<h:panelGrid columns="1" >
+							<s:span styleClass="busHead">FINALIZAR CONSULTA:</s:span>
+							<s:decorate></s:decorate> <rich:spacer width="2px;" height="10px;"/> 
+						</h:panelGrid>
+					
+					</h:panelGrid>
+				</center>
+				
+				<rich:spacer height="3px;"></rich:spacer>
+				
+				<rich:dataTable var="res" value="#{prescriptionHome.examenesAgregados}" id="_tblExam" 
+						align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+						headerClass="tablaHeader" footerClass="tableScroll">
+						<f:facet name="header" style="background-color:gray;"><span style="font-size:14px;" >EXAMENES MEDICOS AGREGADOS</span></f:facet>
+						<rich:column ><!-- #{app.examed_list_sel} -->
+							<f:facet name="header">#{app.medicm_name}</f:facet>
+							<h:outputText value="#{res.examen.name}" />
+						</rich:column>
+						<rich:column ><!-- #{app.examed_list_sel} -->
+							<f:facet name="header">Costo</f:facet>
+							<h:outputText value="#{res.examen.costo}" />
+						</rich:column>
+						<f:facet name="footer"><h:outputLabel value="Total: #{prescriptionHome.totalExamenes}" style="margin-left:100px;font-size:16px;" /></f:facet>			
+					</rich:dataTable>
+					
+				<rich:spacer height="3px;"></rich:spacer>
+				
+				<rich:dataTable var="res" value="#{prescriptionHome.serviciosAgregados}" id="_tblServ" 
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header"><span style="font-size:14px;" >SERVICIOS MEDICOS AGREGADOS</span></f:facet>
+					<rich:column><!-- #{app.serv_list_selmed} -->
+						<f:facet name="header">#{app.medicm_name}</f:facet>
+						<h:outputText value="#{res.service.name}" />
+					</rich:column>		
+					<rich:column><!-- #{app.serv_list_selmed} -->
+						<f:facet name="header">Costo</f:facet>
+						<h:outputText value="#{res.service.costo}" />
+					</rich:column>			
+					<f:facet name="footer"><h:outputLabel value="Total: #{prescriptionHome.totalServicios}" style="margin-left:100px;font-size:16px;" /></f:facet>
+							
+				</rich:dataTable>
+				
+				<rich:spacer height="3px;"></rich:spacer>
+					
+				<h:outputText value="TOTAL A COBRAR: " />
+				<h:outputText value="#{prescriptionHome.calcularTotalCobro()}" />
+				
+				<rich:spacer height="3px;"></rich:spacer>
+				<!-- 
+				<a:commandButton styleClass="cancelBtn" value="Cancelar"
+							ajaxSingle="true"
+							onclick="#{rich:component('modFinalizar')}.hide();">
+				</a:commandButton> -->
+
+				<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
+					value="Aceptar" styleClass="saveBtn"
+					onclick="terminar();#{rich:component('modalLoading')}.show();"
+					rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+				</a:commandButton>
+				
+				
+			</h:form>
+			
+			<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+				onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
+				<h:form id="formModalLoading" style="margin:0;padding:0;" >
+					<h:panelGrid columns="1" style="margin:0">
+						<h:graphicImage  value="/kubeImg/imCargando.gif" style="margin:0;" />
+						<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
+					</h:panelGrid>	
+				</h:form>			
+			</rich:modalPanel>
+			
+</ui:composition>

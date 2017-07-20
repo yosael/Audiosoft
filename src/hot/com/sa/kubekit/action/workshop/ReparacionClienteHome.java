@@ -1049,6 +1049,12 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			return false;
 		}
 		
+		if(instance.getDescripcion()==null || instance.getDescripcion().isEmpty())
+		{
+			FacesMessages.instance().add(Severity.WARN,"Espeficique el motivo del trabajo de taller");
+			return false;
+		}
+		
 		
 		if(selCondicionesApa.isEmpty() && (instance.getProceso().getNombre().equals("Reparacion") || instance.getProceso().getNombre().equals("Limpieza") || instance.getProceso().getNombre().equals("Ensamblaje de aparato")))
 		{

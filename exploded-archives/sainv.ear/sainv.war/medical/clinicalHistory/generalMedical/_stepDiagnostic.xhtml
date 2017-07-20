@@ -43,18 +43,18 @@
 					<table style="width:100%;" >
 						<tr >
 							<td style="width:100%" >
-								<s:decorate template="/layout/kActions.xhtml">
+								<s:decorate template="/layout/kActions.xhtml" style="margin-left:250px;" >
 									<a:commandButton onclick="#{rich:component('selDiagn')}.show();" id="btnAddDiag"  ajaxSingle="true" 
 									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
 										 action="#{diagnosticoMedHome.getDiagnostListByName()}" reRender="d1"
-										styleClass="addBtn" value="DIAGNOTICOS" style="font-size:14px;width:230px"><!-- #{app.button_add_diagn} -->
+										styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;"><!-- #{app.button_add_diagn} -->
 									</a:commandButton> <!-- action="#{diagnosticoMedHome.getDiagnostListByName()}" -->
 								</s:decorate>
 								<rich:spacer height="10" />
-								<rich:dataTable var="res"    style="background-color:gray;background-image:none;" value="#{prescriptionHome.diagnosticosAgregados}" id="_tblDiagn"
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.diagnosticosAgregados}" id="_tblDiagn"
 									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 									headerClass="tablaHeader" footerClass="tableScroll">
-									<f:facet name="header" style="background-color:gray;background-image:none;"><span class="letr15">diagnosticos agregados</span></f:facet>
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">DIAGNOSTICOS PRESUNTIVOS</span></f:facet>
 									<!-- #{app.diagmed_list_sel} -->
 									<rich:column>
 										<f:facet name="header">#{app.diagnos_name}</f:facet>
@@ -82,7 +82,7 @@
 						<tr>	
 							
 							<td style="width:100%" >
-								<s:decorate template="/layout/kEditSpace.xhtml" style="margin-left:40%" rendered="#{clienteHome.instance.diagnosSordera!=null}">
+								<s:decorate template="/layout/kEditSpace.xhtml" style="margin-left:40%"  rendered="#{clienteHome.instance.diagnosSordera!=null}">
 									<ui:define name="label"><span style="font-size:14px;">SORDERA DIAGNOSTICADA</span></ui:define>
 									<h:inputText value="#{clienteHome.instance.diagnosSordera}" disabled="true" style="width:120px;">
 											<s:convertDateTime pattern="dd/MM/yyyy" />
@@ -225,18 +225,18 @@
 						<tr>
 							<td style="width:100%" >
 								
-								<s:decorate template="/layout/kActions.xhtml">
+								<s:decorate template="/layout/kActions.xhtml" style="margin-left:250px;" >
 									<a:commandButton onclick="#{rich:component('selMedicm')}.show();" ajaxSingle="true" 
 										rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
 										action="#{medicamentoHome.getMedicamentosList()}" reRender="m1"
-										styleClass="addBtn" value="MEDICAMENTOS RECETADOS" style="font-size:14px;width:240px" >
+										styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px" >
 									</a:commandButton><!-- #{app.button_add_medicm} -->
 								</s:decorate>
 								<rich:spacer height="10" />					
 								<rich:dataTable var="res" value="#{prescriptionHome.itemsAgregados}" id="_tableMedSug" 
 									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 									headerClass="tablaHeader" footerClass="tableScroll">
-									<f:facet name="header"><span style="font-size:14px;">medicamentos agregados</span></f:facet>
+									<f:facet name="header"><span style="font-size:16px;">MEDICAMENTOS</span></f:facet>
 									
 									<rich:column >
 										<f:facet name="header">#{app.medicm_name}</f:facet>
@@ -313,18 +313,18 @@
 						<tr>
 							<td style="width:100%" >
 							
-								<s:decorate template="/layout/kActions.xhtml">
+								<s:decorate template="/layout/kActions.xhtml" style="margin-left:250px;" >
 									<a:commandButton onclick="#{rich:component('selRecomed')}.show();" ajaxSingle="true" 
 									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
 										action="#{recomendacionMedHome.getRecomenList()}" reRender="r1"
-										styleClass="addBtn" value="RECOMENDACIONES" style="font-size:14px;width:230px">
+										styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px">
 									</a:commandButton><!-- #{app.button_add_recomed} -->
 								</s:decorate>
 								<rich:spacer height="10" />
 								<rich:dataTable var="res" value="#{prescriptionHome.recomendacionesAgregadas}" id="_tblRecom"
 									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 									headerClass="tablaHeader" footerClass="tableScroll">
-									<f:facet name="header"><span style="font-size:14px;">recomendaciones agregadas</span></f:facet><!-- #{app.recomed_list_sel} -->
+									<f:facet name="header"><span style="font-size:16px;">RECOMENDACIONES</span></f:facet><!-- #{app.recomed_list_sel} -->
 									
 									<rich:column>
 										<f:facet name="header">#{app.medicm_name}</f:facet>
@@ -357,11 +357,11 @@
 									
 									
 									
-									<s:decorate template="/layout/kActions.xhtml">
+									<s:decorate template="/layout/kActions.xhtml"  style="margin-left:250px;" >
 										<a:commandButton onclick="#{rich:component('selExam')}.show();" ajaxSingle="true" 
 											rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"									
 											action="#{serviceDAO.loadServiciosExa()}" reRender="e1"
-											styleClass="addBtn" value="EXAMENES MEDICOS" style="font-size:14px;width:230px" >
+											styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px" >
 										</a:commandButton><!-- #{app.button_add_exam} -->
 									</s:decorate>
 									
@@ -370,7 +370,7 @@
 									<rich:dataTable var="res" value="#{prescriptionHome.examenesAgregados}" id="_tblExam" 
 										align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 										headerClass="tablaHeader" footerClass="tableScroll">
-										<f:facet name="header" style="background-color:gray;"><span style="font-size:14px;" >examenes agregados</span></f:facet>
+										<f:facet name="header" style="background-color:gray;"><span style="font-size:16px;" >EXAMENES MEDICOS</span></f:facet>
 										<rich:column ><!-- #{app.examed_list_sel} -->
 											<f:facet name="header">#{app.medicm_name}</f:facet>
 											<h:outputText value="#{res.examen.name}" />
@@ -402,18 +402,18 @@
 									
 								</td>
 								<td style="width:50%" >
-									<s:decorate template="/layout/kActions.xhtml">
+									<s:decorate template="/layout/kActions.xhtml" style="margin-left:250px;" >
 										<a:commandButton onclick="#{rich:component('selServ')}.show();" ajaxSingle="true"
 											rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" 
 											action="#{serviceDAO.loadServiciosList('MED')}" reRender="s1"
-											styleClass="addBtn" value="SERVICIOS MEDICOS" style="font-size:14px;width:230px;" >
+											styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;" >
 										</a:commandButton><!-- #{app.button_add_servcon} -->
 									</s:decorate>
 									<rich:spacer height="10" />
 									<rich:dataTable var="res" value="#{prescriptionHome.serviciosAgregados}" id="_tblServ" 
 										align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 										headerClass="tablaHeader" footerClass="tableScroll">
-										<f:facet name="header"><span style="font-size:14px;" >servicios agregados</span></f:facet>
+										<f:facet name="header"><span style="font-size:16px;" >SERVICIOS MEDICOS</span></f:facet>
 										<rich:column><!-- #{app.serv_list_selmed} -->
 											<f:facet name="header">#{app.medicm_name}</f:facet>
 											<h:outputText value="#{res.service.name}" />
@@ -499,6 +499,18 @@
 					</h:panelGroup>
 				</f:facet>
 				<s:div id="s1"><ui:include src="/medical/clinicalHistory/addService.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="modFinalizar" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('modFinalizar')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('modFinalizar');">
+				<f:facet name="header">Servicios m�dicos registrados</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selServ')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="dvFinalizar"><ui:include src="/medical/clinicalHistory/modFinalizar.xhtml" /></s:div>
 			</rich:modalPanel>
 			
 			<rich:modalPanel id="selExam" width="800" moveable="true" autosized="true"  top="40"

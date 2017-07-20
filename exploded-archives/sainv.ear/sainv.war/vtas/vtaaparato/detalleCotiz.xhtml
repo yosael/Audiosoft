@@ -8,37 +8,55 @@
 	title="Comprobante Cotizacion"
 	creator="Soluciones Aplicativas" pageSize="612 396" type="pdf"
 	margins="30	30 10 30">
-	<p:font size="10">
-		<p:paragraph
-			rendered="#{not empty ventaComboHome.cotizacion.getCliente().getNombreCompleto()}"
-			alignment="center">
-			<p:font style="bold">
-				<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} |<p:font
-				style="bold">
-				<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} | <p:font
-				style="bold">
-				<p:text value=" #{app.report_cotiz_cmb_apa_vali}"></p:text> <p:text value= ": "/> </p:font> <p:text value="#{ventaComboHome.validez} #{app.patimast_age_3}"></p:text>
-		</p:paragraph>
-
-	</p:font>
+	
+	<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0" borderVisible="false" >
+		<p:cell borderWidth="0" >
+			<p:font size="10" >
+				<p:paragraph
+					rendered="#{not empty ventaComboHome.cotizacion.getCliente().getNombreCompleto()}"
+					alignment="center">
+					<p:font style="bold">
+						<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} |<p:font
+						style="bold">
+						<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} | <p:font
+						style="bold">
+						<p:text value=" #{app.report_cotiz_cmb_apa_vali}"></p:text> <p:text value= ": "/> </p:font> <p:text value="#{ventaComboHome.validez} #{app.patimast_age_3}"></p:text>
+				</p:paragraph>
+			</p:font>
+		</p:cell>
+			
+		<p:cell borderWidth="0" >	
+			<p:font size="10" >
+				<p:paragraph alignment="center" >
+					<p:font style="bold"><p:text value="Forma de pago: " /></p:font>
+					<p:text value="#{ventaComboHome.formaPagoSelected.nombre}" />
+					<p:text value=" " />
+					<p:font style="bold">|</p:font>
+					<p:text value=" " />
+					<p:font style="bold"><p:text value="#{ventaComboHome.verificarIva()}" /></p:font>
+				</p:paragraph>
+			</p:font>
+		</p:cell>	
+	</p:table>	
+		
 	<p:html>
 	<br />
 	</p:html>
 	<h:panelGroup rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}">
-	<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0"
-		borderVisible="false">
-		<p:cell backgroundColor="#ffe6e6" horizontalAlignment="center"
-			verticalAlignment="middle">
-			<p:font color="black" style="bold" size="10">
-				<p:paragraph>
-					<p:text value="#{sainv.vtaitm_left_ear}"
-						rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}" />
-					<p:text value="#{sainv.vtaitm_right_ear}"
-						rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}" />
-				</p:paragraph>
-			</p:font>
-		</p:cell>
-	</p:table>
+		<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0"
+			borderVisible="false">
+			<p:cell backgroundColor="#ffe6e6" horizontalAlignment="center"
+				verticalAlignment="middle">
+				<p:font color="black" style="bold" size="10">
+					<p:paragraph>
+						<p:text value="#{sainv.vtaitm_left_ear}"
+							rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}" />
+						<p:text value="#{sainv.vtaitm_right_ear}"
+							rendered="#{ventaComboHome.cotizacion.ladoAparato=='DER'}" />
+					</p:paragraph>
+				</p:font>
+			</p:cell>
+		</p:table>
 	</h:panelGroup>
 	<h:panelGroup rendered="#{ventaComboHome.cotizacion.ladoAparato=='IZQ'}">
 			<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0"

@@ -49,7 +49,7 @@
 							styleClass="modifyBtn" value="#{app.general_vertodos}"
 							style="width:auto; height:23px;">
 						</a:commandButton><!-- action="#{clienteHome.newPatient(true,-1)}" -->
-						<a:commandLink value="#{app.patimast_add}" action="#{clienteHome.loadNewPatientRecep()}" 
+						<a:commandLink value="#{app.patimast_add}" reRender="addCli" action="#{clienteHome.loadNewPatientRecep()}" 
 							onclick="#{rich:component('addClient')}.show();"
 							ajaxSingle="true">
 						</a:commandLink>

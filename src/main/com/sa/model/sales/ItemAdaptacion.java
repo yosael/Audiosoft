@@ -25,6 +25,7 @@ public class ItemAdaptacion {
 	private Categoria categoria;
 	private Producto producto;
 	private Service servicio;
+	private boolean generaRequisicion;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,5 +76,16 @@ public class ItemAdaptacion {
 	public void setServicio(Service servicio) {
 		this.servicio = servicio;
 	}
+	
+	@Column(name="genera_requisicion",nullable=true)
+	public boolean isGeneraRequisicion() {
+		return generaRequisicion;
+	}
+	public void setGeneraRequisicion(boolean generaRequisicion) {
+		this.generaRequisicion = generaRequisicion;
+	}
+	
+	
+	
 
 }

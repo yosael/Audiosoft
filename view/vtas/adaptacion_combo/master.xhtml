@@ -90,6 +90,13 @@
 											<h:outputText value="#{res.servicio.name}" />
 										</rich:column>
 										<rich:column>
+											<f:facet name="header">Genera Requisicion</f:facet>
+												<h:selectBooleanCheckbox value="#{res.generaRequisicion}" rendered="#{res.servicio.name==null}" >
+													<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+												 reRender="formcombo" />
+												</h:selectBooleanCheckbox><!-- action="#{res.setGeneraRequisicion(res.generaRequisicion)}" -->
+										</rich:column>
+										<rich:column>
 											<f:facet name="header">#{msn.col_actions}</f:facet>
 											<a:commandLink title="#{app.combapa_delitm}" eventsQueue="q1" 
 												action="#{adaptacionComboHome.quitarItem(res)}" ajaxSingle="true" reRender="formcombo" >

@@ -287,7 +287,7 @@
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
 															<rich:spacer width="40" height="0" ></rich:spacer>	 
-															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo)}" rendered="#{combo.adaptaciones.size()>0 and ventaComboHome.cotizacion==null}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdap"
+															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo,false)}" rendered="#{combo.adaptaciones.size()>0 and ventaComboHome.cotizacion==null}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdap"
 															 onclick="#{rich:component('selAdaptacion')}.show();"	 
 															/>
 															<h:outputText
@@ -963,8 +963,8 @@
 														<h:panelGroup>
 															<h:outputText value="#{combo.nombre}" />
 															<rich:spacer width="40" height="0" ></rich:spacer>	 
-															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo)}" rendered="#{combo.adaptaciones.size()>0 and ventaComboHome.cotizacion==null}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdap"
-															 onclick="#{rich:component('selAdaptacion')}.show();"	 
+															<a:commandButton action="#{ventaComboHome.seleccionarComboParaAdaptar(combo,true)}" rendered="#{combo.adaptaciones.size()>0 and ventaComboHome.cotizacion==null}" value="Opciones de adaptacion" ajaxSingle="true"  reRender="formapacli,dvAdapBin"
+															 onclick="#{rich:component('selAdaptacionBin')}.show();"	 
 															/>	
 															<h:outputText rendered="#{combo.total > 0}"
 																value="#{combo.total}" style="float:right; clear:both;">
@@ -1771,6 +1771,7 @@
 			
 			<rich:modalPanel id="selAdaptacion" width="750" moveable="true" autosized="true"
 				top="40" 
+				onmaskclick="#{rich:component('selAdaptacion')}.hide();"
 				onbeforeshow="activeModal.setActiveModalPanel('selAdaptacion');">
 				<f:facet name="header">Opciones de adaptacion para combo</f:facet>
 				<f:facet name="controls">
@@ -1778,6 +1779,19 @@
 				</f:facet>
 				<s:div id="dvAdap">
 					<ui:include src="addAdapCmb.xhtml" />
+				</s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selAdaptacionBin" width="750" moveable="true" autosized="true"
+				top="40" 
+				onmaskclick="#{rich:component('selAdaptacionBin')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selAdaptacionBin');">
+				<f:facet name="header">Opciones de adaptacion para combo binaural</f:facet>
+				<f:facet name="controls">
+					
+				</f:facet>
+				<s:div id="dvAdapBin">
+					<ui:include src="addAdapCmbBin.xhtml" />
 				</s:div>
 			</rich:modalPanel>
 

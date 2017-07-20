@@ -162,12 +162,19 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		} catch (Exception e) {
 			e.printStackTrace();
 			setInstance(new Cliente());
+			inicializarNumeros();
 			loadPaisDefault();
 			instance.setTipoDoc("DUI");
 			System.out.println("Genero nueva instancia de cliente");
 		}
 	}
 	
+	public void inicializarNumeros()
+	{
+		diaEdad=null;
+		mesEdad=null;
+		anioEdad=null;
+	}
 	
 	public void loadNewPatientRecep()
 	{
@@ -177,6 +184,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		loadAntecendentes();
 		loadOcupaciones();
 		loadPaisDefault();
+		inicializarNumeros();
 		deptoHome.loadResultList();
 		System.out.println("Entro al nuevo load");
 		System.out.println("idPais instancia"+instance.getPais().getId());
@@ -412,26 +420,35 @@ public class ClienteHome extends KubeDAO<Cliente>{
 						
 				anios = fechaActual.get(Calendar.YEAR) - fechaNaci.get(Calendar.YEAR);
 				
-								
+				System.out.println("Anios calculados ");				
 				if (anios>0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH)) 
 				{				
 					meses =12- (fechaNaci.get(Calendar.MONTH) - fechaActual.get(Calendar.MONTH));
 					anios--;  
+					System.out.println("if 1");
 				}
 				else if (anios==0 && fechaActual.get(Calendar.MONTH) > fechaNaci.get(Calendar.MONTH))
 				{
-					meses =12- (fechaActual.get(Calendar.MONTH) - fechaNaci.get(Calendar.MONTH));
+					meses =(fechaActual.get(Calendar.MONTH) - fechaNaci.get(Calendar.MONTH));
+					System.out.println("if 2");
 					
 				}
 				else if (anios==0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
 				{
 					dias =365-(fechaActual.get(Calendar.DAY_OF_MONTH) -fechaNaci.get(Calendar.DAY_OF_MONTH));
+					System.out.println("if 3");
 					
 				}
-				else if (fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) > fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =(fechaActual.get(Calendar.DAY_OF_MONTH)-fechaNaci.get(Calendar.DAY_OF_MONTH));
+					System.out.println("if 4");
+				}
+				else if (anios>0 && fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
 				{
 					dias =365-(fechaNaci.get(Calendar.DAY_OF_MONTH) - fechaActual.get(Calendar.DAY_OF_MONTH));
 					anios--;  
+					System.out.println("if 5");
 				}
 				
 				System.out.println("ANios "+anios);
@@ -483,6 +500,112 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		
 		return edadReal.toString();
 	}
+	
+	
+	
+	public String calcularEdadRealAlmacenada()
+	{
+		System.out.println("Entro al metodo edad real almacenada *******");
+		StringBuilder edadReal = new StringBuilder();
+		
+		if(instance.getFechaNacimiento()!=null)
+		{
+			//calcular edad
+			
+			try {
+				
+				
+				Calendar fechaNaci = Calendar.getInstance();
+				fechaNaci.setTime(instance.getFechaNacimiento());
+				Calendar fechaActual = Calendar.getInstance();
+				
+				Integer anios=0;
+				Integer meses=0;
+				Integer dias=0;
+						
+				anios = fechaActual.get(Calendar.YEAR) - fechaNaci.get(Calendar.YEAR);
+				
+				System.out.println("Anios calculados ");				
+				if (anios>0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH)) 
+				{				
+					meses =12- (fechaNaci.get(Calendar.MONTH) - fechaActual.get(Calendar.MONTH));
+					anios--;  
+					System.out.println("if 1");
+				}
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) > fechaNaci.get(Calendar.MONTH))
+				{
+					meses =(fechaActual.get(Calendar.MONTH) - fechaNaci.get(Calendar.MONTH));
+					System.out.println("if 2");
+					
+				}
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) < fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =365-(fechaActual.get(Calendar.DAY_OF_MONTH) -fechaNaci.get(Calendar.DAY_OF_MONTH));
+					System.out.println("if 3");
+					
+				}
+				else if (anios==0 && fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) > fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =(fechaActual.get(Calendar.DAY_OF_MONTH)-fechaNaci.get(Calendar.DAY_OF_MONTH));
+					System.out.println("if 4");
+				}
+				else if (anios>0 && fechaActual.get(Calendar.MONTH) == fechaNaci.get(Calendar.MONTH) && fechaActual.get(Calendar.DAY_OF_MONTH) < fechaNaci.get(Calendar.DAY_OF_MONTH)) 
+				{
+					dias =365-(fechaNaci.get(Calendar.DAY_OF_MONTH) - fechaActual.get(Calendar.DAY_OF_MONTH));
+					anios--;  
+					System.out.println("if 5");
+				}
+				
+				System.out.println("ANios "+anios);
+				System.out.println("Meses "+meses);
+				System.out.println("Dias "+dias);
+				
+				if(anios>0 && meses==0 && dias==0)
+				{
+					edadReal.append(anios).append(" años");
+				}
+				else if(anios>0 && meses>0 && dias==0)
+				{
+					edadReal.append(anios).append(" años con ").append(meses).append(" meses");
+				}
+				else if(anios>0 && meses==0 && dias>0)
+				{
+					edadReal.append(anios).append(" años con ").append(dias).append(" dias");
+				}
+				else if(anios==0 && meses>0 && dias==0)
+				{
+					edadReal.append(meses).append(" meses");
+				}
+				else if(anios==0 && meses==0 && dias>0)
+				{
+					edadReal.append(dias).append(" dias");
+				}
+				else
+				{
+					edadReal.append("");
+				}
+					
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				FacesMessages.instance().add(Severity.WARN,"Formato de fecha incorrecto");
+				return "";
+				
+			}
+				
+			
+		}
+		else
+		{
+			edadReal.append("");
+		}
+		
+		System.out.println("EDAD ENCONTRADAAA  "+edadReal.toString());
+		
+		return edadReal.toString();
+	}
+	
 	
 	public void loadAntecendentes() {
 		//metodo de prueba, tendria que cargar de la base de datos

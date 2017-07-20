@@ -450,7 +450,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		movimientoHome.agregarProducto(cargarInventarioEnvio(producto)); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
 	}
 	
-	public void agregarMovimiento(String tipo)
+	public void agregarMovimiento(String tipo) throws Exception
 	{
 		//Crear movimiento de salida y reducir inventarios. 
 		Movimiento movimiento = new Movimiento();
@@ -1089,47 +1089,54 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			}
 			
 			
-			if(nuevoDetalle.getPiezaReparacion()==null)
-			{
-				//Se debe abilitar la opcion para seleccionar nuevo numero de serie
-				//Verificar existencia de aparato y # serie en bodega taller
-				agregarDetallesMovimiento(nuevoDetalle.getAparato());
-				agregarMovimiento("S");
-				//Desabilitar aparato viejo del cliente
-				desabilitarAparatoCliente(nuevoDetalle.getReparacionCliente().getAparatoRep());
-				//Registrar aparato nuevo.
-				AparatoCliente nuevoAparato = new AparatoCliente();
-				nuevoAparato = registrarNuevoAparato(nuevoDetalle.getReparacionCliente().getAparatoRep(), nuevoCodigo);
-				//Sustituir aparato nuevo en reparacion
-				sustituirAparato(nuevoDetalle.getReparacionCliente(),nuevoAparato);
-				//Registrar detalle de reparacion externa
+			try {
 				
-				nuevoDetalle.setFechaModificacion(new Date());
-				nuevoDetalle.setEstado("Generada");
-				nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+			
+				if(nuevoDetalle.getPiezaReparacion()==null)
+				{
+					//Se debe abilitar la opcion para seleccionar nuevo numero de serie
+					//Verificar existencia de aparato y # serie en bodega taller
+					agregarDetallesMovimiento(nuevoDetalle.getAparato());
+					agregarMovimiento("S");
+					//Desabilitar aparato viejo del cliente
+					desabilitarAparatoCliente(nuevoDetalle.getReparacionCliente().getAparatoRep());
+					//Registrar aparato nuevo.
+					AparatoCliente nuevoAparato = new AparatoCliente();
+					nuevoAparato = registrarNuevoAparato(nuevoDetalle.getReparacionCliente().getAparatoRep(), nuevoCodigo);
+					//Sustituir aparato nuevo en reparacion
+					sustituirAparato(nuevoDetalle.getReparacionCliente(),nuevoAparato);
+					//Registrar detalle de reparacion externa
+					
+					nuevoDetalle.setFechaModificacion(new Date());
+					nuevoDetalle.setEstado("Generada");
+					nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+					
+					modificarEstadoReparacionCli(nuevoDetalle, "FIN");
+					detalleReparacionExternaHome.setInstance(nuevoDetalle);
+					detalleReparacionExternaHome.save();
+					
+					//Indicar en detalle de la reparacion que el problema fue resuelto
+					
+				}
+				else
+				{
+					//Verificar existencia de pieza en bodega de taller
+					//Reducir inventario de pieza
+					agregarDetallesMovimiento(nuevoDetalle.getPiezaReparacion());
+					agregarMovimiento("S");
+					
+					//Registrar envio de reparacion externa
+					nuevoDetalle.setFechaModificacion(new Date());
+					nuevoDetalle.setEstado("Generada");
+					nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+					modificarEstadoReparacionCli(nuevoDetalle, "FIN");
+					detalleReparacionExternaHome.setInstance(nuevoDetalle);
+					detalleReparacionExternaHome.save();
+				}
 				
-				modificarEstadoReparacionCli(nuevoDetalle, "FIN");
-				detalleReparacionExternaHome.setInstance(nuevoDetalle);
-				detalleReparacionExternaHome.save();
-				
-				//Indicar en detalle de la reparacion que el problema fue resuelto
-				
-			}
-			else
-			{
-				//Verificar existencia de pieza en bodega de taller
-				//Reducir inventario de pieza
-				agregarDetallesMovimiento(nuevoDetalle.getPiezaReparacion());
-				agregarMovimiento("S");
-				
-				//Registrar envio de reparacion externa
-				nuevoDetalle.setFechaModificacion(new Date());
-				nuevoDetalle.setEstado("Generada");
-				nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
-				modificarEstadoReparacionCli(nuevoDetalle, "FIN");
-				detalleReparacionExternaHome.setInstance(nuevoDetalle);
-				detalleReparacionExternaHome.save();
-			}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
 			
 		}
 		else
@@ -1138,13 +1145,20 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			//Dejar estado de reparacion en espera
 			//Registrar detalle de reparacion externa .....Poner try catch
 			
-			modificarEstadoReparacionCli(nuevoDetalle,"ENV");
+			try {
+				
 			
-			nuevoDetalle.setFechaModificacion(new Date());
-			nuevoDetalle.setEstado("Generada");
-			nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
-			detalleReparacionExternaHome.setInstance(nuevoDetalle);
-			detalleReparacionExternaHome.save();
+				modificarEstadoReparacionCli(nuevoDetalle,"ENV");
+				
+				nuevoDetalle.setFechaModificacion(new Date());
+				nuevoDetalle.setEstado("Generada");
+				nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+				detalleReparacionExternaHome.setInstance(nuevoDetalle);
+				detalleReparacionExternaHome.save();
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 		}
 		

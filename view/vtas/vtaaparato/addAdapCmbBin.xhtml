@@ -10,7 +10,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 	
-	<h:form id="frmAddAdap">
+	<h:form id="frmAddAdapBin">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
@@ -18,7 +18,7 @@
 						<s:span styleClass="busHead">Seleccionar adaptacion:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 				</center>
-				<rich:dataTable var="res" value="#{ventaComboHome.comboAdaptacionSel.adaptaciones}"  width="700" id="_tablaAdap"
+				<rich:dataTable var="res" value="#{ventaComboHome.comboAdaptacionSel.adaptaciones}"  width="700" id="_tablaAdapBin"
 					 rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
@@ -31,8 +31,8 @@
 					
 					<rich:column >
 						<f:facet name="header">#{msn.col_actions}</f:facet><!--  -->
-						<a:commandLink value="#{app.movimientomast_select_product}" reRender="frmAddAdap,formapacli,formapacli2"
-							action="#{ventaComboHome.seleccionarAdaptacionCombo(res)}" ajaxSingle="true" eventsQueue="q1" >
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="frmAddAdapBin,formapacli,formapacli2"
+							action="#{ventaComboHome.seleccionarAdaptacionComboBin(res)}" ajaxSingle="true" eventsQueue="q1" >
 						</a:commandLink>
 					</rich:column>
 					<f:facet name="footer">
@@ -40,13 +40,13 @@
 					</f:facet>
 				</rich:dataTable>
 				
-		<!-- <rich:dataGrid id="adapDet" value="#{ventaComboHome.lstAparatoAdaptacionSel}" var="adaptacion" columns="1" elements="3" border="0" > -->
-		<rich:dataGrid id="adapDet" value="#{ventaComboHome.lsAdaptacionesPorComboSel.get(ventaComboHome.comboAdaptacionSel.id)}" var="adaptacion" columns="1" elements="3" border="0" >
+		<!-- <rich:dataGrid id="adapDetBin" value="#{ventaComboHome.lstAparatoAdaptacionSel}" var="adaptacion" columns="1" elements="3" border="0" > -->
+		<rich:dataGrid id="adapDetBin" value="#{ventaComboHome.lsAdaptacionesPorComboBinSel.get(ventaComboHome.comboAdaptacionSel.id)}" var="adaptacion" columns="1" elements="3" border="0" >
 			<rich:panel>
 				<f:facet name="header">
 					<h:panelGroup>
-						<a:commandLink title="Quitar" reRender="frmAddAdap,formapacli,formapacli2"
-						eventsQueue="q1" action="#{ventaComboHome.quitarAdaptacion(adaptacion,false)}"
+						<a:commandLink title="Quitar" reRender="frmAddAdapBin,formapacli,formapacli2"
+						eventsQueue="q1" action="#{ventaComboHome.quitarAdaptacion(adaptacion,true)}"
 						ajaxSingle="true">
 							<h:graphicImage value="/kubeImg/remove-icon.png" />
 							<rich:spacer width="5px"> </rich:spacer>
@@ -54,7 +54,7 @@
 						<h:outputText value="#{adaptacion.adaptacion.nombre}" />
 					</h:panelGroup>
 				</f:facet>
-				<s:div id="cmbDet" style="margin:0 auto" >
+				<s:div id="cmbDetBin" style="margin:0 auto" >
 					<table style="margin:0 auto;width:500px" >
 						<tr>
 							<td>

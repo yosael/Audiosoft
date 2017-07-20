@@ -145,11 +145,20 @@
 							value="#{app.diagnostic_save}" styleClass="saveBtn"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton> -->
+					 	
 						<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
 							value="Finalizar Consulta" styleClass="saveBtn"
 							onclick="terminar();#{rich:component('modalLoading')}.show();"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton>
+					
+					<!-- 
+					<a:commandButton 
+						value="Finalizar Consulta" styleClass="saveBtn"
+						onclick="#{rich:component('modFinalizar')}.show();"
+						rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA,modFinalizar">												
+					</a:commandButton>
+					 -->
 						
 						<rich:spacer width="100px"></rich:spacer>
 						

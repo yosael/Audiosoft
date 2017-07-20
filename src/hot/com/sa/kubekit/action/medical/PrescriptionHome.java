@@ -29,6 +29,7 @@ import com.sa.model.medical.Prescription;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.RecomendacionMed;
 import com.sa.model.sales.Service;
+import com.sa.model.workshop.ServicioReparacion;
 
 @Name("prescriptionHome")
 @Scope(ScopeType.CONVERSATION)
@@ -60,6 +61,9 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	@In
 	private LoginUser loginUser;
+	
+	private Float totalServicios;
+	private Float totalExamenes;
 	
 	@Override
 	@Begin(join=true)
@@ -344,6 +348,28 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		}
 	}
 	
+	
+	public Float calcularTotalCobro()
+	{
+		Float total=0F;
+		totalExamenes=0F;
+		totalServicios=0F;
+		
+		for(ExamenConsulta ex: examenesAgregados)
+		{
+			total+=ex.getExamen().getCosto().floatValue();
+			totalExamenes+=ex.getExamen().getCosto().floatValue();
+		}
+		
+		for(MedicalAppointmentService mService: serviciosAgregados)
+		{
+			total+=mService.getService().getCosto().floatValue();
+			totalServicios+=mService.getService().getCosto().floatValue();
+		}
+		
+		return total;
+	}
+	
 	public void removerServicioConsul(Service srv)
 	{
 		
@@ -505,6 +531,23 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		this.serviciosYexamenesEliminados = serviciosYexamenesEliminados;
 	}
 
+	public Float getTotalServicios() {
+		return totalServicios;
+	}
+
+	public void setTotalServicios(Float totalServicios) {
+		this.totalServicios = totalServicios;
+	}
+
+	public Float getTotalExamenes() {
+		return totalExamenes;
+	}
+
+	public void setTotalExamenes(Float totalExamenes) {
+		this.totalExamenes = totalExamenes;
+	}
+
+	
 	
 	
 }

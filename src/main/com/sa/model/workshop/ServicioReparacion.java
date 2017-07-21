@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -26,6 +27,7 @@ public class ServicioReparacion implements Serializable {
 	private Service servicio;
 	private String estado;
 	private String generado;
+	private boolean cobrar;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,6 +74,16 @@ public class ServicioReparacion implements Serializable {
 	public void setGenerado(String generado) {
 		this.generado = generado;
 	}
+	
+	@Transient
+	public boolean isCobrar() {
+		return cobrar;
+	}
+	public void setCobrar(boolean cobrar) {
+		this.cobrar = cobrar;
+	}
+	
+	
 	
 	
 }

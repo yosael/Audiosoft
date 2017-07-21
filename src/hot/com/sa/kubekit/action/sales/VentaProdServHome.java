@@ -1291,7 +1291,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 				if (instance.getEstado().equals("PDS"))
 					mnt = totalConDesc;
 
-				if (isCuentaCobrar()) // Generamos la cuenta por cobrar
+				if(isCuentaCobrar()) // Generamos la cuenta por cobrar
 				{
 					// Double mnt = instance.getMonto().doubleValue();
 					CuentaCobrar cxc = new CuentaCobrar();

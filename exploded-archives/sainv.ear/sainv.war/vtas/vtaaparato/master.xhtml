@@ -1485,7 +1485,7 @@
 						</fieldset>
 					</h:form>
 				</rich:tab>
-				<rich:tab name="tab3" label="Productos adicionales" eventsQueue="q2">
+				<!-- <rich:tab name="tab3" label="Productos adicionales" eventsQueue="q2">
 					<h:form id="formprdadic">
 						<center>
 							<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -1621,7 +1621,8 @@
 					</h:form>
 				</rich:tab>
 
-
+				-->
+				<!-- 
 				<rich:tab name="tab4" label="Servicios" eventsQueue="q2">
 					<h:form id="formsrvadic">
 						<center>
@@ -1714,7 +1715,7 @@
 						</center>
 					</h:form>
 				</rich:tab>
-
+				-->
 			</rich:tabPanel>
 
 
@@ -1731,12 +1732,14 @@
 								value="#{msn.button_list}">
 							</s:button>
 						</td>
-						<td><s:button view="/vtas/vtaaparato/master.xhtml"
+						<td>
+							<s:button view="/vtas/vtaaparato/master.xhtml"
 								rendered="#{empty ventaComboHome.cotizacion}"
 								propagation="begin" styleClass="newBtn"
 								value="#{msn.button_new}">
 								<f:param name="id" value="" />
-							</s:button></td>
+							</s:button>
+						</td>
 					</tr>
 				</table>
 

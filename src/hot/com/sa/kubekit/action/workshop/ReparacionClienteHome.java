@@ -84,6 +84,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 	private String repCliId2="";
 	
+	private List<ItemRequisicionEta> requisicionesCobro = new ArrayList<ItemRequisicionEta>();
+	
 	
 	@In
 	private LoginUser loginUser;
@@ -541,14 +543,16 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		System.out.println(instance.getCurrEtapa());
 		
 		if(instance.getProceso().getNombre().equals("Reparacion"))
-		{ System.out.println("Entro a la condicion de reparacion de entrega");
+		{
+			System.out.println("Entro a la condicion de reparacion de entrega");
 			EtapaRepCliente etapaEntrega =(EtapaRepCliente)getEntityManager().createQuery("Select et from EtapaRepCliente et where et.reparacionCli=:reparacionAct and et.etapaRep.orden=7 ").setParameter("reparacionAct", instance).getSingleResult();
 			etapaEntrega.setFechaRealFin(new Date());
 			etapaEntrega.setEstado("APR");
 			getEntityManager().merge(etapaEntrega);
 		}
 		else if(instance.getProceso().getNombre().equals("Fabricacion de molde"))
-		{ System.out.println("Entro a la condicion de elaboracion de molde de entrega");
+		{ 
+			System.out.println("Entro a la condicion de elaboracion de molde de entrega");
 			EtapaRepCliente etapaEntrega =(EtapaRepCliente)getEntityManager().createQuery("Select et from EtapaRepCliente et where et.reparacionCli=:reparacionAct and et.etapaRep.orden=5 ").setParameter("reparacionAct", instance).getSingleResult();
 			etapaEntrega.setFechaRealFin(new Date());
 			etapaEntrega.setEstado("APR");
@@ -617,7 +621,20 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				instance.setNombreRecibe(instance.getCliente().getNombres()	+ " " + instance.getCliente().getApellidos());
 		} else
 			instance.setNombreRecibe(instance.getCliente().getNombres() + " "+ instance.getCliente().getApellidos());
+		
+
+		
 		modify();
+	}
+	
+	//nuevo el 20/07/2017
+	public void prepararEntrega()
+	{
+		//nuevo 20/07/2017
+		setFlagPrsEntrega("D");
+		cargarRequisicionesCobro();
+		verificarGarantia();
+		
 	}
 	
 	//Metodo para validar la entrega del aparato al cliente, que se ha solicitado a traves de una venta de combo de aparato por credito
@@ -1051,7 +1068,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		
 		if(instance.getDescripcion()==null || instance.getDescripcion().isEmpty())
 		{
-			FacesMessages.instance().add(Severity.WARN,"Espeficique el motivo del trabajo de taller");
+			FacesMessages.instance().add(Severity.WARN,"Especifique el motivo del trabajo de taller");
 			return false;
 		}
 		
@@ -1313,7 +1330,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				{
 					vta = vtaExis.get(0);
 				}
-				else
+				else // si no existe se crea.
 				{
 				
 					vta.setCliente(etapaRepCliHome.getInstance().getReparacionCli().getCliente());
@@ -1333,16 +1350,22 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				
 				
 				// Requisiciones
-				List<ItemRequisicionEta> itemsRequis = getEntityManager()
+				/*List<ItemRequisicionEta> itemsRequis = getEntityManager()
 						.createQuery(
 								"SELECT i FROM ItemRequisicionEta i WHERE i.reqEtapa.etapaRepCli.reparacionCli = :rep")
 						.setParameter("rep", etapaRepCliHome.getInstance().getReparacionCli())
-						.getResultList();
+						.getResultList();*/
 				
-				Float totalRepa=0f; // nuevo agregado el 30/06/2017
+				Float totalReparacionSinDescuentos=0f; // nuevo agregado el 30/06/2017
 				
-				if (itemsRequis != null && itemsRequis.size() > 0)
+				/*if (itemsRequis != null && itemsRequis.size() > 0)
 					for (ItemRequisicionEta tmpItr : itemsRequis) 
+					{*/
+				Float cantidadDescuento=0f; // nuevo el 20/07/2017
+				Float descuentoPorGarantia=0f;
+				
+				if (requisicionesCobro != null && requisicionesCobro.size() > 0)// nuevo el 20/07/2017
+					for (ItemRequisicionEta tmpItr : requisicionesCobro) 
 					{
 						DetVentaProdServ dtVta = new DetVentaProdServ();
 						dtVta.setCantidad(tmpItr.getCantidad());
@@ -1359,12 +1382,21 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 								+ tmpItr.getProducto().getMarca().getNombre());
 						dtVta.setDetalle(bld.toString());
 						
-						if(tmpItr.getGenerado()!=null && tmpItr.getGenerado().equals("GEN"))
+						if((tmpItr.getGenerado()!=null && tmpItr.getGenerado().equals("GEN")) || !tmpItr.isCobrar())
+						{
 							dtVta.setMonto(0f);
+							//dtVta.setDescuentoCorp(tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad());
+							cantidadDescuento+=(tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad());
+						}
 						else
 						{
-							dtVta.setMonto(tmpItr.getProducto().getPrcNormal());
+							dtVta.setMonto(tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad());
 							//totalRepa+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
+						}
+						
+						if(!tmpItr.isCobrar())
+						{
+							descuentoPorGarantia+=tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad();
 						}
 						
 						dtVta.setTipoVenta("TLL");// nuevo 17/07/2017
@@ -1375,10 +1407,15 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						
 						totalReparacion += dtVta.getMonto()
 								* dtVta.getCantidad();
+						
+						totalReparacionSinDescuentos += (tmpItr.getProducto().getPrcNormal()*tmpItr.getCantidad());
+						
+						
 						getEntityManager().persist(dtVta);
 					}
 	
 				for (ServicioReparacion srv : getServiciosRep()) {
+					
 					if(srv.getEstado() == null || !srv.getEstado().equals("CBR")) {
 						//totalReparacion += srv.getServicio().getCosto();
 						DetVentaProdServ dtVta = new DetVentaProdServ();
@@ -1388,15 +1425,25 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						dtVta.setDetalle(bld.toString());
 						dtVta.setEscondido(true);
 						
-						if(srv.getGenerado()!=null && srv.getGenerado().equals("GEN"))							
+						if((srv.getGenerado()!=null && srv.getGenerado().equals("GEN")) || !srv.isCobrar())
+						{
 							dtVta.setMonto(0f);
+							cantidadDescuento+=(srv.getServicio().getCosto().floatValue());
+						}
 						else
 						{
 							dtVta.setMonto(srv.getServicio().getCosto().floatValue());
 							//totalRepa+=srv.getServicio().getCosto().floatValue();
 						}
 						
+						if(!srv.isCobrar())
+						{
+							descuentoPorGarantia+=(srv.getServicio().getCosto().floatValue());
+						}
+						
 						totalReparacion+=dtVta.getMonto();
+						
+						totalReparacionSinDescuentos+=srv.getServicio().getCosto().floatValue();
 						
 						dtVta.setTipoVenta("TLL"); // nuevo el 17/07/2017
 						dtVta.setVenta(vta);
@@ -1409,6 +1456,11 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				
 				//instance.setCosto(totalRepa);
 				instance.setCosto(totalReparacion.floatValue());
+				
+				//nuevo el 20/07/2017
+				instance.setIngresosTaller(totalReparacionSinDescuentos);
+				instance.setDescuentos_garantia(descuentoPorGarantia);
+				instance.setDescuentos(cantidadDescuento);
 				
 				//vta.setMonto(totalRepa);
 	
@@ -1476,6 +1528,43 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			}
 		}
 		getEntityManager().flush();
+	}
+	
+	public void cargarRequisicionesCobro()
+	{
+		requisicionesCobro = getEntityManager()
+				.createQuery(
+						"SELECT i FROM ItemRequisicionEta i WHERE i.reqEtapa.etapaRepCli.reparacionCli = :rep")
+				.setParameter("rep", etapaRepCliHome.getInstance().getReparacionCli())
+				.getResultList();
+	}
+	
+	public void verificarGarantia()
+	{
+		if(garRepVigente || garVtaVigente)
+		{
+			for(ItemRequisicionEta itm:requisicionesCobro)
+			{
+				itm.setCobrar(false);
+			}
+			
+			for(ServicioReparacion srv: getServiciosRep())
+			{
+				srv.setCobrar(false);
+			}
+		}
+		else
+		{
+			for(ItemRequisicionEta itm:requisicionesCobro)
+			{
+				itm.setCobrar(true);
+			}
+			
+			for(ServicioReparacion srv: getServiciosRep())
+			{
+				srv.setCobrar(true);
+			}
+		}
 	}
 	
 	
@@ -1712,6 +1801,14 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 
 	public void setRepCliId2(String repCliId2) {
 		this.repCliId2 = repCliId2;
+	}
+
+	public List<ItemRequisicionEta> getRequisicionesCobro() {
+		return requisicionesCobro;
+	}
+
+	public void setRequisicionesCobro(List<ItemRequisicionEta> requisicionesCobro) {
+		this.requisicionesCobro = requisicionesCobro;
 	}
 
 	

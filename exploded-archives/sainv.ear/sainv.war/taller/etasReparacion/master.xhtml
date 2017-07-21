@@ -97,7 +97,7 @@
 						
 								<td>
 									<s:decorate template="/layout/kEditSpace.xhtml">
-										<ui:define name="label">#{app.repcli_descripcion}:</ui:define>
+										<ui:define name="label">Motivo del trabajo de taller:</ui:define>
 										<h:inputTextarea
 											value="#{reparacionClienteHome.instance.descripcion}"
 											cols="20" rows="3" style="width:220px;" required="false">
@@ -108,24 +108,23 @@
 			
 								<td>
 									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden>1}" >
-									<ui:define name="label">Comentario etapa anterior:</ui:define>
-									<h:inputTextarea value="#{etapaRepCliHome.comentarioAnterior}" required="false"  >
-										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
-									</h:inputTextarea>
+										<ui:define name="label">Comentario etapa anterior:</ui:define>
+										<h:inputTextarea value="#{etapaRepCliHome.comentarioAnterior}" required="false"  >
+											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+										</h:inputTextarea>
 									</s:decorate>
-									
 									<s:decorate template="/layout/kEditSpace.xhtml" style="width:100%;" rendered="#{etapaRepCliHome.instance.etapaRep.orden eq 1}" >
 										<ui:define name="label">#{app.etarepcli_comentarios}:</ui:define>
 										<h:inputTextarea value="#{etapaRepCliHome.instance.descripcion}" required="false">
 											<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"  />
 										</h:inputTextarea>
 									</s:decorate>
-									
 								</td>
 								
 						</tr>
 						<tr>
 							<td>
+							<!--  COMENTADO EL 20/07/2017
 								<s:decorate 
 									rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' 
 									and (reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true) }"
@@ -138,6 +137,7 @@
 											event="onchange" />
 									</h:selectBooleanCheckbox>
 								</s:decorate>
+								 -->
 							</td>
 							<td>
 								<s:decorate template="/layout/kEditSpace.xhtml"  rendered="#{etapaRepCliHome.instance.etapaRep.nombre=='Informar'}">
@@ -400,7 +400,8 @@
 					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
 						value="No aprobar" />
-						
+					
+					<!-- 	
 					<a:commandButton
 							onclick="#{rich:component('confirmationDeliver')}.show();"
 							eventsQueue="q1" ajaxSingle="true"
@@ -408,6 +409,14 @@
 							rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' and etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' }"
 							styleClass="detailBtn" ignoreDupResponses="true"
 							reREnder="_prsRec" value="#{app.button_rpc_delcli}" />
+					 -->
+					 <a:commandButton
+							onclick="#{rich:component('confirmationDeliver')}.show();"
+							eventsQueue="q1" ajaxSingle="true"
+							action="#{reparacionClienteHome.prepararEntrega()}"
+							rendered="#{reparacionClienteHome.managed and reparacionClienteHome.instance.estado=='FIN' and etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' }"
+							styleClass="detailBtn" ignoreDupResponses="true"
+							reRender="_prsRec,fm45" value="#{app.button_rpc_delcli}" />	
 						
 					<a:commandButton onclick="#{rich:component('confirmation')}.show();" reRender="formreparacioncli" ignoreDupResponses="true"
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.loopBack != null}" styleClass="doCancelBtn"
@@ -698,7 +707,7 @@
 			
 			
 			
-			<rich:modalPanel id="confirmationDeliver" width="500"
+			<rich:modalPanel id="confirmationDeliver" width="600"
 					moveable="true" autosized="true" top="40"
 					onbeforeshow="activeModal.setActiveModalPanel('confirmationDeliver');">
 					<f:facet name="header">#{app.categorialist_modal}</f:facet>
@@ -729,7 +738,8 @@
 											<a:support event="onchange" eventsQueue="q1"
 												ajaxSingle="true" reRender="_nomRecibe" />
 										</h:selectOneRadio></td>
-									<td><h:panelGroup id="_nomRecibe">
+									<td>
+										<h:panelGroup id="_nomRecibe">
 											<h:inputText
 												value="#{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}"
 												disabled="true" style="width:250px;"
@@ -738,7 +748,85 @@
 												value="#{reparacionClienteHome.instance.nombreRecibe}"
 												style="width:250px;"
 												rendered="#{reparacionClienteHome.flagPrsEntrega=='O'}" />
-										</h:panelGroup></td>
+										</h:panelGroup>
+									</td>
+								</tr>
+								<tr>
+									<td><rich:spacer height="10" ></rich:spacer></td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputText style="font-weight:bold;font-size:18px;text-align:center;" value="TIENE GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true}" />
+										<h:outputText style="font-weight:bold;font-size:18px;text-align:center;" value="SIN GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==false and reparacionClienteHome.garRepVigente==false}" />	
+									</td>
+								</tr>
+								<tr>
+									<td><rich:spacer height="10" ></rich:spacer></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<h:outputText value="Cobro de requisiciones" style="font-weight:bold;font-size:12px;text-align:center;" />
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<rich:dataTable var="res" value="#{reparacionClienteHome.requisicionesCobro}" id="_tableRequiCobro"
+											rendered="#{not empty reparacionClienteHome.requisicionesCobro}" 
+											align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+											headerClass="tablaHeader" footerClass="tableScroll">
+											<f:facet name="header">#{app.reqeta_sel_items}</f:facet>
+											<rich:column>
+												<f:facet name="header">#{app.movimiento_itemlist_col2}</f:facet>
+												<h:outputText value="#{res.producto.nombre}" />
+											</rich:column>
+											<rich:column>
+												<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+												<h:outputText value="#{res.producto.prcNormal}" size="8" >
+												</h:outputText>
+											</rich:column>
+											<rich:column >
+												<f:facet name="header">Cobrar</f:facet>
+												<h:selectBooleanCheckbox value="#{res.cobrar}" eventsQueue="q1" rendered="#{res.generado==null || res.generado!='GEN'}" >
+													<a:support event="onclick" reRender="_tableRequiCobro" ajaxSingle="true" ></a:support>
+												</h:selectBooleanCheckbox>
+												<h:outputText value="Incluye el combo" rendered="#{res.generado!=null || res.generado=='GEN'}" />
+											</rich:column>
+										</rich:dataTable>
+									</td>
+								</tr>
+								<tr>
+									<td><rich:spacer height="10" ></rich:spacer></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<h:outputText value="Cobro de servicios" style="font-weight:bold;font-size:12px;text-align:center;" />
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<rich:dataTable var="res"
+											value="#{reparacionClienteHome.serviciosRep}" align="center"
+											id="_tableServCobro" headerClass="tablaHeader" rendered="#{not empty reparacionClienteHome.serviciosRep}" >
+											<rich:column>
+												<f:facet name="header">#{app.servlist_col2}</f:facet>
+												<h:outputText value="#{res.servicio.name}" />
+											</rich:column>
+											<rich:column>
+												<f:facet name="header">#{app.transferencia_itemlist_col4}</f:facet>
+												<h:outputText value="#{res.servicio.costo}" />
+											</rich:column>
+											<rich:column >
+												<f:facet name="header">Cobrar</f:facet>
+												<h:selectBooleanCheckbox value="#{res.cobrar}" eventsQueue="q1" rendered="#{res.generado==null || res.generado!='GEN'}" >
+													<a:support event="onclick" reRender="_tableServCobro" ajaxSingle="true" ></a:support>
+												</h:selectBooleanCheckbox>
+												<h:outputText value="Incluye el combo" rendered="#{res.generado!=null || res.generado=='GEN'}" />
+											</rich:column>
+										</rich:dataTable>
+									</td>
+								</tr>
+								<tr>
+									<td><rich:spacer height="10" ></rich:spacer></td>
 								</tr>
 								<tr>
 									<td colspan="2">Comentarios relacionados a la entrega:</td>

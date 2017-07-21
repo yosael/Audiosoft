@@ -66,7 +66,10 @@ public class ReparacionCliente implements Serializable {
 	private List<DetalleReparacionExterna> detallesReparacionExterna = new ArrayList<DetalleReparacionExterna>();
 	
 	
-	
+	// nuevo el 20/07/2017
+	private Float ingresosTaller;
+	private Float descuentos;
+	private Float descuentos_garantia;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -299,6 +302,7 @@ public class ReparacionCliente implements Serializable {
 		this.idCot = idCot;
 	}
 
+	//ENV= enviada a reparacion, RCP= Reparacion Cliente con pieza o aparato recibida
 	@Column(name="estado_rep_externa",nullable=true,length=3)
 	public String getEstadoRepExterna() {
 		return estadoRepExterna;
@@ -328,6 +332,35 @@ public class ReparacionCliente implements Serializable {
 
 	public void setAdelanto(Float adelanto) {
 		this.adelanto = adelanto;
+	}
+
+	
+	@Column(name="ingresos_taller",nullable=true)
+	public Float getIngresosTaller() {
+		return ingresosTaller;
+	}
+
+	public void setIngresosTaller(Float ingresosTaller) {
+		this.ingresosTaller = ingresosTaller;
+	}
+
+	@Column(name="descuentos",nullable=true)
+	public Float getDescuentos() {
+		return descuentos;
+	}
+
+	public void setDescuentos(Float descuentos) {
+		this.descuentos = descuentos;
+	}
+
+	
+	@Column(name="descuentos_garantia",nullable=true)
+	public Float getDescuentos_garantia() {
+		return descuentos_garantia;
+	}
+
+	public void setDescuentos_garantia(Float descuentos_garantia) {
+		this.descuentos_garantia = descuentos_garantia;
 	}
 
 	

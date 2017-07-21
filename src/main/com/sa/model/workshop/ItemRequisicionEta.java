@@ -36,6 +36,7 @@ public class ItemRequisicionEta implements Serializable {
 	private CodProducto codProducto;
 	private String ubicacionActual;
 	private String generado;
+	private boolean cobrar;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -134,6 +135,15 @@ public class ItemRequisicionEta implements Serializable {
 
 	public void setGenerado(String generado) {
 		this.generado = generado;
+	}
+
+	@Transient
+	public boolean isCobrar() {
+		return cobrar;
+	}
+
+	public void setCobrar(boolean cobrar) {
+		this.cobrar = cobrar;
 	}
 	
 	

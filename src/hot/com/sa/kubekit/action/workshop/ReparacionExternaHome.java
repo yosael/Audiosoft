@@ -450,7 +450,7 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		movimientoHome.agregarProducto(cargarInventarioEnvio(producto)); //Si la pieza es null, significa que lo que se qiere reparar es el aparato
 	}
 	
-	public void agregarMovimiento(String tipo) throws Exception
+	public boolean agregarMovimiento(String tipo)
 	{
 		//Crear movimiento de salida y reducir inventarios. 
 		Movimiento movimiento = new Movimiento();
@@ -463,7 +463,11 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		movimiento.setUsuario(loginUser.getUser());
 		
 		movimientoHome.setInstance(movimiento);
-		movimientoHome.save();
+		
+		if(movimientoHome.save())
+			return true;
+		else
+			return false;
 	}
 	
 	public void modificarDetalles()//Actualizar el estado de los detalles cuando se envia
@@ -1076,17 +1080,6 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		if(cambioLocal)
 		{
 			
-			//Verificar si aparato actual tiene garantia para agregar servicio de 226 o no
-			try {
-				
-				if(!verificarGarantiaAparato(nuevoDetalle.getReparacionCliente()))
-				{
-					//nuevoDetalle.getReparacionCliente().setCosto(226f);
-					agregarServicioRep(nuevoDetalle.getReparacionCliente());
-				}
-			} catch (Exception e) {
-				FacesMessages.instance().add(Severity.WARN,"Problema verificando la garantia");
-			}
 			
 			
 			try {
@@ -1097,7 +1090,10 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 					//Se debe abilitar la opcion para seleccionar nuevo numero de serie
 					//Verificar existencia de aparato y # serie en bodega taller
 					agregarDetallesMovimiento(nuevoDetalle.getAparato());
-					agregarMovimiento("S");
+					
+					if(!agregarMovimiento("S"))
+						return;
+					
 					//Desabilitar aparato viejo del cliente
 					desabilitarAparatoCliente(nuevoDetalle.getReparacionCliente().getAparatoRep());
 					//Registrar aparato nuevo.
@@ -1123,20 +1119,37 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 					//Verificar existencia de pieza en bodega de taller
 					//Reducir inventario de pieza
 					agregarDetallesMovimiento(nuevoDetalle.getPiezaReparacion());
-					agregarMovimiento("S");
+					
+					if(!agregarMovimiento("S"))
+							return;
 					
 					//Registrar envio de reparacion externa
 					nuevoDetalle.setFechaModificacion(new Date());
 					nuevoDetalle.setEstado("Generada");
 					nuevoDetalle.setReparacionExterna(cargarReparacionGenerada());
+					
 					modificarEstadoReparacionCli(nuevoDetalle, "FIN");
+					
 					detalleReparacionExternaHome.setInstance(nuevoDetalle);
 					detalleReparacionExternaHome.save();
 				}
 				
 			} catch (Exception e) {
 				e.printStackTrace();
-			}	
+			}
+			
+			
+			//Verificar si aparato actual tiene garantia para agregar servicio de 226 o no
+			try {
+				
+				if(!verificarGarantiaAparato(nuevoDetalle.getReparacionCliente()))
+				{
+					//nuevoDetalle.getReparacionCliente().setCosto(226f);
+					agregarServicioRep(nuevoDetalle.getReparacionCliente());
+				}
+			} catch (Exception e) {
+				FacesMessages.instance().add(Severity.WARN,"Problema verificando la garantia");
+			}
 			
 		}
 		else
@@ -1199,66 +1212,108 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 			agregarServicioRep(detalleRep.getReparacionCliente());
 		}*/
 		
-		if(detalleRep.getPiezaReparacion()==null)
-		{
+		try {
 			
-			//Sustituir aparato y reducir inventario de item y #Serie;
-			
-			//Registrar aparato cliente
-			AparatoCliente aparatoNuevo = new AparatoCliente();
-			CodProducto codigoAparato = new CodProducto();
-			
-			if(detalleRep.getIdNuevoCodigo()==null)
+		
+			if(detalleRep.getPiezaReparacion()==null)
 			{
-				codigoAparato=detalleRep.getCodigo();
+				
+				//VerificarInventario
+				if(!verificarExistenciaProducto(detalleRep.getAparato()))
+				{
+					FacesMessages.instance().add(Severity.WARN,"Debe agregar el aparato a su inventario");
+					return;
+				}
+					
+				
+				//Sustituir aparato y reducir inventario de item y #Serie;
+				
+				//Registrar aparato cliente
+				AparatoCliente aparatoNuevo = new AparatoCliente();
+				CodProducto codigoAparato = new CodProducto();
+				
+				if(detalleRep.getIdNuevoCodigo()==null)
+				{
+					codigoAparato=detalleRep.getCodigo();
+				}
+				else
+				{
+					codigoAparato=buscarCodById(detalleRep.getIdNuevoCodigo());
+				}
+				
+				detalleRep.setPiezaReparacion(null);
+				aparatoNuevo=registrarNuevoAparato(detalleRep.getReparacionCliente().getAparatoRep(),codigoAparato);
+				
+				//Desabilitar aparato viejo
+				desabilitarAparatoCliente(detalleRep.getReparacionCliente().getAparatoRep());
+				
+				//Sustituir nuevo aparato en reparacion
+				sustituirAparato(detalleRep.getReparacionCliente(),aparatoNuevo);
+				
+				//Crear el modivmiento y reducir inventario
+				agregarDetallesMovimiento(detalleRep.getAparato());
+				
+				modificarEstadoReparacionCli(detalleRep, "FIN");
+				
+				//Se movio de lugar
+				if(!detalleRep.getTieneGarantia())
+				{
+					//detalleRep.getReparacionCliente().setCosto(226f);
+					agregarServicioRep(detalleRep.getReparacionCliente());
+				}
+				
+				agregarMovimiento("S");
+				
+				
 			}
 			else
 			{
-				codigoAparato=buscarCodById(detalleRep.getIdNuevoCodigo());
+				
+				//VerificarInventario
+				if(!verificarExistenciaProducto(detalleRep.getPiezaReparacion()))
+				{
+					FacesMessages.instance().add(Severity.WARN,"Debe agregar la pieza a su inventario");
+					return;
+				}
+				
+				//Crear el modivmiento y reducir inventario
+				agregarDetallesMovimiento(detalleRep.getPiezaReparacion());
+				
+				modificarEstadoReparacionCli(detalleRep, "FIN");
+				
+				//Se movio de lugar
+				if(!detalleRep.getTieneGarantia())
+				{
+					//detalleRep.getReparacionCliente().setCosto(226f);
+					agregarServicioRep(detalleRep.getReparacionCliente());
+				}
+				
+				agregarMovimiento("S");
+				
+				
 			}
 			
-			detalleRep.setPiezaReparacion(null);
-			aparatoNuevo=registrarNuevoAparato(detalleRep.getReparacionCliente().getAparatoRep(),codigoAparato);
-			
-			//Desabilitar aparato viejo
-			desabilitarAparatoCliente(detalleRep.getReparacionCliente().getAparatoRep());
-			
-			//Sustituir nuevo aparato en reparacion
-			sustituirAparato(detalleRep.getReparacionCliente(),aparatoNuevo);
-			
-			//Crear el modivmiento y reducir inventario
-			agregarDetallesMovimiento(detalleRep.getAparato());
-			
-			modificarEstadoReparacionCli(detalleRep, "FIN");
-			
-			//Se movio de lugar
-			if(!detalleRep.getTieneGarantia())
-			{
-				//detalleRep.getReparacionCliente().setCosto(226f);
-				agregarServicioRep(detalleRep.getReparacionCliente());
-			}
-			
-			agregarMovimiento("S");
-			
-		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesMessages.instance().add(Severity.WARN,"No se pudo cargar la reparacion");
+		}	
+	}
+	
+	public boolean verificarExistenciaProducto(Producto producto)
+	{
+		
+		Integer num = 0;
+		
+		System.out.println("Sucursal: "+loginUser.getUser().getSucursal().getId());
+		System.out.println("Producto id: "+producto.getId());
+		
+		num = (Integer) getEntityManager().createQuery("SELECT i.cantidadActual FROM Inventario i where i.sucursal.id=:idSucursal and i.producto.id=:idProducto").setParameter("idSucursal", loginUser.getUser().getSucursal().getId()).setParameter("idProducto", producto.getId()).getResultList().get(0);
+		
+		if(num>0)
+			return true;
 		else
-		{
-			//Crear el modivmiento y reducir inventario
-			agregarDetallesMovimiento(detalleRep.getPiezaReparacion());
-			
-			modificarEstadoReparacionCli(detalleRep, "FIN");
-			
-			//Se movio de lugar
-			if(!detalleRep.getTieneGarantia())
-			{
-				//detalleRep.getReparacionCliente().setCosto(226f);
-				agregarServicioRep(detalleRep.getReparacionCliente());
-			}
-			
-			agregarMovimiento("S");
-			
-			
-		}
+			return false;
+		
 	}
 	
 	public CodProducto buscarCodById(int idCodigo)

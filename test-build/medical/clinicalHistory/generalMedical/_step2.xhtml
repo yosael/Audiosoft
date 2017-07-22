@@ -15,7 +15,6 @@
 		}
 	</script> -->
 		<rich:panel style="padding:1px;">
-				<f:facet name="header">#{app.general_step2_head}</f:facet>
 				<s:div rendered="#{generalMedicalDAO.managed}">
 				
 					<h:outputText
@@ -51,130 +50,97 @@
 				<a:poll id="autoRefreshStep1" interval="50000" enabled="true" reRender="txtTiempoEvolucion" action="#{medicalAppointmentDAO.refreshCitaMedicaStep1()}"  />
 					 -->
 						<rich:simpleTogglePanel eventsQueue="q1"  switchType="ajax" styleClass="letra15"  label="#{app.general_step1_tab1}" id="toggle1-1" opened="true" >
-							<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1" ><!-- style="padding-left:50px;font-size:14px" -->
+							<h:panelGrid columns="1" style="margin:0 auto;font-size:15px" cellpadding="1" cellspacing="1" ><!-- style="padding-left:50px;font-size:14px" -->
 							
+								<h:panelGrid columns="3" >
+									<h:panelGroup>
+										<h:outputLabel value="Consulta #: " style="font-weight:bold;" />
+										<h:outputText value="#{medicalAppointmentDAO.instance.id}" />
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>	
+									
+									<h:panelGroup>
+										<h:outputLabel value="Ultima consulta: " style="font-weight:bold;" />
+										<h:outputText
+												value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
+										<h:outputText
+										value="Primera vez" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>	
+									
+									<h:panelGroup>	
+										<h:outputLabel value="Referido por: " style="font-weight:bold;" />
+										<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>
+								</h:panelGrid>
+								<hr />
 								<h:panelGroup>
-									<h:outputLabel value="Consulta #: " style="font-weight:bold;" />
-									<h:outputText value="#{medicalAppointmentDAO.instance.id}" />
-								</h:panelGroup>	
-								
-								<h:panelGroup>
-									<h:outputLabel value="Ultima consulta: " style="font-weight:bold;" />
-									<h:outputText
-											value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
-									<h:outputText
-									value="Primera vez" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
-								</h:panelGroup>	
-								
-								<h:column />
-								<h:column />
-								<h:column />
-								<h:column />
-								
-								
-								<h:panelGroup>
-									<h:outputLabel value="Nombre: " style="font-weight:bold;" />
+									<h:outputLabel value="Paciente: " style="font-weight:bold;" />
 									<h:outputText  value="#{clienteHome.instance.nombres} #{clienteHome.instance.apellidos}"
 												required="true" disabled="#{wizardGeneralMedical.mode == 'r'}"   />
-								</h:panelGroup>				
-								
-								
-								<h:panelGroup>
-									<h:outputLabel value="Sexo: "  style="font-weight:bold;"/>
-									<h:outputText value="Masculino" rendered="#{clienteHome.instance.genero==1}" />
-									<h:outputText value="Femenino" rendered="#{clienteHome.instance.genero==0}" />
+									<h:outputText value=", Masculino" rendered="#{clienteHome.instance.genero==1}" />
+									<h:outputText value=", Femenino" rendered="#{clienteHome.instance.genero==0}" />
+									<h:outputText
+										value=", de #{clienteHome.calcularEdadRealAlmacenada()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
 								</h:panelGroup>				
 											
+								<hr />
+								
+								<h:panelGrid columns="3" >	
 											
-								<h:panelGroup>			
-									<h:outputLabel value="Fecha nacimiento: " style="font-weight:bold;" />
-										<!-- 
-										<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
-											 datePattern="dd/MM/yyyy"
-											disabled="true" /> -->
-									<h:outputText
-										value="#{clienteHome.instance.fechaNacimiento}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
-									<h:outputText
-										value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
-								</h:panelGroup>		
-								
-								
-								<h:panelGroup>
-									<h:outputLabel value="Edad: " style="font-weight:bold;" />	
-									<h:outputText
-										value="#{clienteHome.calcularEdadRealAlmacenada()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
-									<h:outputText
-										value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
-								</h:panelGroup>		
-								
-								
-								<h:panelGroup>
-									<h:outputLabel value="Ocupacion: " style="font-weight:bold;" />		
-									<h:outputText
-										value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
-									<h:outputText
-									value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
-								</h:panelGroup>	
+									<h:panelGroup>			
+										<h:outputLabel value="Fecha nacimiento: " style="font-weight:bold;" />
+											<!-- 
+											<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
+												 datePattern="dd/MM/yyyy"
+												disabled="true" /> -->
+										<h:outputText
+											value="#{clienteHome.instance.fechaNacimiento}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+										<h:outputText
+											value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>		
 									
-									
-								<h:panelGroup>	
-									<h:outputLabel value="#{app.patimast_telephone}: " style="font-weight:bold;" />
-										<!-- <h:inputText value="#{clienteHome.instance.telefono1}"
-											disabled="true" /> -->
-									<h:outputText value="#{clienteHome.instance.telefono1}"/>
-								</h:panelGroup>	
-									
-								<h:panelGroup>	
-									<h:outputLabel value="Referido por: " style="font-weight:bold;" />
-									<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
-								</h:panelGroup>	
+									<h:panelGroup>
+										<h:outputLabel value="Ocupacion: " style="font-weight:bold;" />		
+										<h:outputText
+											value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
+										<h:outputText
+										value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>	
+										
+										
+									<h:panelGroup>	
+										<h:outputLabel value="Telefonos: " style="font-weight:bold;" />
+											<!-- <h:inputText value="#{clienteHome.instance.telefono1}"
+												disabled="true" /> -->
+										<h:outputText value="#{clienteHome.instance.telefono1}"/>
+										<h:outputText value=" / #{clienteHome.instance.telefono2}" rendered="#{clienteHome.instance.telefono2!=null}"/>
+										<rich:spacer width="10" height="0" ></rich:spacer>
+									</h:panelGroup>	
+								</h:panelGrid>
 								
-								
-								<h:panelGroup>
-									<h:outputLabel value="#{app.patimast_telephone2}: " style="font-weight:bold;" />
-									<h:outputText value="#{clienteHome.instance.telefono2}"/>
-								</h:panelGroup>	
-								
-								
-								<h:column />
-								<h:column />
-								<h:column />
-								<h:column />
-								
-								
+								<hr />
 								<h:panelGroup>
 									<h:outputLabel value="#{app.patimast_address}: " style="font-weight:bold;" />
 										
 										<!--<h:inputText value="#{clienteHome.instance.direccion}"
 											disabled="true" />-->
 									<h:outputText value="#{clienteHome.instance.direccion}"
-										disabled="true" />
+										disabled="true"  />
+									<h:outputText value=", #{clienteHome.instance.municipio.nombre}"
+										disabled="true" rendered="#{clienteHome.instance.municipio!=null}" />
+									<h:outputText value=", #{clienteHome.instance.depto.nombre}"
+										disabled="true" rendered="#{clienteHome.instance.depto!=null}" />
+									<h:outputText value=", #{clienteHome.instance.pais.codIso2}"
+									disabled="true" rendered="#{clienteHome.instance.pais!=null}" />
+									<rich:spacer width="10" height="0" ></rich:spacer>
 								</h:panelGroup>		
 									
-								<h:panelGroup>	
-									<h:outputLabel value="Municipio: " style="font-weight:bold;" />	
-									<h:outputText value="#{clienteHome.instance.municipio.nombre}"
-										disabled="true" />
-								</h:panelGroup>		
-									
-									
-								
-								<h:panelGroup>
-									<h:outputLabel value="Departamento: "  style="font-weight:bold;" />
-									<h:outputText value="#{clienteHome.instance.depto.nombre}"
-										disabled="true" />
-								</h:panelGroup>		
-									
-									
-								<h:panelGroup>	
-									<h:outputLabel value="Pais: " style="font-weight:bold;" />
-									<h:outputText value="El Salvador"
-										disabled="true" />
-								</h:panelGroup>		
-								
-								
-								
-								
+								<hr />
+
 								<h:panelGroup>
 									<h:outputLabel value="Encargado: " rendered="#{clienteHome.instance.nombresEncargado!=null}" style="font-weight:bold;" />
 										<!-- <h:inputText value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"

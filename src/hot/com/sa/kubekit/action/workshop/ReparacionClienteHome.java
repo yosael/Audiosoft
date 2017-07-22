@@ -86,6 +86,9 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 	private List<ItemRequisicionEta> requisicionesCobro = new ArrayList<ItemRequisicionEta>();
 	
+	private Float totalAcobrar;
+	private Float descuentoCobro;
+	
 	
 	@In
 	private LoginUser loginUser;
@@ -634,6 +637,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		setFlagPrsEntrega("D");
 		cargarRequisicionesCobro();
 		verificarGarantia();
+		
+		recalcularTotalesCobro();
 		
 	}
 	
@@ -1489,7 +1494,9 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						
 						// Verificamos, si hay una garantia de venta o reparacion vigente,
 						// se aprueba la venta con descuento del 100 por ciento si no han chequeado lo de cobrar siempre
-						if (!cobrarSiempre && (tieneGarantiaVigente(
+					
+						//Comentado el 21/07/2017
+						/*if (!cobrarSiempre && (tieneGarantiaVigente(
 								getInstance().getAparatoRep().getFechaGarRep(), 
 								getInstance().getAparatoRep().getPeriodoGarantiaRep()) ||
 								tieneGarantiaVigente(
@@ -1505,7 +1512,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 							ventaProdServHome.getInstance().setEstado("PDS");
 							ventaProdServHome.getInstance().setUsrDescuento(etapaRepCliHome.getInstance().getUsuario());
 							ventaProdServHome.aprobarVta();
-						}
+						}*/
 						
 						//---------------------------------------------------------------
 						
@@ -1565,6 +1572,38 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				srv.setCobrar(true);
 			}
 		}
+	}
+	
+	public void recalcularTotalesCobro()
+	{
+		totalAcobrar=0f;
+		descuentoCobro=0f;
+		
+		for(ItemRequisicionEta item: requisicionesCobro)
+		{
+			if(item.isCobrar() && (item.getGenerado()==null || !item.getGenerado().equals("GEN")))
+			{
+				totalAcobrar+=item.getProducto().getPrcNormal()*item.getCantidad();
+			}
+			else if(!item.isCobrar() && (item.getGenerado()==null || !item.getGenerado().equals("GEN")))
+			{
+				descuentoCobro+=item.getProducto().getPrcNormal()*item.getCantidad();
+			}
+		}
+		
+		
+		for(ServicioReparacion srv: getServiciosRep())
+		{
+			if(srv.isCobrar() && (srv.getGenerado()==null || !srv.getGenerado().equals("GEN")))
+			{
+				totalAcobrar+=srv.getServicio().getCosto().floatValue();
+			}
+			else if(!srv.isCobrar() && (srv.getGenerado()==null || !srv.getGenerado().equals("GEN")))
+			{
+				descuentoCobro+=srv.getServicio().getCosto().floatValue();
+			}
+		}
+		
 	}
 	
 	
@@ -1809,6 +1848,22 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 
 	public void setRequisicionesCobro(List<ItemRequisicionEta> requisicionesCobro) {
 		this.requisicionesCobro = requisicionesCobro;
+	}
+
+	public Float getTotalAcobrar() {
+		return totalAcobrar;
+	}
+
+	public void setTotalAcobrar(Float totalAcobrar) {
+		this.totalAcobrar = totalAcobrar;
+	}
+
+	public Float getDescuentoCobro() {
+		return descuentoCobro;
+	}
+
+	public void setDescuentoCobro(Float descuentoCobro) {
+		this.descuentoCobro = descuentoCobro;
 	}
 
 	

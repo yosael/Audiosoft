@@ -765,7 +765,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			System.out.println("Entro a diferente de NAP");
 			
 			//Validar si se ingreso al menos un servicio o descripcion adicional(componente defectuoso, defecto de capsula)
-			if(instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) && instance.getEstado().equals("PEN"))
+			if(instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) || instance.getEtapaRep().getId().equals((58)) && instance.getEstado().equals("PEN"))
 			{
 				// && reparacionClienteHome.getSelDefectosCap().isEmpty() && reparacionClienteHome.getSelComponentesDef().isEmpty()
 				if(reparacionClienteHome.getServiciosRep().isEmpty())

@@ -21,7 +21,6 @@
 		
 	</ui:define>
 		<rich:panel style="padding:1px;font-size:14px;">
-				<f:facet name="header">#{app.diagnostic_head_diag}</f:facet>
 				<s:div rendered="#{generalMedicalDAO.managed}">
 					<h:outputText
 						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"

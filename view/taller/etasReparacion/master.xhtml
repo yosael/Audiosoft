@@ -25,22 +25,28 @@
 					<legend>#{app.etarepcli_legend}</legend> 
 					<table style="">
 						<tr>
-							<td><s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionClienteHome.managed}" >
-								<ui:define name="label">#{app.repcli_id}:</ui:define>
-								<h:inputText value="#{reparacionClienteHome.instance.proceso.prcCode}#{reparacionClienteHome.instance.id}" disabled="true">
-									<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
-								</h:inputText>
-							</s:decorate></td>
-							<td><s:decorate template="/layout/kEditSpace.xhtml" >
-								<ui:define name="label">#{app.etarepcli_proceso}:</ui:define>
-								<h:inputText value="#{etapaRepCliHome.instance.etapaRep.procesoTll.nombre}" readonly="true" >
-								</h:inputText>
-							</s:decorate></td>
-							<td><s:decorate template="/layout/kEditSpace.xhtml" >
-								<ui:define name="label">#{app.etarepcli_etapa}:</ui:define>
-								<h:inputText value="#{etapaRepCliHome.instance.etapaRep.nombre}" readonly="true" >
-								</h:inputText>
-							</s:decorate></td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionClienteHome.managed}" >
+									<ui:define name="label">#{app.repcli_id}:</ui:define>
+									<h:inputText value="#{reparacionClienteHome.instance.proceso.prcCode}#{reparacionClienteHome.instance.id}" disabled="true">
+										<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
+									</h:inputText>
+								</s:decorate>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">#{app.etarepcli_proceso}:</ui:define>
+									<h:inputText value="#{etapaRepCliHome.instance.etapaRep.procesoTll.nombre}" readonly="true" >
+									</h:inputText>
+								</s:decorate>
+							</td>
+							<td>
+								<s:decorate template="/layout/kEditSpace.xhtml" >
+									<ui:define name="label">#{app.etarepcli_etapa}:</ui:define>
+									<h:inputText value="#{etapaRepCliHome.instance.etapaRep.nombre}" readonly="true" >
+									</h:inputText>
+								</s:decorate>
+							</td>
 						</tr>
 						<tr>
 							
@@ -453,7 +459,7 @@
 						</s:decorate>
 					</td>
 					<td>
-						<s:decorate template="/layout/kActions.xhtml" rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53) and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}">
+						<s:decorate template="/layout/kActions.xhtml" rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53 || etapaRepCliHome.instance.etapaRep.id==58) and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}">
 							<a:commandButton onclick="#{rich:component('servTll')}.show();" ajaxSingle="true"  
 								action="#{serviceDAO.loadServiciosList('TLL')}" reRender="srtll" 
 								styleClass="addBtn" value="#{app.button_add_svtll}" >  
@@ -461,8 +467,8 @@
 						</s:decorate>
 					</td>
 				</tr><!--  --><!-- rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42 || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad'  and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}"  value="#{etapaRepCliHome.instance.requisicionesEtapa}" -->
-				<tr><td style="width:60%;"><!--  -->
-				<rich:dataTable var="res" id="tblRequisiciones"  rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}" value="#{etapaRepCliHome.instance.requisicionesEtapa}"
+				<tr><td style="width:60%;"><!-- rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa}" -->
+				<rich:dataTable var="res" id="tblRequisiciones" rendered="#{not empty etapaRepCliHome.instance.requisicionesEtapa and (etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)  and etapaRepCliHome.instance.etapaRep.aceptaReqs and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}"   value="#{etapaRepCliHome.instance.requisicionesEtapa}"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.etarepcli_requi}</f:facet>
@@ -505,10 +511,10 @@
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>
 				</rich:dataTable>
-				</td>
-				<td>
+				</td><!-- rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42   and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}" -->
+				<td><!-- || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad' -->
 					<rich:dataTable var="res" value="#{reparacionClienteHome.serviciosRep}"
-						rendered="#{(etapaRepCliHome.instance.etapaRep.orden==2 || etapaRepCliHome.instance.etapaRep.orden==1 || etapaRepCliHome.instance.etapaRep.id==102 || etapaRepCliHome.instance.etapaRep.id==42 || etapaRepCliHome.instance.etapaRep.nombre=='Pendiente de entrega' || etapaRepCliHome.instance.etapaRep.nombre=='Control de Calidad'  and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso') and (not empty reparacionClienteHome.serviciosRep)}"
+						rendered="#{not empty reparacionClienteHome.serviciosRep and (etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53 || etapaRepCliHome.instance.etapaRep.id==58) and etapaRepCliHome.instance.etapaRep.nombre!='Ingreso'}"
 						rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  id="_tblSrvs" 
 						headerClass="tablaHeader" footerClass="tableScroll">
 						<f:facet name="header">#{app.etarepcli_costossrv}</f:facet>
@@ -523,7 +529,7 @@
 									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
 							</h:outputText>
 						</rich:column>
-						<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53)}">
+						<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53 || etapaRepCliHome.instance.etapaRep.id==58)}">
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" rendered="#{res.estado==null or res.estado!='CBR'}" 
 								action="#{reparacionClienteHome.delServicioRep(res)}" ajaxSingle="true" reRender="formreparacioncli" ><!-- reRender="_tblSrvs" -->
@@ -756,16 +762,18 @@
 								</tr>
 								<tr>
 									<td>
-										<h:outputText style="font-weight:bold;font-size:18px;text-align:center;" value="TIENE GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true}" />
-										<h:outputText style="font-weight:bold;font-size:18px;text-align:center;" value="SIN GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==false and reparacionClienteHome.garRepVigente==false}" />	
+										<div align="center" >
+											<h:outputText style="font-weight:bold;font-size:18px;text-align:center;color:green;" value="TIENE GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==true or reparacionClienteHome.garRepVigente==true}" />
+											<h:outputText style="font-weight:bold;font-size:18px;text-align:center;color:red;" value="SIN GARANTIA" rendered="#{reparacionClienteHome.garVtaVigente==false and reparacionClienteHome.garRepVigente==false}" />
+										</div>		
 									</td>
 								</tr>
 								<tr>
-									<td><rich:spacer height="10" ></rich:spacer></td>
+									<td><rich:spacer height="10"  ></rich:spacer></td>
 								</tr>
 								<tr>
 									<td colspan="2">
-										<h:outputText value="Cobro de requisiciones" style="font-weight:bold;font-size:12px;text-align:center;" />
+										<h:outputText value="COBRO DE REQUISICIONES" style="font-weight:bold;font-size:12px;text-align:center;" rendered="#{not empty reparacionClienteHome.requisicionesCobro}" />
 									</td>
 								</tr>
 								<tr>
@@ -786,20 +794,19 @@
 											<rich:column >
 												<f:facet name="header">Cobrar</f:facet>
 												<h:selectBooleanCheckbox value="#{res.cobrar}" eventsQueue="q1" rendered="#{res.generado==null || res.generado!='GEN'}" >
-													<a:support event="onclick" reRender="_tableRequiCobro" ajaxSingle="true" ></a:support>
+													<a:support event="onclick" action="#{reparacionClienteHome.recalcularTotalesCobro()}" reRender="fm45" ajaxSingle="true" ></a:support>
 												</h:selectBooleanCheckbox>
 												<h:outputText value="Incluye el combo" rendered="#{res.generado!=null || res.generado=='GEN'}" />
 											</rich:column>
 										</rich:dataTable>
-										<h:outputText value="Sin requisiciones" rendered="#{empty reparacionClienteHome.requisicionesCobro}" />
 									</td>
 								</tr>
 								<tr>
-									<td><rich:spacer height="10" ></rich:spacer></td>
+									<td><rich:spacer height="10" rendered="#{not empty reparacionClienteHome.requisicionesCobro}" ></rich:spacer></td>
 								</tr>
 								<tr>
 									<td colspan="2">
-										<h:outputText value="Cobro de servicios" style="font-weight:bold;font-size:12px;text-align:center;" />
+										<h:outputText value="COBRO DE SERVICIOS" style="font-weight:bold;font-size:12px;text-align:center;" rendered="#{not empty reparacionClienteHome.serviciosRep}" />
 									</td>
 								</tr>
 								<tr>
@@ -818,12 +825,19 @@
 											<rich:column >
 												<f:facet name="header">Cobrar</f:facet>
 												<h:selectBooleanCheckbox value="#{res.cobrar}" eventsQueue="q1" rendered="#{res.generado==null || res.generado!='GEN'}" >
-													<a:support event="onclick" reRender="_tableServCobro" ajaxSingle="true" ></a:support>
+													<a:support event="onclick" reRender="fm45" action="#{reparacionClienteHome.recalcularTotalesCobro()}" ajaxSingle="true" ></a:support>
 												</h:selectBooleanCheckbox>
 												<h:outputText value="Incluye el combo" rendered="#{res.generado!=null || res.generado=='GEN'}" />
 											</rich:column>
 										</rich:dataTable>
 									</td>
+								</tr>
+								<tr>
+									<td><rich:spacer height="10" ></rich:spacer></td>
+								</tr>
+								<tr>
+									<td><h:outputText value="TOTAL A COBRAR: #{reparacionClienteHome.totalAcobrar}" /></td>
+									<td><h:outputText value="DESCUENTO: #{reparacionClienteHome.descuentoCobro}" /> </td>
 								</tr>
 								<tr>
 									<td><rich:spacer height="10" ></rich:spacer></td>

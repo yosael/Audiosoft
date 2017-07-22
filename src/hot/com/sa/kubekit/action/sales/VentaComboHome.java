@@ -5855,14 +5855,21 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			
 			/*if(!tipo)
 			{*/
-			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
-				lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			
+			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId())!=null)
+			{
+				if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+					lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			}
 			/*}
 			else
 			{*/
 			
-			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
-				lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId())!=null)
+			{
+				if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+					lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			}
 			//}
 			
 			calcularPrecios();

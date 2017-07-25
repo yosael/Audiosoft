@@ -214,11 +214,14 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				formaPagoSelected=cotizacion.getFormaPago();
 				incluyeIva=cotizacion.isIncluyeIva();
 				
+				//nuevo agregado el 24/07/2017
+				listFormasPago = getEntityManager().createQuery("SELECT d FROM TasaTarjetaCred d ORDER BY d.porcentaje DESC ").getResultList();
+				
 				System.out.println("FORMA PAGO SELECCIONADA LOAD "+formaPagoSelected.getNombre());
 				System.out.println("INCLUYE IVA LOAD: "+incluyeIva);
 				
 				System.out.println("tmpCotiz: "+ tmpCotiz.getDetalleAparato());
-				System.out.println("instance: "+ instance.getDetalle() );
+				System.out.println("instance: "+ instance.getDetalle());
 				aparatoClienteHome.getInstance().setRetroAuricular(
 						tmpCotiz.isRetroAuricular());
 				aparatoClienteHome.getInstance().setLadoAparato(
@@ -899,6 +902,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	}
 
 	public void fillComboList(ComboAparato combo) {
+		
 		System.out.println("Entre a fillComboList SIZE " + selCmbsList.size());
 		if (selCmbsList.size() >= 3) {
 			FacesMessages.instance().add(Severity.WARN,sainv_messages.get("vtaitm_addcmblimit"));
@@ -912,7 +916,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				}
 			}
 			
-			/*
+			
 			ComboAparato comboAdd = new ComboAparato(); // nuevo
 			comboAdd.setId(combo.getId());
 			comboAdd.setCodigo(combo.getCodigo());
@@ -921,18 +925,36 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			comboAdd.setEmpresa(combo.getEmpresa()!=null?combo.getEmpresa():null);
 			comboAdd.setEstado(combo.getEstado());
 			comboAdd.setPeriodoGarantia(combo.getPeriodoGarantia()!=null?combo.getPeriodoGarantia():null);
-			comboAdd.setCostosCombo(combo.getCostosCombo()!=null?combo.getCostosCombo():null);
 			comboAdd.setItemsCombo(combo.getItemsCombo()!=null?combo.getItemsCombo():null);
 			comboAdd.setAdaptaciones(combo.getAdaptaciones()!=null?combo.getAdaptaciones():null);
-			comboAdd.setNumCombo(contadorCombo);*/
+			comboAdd.setNumCombo(contadorCombo);
+			
+			//nuevo. Para hacer referencia a otra direccion en memoria. Y evitar duplicidad en el combo binaural
+			comboAdd.setCostosCombo(new ArrayList<CostoServicio>());
+			for(CostoServicio ct:combo.getCostosCombo())
+			{
+				comboAdd.getCostosCombo().add(ct);
+			}
 			
 			
-			combo.setItemsCotizados(new ArrayList<ItemComboApa>());
-			combo.setItemsCotizados(combo.getItemsCombo()); // nuevo
+			//combo.setItemsCotizados(new ArrayList<ItemComboApa>());
+			//combo.setItemsCotizados(combo.getItemsCombo()); // nuevo
+			comboAdd.setItemsCotizados(new ArrayList<ItemComboApa>());
 			
-			asignarItemsCategoriaCombo(combo);
+			for(ItemComboApa item:combo.getItemsCombo())
+			{
+				comboAdd.getItemsCotizados().add(item);
+			}
 			
-			selCmbsList.add(combo);
+			//asignarItemsCategoriaCombo(combo);
+			asignarItemsCategoriaCombo(comboAdd);
+			
+			//selCmbsList.add(combo);
+			selCmbsList.add(comboAdd);
+			
+			
+
+			
 			FacesMessages.instance().add(Severity.INFO,
 					sainv_messages.get("vtaitm_addcmbok"));
 			
@@ -976,7 +998,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				}
 			}
 			
-		/*	ComboAparato comboAdd = new ComboAparato(); // nuevo
+			ComboAparato comboAdd = new ComboAparato(); // nuevo
 			comboAdd.setId(combo.getId());
 			comboAdd.setCodigo(combo.getCodigo());
 			comboAdd.setNombre(combo.getNombre());
@@ -984,17 +1006,40 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			comboAdd.setEmpresa(combo.getEmpresa()!=null?combo.getEmpresa():null);
 			comboAdd.setEstado(combo.getEstado());
 			comboAdd.setPeriodoGarantia(combo.getPeriodoGarantia()!=null?combo.getPeriodoGarantia():null);
-			comboAdd.setCostosCombo(combo.getCostosCombo()!=null?combo.getCostosCombo():null);
 			comboAdd.setItemsCombo(combo.getItemsCombo()!=null?combo.getItemsCombo():null);
 			comboAdd.setAdaptaciones(combo.getAdaptaciones()!=null?combo.getAdaptaciones():null);
-			comboAdd.setNumCombo(contadorCombo);*/
+			comboAdd.setNumCombo(contadorCombo);
 			
-			combo.setItemsCotizados(new ArrayList<ItemComboApa>());
-			combo.setItemsCotizados(combo.getItemsCombo()); // nuevo
+			//nuevo
+			comboAdd.setCostosCombo(new ArrayList<CostoServicio>());
+			for(CostoServicio ct:combo.getCostosCombo())
+			{
+				comboAdd.getCostosCombo().add(ct);
+			}
 			
-			asignarItemsCategoriaCombo(combo);
+			//combo.setItemsCotizados(new ArrayList<ItemComboApa>());
+			//combo.setItemsCotizados(combo.getItemsCombo()); // nuevo
 			
-			selCmbsListBin.add(combo);
+			comboAdd.setItemsCotizados(new ArrayList<ItemComboApa>());
+			for(ItemComboApa item: combo.getItemsCombo())
+			{
+				comboAdd.getItemsCotizados().add(item);
+			}
+			
+			//asignarItemsCategoriaCombo(combo);
+			asignarItemsCategoriaCombo(comboAdd);
+			
+			//selCmbsListBin.add(combo);
+			selCmbsListBin.add(comboAdd);
+			
+			//nuevo agregado el 24/07/2017
+			/*if(lsAdaptacionesPorComboSel.get(combo.getId())!=null && lsAdaptacionesPorComboSel.get(combo.getId()).size()>0)
+			{
+				//lsAdaptacionesPorComboBinSel.get(combo.getId()).add((ComboAparatoAdaptacion) lsAdaptacionesPorComboSel.get(combo.getId()));
+				lsAdaptacionesPorComboBinSel.put(combo.getId(),new ArrayList<ComboAparatoAdaptacion>());
+				lsAdaptacionesPorComboBinSel.put(combo.getId(), lsAdaptacionesPorComboSel.get(combo.getId()));
+			}*/
+			
 			FacesMessages.instance().add(Severity.INFO,
 					sainv_messages.get("vtaitm_addcmbok"));
 			
@@ -1433,6 +1478,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							//}
 								
 							cotizacion.setEstado("PRE");
+							cotizacion.setFormaPago(formaPagoSelected);//nuevo el 24/07/2017
+							cotizacion.setIncluyeIva(incluyeIva);// nuevo el 24/07/2017
 							getEntityManager().merge(cotizacion);
 							getEntityManager().flush();
 						
@@ -1636,6 +1683,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							//}
 								
 							cotizacion.getHijoBin().get(0).setEstado("PRE");
+							cotizacion.getHijoBin().get(0).setFormaPago(formaPagoSelected);// nuevo el 24/07/2017
+							cotizacion.getHijoBin().get(0).setIncluyeIva(incluyeIva);// nuevo el 24/07/2017
 							getEntityManager().merge(cotizacion.getHijoBin().get(0));
 							getEntityManager().flush();
 						
@@ -2270,6 +2319,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			return false;
 		}
 		
+		
+		
 		instance.setSucursal(loginUser.getUser().getSucursal());
 		List<CotizacionComboItem> itemsCotizacion = new ArrayList<CotizacionComboItem>();
 		// Guardamos la cotizacion y su detalle
@@ -2288,6 +2339,16 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					sainv_messages.get("vtaitm_error_saveb"));
 			return false;
 		}
+		
+		// nueva validacion 24/07/2017
+		if(!verificarAdaptacionesCombo())
+			return false;
+		
+		if(isBinaural() && !verificarAdaptacionesComboBin())
+			return false;
+		
+		
+		
 
 		CotizacionComboApa cot = genCotizacionApa(false, null);
 
@@ -2313,7 +2374,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				ctcmit.setItem(itm);
 				ctcmit.setCtCmbs(tmpCtCmbs);
 				ctcmit.setTipoPrecio(itm.getTipoPrecio());
-				if (itm != null) {
+				if (itm != null) 
+				{
 					if (itm.getProducto()!=null && itm.getTipoPrecio().equals("NRM"))
 						ctcmit.setPrecioCotizado(itm.getProducto().getPrcNormal()*itm.getCantidad());
 					else if (itm.getProducto()!=null && itm.getTipoPrecio().equals("MIN"))
@@ -2468,6 +2530,41 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		FacesMessages.instance().clear();
 		FacesMessages.instance().add(
 				sainv_messages.get("vtaitm_succ_cotizexit"));
+		return true;
+	}
+	
+	
+	public boolean verificarAdaptacionesCombo()
+	{
+		for(ComboAparato cmb: selCmbsList)
+		{
+			if(cmb.getAdaptaciones().size()>0)
+			{
+				if(lsAdaptacionesPorComboSel.get(cmb.getId())==null || lsAdaptacionesPorComboSel.get(cmb.getId()).size()<=0)
+				{
+					FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo");
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean verificarAdaptacionesComboBin()
+	{
+		for(ComboAparato cmb: selCmbsListBin)
+		{
+			if(cmb.getAdaptaciones().size()>0)
+			{
+				if(lsAdaptacionesPorComboBinSel.get(cmb.getId())==null || lsAdaptacionesPorComboBinSel.get(cmb.getId()).size()<=0)
+				{
+					FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural");
+					return false;
+				}
+			}
+		}
+		
 		return true;
 	}
 
@@ -3844,6 +3941,9 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		cotizacion.setEstado("COT"); 
 		cotizacion.setFechaCredito(new Date());	
 		cotizacion.setFechaVenta(new Date());
+		cotizacion.setFormaPago(formaPagoSelected);// nuevo el 24/07/2017
+		cotizacion.setIncluyeIva(incluyeIva);// nuevo el 24/07/2017
+		
 										// estado cotizado usado para cotizaciones
 										// a las que se les ha generado
 										// una cuenta por cobrar pero no se ha
@@ -4261,6 +4361,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							}
 								
 					cotizacion.getHijoBin().get(0).setEstado("COT");
+					cotizacion.getHijoBin().get(0).setFormaPago(formaPagoSelected);//nuevo el 24/07/2017
+					cotizacion.getHijoBin().get(0).setIncluyeIva(incluyeIva);// nuevo el 24/07/2017
 					
 					/*CotizacionComboApa cotiBin=(CotizacionComboApa) getEntityManager().createQuery("Select c From CotizacionComboApa c where c.id=:idCotiBin")
 							.setParameter("idCotiBin", getCotizId()+1).getSingleResult();
@@ -5604,6 +5706,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			// cambiamos su estado
 			if (cotizacion != null) {
 				cotizacion.setEstado("APL");
+				cotizacion.setFormaPago(formaPagoSelected);// nuevo el 24/07/2017
+				cotizacion.setIncluyeIva(incluyeIva);//nuevo el 24/07/2017
 				cotizacion.setIdVta(instance);
 				cotizacion.setFechaVenta(new Date());
 				getEntityManager().merge(cotizacion);
@@ -5611,6 +5715,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 						&& cotizacion.getHijoBin().size() > 0) {
 					CotizacionComboApa tmpCot = cotizacion.getHijoBin().get(0);
 					tmpCot.setEstado("APL");
+					tmpCot.setFormaPago(formaPagoSelected);// nuevo 24/07/2017
+					tmpCot.setIncluyeIva(incluyeIva);// nuevo 24/07/2017
 					tmpCot.setFechaVenta(new Date());
 					tmpCot.setIdVta(instance);
 					getEntityManager().merge(tmpCot);
@@ -5651,6 +5757,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				itemCombo.setGeneraRequisicion(itemAdap.isGeneraRequisicion());
 				itemCombo.setCantidad(Short.valueOf("1"));
 				itemCombo.setSelCategoria("si");
+				itemCombo.setNombreAdaptacion(itemAdap.getAdaptacion().getNombre());
 				
 				comboAdaptacionSel.getItemsCotizados().add(itemCombo);
 			}
@@ -5663,6 +5770,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				itemCombo.setGeneraRequisicion(itemAdap.isGeneraRequisicion());
 				itemCombo.setCantidad(Short.valueOf("1"));
 				itemCombo.setSelCategoria("no");
+				itemCombo.setNombreAdaptacion(itemAdap.getAdaptacion().getNombre());
 				
 				comboAdaptacionSel.getItemsCotizados().add(itemCombo);
 			}
@@ -5742,7 +5850,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).add(adaptacion);
 		
 		//nuevo
-		if(selCmbsListBin.size()>0 && selCmbsListBin.contains(comboAdaptacionSel))
+		/*if(selCmbsListBin.size()>0 && selCmbsListBin.contains(comboAdaptacionSel))
 		{
 			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId())==null)
 			{
@@ -5750,7 +5858,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			}
 			
 			lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).add(adaptacion);
-		}
+		}*/
 			
 		
 		FacesMessages.instance().add(Severity.INFO,"Se agrego la adaptacion");
@@ -5772,7 +5880,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).add(adaptacion);
 		
 		//nuevo
-		if(selCmbsList.size()>0 && selCmbsList.contains(comboAdaptacionSel))
+		/*if(selCmbsList.size()>0 && selCmbsList.contains(comboAdaptacionSel))
 		{
 			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId())==null)
 			{
@@ -5780,7 +5888,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			}
 			
 			lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).add(adaptacion);
-		}
+		}*/
 		
 		
 		FacesMessages.instance().add(Severity.INFO,"Se agrego la adaptacion");
@@ -5853,24 +5961,24 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 							
 			}
 			
-			/*if(!tipo)
-			{*/
-			
-			if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId())!=null)
+			if(!tipo)
 			{
-				if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
-					lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			
+				/*if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId())!=null)
+				{*/
+					if(lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+						lsAdaptacionesPorComboSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+				//}
 			}
-			/*}
 			else
-			{*/
-			
-			if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId())!=null)
 			{
-				if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
-					lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+			
+				/*if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId())!=null)
+				{*/
+					if(lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).contains(adaptacionCmb))
+						lsAdaptacionesPorComboBinSel.get(comboAdaptacionSel.getId()).remove(adaptacionCmb);
+				//}
 			}
-			//}
 			
 			calcularPrecios();
 			
@@ -5915,6 +6023,18 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	
+	//nuevo 24/07/2017
+	public String verificarColorFila(ItemComboApa item)
+	{
+		String colorFila=""; 
+		
+		if(item.getNombreAdaptacion()!=null)
+			colorFila="hsla(118, 72%, 60%, 0.57)";
+		
+		return colorFila;
 	}
 
 	@Override
@@ -6412,6 +6532,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			Map<Integer, List<ComboAparatoAdaptacion>> lsAdaptacionesPorComboBinSel) {
 		this.lsAdaptacionesPorComboBinSel = lsAdaptacionesPorComboBinSel;
 	}
+
+	
 
 	
 	

@@ -208,21 +208,21 @@
 										<td style="width: 40%;" >
 											<h:panelGrid columns="2" >
 												<s:decorate template="/layout/kEditSpace.xhtml"
-													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }" >
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null or ventaComboHome.cotizacion.estado=='PEN'}" >
 													<ui:define name="label">Precios con iva: </ui:define>
-													<h:selectBooleanCheckbox value="#{ventaComboHome.incluyeIva}" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null }"  >
+													<h:selectBooleanCheckbox value="#{ventaComboHome.incluyeIva}" rendered="#{not empty ventaComboHome.selCmbsList and (ventaComboHome.cotizacion==null or ventaComboHome.cotizacion.estado=='PEN') }"  >
 														<a:support event="onclick" action="#{ventaComboHome.aplicarIva()}" reRender="formapacli" ></a:support>
 													</h:selectBooleanCheckbox> 
 												</s:decorate>
 												<s:decorate template="/layout/kEditSpace.xhtml"
-													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null }" >
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null and ventaComboHome.cotizacion.estado!='PEN' }" >
 													<ui:define name="label">Precios incluyen iva: </ui:define>
 													<h:outputText value="Iva incluido" rendered="#{ventaComboHome.cotizacion.incluyeIva}" />
 													<h:outputText value="No Incluye iva" rendered="#{not ventaComboHome.cotizacion.incluyeIva}" />
 												</s:decorate>
 												
 												<s:decorate template="/layout/kEditSpace.xhtml"
-													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion==null and ventaComboHome.incluyeIva}"  >
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and (ventaComboHome.cotizacion==null or ventaComboHome.cotizacion.estado=='PEN') and ventaComboHome.incluyeIva}"  >
 													<ui:define name="label">Forma de pago: </ui:define>
 													<h:selectOneMenu value="#{ventaComboHome.formaPagoSelected}" id="slcFormaPago"   >
 														<s:selectItems value="#{ventaComboHome.listFormasPago}"  var="_fPago" label="#{_fPago.nombre}" ></s:selectItems>
@@ -231,7 +231,7 @@
 													</h:selectOneMenu>		
 												</s:decorate>
 												<s:decorate template="/layout/kEditSpace.xhtml"
-													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null}"  >
+													style="width:180px;" rendered="#{not empty ventaComboHome.selCmbsList and ventaComboHome.cotizacion!=null and ventaComboHome.cotizacion.estado!='PEN'}"  >
 													<ui:define name="label">Forma de pago: </ui:define>
 													<h:outputText value="#{ventaComboHome.cotizacion.formaPago.nombre}" />
 												</s:decorate>
@@ -306,8 +306,13 @@
 														onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 														headerClass="tablaHeader" footerClass="tableScroll">
 														<f:facet name="header">#{app.combapa_listitems}</f:facet>
-
-														<rich:column>
+														
+														<rich:column style="background:#{ventaComboHome.verificarColorFila(res)}" >
+															<f:facet name="header">Adaptacion</f:facet>
+															<h:outputText value="#{res.nombreAdaptacion}" rendered="#{not res.principal and res.nombreAdaptacion!=null}" />
+															<h:outputText value="---" rendered="#{res.principal or res.nombreAdaptacion==null}" />
+														</rich:column>			
+														<rich:column  >
 															<f:facet name="header">#{app.productomast_category}</f:facet>
 															<h:outputText value="#{res.categoria.nombre}" />
 														</rich:column>
@@ -420,7 +425,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion==null)}"
+																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion==null or res.principal)}"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
@@ -981,12 +986,18 @@
 														onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
 														headerClass="tablaHeader" footerClass="tableScroll">
 														<f:facet name="header">#{app.combapa_listitems}</f:facet>
-
-														<rich:column>
+														
+														<rich:column style="background:#{ventaComboHome.verificarColorFila(res)}" >
+															<f:facet name="header">Adaptacion</f:facet>
+														<h:outputText value="#{res.nombreAdaptacion}" rendered="#{not res.principal and res.nombreAdaptacion!=null}" />
+															<h:outputText value="---" rendered="#{res.principal or res.nombreAdaptacion==null}" />
+														</rich:column>	
+																			
+														<rich:column  >
 															<f:facet name="header">#{app.productomast_category}</f:facet>
 															<h:outputText value="#{res.categoria.nombre}" />
 														</rich:column>
-														<rich:column>
+														<rich:column width="150px" >
 															<f:facet name="header">#{app.productomast_name}</f:facet>
 															<h:outputText value="#{res.producto.nombre}"
 																rendered="#{res.producto!=null}" />
@@ -1035,7 +1046,7 @@
 																	action="#{ventaComboHome.recalcularTotalVenta()}" />
 															</h:selectOneMenu>
 														</rich:column>
-														<rich:column>
+														<rich:column width="30px" >
 															<f:facet name="header">#{app.combapa_apaprpal}</f:facet>
 															<center>
 																<h:selectBooleanCheckbox value="#{res.principal}"
@@ -1053,7 +1064,7 @@
 														</rich:column>
 														-->
 														
-														<rich:column style="width:140px;">
+														<rich:column style="width:30px;">
 															<f:facet name="header">#{app.producto_codlot}</f:facet>
 															<h:outputText value="#{ventaComboHome.codCombo2.numLote}"
 																size="20"
@@ -1071,7 +1082,7 @@
 																rendered="#{res.producto.categoria.tieneNumSerie==false}" />
 														</rich:column> -->
 														
-														<rich:column style="width:140px;">
+														<rich:column style="width:30px;">
 															<f:facet name="header">#{app.producto_codser}</f:facet>
 															<h:outputText value="#{ventaComboHome.codCombo2.numSerie}"
 																size="20"
@@ -1084,7 +1095,7 @@
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<!-- rendered="#{res.producto==null}" -->
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion.getHijoBin().get(0)==null)}"
+																rendered="#{res.selCategoria!=null and res.selCategoria=='si' and (ventaComboHome.cotizacion.getHijoBin().get(0)==null or res.principal)}"
 																reRender="itm" 
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"

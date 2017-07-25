@@ -51,6 +51,9 @@ public class ItemComboApa implements Serializable {
 	
 	private String selCategoria;
 	
+	// nuevo el 24/07/2017
+	private String nombreAdaptacion;
+	
 	
 	
 	@Id
@@ -213,6 +216,14 @@ public class ItemComboApa implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@Column(name="nombre_adaptacion",length=50,nullable=true)
+	public String getNombreAdaptacion() {
+		return nombreAdaptacion;
+	}
+	public void setNombreAdaptacion(String nombreAdaptacion) {
+		this.nombreAdaptacion = nombreAdaptacion;
 	}
 	
 	

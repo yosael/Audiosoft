@@ -1182,6 +1182,13 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			System.out.println("Fecha ingresada: "+instance.getFechaNacimiento());
 		}*/
 		
+		// nuevo agregado el 24/07/2017
+		if(clienteExiste())
+		{
+			FacesMessages.instance().add(Severity.WARN,"El paciente ya esta registrado en el sistema");
+			return false;
+		}
+		
 		
 		instance.setFechaCreacion(new Date());
 		if(instance.getMedioReferido() != null && 
@@ -1193,6 +1200,52 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		return true;
 	}
 	
+	//nuevo el 24/07/2017
+	public boolean clienteExiste()
+	{
+		if(instance.getDocId()!=null)
+		{
+			List<Cliente> cliente = new ArrayList<Cliente>();
+			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.docId))=:doc")
+					.setParameter("doc", instance.getDocId().trim().toUpperCase())
+					.getResultList();
+			
+			if(cliente.size()>0)
+			{
+				return true;
+			}
+		}
+		else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getFechaNacimiento()!=null)
+		{
+			List<Cliente> cliente = new ArrayList<Cliente>();
+			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and c.fechaNacimiento=:fecha")
+					.setParameter("nombres", instance.getNombres().trim().toUpperCase())
+					.setParameter("apellidos", instance.getApellidos().trim().toUpperCase())
+					.setParameter("fecha", instance.getFechaNacimiento())
+					.getResultList();
+			
+			if(cliente.size()>0)
+			{
+				return true;
+			}
+		}
+		else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getTelefono1()!=null)
+		{
+			List<Cliente> cliente = new ArrayList<Cliente>();
+			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and UPPER(TRIM(c.telefono1))=:telefono")
+					.setParameter("nombres", instance.getNombres().trim().toUpperCase())
+					.setParameter("apellidos", instance.getApellidos().trim().toUpperCase())
+					.setParameter("telefono", instance.getTelefono1().trim().toUpperCase())
+					.getResultList();
+			
+			if(cliente.size()>0)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public boolean guardarDesdeCrm()
 	{

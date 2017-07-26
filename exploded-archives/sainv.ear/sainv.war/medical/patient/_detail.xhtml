@@ -239,6 +239,88 @@
 				</rich:dataTable>
 			</h:form>
 		</rich:tab>
+		<rich:tab name="tab12" label="Cotizaciones"
+			disabled="#{empty clienteHome.cotizacionesCliente}">
+			<h:form id="formCot">
+			
+				<!-- 
+				<h:panelGrid columns="5">
+				
+					<rich:calendar value="#{clienteHome.fechaVtasUs1}" datePattern="dd/MM/yyyy" style="width:60px;" >
+						<a:support event="onchanged" reRender="tblCotizaciones" action="#{clienteHome.buscarRangoCotizaciones()}" ajaxSingle="true" eventsQueue="q1" />
+					</rich:calendar>
+					
+					<rich:calendar value="#{clienteHome.fechaVtasUs2}" datePattern="dd/MM/yyyy"   style="width:60px;" >
+						<a:support event="onchanged" reRender="tblCotizaciones" action="#{clienteHome.buscarRangoCotizaciones()}" ajaxSingle="true" eventsQueue="q1" /> 
+					</rich:calendar>
+					 
+				</h:panelGrid>
+				 -->
+				
+				<rich:dataTable var="res" value="#{clienteHome.cotizacionesCliente}" 
+					rows="10" align="center" rowClasses="tblEven,tblOdd"
+					onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+					onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+					headerClass="tablaHeader" footerClass="tableScroll"
+					id="tblCotizaciones" >
+					<!-- <f:facet name="header">#{app.cotizcmb_list}</f:facet>-->
+					<rich:column filterBy="#{res.id}" filterEvent="onkeyup" width="10%"> 
+						<f:facet name="header">Num. cotizacion</f:facet>
+						<h:outputText value="#{'COT'}#{res.id}" />
+					</rich:column>
+					<rich:column width="10%">
+						<f:facet name="header">#{app.cotapa_fecha}</f:facet>
+						<h:outputText value="#{res.fechaIngreso}">
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="10%" style="background-color:#{ventaComboHome.verificarColorEstado(res.estado)};color:white" >
+					
+						<f:facet name="header">#{app.schedlist_col5}</f:facet>
+						<h:outputText rendered="#{res.estado=='COT'}"
+							value="Cotizado con cuenta por cobrar" />
+						<h:outputText rendered="#{res.estado=='PEN'}"
+							value="Pendiente" />
+						<h:outputText rendered="#{res.estado=='PRE'}"
+						value="Preventa" />
+						<h:outputText rendered="#{res.estado=='TFN'}"
+						value="Trabajo taller finalizado" />
+						<h:outputText rendered="#{res.estado=='APL'}"
+						value="Vendido" />
+						
+					</rich:column>
+					<rich:column width="20%">
+						<f:facet name="header">#{app.vtaitm_sucursal}</f:facet>
+						<h:outputText rendered="#{empty res.sucursal.sucursalSuperior}" value="#{res.sucursal.nombre}">
+						</h:outputText>
+						<h:outputText rendered="#{not empty res.sucursal.sucursalSuperior}" value="#{res.sucursal.sucursalSuperior.nombre}">
+						</h:outputText>
+					</rich:column>
+					<rich:column width="40%">
+						<f:facet name="header">#{app.vtaprs_cliente}</f:facet>
+						<h:outputText
+							value="#{res.cliente.nombres} #{res.cliente.apellidos}" />
+					</rich:column>
+					<rich:column width="20%">
+						<f:facet name="header">#{app.aparcli_earside}</f:facet>
+						<h:outputText value="#{ventaComboHome.obtenerLado(res)}">
+						</h:outputText>
+					</rich:column>
+					<rich:column width="40%">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/vtas/vtaaparato/master.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="isCot" value="#{res.id}" />
+						</s:link>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+				
+			</h:form>
+		</rich:tab>
 		<rich:tab name="tab7" label="Aparatos auditivos"
 			disabled="#{empty clienteHome.instance.aparatosAuditivos}">
 			<h:form id="formJ">

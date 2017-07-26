@@ -32,6 +32,7 @@ import com.sa.model.crm.Pais;
 import com.sa.model.medical.ClinicalHistory;
 import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.medical.MedicalAppointmentService;
+import com.sa.model.sales.CotizacionComboApa;
 import com.sa.model.sales.VentaProdServ;
 import com.sa.model.workshop.AparatoCliente;
 import com.sa.model.workshop.ReparacionCliente;
@@ -81,6 +82,8 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	private List<AparatoCliente> listaAparatosCliente;
 	
 	private String diaEdad,mesEdad,anioEdad;
+	
+	private List<CotizacionComboApa> cotizacionesCliente;
 	
 	
 	@In(required=false, create=true)
@@ -146,6 +149,12 @@ public class ClienteHome extends KubeDAO<Cliente>{
 				medicalAppointmentList.clear();
 				servicesAttended.clear();
 				servicesPending.clear();
+				
+				//nuevo el 25/07/2017
+				cotizacionesCliente = new ArrayList<CotizacionComboApa>();
+				
+				cotizacionesCliente = getEntityManager().createQuery("SELECT c FROM CotizacionComboApa c where c.cotizacionComboBin=null and c.cliente.id=:idCliente order by c.id,c.fechaIngreso ").setParameter("idCliente", instance.getId()).getResultList();
+				
 				clinicalHistoryList.addAll(instance.getHistoriasClinicas());
 				medicalAppointmentList.addAll(instance.getCitasMedicas());
 				for (MedicalAppointment med : medicalAppointmentList) {
@@ -189,6 +198,22 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		System.out.println("Entro al nuevo load");
 		System.out.println("idPais instancia"+instance.getPais().getId());
 		//updateMunicipios();
+	}
+	
+	
+	public void buscarRangoCotizaciones()
+	{
+		System.out.println("Entro a buscar cotizaciones por fecha");
+		
+		if(fechaVtasUs1!=null && fechaVtasUs2!=null)
+		{
+			System.out.println("Entro a la condicion");
+			
+			/*setFechaVtasUs1(truncDate(getFechaVtasUs1(), false));
+			setFechaVtasUs2(truncDate(getFechaVtasUs2(), true));*/
+			
+			cotizacionesCliente = getEntityManager().createQuery("SELECT c FROM CotizacionComboApa c where c.cotizacionComboBin=null and c.cliente.id=:idCliente and c.fechaIngreso>=:fechaInicio and c.fechaIngreso<=:fechaFin order by c.id,c.fechaIngreso ").setParameter("idCliente", instance.getId()).setParameter("fechaInicio", fechaVtasUs1).setParameter("fechaFin", fechaVtasUs2).getResultList();
+		}
 	}
 	
 	public void cargarAparatosCliente(Cliente cliente)
@@ -1205,44 +1230,45 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	{
 		if(instance.getDocId()!=null)
 		{
-			List<Cliente> cliente = new ArrayList<Cliente>();
-			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.docId))=:doc")
+			List<Cliente> clienteLs = new ArrayList<Cliente>();
+			clienteLs = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.docId))=:doc")
 					.setParameter("doc", instance.getDocId().trim().toUpperCase())
 					.getResultList();
 			
-			if(cliente.size()>0)
+			if(clienteLs!=null && clienteLs.size()>0)
 			{
 				return true;
 			}
 		}
-		else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getFechaNacimiento()!=null)
+		else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getFechaNacimiento()!=null && instance.getTelefono1()!=null)
 		{
-			List<Cliente> cliente = new ArrayList<Cliente>();
-			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and c.fechaNacimiento=:fecha")
-					.setParameter("nombres", instance.getNombres().trim().toUpperCase())
-					.setParameter("apellidos", instance.getApellidos().trim().toUpperCase())
-					.setParameter("fecha", instance.getFechaNacimiento())
-					.getResultList();
+			List<Cliente> clienteLs = new ArrayList<Cliente>();
+			clienteLs = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and DATE(c.fechaNacimiento)=DATE(:fecha) and UPPER(TRIM(c.telefono1))=:telefono")
+						.setParameter("nombres", instance.getNombres().trim().toUpperCase())
+						.setParameter("apellidos", instance.getApellidos().trim().toUpperCase())
+						.setParameter("fecha", instance.getFechaNacimiento())
+						.setParameter("telefono", instance.getTelefono1().trim().toUpperCase())
+						.getResultList();
 			
-			if(cliente.size()>0)
+			if(clienteLs!=null && clienteLs.size()>0)
 			{
 				return true;
 			}
 		}
-		else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getTelefono1()!=null)
+		/*else if(instance.getNombres()!=null && instance.getApellidos()!=null && instance.getTelefono1()!=null)
 		{
-			List<Cliente> cliente = new ArrayList<Cliente>();
-			cliente = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and UPPER(TRIM(c.telefono1))=:telefono")
+			List<Cliente> clienteLs = new ArrayList<Cliente>();
+			clienteLs = getEntityManager().createQuery("SELECT c FROM Cliente c where UPPER(TRIM(c.nombres))=:nombres and UPPER(TRIM(c.apellidos))=:apellidos and UPPER(TRIM(c.telefono1))=:telefono")
 					.setParameter("nombres", instance.getNombres().trim().toUpperCase())
 					.setParameter("apellidos", instance.getApellidos().trim().toUpperCase())
 					.setParameter("telefono", instance.getTelefono1().trim().toUpperCase())
 					.getResultList();
 			
-			if(cliente.size()>0)
+			if(clienteLs!=null && clienteLs.size()>0)
 			{
 				return true;
 			}
-		}
+		}*/
 		
 		return false;
 	}
@@ -1838,6 +1864,14 @@ public class ClienteHome extends KubeDAO<Cliente>{
 
 	public void setAnioEdad(String anioEdad) {
 		this.anioEdad = anioEdad;
+	}
+
+	public List<CotizacionComboApa> getCotizacionesCliente() {
+		return cotizacionesCliente;
+	}
+
+	public void setCotizacionesCliente(List<CotizacionComboApa> cotizacionesCliente) {
+		this.cotizacionesCliente = cotizacionesCliente;
 	}
 	
 	

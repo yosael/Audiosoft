@@ -56,7 +56,7 @@
 									<h:panelGroup>
 										<h:outputLabel value="Consulta #: " style="font-weight:bold;" />
 										<h:outputText value="#{medicalAppointmentDAO.instance.id}" />
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>	
 									
 									<h:panelGroup>
@@ -65,13 +65,13 @@
 												value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
 										<h:outputText
 										value="Primera vez" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>	
 									
 									<h:panelGroup>	
 										<h:outputLabel value="Referido por: " style="font-weight:bold;" />
 										<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>
 								</h:panelGrid>
 								<hr />
@@ -99,7 +99,7 @@
 											value="#{clienteHome.instance.fechaNacimiento}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
 										<h:outputText
 											value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>		
 									
 									<h:panelGroup>
@@ -108,7 +108,7 @@
 											value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
 										<h:outputText
 										value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>	
 										
 										
@@ -118,7 +118,7 @@
 												disabled="true" /> -->
 										<h:outputText value="#{clienteHome.instance.telefono1}"/>
 										<h:outputText value=" / #{clienteHome.instance.telefono2}" rendered="#{clienteHome.instance.telefono2!=null}"/>
-										<rich:spacer width="10" height="0" ></rich:spacer>
+										<rich:spacer width="60" height="0" ></rich:spacer>
 									</h:panelGroup>	
 								</h:panelGrid>
 								
@@ -136,7 +136,7 @@
 										disabled="true" rendered="#{clienteHome.instance.depto!=null}" />
 									<h:outputText value=", #{clienteHome.instance.pais.codIso2}"
 									disabled="true" rendered="#{clienteHome.instance.pais!=null}" />
-									<rich:spacer width="10" height="0" ></rich:spacer>
+									<rich:spacer width="60" height="0" ></rich:spacer>
 								</h:panelGroup>		
 									
 								<hr />

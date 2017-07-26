@@ -62,7 +62,7 @@
 					</table>
 				<s:div styleClass="schedCalendar" style="padding-top:0px;font-size:15px;">
 					<rich:extendedDataTable
-						value="#{appointmentGrid.listAppointments}" var="res" id="table" height="570px"
+						value="#{appointmentGrid.listAppointments}" var="res" id="table" height="500px"
 						width="1250px" sortMode="single"
 						selectionMode="single" selection="#{appointmentGrid.selection}"
 						align="center"  rowClasses="tblEven,tblOdd" 
@@ -145,6 +145,9 @@
 								value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
 						</s:button>
 						<!--  atender la cita solo debe ser visto por el doctor que va a atender la cita-->
+						
+						<!-- Comentado el 25/07/2017 -->
+						<!-- 
 						<s:button propagation="join"
 							view="/medical/scheddoc/attend.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
@@ -152,7 +155,17 @@
 							(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
 							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;" >
 							<f:param name="back" value="#{conversation.viewId}" />
+						</s:button> -->
+						
+						<s:button propagation="begin"
+							view="/medical/clinicalHistory/generalMedical/step1.xhtml"
+							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
+							(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
+							(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
+							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;"  ><!-- #{app.sched_attend} -->
+							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" />
 						</s:button>
+						
 						<!--  cambiar estados-->
 						<a:commandButton value="#{app.sched_state}" reRender="fm2"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 

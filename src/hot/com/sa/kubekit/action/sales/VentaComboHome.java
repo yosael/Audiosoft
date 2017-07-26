@@ -828,6 +828,21 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		
 	}
 	
+	public String verificarColorEstado(String estado)
+	{
+		String color="";
+		
+		if(estado.equals("COT") || estado.equals("PRE") || estado.equals("TFN"))
+			color="orange";
+		else if(estado.equals("PEN"))
+			color="red";
+		else if(estado.equals("APL"))
+			color="green";
+		
+		return color;
+	}
+	
+	
 	public void getCotizacionesPendByName() {
 		cotizacionList.clear();
 		

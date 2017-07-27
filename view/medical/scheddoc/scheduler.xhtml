@@ -123,7 +123,7 @@
 						</rich:column>
 						<a:support reRender="action,renderImp,action2,dvActionBtn" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
-							event="onselectionchange" ajaxSingle="true"    />
+							event="onselectionchange" ajaxSingle="true"  onsubmit="document.getElementById('btnCambiarEstado').focus();"  />
 					</rich:extendedDataTable><!-- oncomplete="mostrarAcciones()" -->
 					<rich:spacer height="10" />
 					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">
@@ -162,7 +162,7 @@
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
 							(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
-							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;"  ><!-- #{app.sched_attend} -->
+							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;"   ><!-- #{app.sched_attend} -->
 							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" />
 						</s:button>
 						
@@ -171,8 +171,10 @@
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)}"
 							styleClass="cancelBtn" ajaxSingle="true"
-							oncomplete="#{rich:component('modalState')}.show();" style="font-size:15px;" />
+							action="#{medicalAppointmentDAO.verificarEstadoPorDefecto()}"
 							
+							oncomplete="#{rich:component('modalState')}.show();" id="btnCambiarEstado" style="font-size:15px;" />
+							<!-- document.getElementById(#{rich:clientId('btnActualizarEstado')}).focus(); -->
 						<!--  crear nueva cita-->
 							
 							<a:commandButton
@@ -223,7 +225,7 @@
 					</s:div>	
 					
 				
-					<rich:modalPanel   id="modActionBtn" width="500" moveable="true"
+				<rich:modalPanel   id="modActionBtn" width="500" moveable="true"
 					autosized="true" top="250" left="826"
 					onmaskclick="#{rich:component('modActionBtn')}.hide();"
 					onbeforeshow="activeModal.setActiveModalPanel('modActionBtn');">

@@ -60,6 +60,9 @@ public class CotizacionComboApa implements Serializable {
 	private TasaTarjetaCred formaPago;
 	private boolean incluyeIva; 
 	
+	//nuevo el 26/07/2017
+	private String ignorar;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -297,6 +300,14 @@ public class CotizacionComboApa implements Serializable {
 	}
 	public void setIncluyeIva(boolean incluyeIva) {
 		this.incluyeIva = incluyeIva;
+	}
+	
+	@Column(name="ignorar",length=2,nullable=true)
+	public String getIgnorar() {
+		return ignorar;
+	}
+	public void setIgnorar(String ignorar) {
+		this.ignorar = ignorar;
 	}
 	
 	

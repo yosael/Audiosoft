@@ -202,6 +202,15 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		}
 	}
 	
+	
+	public void verificarEstadoPorDefecto()
+	{
+		if(instance.getStatus()==0)
+		{
+			instance.setStatus(4);
+		}
+	}
+	
 	public boolean validateSucursal(){
 		try {
 			Sucursal selSuc= getEntityManager().find(

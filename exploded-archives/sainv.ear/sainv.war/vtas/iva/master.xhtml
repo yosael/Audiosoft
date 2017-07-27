@@ -14,22 +14,24 @@
 		<rich:panel>
 			<f:facet name="header">
 				<h:outputText
-					value="#{ivaHome.managed?sainv_view_messages.get('tstrjcrd_head_edit'):sainv_view_messages.get('tstrjcrd_head_register')}" />
+					value="Gestionar impuesto del iva"  styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formtst">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-				<fieldset>
-					<legend>#{app.tstrjcrd_legend}</legend> 
+				<fieldset style="width:600px;" >
+					<legend>Porcentaje iva</legend> 
 					
 					<h:panelGrid columns="3" style="padding-left:100px;">
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{ivaHome.managed}">
 							<ui:define name="label">#{app.tstrjcrd_porcentaje}:</ui:define>
-							<h:inputText value="#{ivaHome.instance.porcentaje}" readonly="true" ondblclick="this.readonly=false" required="true" maxlength="80"
-								onkeypress="return restrictNumDigitsDecimals(event, this, 3, 2);" />%
+							<h:inputText id="txtPorcentaje" value="#{ivaHome.instance.porcentaje}"  required="true" maxlength="80"
+								onkeypress="return restrictNumDigitsDecimals(event, this, 3, 2);" >
+								<a:support event="onkeyup" ajaxSingle="true" ></a:support>	
+							</h:inputText>%
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not ivaHome.managed}">
@@ -43,18 +45,17 @@
 							<h:inputText value="#{ivaHome.instance.fechaModificacion}" required="true" maxlength="80" />
 						</s:decorate>
 						
-				</h:panelGrid> 
-				
-				<s:decorate template="/layout/kActions.xhtml">
-					 
-					<a:commandButton action="#{ivaHome.save()}" reRender="formtst"
-						rendered="#{not ivaHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						value="#{msn.button_save}"/>
+					</h:panelGrid> 
 					
-					<a:commandButton action="#{ivaHome.modify()}" reRender="formtst"
-						rendered="#{ivaHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
-						value="#{msn.button_modify}" />
-				</s:decorate>
+					<s:decorate template="/layout/kActions.xhtml">
+						<a:commandButton action="#{ivaHome.save()}" reRender="formtst"
+							rendered="#{not ivaHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
+							value="#{msn.button_save}"/>
+						
+						<a:commandButton action="#{ivaHome.modify()}" ajaxSingle="true"  reRender="formtst"
+							rendered="#{ivaHome.managed}" styleClass="modifyBtn" 
+							value="#{msn.button_modify}" />
+					</s:decorate>
 				</fieldset>
 			</h:form>
 		</rich:panel>

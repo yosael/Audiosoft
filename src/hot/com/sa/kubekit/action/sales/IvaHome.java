@@ -14,7 +14,7 @@ import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.sales.Iva;
 
 @Name("ivaHome")
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.CONVERSATION)
 public class IvaHome extends KubeDAO<Iva> {
 	
 	
@@ -24,12 +24,12 @@ public class IvaHome extends KubeDAO<Iva> {
 	{
 		List<Iva> ivas = new ArrayList<Iva>();
 		
-		
 		try {
+			
+			ivas = getEntityManager().createQuery("SELECT i FROM Iva i").getResultList();
 			
 			if(ivas!=null && ivas.size()>0)
 			{
-				ivas = getEntityManager().createQuery("SELECT i FROM Iva i").getResultList();
 				setInstance(ivas.get(0));
 			}
 			else
@@ -38,7 +38,7 @@ public class IvaHome extends KubeDAO<Iva> {
 			}
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			setInstance(new Iva());
 		}
 			 
@@ -65,6 +65,8 @@ public class IvaHome extends KubeDAO<Iva> {
 	@Override
 	public boolean preModify() {
 		// TODO Auto-generated method stub
+		
+		System.out.println("Entro a modificar");
 		
 		if(instance.getPorcentaje()==null)
 		{

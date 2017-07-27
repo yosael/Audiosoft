@@ -58,6 +58,14 @@ body {
 	/*text-shadow: 1px 1px navy;font-weight: bold;font-family:sans-serif;*/
 }
 
+.letraCotizacionRep
+{
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 16px;
+	color:#000000;
+}
+
 .busProd{
     background-image: url(../kubeImg/search16.png);
     background-position: 5px 4px;

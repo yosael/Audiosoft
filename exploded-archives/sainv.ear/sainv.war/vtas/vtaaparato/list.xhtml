@@ -18,6 +18,7 @@
 					styleClass="newBtn" value="#{msn.button_register}" rendered="true">
 					<f:param name="id" value="" />
 					<f:param name="isCot" value="" />
+					<f:param name="isCotDup" value="" />
 				</s:button>
 			</s:decorate>
 			<rich:spacer height="10" />
@@ -105,6 +106,21 @@
 					headerClass="tablaHeader" footerClass="tableScroll"
 					id="aparatosList">
 					<!-- <f:facet name="header">#{app.cotizcmb_list}</f:facet>-->
+					<rich:column width="30px;">
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<h:panelGroup>
+							<h:commandLink  value="" title="Ignorar" action="#{ventaComboHome.ignorarCotizacion(res)}"  rendered="#{res.estado=='PEN'}" >
+								<h:graphicImage width="16" height="16" value="/kubeImg/BasureroIcon.png" />
+							</h:commandLink>
+							<rich:spacer width="5" height="0" ></rich:spacer>
+							<s:link title="Duplicar Cotizacion" rendered="#{res.estado=='PEN'}"
+								view="/vtas/vtaaparato/master.xhtml" propagation="begin">
+								<h:graphicImage width="16" height="16" value="/kubeImg/duplicarIcon.png" />
+								<f:param name="isCotDup" value="#{res.id}" />
+							</s:link>
+						</h:panelGroup>
+						
+					</rich:column>
 					<rich:column filterBy="#{res.id}" filterEvent="onkeyup" width="10%"> 
 						<f:facet name="header">Num. cotizacion</f:facet>
 						<h:outputText value="#{'COT'}#{res.id}" />
@@ -144,7 +160,7 @@
 						</h:outputText>
 					</rich:column>
 					<rich:column width="40%">
-						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<f:facet name="header">Ver</f:facet>
 						<s:link title="#{app.vtaprs_verdet}" rendered="true"
 							view="/vtas/vtaaparato/master.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
@@ -183,5 +199,35 @@
 				</s:decorate>
 			</h:form>
 		</rich:modalPanel>
+		
+		<!-- 
+		<rich:modalPanel id="confirmationDup" width="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmationDup');">
+			<f:facet name="header" >
+				#{app.vtacomb_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmationDup')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="fm1">
+				<p>#{app.vtacomb_confirm}</p>
+				<s:decorate template="/layout/kActions.xhtml" id="m1">
+					<a:commandButton styleClass="cancelBtn" value="#{msn.button_no}"
+						onclick="#{rich:component('confirmationDup')}.hide();">
+					</a:commandButton>
+					<a:commandButton action="#{ventaProdServHome.delete()}"
+						reRender="formA" rendered="#{ventaProdServHome.managed}"
+						styleClass="doCancelBtn" value="#{msn.button_yes}"
+						onclick="#{rich:component('confirmationDup')}.hide();">
+					</a:commandButton>
+				</s:decorate>
+			</h:form>
+		</rich:modalPanel>
+		 -->
+		
 	</ui:define>
 </ui:composition>

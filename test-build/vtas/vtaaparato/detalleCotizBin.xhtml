@@ -10,14 +10,14 @@
 	margins="30	30 10 30">
 	<p:table  columns="1" widthPercentage="100" height="10px" headerRows="0" borderVisible="false" >
 		<p:cell borderWidth="0" >
-			<p:font size="10" >
+			<p:font size="8" >
 				<p:paragraph
 					rendered="#{not empty ventaComboHome.cotizacion.getCliente().getNombreCompleto()}"
 					alignment="center">
 					<p:font style="bold">
-						<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} |<p:font
+						<p:text value="#{app.report_cotiz_cmb_apa_paciente}" />:</p:font> #{ventaComboHome.cotizacion.getCliente().getNombreCompleto()} <p:text value=" | " /><p:font
 						style="bold">
-						<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} | <p:font
+						<p:text value=" #{app.report_cotiz_cmb_apa_fecha}"></p:text>:</p:font> #{ventaComboHome.cotizacion.getFechaIngreso().toGMTString().substring(0, 11)} <p:text value=" | " /> <p:font
 						style="bold">
 						<p:text value=" #{app.report_cotiz_cmb_apa_vali}"></p:text> <p:text value= ": "/> </p:font> <p:text value="#{ventaComboHome.validez} #{app.patimast_age_3}"></p:text>
 				</p:paragraph>
@@ -25,13 +25,13 @@
 		</p:cell>
 			
 		<p:cell borderWidth="0" >	
-			<p:font size="10" >
+			<p:font size="8" >
 				<p:paragraph alignment="center" >
 					<p:font style="bold"><p:text value="Forma de pago: " /></p:font>
 					<p:text value="#{ventaComboHome.formaPagoSelected.nombre}" />
 					<p:text value=" " />
-					<p:font style="bold">|</p:font>
-					<p:text value=" " />
+					<p:font style="bold"></p:font>
+					<p:text value=" | " />
 					<p:font style="bold"><p:text value="#{ventaComboHome.verificarIva()}" /></p:font>
 				</p:paragraph>
 			</p:font>
@@ -225,9 +225,12 @@
 					</h:panelGroup>
 					
 					<p:paragraph>
+					<!-- 
 						<ui:repeat var="apaPrin" value="#{combo.itemsCombo}">
 								<p:text value="- #{apaPrin.producto.nombre}  "/>
 						</ui:repeat>
+					-->
+					<p:text value="Combo: #{combo.nombre}  "/>
 					</p:paragraph>
 					</p:font>
 				</p:cell>

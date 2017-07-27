@@ -19,7 +19,7 @@
 					onclick="#{rich:component('modalState')}.hide();" />
 			</h:panelGroup>
 		</f:facet>
-		<h:form id="fm2">
+		<h:form id="fm2" onload="document.getElementById('btnActualizarEstado').focus();" >
 			<h:panelGrid style="padding-left:50px;" columns="1">
 				<s:decorate template="/layout/kEditSpace.xhtml" style="width:400px;font-size:15px;">
 					<ui:define name="label">#{app.sched_status}:</ui:define>
@@ -57,7 +57,7 @@
 				<a:commandButton action="#{appointmentGrid.modifyAppointment()}"
 					reRender="formA, formB" styleClass="modifyBtn"
 					value="#{msn.button_modify}" 
-					oncomplete="#{rich:component('modalState')}.hide();" style="font-size:15px;" >
+					oncomplete="#{rich:component('modalState')}.hide();" id="btnActualizarEstado"  style="font-size:15px;" >
 				</a:commandButton>
 			</s:decorate>
 		</h:form>

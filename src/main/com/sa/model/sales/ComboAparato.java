@@ -32,7 +32,7 @@ public class ComboAparato implements Serializable {
 	private String estado;
 	private Integer periodoGarantia;
 	private float total;
-	private List<ItemComboApa> itemsCombo = new ArrayList<ItemComboApa>();
+	private List<ItemComboApa> itemsCombo = new ArrayList<ItemComboApa>(); //comentado el 27/07/2017
 	private List<CostoServicio> costosCombo = new ArrayList<CostoServicio>();
 	private List<CotizacionCombos> cmbCotizados = new ArrayList<CotizacionCombos>(); 
 	

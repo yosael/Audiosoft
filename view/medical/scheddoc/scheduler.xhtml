@@ -123,7 +123,7 @@
 						</rich:column>
 						<a:support reRender="action,renderImp,action2,dvActionBtn" immediate="true"
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
-							event="onselectionchange" ajaxSingle="true"  onsubmit="document.getElementById('btnCambiarEstado').focus();"  />
+							event="onselectionchange" ajaxSingle="true" oncomplete="#{rich:component('btnCambiarEstado')}.focus();"   />
 					</rich:extendedDataTable><!-- oncomplete="mostrarAcciones()" -->
 					<rich:spacer height="10" />
 					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">

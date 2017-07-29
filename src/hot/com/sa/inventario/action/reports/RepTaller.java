@@ -40,6 +40,7 @@ import com.sa.model.workshop.EtapaReparacion;
 import com.sa.model.workshop.ItemRequisicionEta;
 import com.sa.model.workshop.ProcesoTaller;
 import com.sa.model.workshop.ReparacionCliente;
+import com.sa.model.workshop.ServicioReparacion;
 
 @Name("repTaller")
 @Scope(ScopeType.CONVERSATION)
@@ -897,6 +898,56 @@ public class RepTaller extends MasterRep implements Serializable {
 		
 		dtRp.put("lst", tiemposPromedios);
 	}
+	
+	
+	
+	//nuevo el 28/07/2017
+	
+	public void reporteReparacionesTaller()
+	{
+		
+		
+		String jpql="";
+		
+		List<Object[]> contenidoDiagnostico;
+		List<Object[]> contenidoReparacion;
+		
+		
+		jpql="SELECT c";
+				
+		
+		
+	}
+	
+	
+	public String obtenerContenidoReparacionEtapa(Integer idReparacion,Integer idEtapa)
+	{
+		StringBuilder contenido = new StringBuilder();
+		
+		List<ServicioReparacion> servicios = entityManager.createQuery("FROM ServicioReparacion s where s.reparacion.id=:idReparacion ").setParameter("idReparacion", idReparacion).getResultList();
+		
+		if(servicios!=null && servicios.size()>0)
+		{
+			for(ServicioReparacion sr:servicios)
+			{
+				contenido.append(sr.getServicio().getName()).append(" + ");
+			}
+		}
+		
+		List<ItemRequisicionEta> itemsRequi = entityManager.createQuery("SELECT i FROM ItemRequisicionEta i WHERE i.reqEtapa.etapaRepCli.reparacionCli = :rep").setParameter("rep", idReparacion).getResultList();
+		
+		if(itemsRequi!=null && itemsRequi.size()>0)
+		{
+			for(ItemRequisicionEta item:itemsRequi)
+			{
+				contenido.append(item.getProducto().getNombre()).append(" + ");
+			}
+				
+		}
+		
+		return contenido.toString();
+	}
+	
 
 	public String getRepCtx() {
 		return repCtx;

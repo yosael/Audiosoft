@@ -11,17 +11,26 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ForeignKey;
 
+import com.sa.model.inventory.Producto;
+
 @Entity
 @Table(name = "cotizacion_combos_items")
 public class CotCmbsItems {
 	Integer id;
 	CotizacionCombos ctCmbs;
-	ItemComboApa item;
+	ItemComboApa item;//Este valor ya no se utiliza. Se dejo para no afectar a valores historicos. Se quito porque al tener items de combos solo con categorias. Al realizar este registro el producto se registraba en los items del combo y generaba inconsistencias en las cotizaciones
+	Producto producto;// nuevo agregado el 27/07/2017. Este es el valor utlizado para saber que es lo que se cotizo
 	private String tipoPrecio;
 	private Float precioCotizado;
 	
 	// nuevo agregado el 13/07/2017 .. Aqui se guardaran SOLO los servicios que se han agregado desde la adaptacion del combo. Debido a que no estan asociados directamnte al combo. solo cuando se requiera
 	private Service servicioCotizado;
+	
+	//nuevo agregado el27/07/2017
+	private Short cantidad;
+	private Boolean principal;
+	private Boolean generaRequisicion;
+	private String nombreAdaptacion;
 	
 	
 	@Id
@@ -83,6 +92,55 @@ public class CotCmbsItems {
 	}
 	
 	
+	@ManyToOne
+	@JoinColumn(name = "id_producto", nullable = true)
+	@ForeignKey(name = "fk_cotcmbitm_producto")
+	public Producto getProducto() {
+		return producto;
+	}
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
 	
-
+	@Column(name="cantidad",nullable=true)
+	public Short getCantidad() {
+		return cantidad;
+	}
+	public void setCantidad(Short cantidad) {
+		this.cantidad = cantidad;
+	}
+	
+	
+	@Column(name="principal",nullable=true)
+	public Boolean isPrincipal() {
+		return principal;
+	}
+	public void setPrincipal(Boolean principal) {
+		this.principal = principal;
+	}
+	
+	@Column(name="genera_requisicion",nullable=true)
+	public Boolean isGeneraRequisicion() {
+		return generaRequisicion;
+	}
+	public void setGeneraRequisicion(Boolean generaRequisicion) {
+		this.generaRequisicion = generaRequisicion;
+	}
+	
+	@Column(name="nombre_adaptacion",nullable=true,length=50)
+	public String getNombreAdaptacion() {
+		return nombreAdaptacion;
+	}
+	public void setNombreAdaptacion(String nombreAdaptacion) {
+		this.nombreAdaptacion = nombreAdaptacion;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

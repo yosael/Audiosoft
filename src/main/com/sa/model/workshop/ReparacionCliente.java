@@ -29,6 +29,7 @@ import org.hibernate.validator.Min;
 import com.sa.model.crm.Cliente;
 import com.sa.model.inventory.DetalleReparacionExterna;
 import com.sa.model.security.Sucursal;
+import com.sa.model.security.Usuario;
 
 @Entity
 @Table(name = "reparacion_cliente")
@@ -70,6 +71,10 @@ public class ReparacionCliente implements Serializable {
 	private Float ingresosTaller;
 	private Float descuentos;
 	private Float descuentos_garantia;
+	
+	//nuevo agregado el 20/07/2017
+	private Usuario usuarioRecibe;
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -361,6 +366,18 @@ public class ReparacionCliente implements Serializable {
 
 	public void setDescuentos_garantia(Float descuentos_garantia) {
 		this.descuentos_garantia = descuentos_garantia;
+	}
+
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "usuario_recibe_id", nullable = true)
+	@ForeignKey(name = "fk_rep_usrec")
+	public Usuario getUsuarioRecibe() {
+		return usuarioRecibe;
+	}
+
+	public void setUsuarioRecibe(Usuario usuarioRecibe) {
+		this.usuarioRecibe = usuarioRecibe;
 	}
 
 	

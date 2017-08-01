@@ -191,6 +191,27 @@ public class AdaptacionComboHome extends KubeDAO<AdaptacionCombo> {
 	public void posModify() {
 		// TODO Auto-generated method stub
 		
+		for(ItemAdaptacion item: itemsAdaptacion)
+		{
+			if(item.getId()==null)
+			{
+				itemAdaptacionHome.setInstance(item);
+				
+				if(!itemAdaptacionHome.save())
+				{
+					return;
+				}
+			}
+			else
+			{
+				itemAdaptacionHome.setInstance(item);
+				
+				if(!itemAdaptacionHome.modify())
+				{
+					return;
+				}
+			}
+		}
 	}
 
 	@Override

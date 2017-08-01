@@ -62,6 +62,8 @@ public class CompraHome extends KubeDAO<Compra>{
 	@In(required=false,create=true)
 	private MovimientoHome movimientoHome;
 	
+	private Integer cantidadActualItem;
+	
 	@Override
 	public void create() {
 		setRangoUlt30dias();
@@ -470,8 +472,8 @@ public class CompraHome extends KubeDAO<Compra>{
 	public void desactualizarItem()
 	{
 		
-			System.out.println("Cantidad"+itemDesactualizar.getCantidad());
-			System.out.println("Nombre"+itemDesactualizar.getInventario().getProducto().getNombre());
+			//System.out.println("Cantidad"+itemDesactualizar.getCantidad());
+			//System.out.println("Nombre"+itemDesactualizar.getInventario().getProducto().getNombre());
 			
 		if(itemDesactualizar.getItemId().getMovimientoId()!=null && itemDesactualizar.getItemId().getInventarioId()!=null)
 		{
@@ -518,8 +520,7 @@ public class CompraHome extends KubeDAO<Compra>{
 		{
 			removerItemPreCompra(itemDesactualizar);
 		}
-		
-		
+				
 	}
 	
 	
@@ -527,8 +528,8 @@ public class CompraHome extends KubeDAO<Compra>{
 	public void desactualizarItemCodigo(Item item)
 	{
 		int indicep=itemsAgregados.indexOf(item);
-		System.out.println("CANTIDAD EN LISTA: "+itemsAgregados.get(indicep).getCantidad());
-		System.out.println("CANTIDAD EN ITEM ACTUAL "+item.getCantidad());
+		//System.out.println("CANTIDAD EN LISTA: "+itemsAgregados.get(indicep).getCantidad());
+		//System.out.println("CANTIDAD EN ITEM ACTUAL "+item.getCantidad());
 		
 		int cantidadActualItem=item.getCantidad();
 		
@@ -537,14 +538,11 @@ public class CompraHome extends KubeDAO<Compra>{
 		if(item.getItemId().getMovimientoId()==null || item.getItemId().getInventarioId()==null)
 		{
 			
-			
-			
-			
 			if(item.getCantidad()>1)
 			{
 				
 				int indice=itemsAgregados.indexOf(item);
-				System.out.println("Indice "+indice);
+				//System.out.println("Indice "+indice);
 				
 				//itemsAgregados.remove(item);
 				//item.setCantidad(item.getCantidad()-1);
@@ -588,7 +586,6 @@ public class CompraHome extends KubeDAO<Compra>{
 			if(cantidadActualItem>1)
 			{
 			
-				
 				//itemsAgregados.remove(item);
 				//item.setCantidad(item.getCantidad()-1);
 				//itemsAgregados.add(item);
@@ -619,6 +616,127 @@ public class CompraHome extends KubeDAO<Compra>{
 		}
 		
 		
+	}
+	
+	public void activarEdicion(Item item)
+	{
+		if(item.getRegistrado()!=null && item.getRegistrado()==true)
+		{
+			cantidadActualItem=0;
+			cantidadActualItem = item.getCantidad();
+			item.setModoEdicion(true);
+			item.setRegistrado(false);//para quitar el readonly
+		}
+	}
+	
+	//Metodo que se utilza en los items que han sido preguardados, pero que luego requieren ser editados nuevamente. ya sea para aumenta o disminuir su cantidad
+	public void guardarEdicion(Item item)
+	{
+		int cantidadAEditar=0;
+		int cantidadEnCompra=0;
+		
+		System.out.println("Entro a guardar edicion");
+		
+		try 
+		{
+		
+			if(cantidadActualItem>item.getCantidad() && item.getInventario().getProducto().getCategoria().isTieneNumSerie())// validar que si se quiere restar un items con numero de serie, este solo se realiza al quitar cada # serie individual
+			{
+				FacesMessages.instance().add(Severity.WARN,"Para reducir la cantidad debe ser desde los numeros de serie");
+				return;
+			}
+			else if(cantidadActualItem>item.getCantidad())//Restar. Se restaran los items de la comprar que no tengan numeros de serie
+			{
+				cantidadAEditar=cantidadActualItem-item.getCantidad();// para obtener la cantidad que se va a editar en inventario
+				cantidadEnCompra=item.getCantidad();//para mostrar la cantidad realizada en la compra
+				item.setCantidad(cantidadAEditar);
+				
+				restarItemPreguardado(item);
+				
+				item.setCantidad(cantidadEnCompra);
+				item.setModoEdicion(false);
+				item.setRegistrado(true);
+				
+				getEntityManager().merge(item);
+				
+			}
+			else if(cantidadActualItem<item.getCantidad())//Agregar. Se agregan la cantidad de items editados en la compra 
+			{
+				//cantidadActualItem --> representa la cantidad en la compra actual. este ya esta incluido en el total de invetario del item
+				
+				cantidadAEditar=item.getCantidad()-cantidadActualItem; // para obtener la cantidad que se va a editar en inventario
+				cantidadEnCompra=item.getCantidad();//para mostrar la cantidad realizada en la compra
+				
+				item.setCantidad(cantidadAEditar);
+				
+				agregarNuevoItemPreGuardado(item);
+				
+				item.setCantidad(cantidadEnCompra);
+				item.setModoEdicion(false);
+				item.setRegistrado(true);
+				
+				getEntityManager().merge(item);
+				
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			FacesMessages.instance().add(Severity.WARN,"No se pudo actualizar el item, intente de nuevo");
+			return;
+		}	
+		
+		
+	}
+	
+	
+	public void agregarNuevoItemPreGuardado(Item item) throws Exception
+	{
+		
+		//validar que se ingrese los nuevos codigos que se hayan ingresado si asi lo requieren
+		
+		item.getItemId().setMovimientoId(instance.getId());
+		item.setMovimiento(instance);
+		item.setRegistrado(true);//Nuevo el 24/03/2017
+		itemHome.setInstance(item);
+		itemHome.modificarCantidadInventario();
+		itemHome.save();
+		
+		int numItemsCods = item.getCantidad();
+		
+		//Guardamos los codigos si es que tienen codigos
+		if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || item.getInventario().getProducto().getCategoria().isTieneNumLote()) 
+		{
+			for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) 
+			{
+				if(numItemsCods <= 0)
+					break;
+				
+				tmpCod.setMovimiento(instance);
+				
+				if(tmpCod.getId() != null && tmpCod.getId() > 0) 
+					getEntityManager().merge(tmpCod);
+				else
+					getEntityManager().persist(tmpCod);
+				
+				numItemsCods--;
+			}
+		}
+	}
+	
+	public void restarItemPreguardado(Item item) throws Exception
+	{
+		Movimiento movimiento = new Movimiento();
+		movimiento.setRazon("O");
+		movimiento.setSucursal(item.getInventario().getSucursal());
+		movimiento.setTipoMovimiento("S");
+		
+		
+		movimientoHome.getItemsAgregados().clear();
+		movimientoHome.setInstance(movimiento);
+		movimientoHome.getItemsAgregados().add(item);
+		movimientoHome.save();
 	}
 	
 	
@@ -679,12 +797,9 @@ public class CompraHome extends KubeDAO<Compra>{
 		{*/
 		
 			
-			
 			if(selectedItem.getInventario().getProducto().getCategoria().isTieneNumSerie())
 			{
 				
-				
-					
 					//Remover item del hashmap
 					//lstCodsProductos.remove(codigos);
 					//currCodigos.remove(cod);
@@ -1192,6 +1307,16 @@ public class CompraHome extends KubeDAO<Compra>{
 	public void setSucursalSelected(Sucursal sucursalSelected) {
 		this.sucursalSelected = sucursalSelected;
 	}
+
+	public Integer getCantidadActualItem() {
+		return cantidadActualItem;
+	}
+
+	public void setCantidadActualItem(Integer cantidadActualItem) {
+		this.cantidadActualItem = cantidadActualItem;
+	}
+
+	
 	
 	
 

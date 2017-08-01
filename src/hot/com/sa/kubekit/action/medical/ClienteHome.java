@@ -1208,12 +1208,12 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		}*/
 		
 		// nuevo agregado el 24/07/2017
-		if(clienteExiste())
+		/*if(clienteExiste())
 		{
 			FacesMessages.instance().add(Severity.WARN,"El paciente ya esta registrado en el sistema");
 			return false;
 		}
-		
+		*/
 		
 		instance.setFechaCreacion(new Date());
 		if(instance.getMedioReferido() != null && 

@@ -85,11 +85,16 @@
 						 -->			
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formA"
+						 <a:commandLink  value="#{app.movimientomast_select_product}" reRender="formA"
 							action="#{appointmentGrid.loadDoctorSched(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('selDoc')}.hide();">
 						</a:commandLink>
 					</rich:column>
+					
+					<!-- 
+					<a:support actionListener="#{appointmentGrid.loadDoctorSched(res)}" event="onRowClick" ajaxSingle="true" reRender="formA" eventsQueue="q1" oncomplete="#{rich:component('selDoc')}.hide();" >
+					</a:support> -->
+					
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>

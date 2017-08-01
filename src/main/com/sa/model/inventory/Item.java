@@ -45,6 +45,7 @@ public class Item implements Serializable, Cloneable{
 	private Float precioVenta;
 	
 	private Boolean registrado;
+	private Boolean modoEdicion;
 	
 	@EmbeddedId
 	public ItemId getItemId() {
@@ -227,6 +228,17 @@ public class Item implements Serializable, Cloneable{
 		this.registrado = registrado;
 	}
 
+	@Transient
+	public Boolean getModoEdicion() {
+		return modoEdicion;
+	}
+
+	public void setModoEdicion(Boolean modoEdicion) {
+		this.modoEdicion = modoEdicion;
+	}
+
+	
+	
 	
 	
 	

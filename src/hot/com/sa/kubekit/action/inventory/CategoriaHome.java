@@ -68,12 +68,18 @@ public class CategoriaHome extends KubeDAO<Categoria>{
 	}
 	
 	public void buscadorCategorias(){
-		System.out.println("Valor nomCoinci "+ nomCoinci);
-		resultList = getEntityManager().createQuery("select e from Categoria e " +
-				"	WHERE (UPPER(e.nombre) LIKE UPPER(:nom) OR UPPER(e.codigo) LIKE UPPER(:cod)) and e.activo=true order by e.codigo,e.nombre ")
-				.setParameter("cod","%"+nomCoinci+"%" )
-				.setParameter("nom","%"+nomCoinci+"%")
-				.getResultList();	
+		
+		//System.out.println("Valor nomCoinci "+ nomCoinci);
+		
+		if(nomCoinci!=null)
+		{
+			resultList = getEntityManager().createQuery("select e from Categoria e " +
+					"	WHERE (UPPER(e.nombre) LIKE UPPER(:nom) OR UPPER(e.codigo) LIKE UPPER(:cod)) and e.activo=true order by e.codigo,e.nombre ")
+					.setParameter("cod","%"+nomCoinci+"%" )
+					.setParameter("nom","%"+nomCoinci+"%")
+					.getResultList();
+		}
+		
 		System.out.println("Tamaño de resultList "+resultList.size()); 
 	}
 	

@@ -39,6 +39,7 @@ import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.UbicacionPrd;
+import com.sa.model.sales.Iva;
 import com.sa.model.security.Empresa;
 import com.sa.model.security.Sucursal;
 
@@ -449,6 +450,9 @@ public class ProductoHome extends KubeDAO<Producto> {
 		if (this.instance != null)
 		{
 			//actualizarMontos(); comentado el 22/06/2017
+			
+			instance.setIvaPorcent(obtenerIVA());//nuevo el 30/07/2017
+			
 			actualizarMontosLoad();
 			
 		}
@@ -1217,8 +1221,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	public void actualizarMontoPrd(Producto prd) {
 		setInstance(prd);
-		//actualizarMontos(); comentado el 10/07/2017
-		actualizarMontosLoad(); //agregado el 10/07/2017
+		actualizarMontos(); //comentado el 10/07/2017  se descomento nuevamente el 30/07/2017
+		//actualizarMontosLoad(); //agregado el 10/07/2017 comentado nuevamente el 30/07/2017
 	}
 
 	public void actualizarMontos() {
@@ -1416,6 +1420,24 @@ public class ProductoHome extends KubeDAO<Producto> {
 			instance.setPrcOfertaCalculado(Float.valueOf(this.frmtMoney.format(instance
 					.getPrcOfertaCalculado())));
 		}
+	}
+	
+	public Float obtenerIVA()
+	{
+		Float iva=0f;
+		
+		List<Iva> ivas = getEntityManager().createQuery("SELECT i FROM Iva i").getResultList();
+		
+		if(ivas!=null && ivas.size()>0)
+		{
+			iva=ivas.get(0).getPorcentaje().floatValue();
+		}
+		else
+		{
+			iva=13f;
+		}
+		
+		return iva;
 	}
 
 	public boolean preSave() {

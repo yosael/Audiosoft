@@ -84,11 +84,14 @@ public class ClaseProductoHome extends KubeDAO<ClaseProducto>{
 
 	@Override
 	public void posModify() {
+		
+		
 		//Actualizamos los montos de todos los productos en base a la nueva generacion de porcentajes
-		List<Producto> lstPrds = getEntityManager()
-				.createQuery("SELECT p FROM Producto p ")
-				.getResultList();
+		//List<Producto> lstPrds = getEntityManager().createQuery("SELECT p FROM Producto p ").getResultList(); comentado el 30/07/2017
+		List<Producto> lstPrds = getEntityManager().createQuery("SELECT p FROM Producto p where p.claseProducto.id=:idClase").setParameter("idClase",instance.getId()).getResultList();// agregado el 30/07/2017
+		
 		System.out.println("Tamabbio de items de los montos actualizados "+lstPrds.size());
+		
 		for(Producto tmpPrd : lstPrds) {
 			productoHome.actualizarMontoPrd(tmpPrd);
 			getEntityManager().merge(tmpPrd);

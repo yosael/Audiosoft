@@ -42,6 +42,8 @@ public class ComboAparato implements Serializable {
 	
 	private Integer numCombo;
 	
+	private Boolean resaltarColor;
+	
 		
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -232,6 +234,15 @@ public class ComboAparato implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	
+	@Transient
+	public Boolean getResaltarColor() {
+		return resaltarColor;
+	}
+	public void setResaltarColor(Boolean resaltarColor) {
+		this.resaltarColor = resaltarColor;
 	}
 	
 	

@@ -206,6 +206,7 @@
 							<rich:dataTable var="res" value="#{comboAparatoHome.adaptaciones}" id="_tblAdapsCmb"  rows="10"
 								align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 								headerClass="tablaHeader" footerClass="tableScroll">
+								
 								<f:facet name="header">Adaptaciones para el combo</f:facet>
 								
 								<rich:column>
@@ -213,20 +214,21 @@
 									<h:outputText value="#{res.adaptacion.nombre}" />
 								</rich:column>
 																
-								<rich:column>
-									<f:facet name="header">Quitar</f:facet>
-									<a:commandLink title="Quitar adaptacion" eventsQueue="q1" 
-										action="#{comboAparatoHome.quitarAdaptacion(res)}" ajaxSingle="true" reRender="formcombo" >
-										<h:graphicImage value="/kubeImg/table_delete16.png" />
-									</a:commandLink>
-									
-								</rich:column>	
 								<rich:column>	
 									<f:facet name="header">Contenido</f:facet>
 									<a:commandLink title="Ver contenido" eventsQueue="q1" 
 											action="#{comboAparatoHome.verContenidoAdaptacion(res)}" onclick="#{rich:component('contenidoAdap')}.show();" ajaxSingle="true" reRender="mContenidoAdap,frmConteAdap" value="Ver contenido" >
 									</a:commandLink>
 								</rich:column>
+								
+								<rich:column>
+									<f:facet name="header">Quitar</f:facet>
+									<a:commandLink title="Quitar adaptacion" eventsQueue="q1" 
+										action="#{comboAparatoHome.quitarAdaptacion(res)}" ajaxSingle="true" reRender="formcombo" >
+										<h:graphicImage value="/kubeImg/table_delete16.png" />
+									</a:commandLink>
+								</rich:column>
+								
 								<f:facet name="footer">
 									<rich:datascroller id="ds1" renderIfSinglePage="true" />
 								</f:facet>
@@ -239,6 +241,12 @@
 					<s:button view="/vtas/combo/list.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
+					
+					<a:commandButton reRender="formcombo"
+						rendered="#{comboAparatoHome.managed and loginUser.user.accionEspecial==true}" styleClass="deleteBtn" ignoreDupResponses="true"
+						 ajaxSingle="true" eventsQueue="q1"
+							onclick="#{rich:component('confirmation')}.show();" value="#{msn.button_delete}" />
+							
 					<s:button view="/vtas/combo/master.xhtml" propagation="begin"
 						styleClass="newBtn" value="#{msn.button_new}">
 						<f:param name="id" value="" />
@@ -251,10 +259,6 @@
 						rendered="#{comboAparatoHome.managed}" styleClass="modifyBtn" ignoreDupResponses="true"
 						onclick="upperCaseAllInputs();" value="#{msn.button_modify}" />
 						
-					<a:commandButton reRender="formcombo"
-						rendered="#{comboAparatoHome.managed and loginUser.user.accionEspecial==true}" styleClass="deleteBtn" ignoreDupResponses="true"
-						 ajaxSingle="true" eventsQueue="q1"
-							onclick="#{rich:component('confirmation')}.show();" value="#{msn.button_delete}" />
 				</s:decorate>
 				</center>
 				</fieldset>

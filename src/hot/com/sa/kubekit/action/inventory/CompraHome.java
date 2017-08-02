@@ -76,29 +76,42 @@ public class CompraHome extends KubeDAO<Compra>{
 				.get("compraHome_deleted")));
 	}
 	
-	public void load(){
-		try{
+	public void load()
+	{
+		try
+		{
 			selectedItem = null;
 			setInstance(getEntityManager().find(Compra.class, compraId));
 			itemsAgregados = new ArrayList<Item>(instance.getItems());
 			productosAgregados = new ArrayList<Inventario>();
-			for(Item producto: instance.getItems()){
+			
+			for(Item producto: instance.getItems())
+			{
 				productosAgregados.add(producto.getInventario());
 			}
+			
 			empresaSeleccionada = instance.getSucursal().getEmpresa();
-		}catch (Exception e) {
+			
+		}
+		catch (Exception e) 
+		{
 			clearInstance();
 			setInstance(new Compra());
-			if(loginUser.getUser()!=null){
+			
+			if(loginUser.getUser()!=null)
+			{
 				instance.setUsuario(loginUser.getUser());
 				instance.setTipoMovimiento("E");
 				instance.setFecha(new Date());
 				instance.setRazon("C");
-				if(loginUser.getUser().getSucursal()!=null){
+				
+				if(loginUser.getUser().getSucursal()!=null)
+				{
 					instance.setSucursal(loginUser.getUser().getSucursal());
 				}
 			}
 		}
+		
 		if(empresaSeleccionada!=null)
 			sucursales = new ArrayList<Sucursal>(empresaSeleccionada.getSucursales());
 	}
@@ -591,6 +604,7 @@ public class CompraHome extends KubeDAO<Compra>{
 				//itemsAgregados.add(item);
 				itemsAgregados.get(indice).setCantidad(cantidadActualItem-1);
 				
+				getEntityManager().merge(itemsAgregados.get(indice));// nuevo
 				System.out.println("ESTA REGISTRADO");
 				System.out.println("REMOVIO EL ITEM DE LA DB Y REDUJO LA CANTIDAD DEL ITEM EN LA LISTA");
 				
@@ -599,6 +613,8 @@ public class CompraHome extends KubeDAO<Compra>{
 			{
 				itemsAgregados.remove(item);
 				productosAgregados.remove(item.getInventario());
+				
+				getEntityManager().remove(item);
 				
 				System.out.println("ESTA REGISTRADO");
 				System.out.println("REMOVIO EL ITEM DE LA DB Y LISTA YA QUE ERA IGUAL A 1");
@@ -609,7 +625,7 @@ public class CompraHome extends KubeDAO<Compra>{
 			//item.setCantidad(item.getCantidad()+1);
 			
 			
-			
+			//getEntityManager().merge(item);
 			
 			
 			actualizarSubtotal();
@@ -622,6 +638,9 @@ public class CompraHome extends KubeDAO<Compra>{
 	{
 		if(item.getRegistrado()!=null && item.getRegistrado()==true)
 		{
+			
+			System.out.println("CantidadActualItem: "+item.getCantidad());
+			
 			cantidadActualItem=0;
 			cantidadActualItem = item.getCantidad();
 			item.setModoEdicion(true);
@@ -642,14 +661,26 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 			if(cantidadActualItem>item.getCantidad() && item.getInventario().getProducto().getCategoria().isTieneNumSerie())// validar que si se quiere restar un items con numero de serie, este solo se realiza al quitar cada # serie individual
 			{
+				item.setCantidad(cantidadActualItem);
+				item.setModoEdicion(false);
+				item.setRegistrado(true);
+				
 				FacesMessages.instance().add(Severity.WARN,"Para reducir la cantidad debe ser desde los numeros de serie");
 				return;
 			}
 			else if(cantidadActualItem>item.getCantidad())//Restar. Se restaran los items de la comprar que no tengan numeros de serie
 			{
+				
+				System.out.println("Entro a restar");
+				
 				cantidadAEditar=cantidadActualItem-item.getCantidad();// para obtener la cantidad que se va a editar en inventario
 				cantidadEnCompra=item.getCantidad();//para mostrar la cantidad realizada en la compra
 				item.setCantidad(cantidadAEditar);
+				
+				System.out.println("CantidadActual: "+cantidadActualItem);
+				System.out.println("CantidadAEditar: "+cantidadAEditar);
+				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
+				
 				
 				restarItemPreguardado(item);
 				
@@ -658,16 +689,23 @@ public class CompraHome extends KubeDAO<Compra>{
 				item.setRegistrado(true);
 				
 				getEntityManager().merge(item);
+				getEntityManager().flush();
 				
 			}
 			else if(cantidadActualItem<item.getCantidad())//Agregar. Se agregan la cantidad de items editados en la compra 
 			{
 				//cantidadActualItem --> representa la cantidad en la compra actual. este ya esta incluido en el total de invetario del item
 				
+				System.out.println("Entro a sumar");
+				
 				cantidadAEditar=item.getCantidad()-cantidadActualItem; // para obtener la cantidad que se va a editar en inventario
 				cantidadEnCompra=item.getCantidad();//para mostrar la cantidad realizada en la compra
 				
 				item.setCantidad(cantidadAEditar);
+				
+				System.out.println("CantidadActual: "+cantidadActualItem);
+				System.out.println("CantidadAEditar: "+cantidadAEditar);
+				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
 				
 				agregarNuevoItemPreGuardado(item);
 				
@@ -676,18 +714,26 @@ public class CompraHome extends KubeDAO<Compra>{
 				item.setRegistrado(true);
 				
 				getEntityManager().merge(item);
-				
+				getEntityManager().flush();
 				
 			}
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
-			
 			FacesMessages.instance().add(Severity.WARN,"No se pudo actualizar el item, intente de nuevo");
 			return;
 		}	
 		
 		
+	}
+	
+	public void cancelarEdicionItemRegistrado(Item item)
+	{
+		item.setCantidad(cantidadActualItem);
+		item.setModoEdicion(false);
+		item.setRegistrado(true);
 	}
 	
 	
@@ -727,16 +773,15 @@ public class CompraHome extends KubeDAO<Compra>{
 	
 	public void restarItemPreguardado(Item item) throws Exception
 	{
-		Movimiento movimiento = new Movimiento();
-		movimiento.setRazon("O");
-		movimiento.setSucursal(item.getInventario().getSucursal());
-		movimiento.setTipoMovimiento("S");
+		instance.setTipoMovimiento("S");
+		item.getItemId().setMovimientoId(instance.getId());
+		item.setMovimiento(instance);
 		
+		itemHome.setInstance(item);
+		itemHome.modificarCantidadInventario();
+		itemHome.save();
 		
-		movimientoHome.getItemsAgregados().clear();
-		movimientoHome.setInstance(movimiento);
-		movimientoHome.getItemsAgregados().add(item);
-		movimientoHome.save();
+		instance.setTipoMovimiento("E");
 	}
 	
 	

@@ -50,12 +50,13 @@
 						<h:outputText value="---" rendered="#{res.inventario.producto.categoria.tieneNumSerie==false}" />
 					</rich:column>
 					
-					
+					<!-- 
 					<rich:column style="width:100px;" >
 						<f:facet name="header">Quitar</f:facet>
 						<a:commandLink rendered="#{(res.numSerie!=null or res.numLote!=null) and  compraHome.currCodigos.size()>1}"  value="Quitar" action="#{compraHome.quitarCodigoPreGuardado(res)}" reRender="formCodPrd,formcompra" ></a:commandLink>
 					</rich:column>
-					
+					 -->
+					 
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>

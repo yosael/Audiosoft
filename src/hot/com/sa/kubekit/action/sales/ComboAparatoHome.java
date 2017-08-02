@@ -24,6 +24,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
@@ -411,11 +412,17 @@ public class ComboAparatoHome extends KubeDAO<ComboAparato>{
 				if(itemCombo.getCategoria()!=null && itemCombo.getProducto()==null)
 				{
 					
-					Producto producto=(Producto)itemCombo.getCategoria().getProductos().toArray()[0];
-					
-					costoEstimado+=(producto.getPrcNormal()*itemCombo.getCantidad());
-					
-					System.out.println("Es categoria");
+					if(itemCombo.getCategoria().getProductos()!=null && itemCombo.getCategoria().getProductos().size()>0)
+					{
+						Producto producto=(Producto)itemCombo.getCategoria().getProductos().toArray()[0];
+						costoEstimado+=(producto.getPrcNormal()*itemCombo.getCantidad());
+						System.out.println("Es categoria");
+					}
+					else
+					{
+						FacesMessages.instance().add(Severity.WARN,"La categoria no tiene productos asociados");
+						return;
+					}
 				}
 				else
 				{

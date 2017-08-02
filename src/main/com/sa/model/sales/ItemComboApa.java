@@ -54,6 +54,9 @@ public class ItemComboApa implements Serializable {
 	// nuevo el 24/07/2017
 	private String nombreAdaptacion;
 	
+	//agregado el 01/08/2017
+	private Integer idItemCotizado;
+	
 	
 	
 	@Id
@@ -224,6 +227,14 @@ public class ItemComboApa implements Serializable {
 	}
 	public void setNombreAdaptacion(String nombreAdaptacion) {
 		this.nombreAdaptacion = nombreAdaptacion;
+	}
+	
+	@Transient
+	public Integer getIdItemCotizado() {
+		return idItemCotizado;
+	}
+	public void setIdItemCotizado(Integer idItemCotizado) {
+		this.idItemCotizado = idItemCotizado;
 	}
 	
 	

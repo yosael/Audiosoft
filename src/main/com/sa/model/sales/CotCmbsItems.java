@@ -32,6 +32,9 @@ public class CotCmbsItems {
 	private Boolean generaRequisicion;
 	private String nombreAdaptacion;
 	
+	//agregado el 01/08/2017
+	private String selCategoria;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -133,6 +136,14 @@ public class CotCmbsItems {
 	}
 	public void setNombreAdaptacion(String nombreAdaptacion) {
 		this.nombreAdaptacion = nombreAdaptacion;
+	}
+	
+	@Column(name="sel_categoria",nullable=true,length=2)
+	public String getSelCategoria() {
+		return selCategoria;
+	}
+	public void setSelCategoria(String selCategoria) {
+		this.selCategoria = selCategoria;
 	}
 	
 	

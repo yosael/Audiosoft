@@ -26,24 +26,30 @@ public class ItemHome extends KubeDAO<Item>{
 				.get("")));
 	}
 	
-	public void modificarCantidadInventario(){
+	public void modificarCantidadInventario()
+	{
 		System.out.println("EL TIPO DE MOVIMIENTO ES: " + instance.getMovimiento().getTipoMovimiento());
 		System.out.println("VA DISMINUIR EL NUMERO DE ITEMS DEL INVENTARIO: " + instance.getInventario().getId());
-		if(instance.getMovimiento().getTipoMovimiento().equals("E")){
-			getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual + :cant " +
-					"where id = :id")
+		
+		if(instance.getMovimiento().getTipoMovimiento().equals("E"))
+		{
+			getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual + :cant " +"where id = :id")
 			.setParameter("cant", instance.getCantidad())
 			.setParameter("id", instance.getInventario().getId())
 			.executeUpdate();
-		}else{
+			
+		}
+		else
+		{
 			System.out.println("VA A MODIFICAR LAS EXISTENCIA DEL INVENTARIO: " + instance.getInventario().getId());
 			System.out.println("LA CANTIDAD DEL ITEM ES: " + instance.getCantidad());
-			getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual - :cant " +
-					"where id = :id")
+			
+			getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual - :cant " +"where id = :id")
 					.setParameter("cant", instance.getCantidad())
 					.setParameter("id", instance.getInventario().getId())
 					.executeUpdate();
 		}
+		
 		getEntityManager().refresh(instance.getInventario());
 	}
 	

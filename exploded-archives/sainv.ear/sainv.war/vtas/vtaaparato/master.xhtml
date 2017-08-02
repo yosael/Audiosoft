@@ -36,8 +36,8 @@
 													<ui:define name="label">#{app.repcli_cliente}:</ui:define><!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') }" -->
 													<h:inputText id="patSearch" styleClass="busProd"
 														rendered="#{empty ventaComboHome.cotizacion}"
-														style="width:200px;"> <a:support ajaxSingle="true" event="onblur" reRender="formapacli"> </a:support>
-													</h:inputText>
+														style="width:200px;"> 
+													</h:inputText><!-- <a:support ajaxSingle="true" event="onblur" reRender="formapacli"> </a:support> -->
 													<!-- 
 													<p:watermark for="patSearch"
 														value="#{app.sched_new_searchpat}" id="watermark" />
@@ -78,10 +78,10 @@
 															</h:outputText>
 														</h:column>
 															<!-- reRender="lblSelPat, lblSelPat1" -->
-														<a:support event="onselect" reRender="formapacli,_selLadoNrml"
+														<a:support event="onselect" reRender="lblSelPat,patSearch,suggestionBox"
 															eventsQueue="q1" ajaxSingle="true"
 															action="#{ventaComboHome.seleccionarCliente(val[4])}"
-															focus="patSearch" />
+															focus="patSearch" /><!-- formapacli,_selLadoNrml -->
 															
 													</rich:suggestionbox>
 													
@@ -259,8 +259,8 @@
 														hideNoSelectionLabel="true" />
 													<a:support event="onchange" ajaxSingle="true"
 														eventsQueue="q1"
-														reRender="_clPrecio,_tblItemsCmb, _dgCombos, boolTieneGar, _tmGar, _totMag1,crearOrden,comentOrden,lblReqMolde,formapacli,lblReqEnsam"
-														action="#{ventaComboHome.setComboVender()}" update="growl" />
+														reRender="formapacli"
+														action="#{ventaComboHome.setComboVender()}" update="growl" /><!-- _clPrecio,_tblItemsCmb, _dgCombos, boolTieneGar, _tmGar, _totMag1,crearOrden,comentOrden,lblReqMolde,,lblReqEnsam -->
 											</h:selectOneMenu>
 											
 											<rich:spacer width="10px;"></rich:spacer>
@@ -573,13 +573,13 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
-															</a:commandLink>
+															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
@@ -708,13 +708,13 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!--  and (ventaComboHome.cotizacion==null) -->
-															</a:commandLink>
+															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="cod" eventsQueue="q1"
@@ -1249,13 +1249,13 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!--  and (ventaComboHome.cotizacion.getHijoBin().get(0)==null) -->
-															</a:commandLink>
+															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<rich:spacer width="3" height="0" ></rich:spacer>
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
@@ -1394,13 +1394,13 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<a:commandLink title="#{msn.ca_button_selpzap}"
-																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
+																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
 																ajaxSingle="true"
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!--  and (ventaComboHome.cotizacion.getHijoBin().get(0)==null) -->
-															</a:commandLink>
+															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<a:commandLink title="#{msn.ca_button_selcodp}"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
@@ -1414,7 +1414,8 @@
 														</f:facet>
 													</rich:dataTable>
 												</rich:panel>
-											</rich:dataGrid></td>
+											</rich:dataGrid>
+										</td>
 									</tr>
 								</table>
 								<s:decorate template="/layout/kActions.xhtml">

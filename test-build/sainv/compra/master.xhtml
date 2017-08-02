@@ -9,6 +9,20 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="head">
+		<script type="text/javascript">
+		function terminar()
+		{
+			window.onbeforeunload = null;
+		}
+		
+		window.onbeforeunload = function exitAlert()
+		{
+			var texto = "Los datos que no se han guardado se perderan.";
+			return texto;
+		}
+		</script>
+	</ui:define>
 
 	<ui:define name="body">
 	
@@ -303,7 +317,7 @@
 						</a:commandButton>
 						<a:commandButton action="#{compraHome.save()}"
 								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmSave')}.hide();"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmSave')}.hide();terminar();"
 								value="#{msn.button_save}" >
 						</a:commandButton>
 					</s:decorate>
@@ -332,7 +346,7 @@
 						</a:commandButton>
 						<a:commandButton action="#{compraHome.preGuardar()}"
 								reRender="formcompra" rendered="#{not compraHome.managed}"
-								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.hide();"
+								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.hide();terminar();"
 								value="Pre-Guardar"  >
 						</a:commandButton>
 					</s:decorate>

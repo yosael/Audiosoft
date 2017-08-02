@@ -27,6 +27,14 @@ public class GeneralMedical extends ClinicalHistory {
 	private String regTips;
 	private String regGenitals;
 	
+	
+	//agredo el 02/08/2017  //Historia Clinica actual
+	private String enfermedadActual;
+	private String antecedentesMedicos;
+	private String antecedentesNoPatologicos;
+	private String antecedentesPatologicos;
+	
+	
 	//Nuevo el 14/06/2017
 	//Nueva seccion OIDO-NARIZ-GARGANTA
 	private String oidos;

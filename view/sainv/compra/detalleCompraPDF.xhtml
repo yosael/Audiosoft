@@ -22,13 +22,15 @@
 			</p:cell>
 			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
 				<p:font color="white" style="bold" >
-					<p:paragraph >#{app.vtaprs_fecha}:</p:paragraph>
+					<p:paragraph >Fecha de compra:</p:paragraph>
 				</p:font>
 			</p:cell>
 			<p:cell verticalAlignment="middle">	
-				<p:paragraph><p:text value="#{compraHome.instance.fecha}" >
-					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-				</p:text></p:paragraph>
+				<p:paragraph>
+					<p:text value="#{compraHome.instance.fecha}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+					</p:text>
+				</p:paragraph>
 			</p:cell>
 			
 			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">

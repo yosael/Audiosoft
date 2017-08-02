@@ -192,12 +192,14 @@ public class CompraHome extends KubeDAO<Compra>{
 				.getResultList());
 	}
 
-	public void cargarListaCodigos(Item prdItm){
+	public void cargarListaCodigos(Item prdItm)
+	{
 		//prdItm.getC
 		selectedItem = prdItm;
 		ArrayList<CodProducto> codsProds = null;
 		//Buscamos primero si ya esta la lista en la lista madre
-		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()) == null && prdItm.getItemId() != null) {
+		if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()) == null && prdItm.getItemId() != null) 
+		{
 			codsProds = (ArrayList<CodProducto>)getEntityManager().createQuery("SELECT c FROM CodProducto c " +
 					"	WHERE c.inventario = :inv AND c.movimiento = :mov AND c.estado='ACT'")
 					.setParameter("inv", prdItm.getInventario())
@@ -216,10 +218,12 @@ public class CompraHome extends KubeDAO<Compra>{
 		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
 		System.out.println("Producto cantidad dps"+prdItm.getCantidad());
 		System.out.println("Tamanios Cod fuera"+codsProds.size());
+		
 		if(codsProds == null) 
 			codsProds = new ArrayList<CodProducto>();
 		
-		while(codsProds.size() < prdItm.getCantidad()) {
+		while(codsProds.size() < prdItm.getCantidad()) 
+		{
 			System.out.println("Entro al while");
 			CodProducto codPrd = new CodProducto();
 			codPrd.setEstado("ACT");
@@ -338,7 +342,8 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 		
 		//Validamos que hayan ingresado el mismo numero de codigos que de items a comprar
-		for(Item tmpItm : itemsAgregados) {
+		for(Item tmpItm : itemsAgregados) 
+		{
 			if(lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia()) == null
 					&& (tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() ||
 							tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote()) )  {
@@ -457,7 +462,10 @@ public class CompraHome extends KubeDAO<Compra>{
 			}
 			
 				
-		}System.out.println("Llego al final de presave compra");
+		}
+		
+		System.out.println("Llego al final de presave compra");
+		
 		return true;
 	}
 	
@@ -1093,19 +1101,25 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 		
 		System.out.println("Entro al posave de compra");
-		for(Item item: itemsAgregados){
+		
+		for(Item item: itemsAgregados)
+		{
 			
 				item.getItemId().setMovimientoId(instance.getId());
 				item.setMovimiento(instance);
 				item.setRegistrado(true);//Nuevo el 24/03/2017
+				
 				itemHome.setInstance(item);
 				itemHome.modificarCantidadInventario();
 				itemHome.save();
+				
 				int numItemsCods = item.getCantidad();
 				//Guardamos los codigos si es que tienen codigos
 				if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
-						item.getInventario().getProducto().getCategoria().isTieneNumLote()) {
-					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) {
+						item.getInventario().getProducto().getCategoria().isTieneNumLote()) 
+				{
+					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) 
+					{
 						if(numItemsCods <= 0)
 							break;
 						
@@ -1116,7 +1130,6 @@ public class CompraHome extends KubeDAO<Compra>{
 							getEntityManager().persist(tmpCod);
 						numItemsCods--;
 					}
-					
 				}
 				
 		}
@@ -1154,6 +1167,7 @@ public class CompraHome extends KubeDAO<Compra>{
 				//nuevoInventario=getEntityManager().merge(nuevoInventario);
 				inventarioHome.setInstance(nuevoInventario);
 				inventarioHome.modify();
+				
 				System.out.println("nuevo"+nuevoInventario.getCantidadActual());
 				System.out.println("nuevo id"+nuevoInventario.getId());
 				//getEntityManager().merge(nuevoInventario);

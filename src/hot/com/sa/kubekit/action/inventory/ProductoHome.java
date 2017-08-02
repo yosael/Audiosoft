@@ -1482,13 +1482,15 @@ public class ProductoHome extends KubeDAO<Producto> {
 		this.imgSize = imgSize;
 	}
 
-	public void posSave() {
+	public void posSave() 
+	{
 		List<Sucursal> sucursales = getEntityManager()
 				.createQuery(
 						"select s from Sucursal s where s.empresa = :empresa")
 				.setParameter("empresa", instance.getEmpresa()).getResultList();
 
-		for (Sucursal sucursal : sucursales) {
+		for (Sucursal sucursal : sucursales) 
+		{
 			Inventario inventario = new Inventario();
 			inventario.setCantidadActual(Integer.valueOf(0));
 			inventario.setProducto(instance);
@@ -1496,6 +1498,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 			this.inventarioHome.setInstance(inventario);
 			this.inventarioHome.save();
 		}
+		
 		getEntityManager().refresh(this.instance);
 		getEntityManager().flush();
 	}

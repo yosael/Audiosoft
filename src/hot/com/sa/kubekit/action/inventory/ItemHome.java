@@ -1,7 +1,5 @@
 package com.sa.kubekit.action.inventory;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -53,7 +51,8 @@ public class ItemHome extends KubeDAO<Item>{
 		getEntityManager().refresh(instance.getInventario());
 	}
 	
-	public void retornarItems(Integer cantidad){
+	public void retornarItems(Integer cantidad)
+	{
 		getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual + :cant " +
 				"where id = :id")
 		.setParameter("cant", cantidad)
@@ -62,7 +61,8 @@ public class ItemHome extends KubeDAO<Item>{
 		getEntityManager().refresh(instance.getInventario());
 	}
 	
-	public void disminuirItems(Integer cantidad){
+	public void disminuirItems(Integer cantidad)
+	{
 		getEntityManager().createQuery("update Inventario set cantidadActual = cantidadActual - :cant " +
 				"where id = :id")
 		.setParameter("cant", cantidad)

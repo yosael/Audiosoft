@@ -150,12 +150,23 @@
 								</h:panelGroup>
 									
 							</h:panelGrid>
-					</rich:simpleTogglePanel>		
+					</rich:simpleTogglePanel>	
+					
+					<rich:simpleTogglePanel eventsQueue="q1"  switchType="ajax" styleClass="letra15"  label="HISTORIAL CLINICO" id="toggleHis" opened="true" >
+							<h:panelGrid columns="1" style="margin:0 auto;font-size:15px" cellpadding="1" cellspacing="1" ><!-- style="padding-left:50px;font-size:14px" -->
+								<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}" style="width:200px"  styleClass="historyBtn" value="Consultar historial clinico"
+											ajaxSingle="true"
+											reRender="modHst1,frmHistorial"
+											onclick="#{rich:component('verHistorialMod')}.show();" >
+								</a:commandButton>
+							</h:panelGrid>
+					</rich:simpleTogglePanel>	
 				
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" style="font-size:14px;" label="#{app.general_step2_tab1}" id="toggles21" opened="true">
-						<h:panelGrid columns="1" style="padding-left:50px;font-size:14px">
+					<!-- #{app.general_step2_tab1} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" style="font-size:14px;" label="HISTORIA CLINICA ACTUAL" id="toggles21" opened="true">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 						
-							
+							<!--  
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:panelGrid columns="1" >
 								
@@ -163,29 +174,34 @@
 										<ui:define name="label">Motivo consulta anterior:</ui:define>	
 										<h:inputTextarea
 											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:780px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" />	
-									</s:decorate>
-								
-									<h:panelGrid columns="2" >
-										<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
-										
-										<a:commandButton  styleClass="addBtn" value=" " 
-											onclick="#{rich:component('selMotiv')}.show();"
-										 	ajaxSingle="true"
-										 	reRender="dMotivoConsulta"
-										 	action="#{motivoConsultaHome.load()}"
-										 	style="width:30px"
-										 	rendered="#{wizardGeneralMedical.mode != 'r'}"
-										/>
-									</h:panelGrid>
-									
-									<h:inputTextarea
-										value="#{generalMedicalDAO.instance.consultationReason}"
-										disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:780px;font-size:14px" id="txtMotivoConsulta" >
-											<a:support event="onchange" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
-										</h:inputTextarea>
-									
+									</s:decorate>								
+
 								</h:panelGrid>
-							</s:decorate>	
+							</s:decorate>-->
+							
+							<h:outputLabel value="Motivo anterior: " style="font-weight:bold" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='') }" />
+							<h:inputTextarea
+											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:710px;height:70px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='')}" />	
+							
+							<h:panelGrid columns="2" >
+								<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
+								
+								<a:commandButton  styleClass="addBtn" value=" " 
+									onclick="#{rich:component('selMotiv')}.show();"
+								 	ajaxSingle="true"
+								 	reRender="dMotivoConsulta"
+								 	action="#{motivoConsultaHome.load()}"
+								 	style="width:30px"
+								 	rendered="#{wizardGeneralMedical.mode != 'r'}"
+								/>
+							</h:panelGrid>
+							
+							<h:inputTextarea
+								value="#{generalMedicalDAO.instance.consultationReason}"
+								disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:710px;height:70px;font-size:14px" id="txtMotivoConsulta" >
+									<a:support event="onchange" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+							</h:inputTextarea>
+							
 
 									<!-- <rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivPa"  >
 										<rich:column >
@@ -206,12 +222,13 @@
 								 	action="#{motivoConsultaHome.load()}"
 								/> -->
 							
+							<h:outputLabel value="#{app.general_step2_observation}:" style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
+								<!-- <ui:define name="label"></ui:define> -->
 								<h:inputTextarea
 									value="#{generalMedicalDAO.instance.observation}" 
-									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtTiempoEvolucion" style="width:780px;font-size:14px" >
+									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtTiempoEvolucion" style="width:710px;height:70px;font-size:14px" >
 									 <a:support event="onkeyup" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>

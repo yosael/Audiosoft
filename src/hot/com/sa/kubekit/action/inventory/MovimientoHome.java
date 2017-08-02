@@ -141,10 +141,14 @@ public class MovimientoHome extends KubeDAO<Movimiento>{
 	
 	
 	@Override
-	public boolean preSave() {
-		for(Item item : itemsAgregados){
-			if(instance.getTipoMovimiento().equals("S")){
-				if(item.getCantidad()>item.getInventario().getCantidadActual()){
+	public boolean preSave() 
+	{
+		for(Item item : itemsAgregados)
+		{
+			if(instance.getTipoMovimiento().equals("S"))
+			{
+				if(item.getCantidad()>item.getInventario().getCantidadActual())
+				{
 					FacesMessages.instance().add(Severity.WARN,
 							sainv_messages.get("movimientoHome_error_save0"));
 					return false;

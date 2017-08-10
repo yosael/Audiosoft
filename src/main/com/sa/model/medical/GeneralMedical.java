@@ -35,6 +35,13 @@ public class GeneralMedical extends ClinicalHistory {
 	private String antecedentesPatologicos;
 	
 	
+	//EXPLORACION FISICA. 07/08/2017
+	private String inspeccionGeneral;
+	
+	private String pulso;
+	private String talla;
+	
+	
 	//Nuevo el 14/06/2017
 	//Nueva seccion OIDO-NARIZ-GARGANTA
 	private String oidos;
@@ -42,6 +49,15 @@ public class GeneralMedical extends ClinicalHistory {
 	private String bocaFaringe;
 	private String laringe;
 	private String cabezaCuello;
+	
+	//nuevo el 07/08/2017
+	private String sistemaNervioso;
+	
+	//EXAMENES COMPLEMENTARIOS. 07/08/2017
+	private String exaAudiologia;
+	private String exaOtoneurologia;
+	private String labClinico;
+	private String radioImagenologia; //radiograficas, imagenologia USG-DUPLIER
 	
 	
 	public GeneralMedical() {
@@ -204,6 +220,109 @@ public class GeneralMedical extends ClinicalHistory {
 	public void setCabezaCuello(String cabezaCuello) {
 		this.cabezaCuello = cabezaCuello;
 	}
+	
+	//nuevo
+
+	public String getEnfermedadActual() {
+		return enfermedadActual;
+	}
+
+	public void setEnfermedadActual(String enfermedadActual) {
+		this.enfermedadActual = enfermedadActual;
+	}
+
+	public String getAntecedentesMedicos() {
+		return antecedentesMedicos;
+	}
+
+	public void setAntecedentesMedicos(String antecedentesMedicos) {
+		this.antecedentesMedicos = antecedentesMedicos;
+	}
+
+	public String getAntecedentesNoPatologicos() {
+		return antecedentesNoPatologicos;
+	}
+
+	public void setAntecedentesNoPatologicos(String antecedentesNoPatologicos) {
+		this.antecedentesNoPatologicos = antecedentesNoPatologicos;
+	}
+
+	public String getAntecedentesPatologicos() {
+		return antecedentesPatologicos;
+	}
+
+	public void setAntecedentesPatologicos(String antecedentesPatologicos) {
+		this.antecedentesPatologicos = antecedentesPatologicos;
+	}
+
+	public String getSistemaNervioso() {
+		return sistemaNervioso;
+	}
+
+	public void setSistemaNervioso(String sistemaNervioso) {
+		this.sistemaNervioso = sistemaNervioso;
+	}
+
+	public String getInspeccionGeneral() {
+		return inspeccionGeneral;
+	}
+
+	public void setInspeccionGeneral(String inspeccionGeneral) {
+		this.inspeccionGeneral = inspeccionGeneral;
+	}
+
+	public String getPulso() {
+		return pulso;
+	}
+
+	public void setPulso(String pulso) {
+		this.pulso = pulso;
+	}
+
+	public String getTalla() {
+		return talla;
+	}
+
+	public void setTalla(String talla) {
+		this.talla = talla;
+	}
+
+	public String getExaAudiologia() {
+		return exaAudiologia;
+	}
+
+	public void setExaAudiologia(String exaAudiologia) {
+		this.exaAudiologia = exaAudiologia;
+	}
+
+	public String getExaOtoneurologia() {
+		return exaOtoneurologia;
+	}
+
+	public void setExaOtoneurologia(String exaOtoneurologia) {
+		this.exaOtoneurologia = exaOtoneurologia;
+	}
+
+	public String getLabClinico() {
+		return labClinico;
+	}
+
+	public void setLabClinico(String labClinico) {
+		this.labClinico = labClinico;
+	}
+
+	public String getRadioImagenologia() {
+		return radioImagenologia;
+	}
+
+	public void setRadioImagenologia(String radioImagenologia) {
+		this.radioImagenologia = radioImagenologia;
+	}
+	
+	
+	
+	
+	////
 	
 	
 	

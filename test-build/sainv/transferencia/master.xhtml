@@ -176,7 +176,7 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{app.transferencia_itemlist_col3}</f:facet>
-						<h:inputText value="#{res.cantidad}" size="8" onkeypress="return restrictNumDigits(event, this, 8);" >
+						<h:inputText value="#{res.cantidad}" size="8" onkeypress="return restrictNumDigits(event, this, 8);" onkeyup="validar_items(#{res.inventario.cantidadActual},this);" >
 							<a:support event="onblur" ajaxSingle="true" eventsQueue="q1"/>
 						</h:inputText>
 					</rich:column>
@@ -221,6 +221,24 @@
 						onclick="upperCaseAllInputs();" value="#{app.transfer_confirm_rec}" />
 				</s:decorate>
 				</fieldset>
+				
+				<s:div>
+					<script type="text/javascript">//<![CDATA[
+						function validar_items(cantidad_actual,elemento)
+						{
+							if(cantidad_actual<elemento.value)
+							{
+								elemento.value=cantidad_actual;
+								elemento.focus();
+								alert('LA CANTIDAD SOLICITADA NO PUEDE SER MAYOR A LA EXISTENCIA');
+								return false;		
+							}	
+						}
+						//]]>
+					</script>
+				</s:div>
+				
+				
 			</h:form>
 			
 			<rich:modalPanel id="confirmation" width="800" moveable="true" autosized="true"  top="40"

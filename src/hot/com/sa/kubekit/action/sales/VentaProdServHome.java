@@ -603,7 +603,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		resultList = getEntityManager()
 				.createQuery(
 						"SELECT v FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) "
-								+ fltFch + " ORDER BY v.fechaVenta DESC ")
+								+ fltFch + " ORDER BY v.cliente.nombres ASC,v.fechaVenta DESC ")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
 				.setParameter("fch2", getFechaPFlt2())

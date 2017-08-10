@@ -37,7 +37,8 @@
 
 						<table style="">
 							<tr>
-								<td><s:decorate template="/layout/kEditSpace.xhtml"
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml"
 										rendered="#{reparacionClienteHome.managed}">
 										<ui:define name="label">#{app.repcli_id}:</ui:define>
 										<h:inputText
@@ -80,7 +81,8 @@
 								</td>
 							</tr>
 							<tr>
-								<td><s:decorate template="/layout/kEditSpace.xhtml">
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml">
 										<ui:define name="label">#{app.repcli_proceso}: <span class="required">*</span></ui:define>
 										<h:selectOneMenu
 											value="#{reparacionClienteHome.instance.proceso}"
@@ -93,8 +95,10 @@
 												eventsQueue="q1" reRender="_precioRep"
 												action="#{reparacionClienteHome.editarCosto()}" />
 										</h:selectOneMenu>
-									</s:decorate></td>
-								<td><s:decorate template="/layout/kEditSpace.xhtml">
+									</s:decorate>
+								</td>
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml">
 										<ui:define name="label">#{app.repcli_cliente}:</ui:define>
 										<h:inputText id="lblSelPat"
 											value="#{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}"
@@ -156,7 +160,8 @@
 
 										</rich:suggestionbox>
 
-									</s:decorate></td>
+									</s:decorate>
+									</td>
 								<td>
 									<s:decorate template="/layout/kEditSpace.xhtml">
 										<ui:define name="label">#{app.repcli_aparato}:</ui:define>

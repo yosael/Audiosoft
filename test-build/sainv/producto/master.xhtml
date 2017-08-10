@@ -16,7 +16,7 @@
 					value="#{productoHome.managed?sainv_view_messages.get('productomast_head_edit'):sainv_view_messages.get('productomast_head_register')}" styleClass="marginhead" />
 			</f:facet>
 			<rich:spacer height="10" />
-			<h:form id="formproducto">
+			<h:form id="formproducto" enctype="multipart/form-data" >
 
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -31,13 +31,17 @@
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_ref}:</ui:define>
 									<h:inputText value="#{productoHome.instance.referencia}"
-										required="true" />
+										required="true" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_name}:</ui:define>
 									<h:inputText value="#{productoHome.instance.nombre}"
-										required="true" />
+										required="true" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml" id="catProducto">
@@ -59,13 +63,16 @@
 										<s:selectItems value="#{marcaList.resultList}" var="mar"
 											label="#{mar.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
+										<a:support ajaxSingle="true" event="onchange" ></a:support>
 									</h:selectOneMenu>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_modelo}:</ui:define>
 									<h:inputText value="#{productoHome.instance.modelo}"
-										required="false" />
+										required="false" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
@@ -74,6 +81,7 @@
 										<s:selectItems value="#{paisHome.resultList}" var="pais"
 											label="#{pais.nombreEsp}" noSelectionLabel="#{app.productomast_selecOri}" />
 										<s:convertEntity />
+										<a:support ajaxSingle="true" event="onchange" ></a:support>
 									</h:selectOneMenu>
 								</s:decorate>
 								
@@ -118,7 +126,9 @@
 									<ui:define name="label">#{app.productomast_codubi}:</ui:define>
 									<h:inputText value="#{productoHome.codUbicacion.nombre}"
 										id="btnUbiPrd" disabled="true" readonly="true"
-										required="false" style="width:200px;" />
+										required="false" style="width:200px;" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputText>
 
 								</s:decorate>
 
@@ -126,21 +136,27 @@
 									<ui:define name="label">#{app.productomast_min_amount}:</ui:define>
 									<h:inputText value="#{productoHome.instance.cantidadMinima}"
 										required="true"
-										onkeypress="return restrictNumDigits(event, this, 6);" />
+										onkeypress="return restrictNumDigits(event, this, 6);" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_max_amount}:</ui:define>
 									<h:inputText value="#{productoHome.instance.cantidadMaxima}"
 										required="true"
-										onkeypress="return restrictNumDigits(event, this, 6);" />
+										onkeypress="return restrictNumDigits(event, this, 6);" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>	
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_tmpenv}:</ui:define>
 									<h:inputText value="#{productoHome.instance.tiempoEnvio}"
 										required="false"
-										onkeypress="return restrictNumDigits(event, this, 3);" />
+										onkeypress="return restrictNumDigits(event, this, 3);" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>	
+									</h:inputText>
 								</s:decorate>
 
 								<s:decorate template="/layout/kEditSpace.xhtml"
@@ -151,6 +167,7 @@
 										<s:selectItems value="#{empresaList.resultList}" var="_emp"
 											label="#{_emp.nombre}" noSelectionLabel=" " />
 										<s:convertEntity />
+										<a:support ajaxSingle="true" event="onchange" ></a:support>
 									</h:selectOneMenu>
 								</s:decorate>
 
@@ -168,11 +185,13 @@
 								<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.productomast_descripcion}:</ui:define>
 									<h:inputTextarea value="#{productoHome.instance.descripcion}"
-										required="false" style="width:480px; height:50px;" />
+										required="false" style="width:480px; height:50px;" >
+										<a:support ajaxSingle="true" event="onkeyup" ></a:support>
+									</h:inputTextarea>
 								</s:decorate>
 
 							</h:panelGrid>
-							<h:column>
+							<h:column id="idImageCol" >
 								<h:outputLabel value="#{app.productomast_imgRestri}" />
 								<rich:fileUpload fileUploadListener="#{productoHome.loadImage}"
 									listHeight="0" maxFilesQuantity="1" ajaxSingle="true"
@@ -181,14 +200,14 @@
 									immediateUpload="true" listWidth="300" autoclear="false"
 									doneLabel="Listo" stopButtonClassDisabled="true"
 									style="height:30px;" clearAllControlLabel="Quitar imagen"
-									cleanButtonClassDisabled="false">
+									cleanButtonClassDisabled="false"   >
 									<a:support event="onuploadcomplete" ajaxSingle="true"
-										eventsQueue="q1" reRender="formproducto" />
+										eventsQueue="q1" reRender="formproducto" /><!-- formproducto -->
 								</rich:fileUpload>
 								<br />
 								<h:outputLabel styleClass="errors"
 									value="#{sainv.productoHome_error_image}"
-									rendered="#{productoHome.imgSize==false}" />
+									rendered="#{productoHome.imgSize==false}" id="errorIm" />
 								<br />
 								<br />
 								<s:graphicImage id="graphPrd" width="300px" height="300px"

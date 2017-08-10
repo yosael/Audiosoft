@@ -5,25 +5,29 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	title="#{app.report_pdf_movements_file_title}" creator="Soluciones Aplicativas"
+	title="Trabajo de taller" creator="Soluciones Aplicativas"
 	pageSize="LETTER" type="pdf" margins="40 30 30 30">
-	<p:font size="10" style="italic">
+	
+	<p:font size="9" style="italic">
+		<p:paragraph alignment="right"><p:text value="Audiomed El Salvador, tel. 2525 0900"></p:text></p:paragraph>
+	</p:font>
+	<p:font size="9" style="italic">
 		<p:paragraph alignment="right"><p:text value="Le atendio: #{loginUser.getUser().getNombreCompleto()}, "></p:text> <p:text value="#{reparacionClienteHome.getFecDeHoy().toGMTString().substring(0, 11)}"></p:text> </p:paragraph>
 	</p:font>
-	<p:font size="16" >	
+	<p:font size="14" >	
 		<p:paragraph alignment="center">COMPROBANTE DE TRABAJO DE TALLER</p:paragraph><!-- #{app.comprrep_title} -->
 	</p:font>
 	<p:html><br /></p:html>
 	<p:font size="9">
 	<p:table columns="2" widthPercentage="100" headerRows="0"  widths="2 2">
-			<p:cell verticalAlignment="middle" paddingBottom="2" >
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2" >
 				<p:paragraph alignment="left">Paciente: #{reparacionClienteHome.instance.cliente.nombres} #{reparacionClienteHome.instance.cliente.apellidos}</p:paragraph>
 			</p:cell>
-			<p:cell verticalAlignment="middle" paddingBottom="2">
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2">
 				<p:paragraph alignment="left">Codigo: #{reparacionClienteHome.instance.proceso.prcCode}#{reparacionClienteHome.instance.id}
 				</p:paragraph>
 			</p:cell>
-			<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2">
+			<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="3" paddingTop="2">
 				<p:paragraph>
 					<p:text value="Hecho a la medida: "  />
 					<p:text value="Si                      " rendered="#{reparacionClienteHome.instance.aparatoRep.hechoMedida==true}" />
@@ -35,7 +39,7 @@
 			</p:cell>
 			 
 			
-			<p:cell verticalAlignment="middle" paddingBottom="2" >
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2" >
 				<p:paragraph>
 				<p:text value="Lado: "  />
 				<p:text value="DERECHO" rendered="#{reparacionClienteHome.instance.aparatoRep.ladoAparato=='DER'}" />
@@ -44,25 +48,33 @@
 			</p:cell>
 			
 	
-			<p:cell verticalAlignment="middle" paddingBottom="2">
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2">
 				<p:paragraph alignment="right">Marca: #{reparacionClienteHome.instance.aparatoRep.marca}     Modelo: #{reparacionClienteHome.instance.aparatoRep.modelo}</p:paragraph>
 			</p:cell>
 			
-			<p:cell verticalAlignment="middle" paddingBottom="2">
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2">
 				<p:paragraph alignment="right">N° serie: #{reparacionClienteHome.instance.aparatoRep.numSerie}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2">
+				<p:paragraph alignment="right">Tipo de trabajo: #{reparacionClienteHome.instance.proceso.nombre}</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" paddingBottom="3" paddingTop="2">
+				<p:paragraph alignment="right">Motivo: #{reparacionClienteHome.instance.descripcion}</p:paragraph>
 			</p:cell>
 
 			
 	</p:table>
 	<p:html><br /></p:html>
 	<p:table columns="3" widthPercentage="100" headerRows="1"  widths="2 2 2">		
-			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="3" paddingTop="2">
 				<p:paragraph>#{app.repcli_lstcnds}</p:paragraph>
 			</p:cell>
-			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="3" paddingTop="2">
 				<p:paragraph>#{app.repcli_lstcmps}</p:paragraph>
 			</p:cell>
-			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="2">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingBottom="3" paddingTop="2">
 				<p:paragraph>#{app.repcli_lstcpds}</p:paragraph>
 			</p:cell>
 			
@@ -71,30 +83,34 @@
 					<ui:repeat value="#{reparacionClienteHome.instance.condsAparatorep}" var="bean">
 						<p:text value="#{bean.condAparato.nombre}" /><p:html><br /></p:html>
 					</ui:repeat>
+					<p:text value="No se especifico" rendered="#{empty reparacionClienteHome.instance.condsAparatorep}" />
 				</p:paragraph>
+				
 			</p:cell>
-			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14">
+			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14" paddingBottom="3" paddingTop="2">
 				<p:paragraph>
 					<ui:repeat value="#{reparacionClienteHome.instance.compsDefAparato}" var="bean">
 						<p:text value="#{bean.cmpAparato.nombre}" /><p:html><br /></p:html>
 					</ui:repeat>
+					<p:text value="No se especifico" rendered="#{empty reparacionClienteHome.instance.compsDefAparato}" />
 				</p:paragraph>
 			</p:cell>
-			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14">
+			<p:cell minimumHeight="5" verticalAlignment="middle" horizontalAlignment="left" paddingLeft="14" paddingBottom="3" paddingTop="2">
 				<p:paragraph>
 					<ui:repeat value="#{reparacionClienteHome.instance.defCapsAparato}" var="bean">
 						<p:text value="#{bean.defCapsula.nombre}" /><p:html><br /></p:html>
 					</ui:repeat>
+					<p:text value="No se especifico" rendered="#{empty reparacionClienteHome.instance.defCapsAparato}" />
 				</p:paragraph>
 			</p:cell>		
 		</p:table>
 		<p:html><br /></p:html>
 		<p:table columns="6" widthPercentage="100" headerRows="0"  widths="2 1 1 1 1 1" rendered="#{reparacionClienteHome.instance.estado=='FIN' or reparacionClienteHome.instance.estado=='DLV'}">
 			<ui:repeat value="#{reparacionClienteHome.instance.etapasReparacion}" var="eta">
-				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthRight="0">
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="3" paddingTop="2" borderWidthBottom="0" borderWidthRight="0">
 					<p:paragraph>#{eta.etapaRep.nombre}</p:paragraph>
 				</p:cell>
-				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="3" paddingTop="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
 					<p:paragraph>
 						<p:text value="Fecha: " />
 						<p:text value="#{eta.fechaRealFin}" >
@@ -102,7 +118,7 @@
 						</p:text>
 					</p:paragraph>
 				</p:cell>
-				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
+				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="3" paddingTop="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
 					<p:paragraph>
 						<p:text value="Técnico: " />
 						<p:text value="#{eta.usuario.nombreCompleto}" />
@@ -144,8 +160,8 @@
 				
 	</p:table>
 	<p:table columns="6" widthPercentage="100" headerRows="0"  widths="2 1 1 1 1 1" rendered="#{reparacionClienteHome.instance.estado=='DLV'}">
-				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthRight="0">
-					<p:paragraph>CONFIRMACION DE ENTREGA</p:paragraph>
+				<p:cell verticalAlignment="middle" horizontalAlignment="left" paddingBottom="3" paddingTop="2" borderWidthBottom="0" borderWidthRight="0">
+					<p:paragraph>Confirmacion de entrega</p:paragraph>
 				</p:cell>
 				<p:cell verticalAlignment="middle" colspan="2" horizontalAlignment="left" paddingBottom="2" borderWidthBottom="0" borderWidthLeft="0" borderWidthRight="0">
 					<p:paragraph>

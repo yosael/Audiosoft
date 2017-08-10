@@ -14,16 +14,16 @@
 			<f:facet name="header"><span class="marginhead">#{app.productolist_head}</span></f:facet>
 			<h:form id="formA">
 				
-				<h:panelGrid columns="3" style="margin:0 auto;" >
+				<h:panelGrid columns="4" style="margin:0 auto;" >
 				
 					<s:decorate template="/layout/kActions.xhtml">
-						<s:button view="/sainv/producto/list.xhtml" propagation="begin"
+						<s:button view="/sainv/producto/list.xhtml" style="width:110px;height:25px;" propagation="begin"
 							styleClass="refreshBtn" value="Actualizar" rendered="true"  action="#{productoList.recargar()}" >
 						</s:button>
 					</s:decorate>
 					
 					<s:decorate template="/layout/kActions.xhtml">
-						<s:button view="/sainv/producto/master.xhtml" propagation="begin"
+						<s:button view="/sainv/producto/master.xhtml" style="width:110px;height:25px;" propagation="begin"
 							styleClass="newBtn" value="#{msn.button_register}" rendered="true">
 							<f:param name="id" value="" />
 						</s:button>
@@ -35,16 +35,23 @@
 					</s:decorate>
 						 -->
 					<s:decorate template="/layout/kActions.xhtml">
-						<s:button action="#{productoHome.loadItemsExcel()}" style="width:200px;" ajax="false" propagation="join"
+						<s:button action="#{productoHome.loadItemsExcel()}" style="width:110px;height:25px;" ajax="false" propagation="join"
 							styleClass="excBtn" value="Items" >
 							<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
 						</s:button>
 					</s:decorate>
 					
+					<h:panelGroup>
+						<h:outputLabel value="Incluir inactivos" style="margin-top:12px;font-weight:bold;" />	
+						<h:selectBooleanCheckbox value="#{productoList.verInactivos}" label="Incluir inactivos" style="margin-top:12px" >
+							<a:support reRender="#{rich:clientId('_table')}" event="onclick" ajaxSingle="true" action="#{productoList.init()}" ></a:support>
+						</h:selectBooleanCheckbox>
+					</h:panelGroup>
+					
 				</h:panelGrid>
 			<rich:spacer height="10" />
 						
-					<h:panelGroup id="panel">
+				<h:panelGroup id="panel">
 				<p:growl globalOnly="true" sticky="false" life="5000" />
 				
 				<a:queue name="q1"/>

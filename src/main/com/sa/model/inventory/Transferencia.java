@@ -97,4 +97,11 @@ public class Transferencia extends Movimiento{
 		this.entrada = entrada;
 	}
 	
+	
+	
+	
+	
+	
+	
+	
 }

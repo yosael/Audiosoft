@@ -233,6 +233,13 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 			bl.append(". ");
 		}
 		
+		if(generalMedicalDAO.getInstance().getEnfermedadActual()!=null)
+		{
+			bl.append("Enfermedad actual ");
+			bl.append(generalMedicalDAO.getInstance().getEnfermedadActual());
+			bl.append(". ");
+		}
+		
 		resumenPaciente=bl.toString();
 		
 		System.out.println(resumenPaciente);

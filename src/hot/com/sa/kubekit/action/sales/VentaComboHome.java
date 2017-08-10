@@ -5148,7 +5148,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					{
 						
 						
-						System.out.println("*********************************************************************Precio de itemComboApa "+itemCmb.getPrecioCotizado());
+						//System.out.println("*********************************************************************Precio de itemComboApa "+itemCmb.getPrecioCotizado());
 						//Poner aqi el precioCotizado al valor, costo unitario
 						
 						itemCmb.setPrecioCotizado(itemCmb.getPrecioCotizado());

@@ -89,6 +89,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 	private String nombreSucursalSelec="";
 	
 	private List<Producto> listaItems = new ArrayList<Producto>();
+	private String referenciaActual;
 	
 
 	public void create() {
@@ -102,7 +103,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	// Método que convierte la imagen a un array de byte, luego asigna el
 	// resultado al objeto instance
-	public void loadImage(UploadEvent e) {
+	public void loadImage(UploadEvent e) 
+	{
 		String path = e.getUploadItem().getFileName();
 		System.out.println("Path var: "+path);
 		File file = new File(e.getUploadItem().getFile().getPath());
@@ -112,15 +114,19 @@ public class ProductoHome extends KubeDAO<Producto> {
 			FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("productoHome_error_image"));
 			setImgSize(false);
-		}  else {
+		}  
+		else 
+		{
 			setImgSize(true);
 			byte[] bFile = new byte[(int) file.length()];
-			try {
+			try 
+			{
 				FileInputStream fileInputStream = new FileInputStream(file);
 				// convert file into array of bytes
 				fileInputStream.read(bFile);
 				fileInputStream.close();
 				instance.setImage(bFile);
+				
 				System.out.println(instance.getImage().length);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -129,12 +135,14 @@ public class ProductoHome extends KubeDAO<Producto> {
 	}
 
 	public void getProductosExisLst() {
+		
+		System.out.println("buscando...");
 
 		// Calculamos el total en base a todos los inventarios
 		getEntityManager().clear();
 		prdsExistencias = getEntityManager()
 				.createQuery(
-						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(p.nombre) like UPPER(:ref) or UPPER(p.categoria.codigo) like UPPER(:ref) or UPPER(p.modelo) like UPPER(:ref)) order by p.referencia,p.categoria.codigo,p.nombre ")
+						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(TRIM(p.nombre)) like UPPER(TRIM(:ref)) or UPPER(p.categoria.codigo) like UPPER(:ref) or UPPER(TRIM(p.modelo)) like UPPER(TRIM(:ref))) order by p.referencia,p.categoria.codigo,p.nombre ")
 				.setParameter("ref", "%" + this.getNomCoinci() + "%")
 				.getResultList();
 
@@ -453,6 +461,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 			
 			instance.setIvaPorcent(obtenerIVA());//nuevo el 30/07/2017
 			
+			referenciaActual=instance.getReferencia();
+			
 			actualizarMontosLoad();
 			
 		}
@@ -462,11 +472,13 @@ public class ProductoHome extends KubeDAO<Producto> {
 
 	public void loadConsolidadoExis() {
 		List<Producto> prdElim = new ArrayList<Producto>();
-		String hql = "SELECT p FROM Producto p  WHERE 1=1 ORDER BY p.tipo ASC,p.referencia,p.nombre ";
+		String hql = "SELECT p FROM Producto p  WHERE 1=1 ORDER BY p.tipo ASC,p.nombre ";
 		prdsExistencias = getEntityManager().createQuery(hql).getResultList();
 		// Calculamos el total en base a todos los inventarios
 		totalInventario = 0;
-		for (Producto tmpPrd : prdsExistencias) {
+		
+		for (Producto tmpPrd : prdsExistencias) 
+		{
 			Integer conteo = 0;
 			for (Inventario tmpInv : tmpPrd.getInventarios()) 
 			{
@@ -478,7 +490,9 @@ public class ProductoHome extends KubeDAO<Producto> {
 						conteo += tmpInv.getCantidadActual();
 						break;
 					}
-				} else {
+				} 
+				else 
+				{
 					conteo += tmpInv.getCantidadActual();
 				}
 				
@@ -488,11 +502,14 @@ public class ProductoHome extends KubeDAO<Producto> {
 				tmpPrd.setTotalPrds(conteo);
 				totalInventario += conteo;
 				
-			} else {
+			} 
+			else 
+			{
 				prdElim.add(tmpPrd);
 			}
 			
 		}
+		
 		prdsExistencias.removeAll(prdElim);
 		System.out.println("Entro a liad exis");
 		
@@ -1071,7 +1088,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 				System.out.println("disdd");
 				prdsExistencias = getEntityManager()
 						.createQuery(
-								"select p from Producto p where p.tipo=:tipo order by p.referencia ")
+								"select p from Producto p where p.tipo=:tipo order by p.nombre ")
 						.setParameter("tipo",tipoProducto)
 						.getResultList();
 			}
@@ -1079,7 +1096,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 			{
 				prdsExistencias = getEntityManager()
 						.createQuery(
-								"select p from Producto p order by p.referencia ")
+								"select p from Producto p order by p.nombre ")
 						.getResultList();
 			}
 		}
@@ -1087,7 +1104,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 		{
 			prdsExistencias = getEntityManager()
 					.createQuery(
-							"select p from Producto p  order by p.referencia ")
+							"select p from Producto p  order by p.nombre ")
 					.getResultList();
 		}
 
@@ -1117,7 +1134,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 		String hql = "SELECT s FROM Sucursal s WHERE 	1=1 ";
 		
 		System.out.println("entro al metodo");
-		if (!nombreSucursalSelec.equals(""))
+		if (nombreSucursalSelec!=null && !nombreSucursalSelec.equals(""))
 		{
 			hql += " AND s.nombre = :suc ";
 			System.out.println("sucursal seleccionada"+nombreSucursalSelec);
@@ -1127,19 +1144,21 @@ public class ProductoHome extends KubeDAO<Producto> {
 		}
 		else
 		{
-			hql += " AND :suc IS NULL ";
+			//hql += " AND :suc IS NULL ";
 			System.out.println("sucursal vacia");
 			
-			sucList = getEntityManager().createQuery(hql)
-					.setParameter("suc", sucursalFlt).getResultList();
+			sucList = getEntityManager().createQuery(hql).getResultList();
 		}
 
 		
+		
 
 		// Calculamos el total por sucursal
-		for (Sucursal tmpS : sucList) {
+		for (Sucursal tmpS : sucList) 
+		{
 			Integer totSuc = 0;
-			for (Inventario tmpInv : tmpS.getInventarios()) {
+			for (Inventario tmpInv : tmpS.getInventarios()) 
+			{
 				totSuc += tmpInv.getCantidadActual();
 				if (tmpInv.getCantidadActual() <= 0)
 					prdElim.add(tmpInv);
@@ -1441,6 +1460,14 @@ public class ProductoHome extends KubeDAO<Producto> {
 	}
 
 	public boolean preSave() {
+		
+		if(existeReferenciaProducto())
+		{
+			FacesMessages.instance().add(Severity.WARN,"El numero de referencia ya existe");
+			
+			return false;
+		}
+		
 		if (instance.getEmpresa() == null) {
 			FacesMessages.instance().add(
 					this.sainv_messages.get("productoHome_error_save1"),
@@ -1451,6 +1478,16 @@ public class ProductoHome extends KubeDAO<Producto> {
 	}
 
 	public boolean preModify() {
+		
+		if(!referenciaActual.equals(instance.getReferencia()))
+		{
+			if(existeReferenciaProducto())
+			{
+				FacesMessages.instance().add(Severity.WARN,"El numero de referencia ya existe");
+				return false;
+			}
+		}
+		
 		if (instance.getEmpresa() == null) {
 			FacesMessages.instance().add(
 					this.sainv_messages.get("productoHome_error_save1"),
@@ -1458,6 +1495,22 @@ public class ProductoHome extends KubeDAO<Producto> {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean existeReferenciaProducto()
+	{
+		
+		if(instance.getReferencia()!=null)
+		{
+			List<Producto> prod = getEntityManager().createQuery("SELECT p FROM Producto p where p.referencia=:ref").setParameter("ref", instance.getReferencia()).getResultList();
+			
+			if(prod!=null && prod.size()>0)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public boolean preDelete() {
@@ -1472,6 +1525,11 @@ public class ProductoHome extends KubeDAO<Producto> {
 		} catch (Exception e) {
 		}
 		return true;
+	}
+	
+	public void asignarCategoria(Categoria cat)
+	{
+		instance.setCategoria(cat);
 	}
 
 	public boolean isImgSize() {

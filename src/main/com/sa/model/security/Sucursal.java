@@ -16,11 +16,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
+import org.hibernate.annotations.Sort;
 import org.hibernate.validator.Length;
 import org.hibernate.validator.NotEmpty;
 
@@ -152,6 +154,7 @@ public class Sucursal implements Serializable{
 		this.pedidos = pedidos;
 	}
 
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "sucursal", cascade = CascadeType.REMOVE)
 	public List<Inventario> getInventarios() {
 		return inventarios;

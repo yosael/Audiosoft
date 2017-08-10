@@ -50,7 +50,7 @@
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.movimientomast_select_product}" reRender="catProducto"
-							action="#{productoHome.instance.setCategoria(res)}" ajaxSingle="true" eventsQueue="q1"
+							action="#{productoHome.asignarCategoria(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('catsList')}.hide();">
 						</a:commandLink>
 					</rich:column>

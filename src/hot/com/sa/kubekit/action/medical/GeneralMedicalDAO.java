@@ -61,22 +61,33 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 			
 			FacesMessages.instance().add(Severity.WARN,"El motivo de consulta ya fue agregado");
 			return;
-		}*/
+		}
 		
 		if(instance.getConsultationReason()==null)
 		{
 			instance.setConsultationReason("");
+		}*/
+		
+		if(motivo.getSelected())
+		{
+			motivosAgregados.add(motivo);
+			generarMotivoConsulta();
+		}
+		else
+		{
+			motivosAgregados.remove(motivo);
+			generarMotivoConsulta();
 		}
 		
 		
-		if(instance.getConsultationReason().contains(motivo.getDescripcion()))
+		/*if(instance.getConsultationReason().contains(motivo.getDescripcion()))
 		{
 			FacesMessages.instance().add(Severity.WARN,"El motivo de consulta ya fue agregado");
 			return;
 		}
 		
 		instance.setConsultationReason(instance.getConsultationReason()+". "+motivo.getDescripcion());
-		FacesMessages.instance().add(Severity.INFO,"Motivo de consulta agregado");
+		FacesMessages.instance().add(Severity.INFO,"Motivo de consulta agregado");*/
 		
 		//motivosAgregados.add(motivo);
 		
@@ -88,11 +99,14 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 		
 		if(motivosAgregados.size()>0)
 		{
-			instance.getConsultationReason();
+			//instance.getConsultationReason();
+			StringBuilder blMotivos = new StringBuilder();
 			for(MotivoConsulta motivo:motivosAgregados)
 			{
-				instance.setConsultationReason(instance.getConsultationReason()+motivo.getDescripcion());
+				blMotivos.append(motivo.getDescripcion()).append(". ");
 			}
+			
+			instance.setConsultationReason(blMotivos.toString());
 		}
 		
 	}

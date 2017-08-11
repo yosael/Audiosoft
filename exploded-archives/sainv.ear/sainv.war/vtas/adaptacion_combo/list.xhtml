@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml" >
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header">Adaptacion combos</f:facet>
+			<f:facet name="header"><span class="marginhead" >Adaptacion combos</span></f:facet>
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
@@ -28,7 +28,7 @@
 				</center>
 					<a:queue name="q1" />
 				<center>
-						<s:span styleClass="busHead">#{app.combapa_head_buscar}:</s:span>
+						<s:span styleClass="busHead">BUSCAR ADAPTACION:</s:span>
 						<rich:spacer width="0" /> <s:decorate></s:decorate>
 						<h:inputText styleClass="busProd" value="#{adaptacionComboHome.nomCoinci}"
 							 id="_nomCoinci">

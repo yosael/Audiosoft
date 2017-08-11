@@ -35,6 +35,9 @@
 					<a:commandButton oncomplete="showReport('#{conversation.id}')"  
 						styleClass="pdfBtn" value="#{msn.button_pdf}" 
 						rendered="#{not empty transferenciasPendientesList.resultList}"/>
+					<s:button 
+						styleClass="refreshBtn" value="Actualizar" action="#{transferenciasPendientesList.init()}" propagation="begin"  view="/sainv/transferSend/transferPendingSend.xhtml"   rendered="true"  >
+					</s:button>
 				</s:decorate>
 				<rich:spacer height="20" />
 			

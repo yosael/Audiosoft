@@ -72,13 +72,13 @@
 					<rich:column >
 						<f:facet name="header">#{app.transferencialist_col4}</f:facet>
 						<h:outputText value="#{res.fecha}">
-							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+							<s:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm a" />
 						</h:outputText>
 					</rich:column>
 					<rich:column >
-						<f:facet name="header">#{app.transferencialist_col5}</f:facet>
+						<f:facet name="header">Fecha de recibido</f:facet><!-- #{app.transferencialist_col5} -->
 						<h:outputText value="#{res.fechaRecibo}">
-							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+							<s:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm a" />
 						</h:outputText>
 					</rich:column>
 					<rich:column>

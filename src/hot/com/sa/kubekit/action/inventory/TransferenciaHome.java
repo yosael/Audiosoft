@@ -502,6 +502,8 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 			return false;
 		}
 		
+		instance.setFecha(new Date());
+		
 		return true;
 	}
 

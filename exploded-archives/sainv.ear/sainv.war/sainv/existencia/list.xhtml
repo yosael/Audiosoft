@@ -45,10 +45,12 @@
 							<a:commandButton value="Inexistencias" action="#{productoHome.loadConsolidadoInexis()}"
 								oncomplete="showReport('listaInexistencias', '#{conversation.id}');" styleClass="pdfBtn"   />
 						</s:decorate> -->
+						
+						<!-- Comentado el 10/08/2017 
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<a:commandButton value="#{app.bt_rep_exis_suc}" action="#{productoHome.loadSucursalesRep()}"
 								oncomplete="showReport('listadoExistenciasSuc', '#{conversation.id}');" styleClass="pdfBtn"  />
-						</s:decorate>
+						</s:decorate>-->
 						
 						<s:decorate template="/layout/kActions.xhtml">
 							<s:button action="#{productoHome.loadConsolidadoExisExcel()}" style="width:200px;" ajax="false" propagation="join"

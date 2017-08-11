@@ -213,6 +213,16 @@
 									<f:facet name="header">Nombre</f:facet>
 									<h:outputText value="#{res.adaptacion.nombre}" />
 								</rich:column>
+								
+								<rich:column>
+									<f:facet name="header">Opcional?</f:facet>
+									<center>
+										<h:selectBooleanCheckbox value="#{res.opcional}" >
+											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" 
+										 reRender="formcombo"/>
+										</h:selectBooleanCheckbox><!-- action="#{res.setGeneraRequisicion(res.generaRequisicion)}" -->
+									</center>
+								</rich:column>
 																
 								<rich:column>	
 									<f:facet name="header">Contenido</f:facet>

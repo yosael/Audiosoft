@@ -2941,12 +2941,17 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	{
 		for(ComboAparato cmb: selCmbsList)
 		{
+			
 			if(cmb.getAdaptaciones().size()>0)
 			{
-				if(lsAdaptacionesPorComboSel.get(cmb.getId())==null || lsAdaptacionesPorComboSel.get(cmb.getId()).size()<=0)
+				
+				for(ComboAparatoAdaptacion adp: cmb.getAdaptaciones())
 				{
-					FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo");
-					return false;
+					if(adp.getOpcional()==null || adp.getOpcional()==false && !lsAdaptacionesPorComboSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
+					{
+						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo");
+						return false;
+					}
 				}
 			}
 		}
@@ -2960,10 +2965,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		{
 			if(cmb.getAdaptaciones().size()>0)
 			{
-				if(lsAdaptacionesPorComboBinSel.get(cmb.getId())==null || lsAdaptacionesPorComboBinSel.get(cmb.getId()).size()<=0)
+				for(ComboAparatoAdaptacion adp: cmb.getAdaptaciones())
 				{
-					FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural");
-					return false;
+					if(adp.getOpcional()==null || adp.getOpcional()==false && !lsAdaptacionesPorComboBinSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
+					{
+						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural");
+						return false;
+					}
 				}
 			}
 		}

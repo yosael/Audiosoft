@@ -18,53 +18,66 @@
 				<p:focus />
 				<a:queue name="q1" />
 				<center>
-					<h:panelGrid columns="4">
+					<h:panelGrid columns="6">
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Estado:</ui:define>
 							<h:selectOneMenu value="#{repTransferencia.estado}" >
 								<f:selectItem itemLabel="" />
 								<f:selectItem itemLabel="Generada" itemValue="G"/>
 								<f:selectItem itemLabel="Pendiente" itemValue="P"/>
-								<f:selectItem itemLabel="Aceptado" itemValue="A"/>
+								<f:selectItem itemLabel="Finalizado" itemValue="A"/>
 								<f:selectItem itemLabel="Descartado" itemValue="D"/>
-								<f:selectItem itemLabel="Rechazado" itemValue="R"/>																		
+								<f:selectItem itemLabel="Rechazado" itemValue="R"/>
+								<f:selectItem itemLabel="#{msn.status_sent}" itemValue="S"/>
 		                          <a:support event="onchange" ajaxSingle="true" action="#{repTransferencia.buscarTransferencias()}" 
-		                          	eventsQueue="q1" reRender="_tblRes"/>
+		                          	eventsQueue="q1" reRender="_table"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">Solicitado desde:</ui:define>
+							<h:selectOneMenu value="#{repTransferencia.sucursalDesde}">
+								<s:selectItems value="#{repTransferencia.sucursales}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=""/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{repTransferencia.buscarTransferencias()}" 
+									ajaxSingle="true" reRender="_table"/>
+							</h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal!=null}">
+							<ui:define name="label">Solicitado a:</ui:define>
+							<h:selectOneMenu value="#{repTransferencia.sucursalHacia}">
+								<s:selectItems value="#{repTransferencia.sucursales}" var="_suc" 
+									label="#{_suc.nombre}" noSelectionLabel=""/>
+								<s:convertEntity />
+								<a:support event="onchange" eventsQueue="q1" action="#{repTransferencia.buscarTransferencias()}" 
+									ajaxSingle="true" reRender="_table"/>
 							</h:selectOneMenu>
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.report_movements_filter1}:</ui:define>
 							<rich:calendar value="#{repTransferencia.fechaInicio}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" action="#{repTransferencia.buscarTransferencias()}" eventsQueue="q1" reRender="_tblRes"/>
+								<a:support event="oncollapse" ajaxSingle="true" action="#{repTransferencia.buscarTransferencias()}" eventsQueue="q1" reRender="_table"/>
 							</rich:calendar>
 						</s:decorate>
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">#{app.report_movements_filter2}:</ui:define>
 							<rich:calendar value="#{repTransferencia.fechaFin}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" action="#{repTransferencia.buscarTransferencias()}" eventsQueue="q1" reRender="_tblRes"/>
+								<a:support event="oncollapse" ajaxSingle="true" action="#{repTransferencia.buscarTransferencias()}" eventsQueue="q1" reRender="_table"/>
 							</rich:calendar>
 						</s:decorate>
 						
-						<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{loginUser.user.sucursal==null}">
-							<ui:define name="label">#{app.report_movements_filter6}:</ui:define>
-							<h:selectOneMenu value="#{repTransferencia.sucursalSel}">
-								<s:selectItems value="#{repTransferencia.sucursales}" var="_suc" 
-									label="#{_suc.nombre}" noSelectionLabel=""/>
-								<s:convertEntity />
-								<a:support event="onchange" eventsQueue="q1" action="#{repTransferencia.buscarTransferencias()}" 
-									ajaxSingle="true" reRender="_tblRes"/>
-							</h:selectOneMenu>
-						</s:decorate>
 						
-				
+						<!-- 				
 						<s:decorate template="/layout/kActions.xhtml">
 							<s:button action="#{repTransferencia.excelrepTransferencia()}" ajax="false" propagation="join"
 								styleClass="excBtn" value="#{msn.button_excel}" >
 								<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
 							</s:button>
 						</s:decorate>
-						
+						 -->
 					
 						
 					</h:panelGrid>
@@ -74,7 +87,7 @@
 					</center>
 					<rich:spacer height="8"/>
 					
-				<rich:dataTable var="res" value="#{repTransferencia.resultList}"
+				<rich:dataTable id="_table" var="res" value="#{repTransferencia.resultList}"
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.transfer_send_list_list}</f:facet>
@@ -83,17 +96,35 @@
 						<f:facet name="header">#{app.transfer_send_list_col1}</f:facet>
 						<h:outputText value="#{res.sucursalDestino.nombre}" />
 					</rich:column>
-					<rich:column width="85 px" filterBy="#{res.estado}"
-						filterEvent="onkeyup">
-						<f:facet name="header">Estado</f:facet>
-						<h:outputText value="#{msn.status_pending}"
-							rendered="#{res.estado=='P'}" />
-						<h:outputText value="#{msn.status_sent}"
-							rendered="#{res.estado=='S'}" />
-					</rich:column>
+					
 					<rich:column filterBy="#{res.usuarioGenera.nombreUsuario}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.transfer_send_list_col2}</f:facet>
 						<h:outputText value="#{res.usuarioGenera.nombreUsuario}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.transferencialist_col1}</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					
+					
+					<rich:column width="85px" >
+						<h:outputText value="#{msn.status_generated}" rendered="#{res.estado=='G'}" />
+						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='P'}" />
+						<h:outputText value="#{msn.status_finished}" rendered="#{res.estado=='A'}" />
+						<h:outputText value="#{msn.status_discarded}" rendered="#{res.estado=='D'}" />
+						<h:outputText value="#{msn.status_rejected}" rendered="#{res.estado=='R'}" />
+						<h:outputText value="#{msn.status_sent}" rendered="#{res.estado=='S'}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Descripcion de estado</f:facet>
+						
+						<h:outputText value="Creada pero sin autorizar" rendered="#{res.estado=='G'}" />
+						<h:outputText value="Pendiente de enviarse desde sucursal origen" rendered="#{res.estado=='P'}" />
+						<h:outputText value="Se confirmo de recibido en sucursal destino" rendered="#{res.estado=='A'}" />
+						<h:outputText value="Transferencia rechazada" rendered="#{res.estado=='D'}" />
+						<h:outputText value="..." rendered="#{res.estado=='R'}" />
+						<h:outputText value="Enviada pero sin confirmar como recibido" rendered="#{res.estado=='S'}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{app.transfer_send_list_col3}</f:facet>
@@ -105,10 +136,17 @@
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>
+					<rich:column >
+						<f:facet name="header">Fecha de recibido</f:facet><!-- #{app.transferencialist_col5} -->
+						<h:outputText value="#{res.fechaRecibo}">
+							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<s:link title="#{app.transfer_send_list_detail}"
-							view="/sainv/transferSend/transferSend.xhtml" propagation="begin">
+							view="/rep/transf/master.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/detail16.png" />
 							<f:param name="id" value="#{res.id}" />
 						</s:link>

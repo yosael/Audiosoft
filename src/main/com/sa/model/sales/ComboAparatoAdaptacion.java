@@ -23,6 +23,7 @@ public class ComboAparatoAdaptacion implements Serializable {
 	private Integer id;
 	private AdaptacionCombo adaptacion;
 	private ComboAparato comboAparato;
+	private Boolean opcional;
 	
 	
 	@Id
@@ -53,6 +54,14 @@ public class ComboAparatoAdaptacion implements Serializable {
 	}
 	public void setComboAparato(ComboAparato comboAparato) {
 		this.comboAparato = comboAparato;
+	}
+	
+	@Column(name="opcional",nullable=true)
+	public Boolean getOpcional() {
+		return opcional;
+	}
+	public void setOpcional(Boolean opcional) {
+		this.opcional = opcional;
 	}
 	
 	

@@ -58,8 +58,10 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	
 	private List<Transferencia> resultList = new ArrayList<Transferencia>();
 	private String estado="";
-	private Sucursal sucursalSel;
+	private Sucursal sucursalDesde;
+	private Sucursal sucursalHacia;
 	List<Sucursal> sucursales = new ArrayList<Sucursal>();
+	private String estadoFilter="";
 	
 	
 	public void buscarTransferencias()
@@ -79,12 +81,17 @@ public class RepTransferencia extends MasterRep implements Serializable {
 			jpql.append("  AND (:f1 = :f2 OR 1 = 1) ");
 		
 		
-		if(!estado.equals(""))
-			jpql.append("AND t.estado='").append(estado).append("'");
+		if(estado!=null && !estado.equals(""))
+			jpql.append(" AND t.estado='").append(estado).append("'");
 		
-		if(sucursalSel!=null)
+		if(sucursalDesde!=null)
 		{
-			jpql.append("AND t.sucursalDestino.id=").append(sucursalSel.getId());
+			jpql.append(" AND t.sucursalDestino.id=").append(sucursalDesde.getId());
+		}
+		
+		if(sucursalHacia!=null)
+		{
+			jpql.append(" AND t.sucursal.id=").append(sucursalHacia.getId());
 		}
 		
 		
@@ -122,16 +129,6 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	}
 
 
-	public Sucursal getSucursalSel() {
-		return sucursalSel;
-	}
-
-
-	public void setSucursalSel(Sucursal sucursalSel) {
-		this.sucursalSel = sucursalSel;
-	}
-
-
 	public List<Sucursal> getSucursales() {
 		return sucursales;
 	}
@@ -140,6 +137,38 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	public void setSucursales(List<Sucursal> sucursales) {
 		this.sucursales = sucursales;
 	}
+
+
+	public String getEstadoFilter() {
+		return estadoFilter;
+	}
+
+
+	public void setEstadoFilter(String estadoFilter) {
+		this.estadoFilter = estadoFilter;
+	}
+
+
+	public Sucursal getSucursalDesde() {
+		return sucursalDesde;
+	}
+
+
+	public void setSucursalDesde(Sucursal sucursalDesde) {
+		this.sucursalDesde = sucursalDesde;
+	}
+
+
+	public Sucursal getSucursalHacia() {
+		return sucursalHacia;
+	}
+
+
+	public void setSucursalHacia(Sucursal sucursalHacia) {
+		this.sucursalHacia = sucursalHacia;
+	}
+	
+	
 	
 	
 	

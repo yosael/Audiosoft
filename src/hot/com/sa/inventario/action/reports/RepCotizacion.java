@@ -178,16 +178,18 @@ public class RepCotizacion extends MasterRep implements Serializable {
 			List<CotCmbsItems> lsItemsCots = entityManager.createQuery("SELECT c FROM CotCmbsItems c where c.ctCmbs.id="+combo.getCmbCotizados().get(0).getId()+" ").getResultList();
 			//for (CotCmbsItems tmpItem: cotizacion.getCmbCotizados().get(0).getItemsCotizados()){
 			for (CotCmbsItems tmpItem: lsItemsCots){
-				if (tmpItem != null && tmpItem.getPrecioCotizado() > 0)
-					subtotal += tmpItem.getPrecioCotizado();
-					else if (tmpItem != null){
+				if (tmpItem != null && tmpItem.getPrecioCotizado()!=null && tmpItem.getPrecioCotizado() > 0)
+				{
+					/*subtotal += tmpItem.getPrecioCotizado(); comentado el 11/08/2017
+					else if (tmpItem != null){*/
 					if (tmpItem.getTipoPrecio().equals("NRM"))
 						subtotal += tmpItem.getPrecioCotizado();
 					else if (tmpItem.getTipoPrecio().equals("MIN"))
 						subtotal += tmpItem.getPrecioCotizado();
 					else if (tmpItem.getTipoPrecio().equals("OFE"))
-						subtotal += tmpItem.getPrecioCotizado(); 
+						subtotal += tmpItem.getPrecioCotizado();
 				}
+				//}
 			}
 				
 				total += subtotal;

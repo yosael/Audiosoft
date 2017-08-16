@@ -94,6 +94,7 @@ public class RepTransferencia extends MasterRep implements Serializable {
 			jpql.append(" AND t.sucursal.id=").append(sucursalHacia.getId());
 		}
 		
+		jpql.append(" Order by t.id desc");
 		
 		resultList = entityManager.createQuery(jpql.toString())
 				.setParameter("f1", fechaInicio)

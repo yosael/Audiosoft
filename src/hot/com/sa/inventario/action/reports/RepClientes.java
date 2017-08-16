@@ -76,10 +76,21 @@ public class RepClientes extends MasterRep implements Serializable {
 	public boolean faltaInformacion(Cliente cliente)
 	{
 		
-		if(cliente.getTelefono1()==null || cliente.getDireccion()==null || cliente.getFechaNacimiento()==null || cliente.getOcupacion()==null || (cliente.getReferidoPor()==null && cliente.getDoctorRef()==null && cliente.getMdif()==null) || cliente.getMunicipio()==null || cliente.getDepto()==null)
+		if(cliente.getPais()!=null && cliente.getPais().getId()==68)
 		{
-			return true;
+			if(cliente.getTelefono1()==null || cliente.getDireccion()==null || cliente.getFechaNacimiento()==null || cliente.getOcupacion()==null || (cliente.getReferidoPor()==null && cliente.getDoctorRef()==null && cliente.getMdif()==null) || cliente.getMunicipio()==null || cliente.getDepto()==null)
+			{
+				return true;
+			}
 		}
+		else
+		{
+			if(cliente.getTelefono1()==null || cliente.getDireccion()==null || cliente.getFechaNacimiento()==null || cliente.getOcupacion()==null || (cliente.getReferidoPor()==null && cliente.getDoctorRef()==null && cliente.getMdif()==null))
+			{
+				return true;
+			}
+		}
+		
 		
 		return false;
 	}

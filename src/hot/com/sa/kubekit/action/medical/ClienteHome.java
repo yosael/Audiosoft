@@ -118,7 +118,8 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	public void load(boolean detail) {
 		
 		loadAntecendentes();
-		loadOcupaciones();
+		//loadOcupaciones();
+		
 		try {
 			Cliente cliente = (Cliente) getEntityManager().createQuery(
 							"select c from Cliente c where c.id = :numId")
@@ -718,6 +719,10 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	
 	public void addOcupacion(ClienteJob j){				
 		instance.setOcupacion(j.getNombre());		
+	}
+	
+	public void addOcupacion(String nombre){				
+		instance.setOcupacion(nombre);		
 	}
 	
 	//guarda y limpia desde el modal para agregar nuevo paciente

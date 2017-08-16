@@ -158,7 +158,7 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		resultListGen= new ArrayList<Transferencia>();
 		resultListGen= (List<Transferencia>)getEntityManager().createQuery("select t from Transferencia t where " +
 					"t.usuarioGenera.id = " + loginUser.getUser().getId() + 
-					"AND t.estado != 'A' order by t.fecha desc").getResultList();
+					"AND t.estado != 'A' order by t.id desc").getResultList();
 		
 		System.out.println("**** transferencia generada");
 		System.out.println("tmanan "+ resultListGen.size());
@@ -177,14 +177,14 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 				resultList = getEntityManager()
 						.createQuery("select t from Transferencia t where t.estado = 'G' AND " +
 								" (t.sucursalDestino = :suc ) " +
-								"	order by t.fecha desc, t.estado ")
+								"	order by t.id desc, t.estado ")
 						.setParameter("suc", loginUser.getUser().getSucursal())
 						.getResultList();
 			} else {
 				resultList = getEntityManager()
 						.createQuery("select t from Transferencia t where t.estado = 'G' AND " +
 								" (t.sucursalDestino = :suc OR t.sucursalDestino IN (:subSuc) ) " +
-								"	order by t.fecha desc, t.estado ")
+								"	order by t.id desc, t.estado ")
 						.setParameter("suc", loginUser.getUser().getSucursal())
 						.setParameter("subSuc", subSucFlt)
 						.getResultList();
@@ -193,7 +193,7 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		} else {
 			resultList = getEntityManager()
 					.createQuery("select t from Transferencia t where t.estado = 'G' " +
-							"	order by t.fecha desc, t.estado ")
+							"	order by t.id desc, t.estado ")
 					.getResultList();
 		}
 		

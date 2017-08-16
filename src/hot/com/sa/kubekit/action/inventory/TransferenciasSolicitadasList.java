@@ -25,9 +25,9 @@ public class TransferenciasSolicitadasList extends KubeQuery<Transferencia>{
 		if(loginUser.getUser().getSucursal()!=null){
 			setJpql("select t from Transferencia t where t.estado like 'G' and " +
 					"t.sucursalDestino.id = " + loginUser.getUser().getSucursal().getId() + 
-					" order by t.fecha desc");
+					" order by t.id desc");
 		}else{
-			setJpql("select t from Transferencia t where t.estado like 'G' order by  t.fecha desc");
+			setJpql("select t from Transferencia t where t.estado like 'G' order by  t.id desc");
 		}
 	}
 }

@@ -81,8 +81,8 @@
 									<ui:define name="label">Ocupacion:</ui:define>
 									<a:commandButton
 										onclick="#{rich:component('addOcupacion')}.show();"
-										ajaxSingle="true" action="#{categoriaHome.loadCatList()}"
-										reRender="mDoc" styleClass="addBtn" value=" "
+										ajaxSingle="true" action="#{ocupacionHome.load()}"
+										reRender="frmSelDoc" styleClass="addBtn" value=" "
 										style="width:27px; height:23px">
 									</a:commandButton>
 									<h:outputText value="#{clienteHome.instance.ocupacion}">
@@ -424,7 +424,7 @@
 							<p:focus />
 							<a:queue name="q1" />
 											
-							<rich:dataTable var="res" value="#{clienteHome.ocupacionLst}" id="_tabl"
+							<rich:dataTable var="res" value="#{ocupacionHome.ocupaciones}" id="_tabl"
 								rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 								headerClass="tablaHeader" footerClass="tableScroll">
 								<f:facet name="header">Tipos de Ocupaciones</f:facet>
@@ -436,7 +436,7 @@
 								<rich:column>
 									<f:facet name="header">#{msn.col_actions}</f:facet>
 									<a:commandLink value="#{app.movimientomast_select_product}" reRender="formA"
-										action="#{clienteHome.addOcupacion(res)}" ajaxSingle="true" eventsQueue="q1"							
+										action="#{clienteHome.addOcupacion(res.nombre)}" ajaxSingle="true" eventsQueue="q1"							
 										onclick="#{rich:component('addOcupacion')}.hide();">
 									</a:commandLink>
 								</rich:column>

@@ -26,10 +26,10 @@ public class TransferenciasPendientesList extends KubeQuery<Transferencia>{
 		if(loginUser.getUser().getSucursal()!=null){
 			setJpql("select t from Transferencia t where (t.estado = 'P' OR t.estado = 'S') and " +
 					"t.sucursal.id = " + loginUser.getUser().getSucursal().getId() + 
-					" order by t.fecha desc ");
+					" order by t.id desc ");
 			
 		}else{
-			setJpql("select t from Transferencia t where (t.estado like 'P' or t.estado like 'S') order by t.fecha desc");
+			setJpql("select t from Transferencia t where (t.estado like 'P' or t.estado like 'S') order by t.id desc");
 		}
 	}
 }

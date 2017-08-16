@@ -429,7 +429,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						.setParameter("fch1", getFechaPFlt1())
 						.setParameter("fch2", getFechaPFlt2())
 						.getResultList();
-				System.out.println("Size del resultList de Reparaciones: "+resultList.size());
+				//System.out.println("Size del resultList de Reparaciones: "+resultList.size());
 				for(ReparacionCliente rc: resultList){
 					rc.setCurrEtaNom(getCurrentEtapaRepCli(rc));
 				}

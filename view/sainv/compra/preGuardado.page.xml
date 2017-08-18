@@ -3,6 +3,7 @@
 	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
 	<param name="id" value="#{compraHome.compraId}" required="false" />
 	<action execute="#{compraHome.load()}" on-postback="false" />
+	<begin-conversation join="true" />
 	<navigation from-action="#{compraHome.finalizarPreGuardado()}">
 		<rule if-outcome="true">
 			<redirect view-id="/sainv/compra/list.xhtml" />

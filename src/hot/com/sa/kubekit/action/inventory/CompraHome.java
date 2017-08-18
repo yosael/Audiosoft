@@ -205,10 +205,12 @@ public class CompraHome extends KubeDAO<Compra>{
 					.setParameter("inv", prdItm.getInventario())
 					.setParameter("mov", prdItm.getMovimiento())
 					.getResultList();
+			
 			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
 			System.out.println("Referencia prodycto"+prdItm.getInventario().getProducto().getReferencia());
 			System.out.println("Asigno el valor a la lista codigo");
 			System.out.println("Tambn codsProds dentro"+codsProds.size());
+			
 		} else {
 			codsProds = lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
 			System.out.println("NOO Asigno el valor a la lista codigo");
@@ -592,17 +594,20 @@ public class CompraHome extends KubeDAO<Compra>{
 		{
 			int indice = itemsAgregados.indexOf(item);
 			
-			Movimiento movimiento = new Movimiento();
+			/*Movimiento movimiento = new Movimiento();
 			movimiento.setRazon("O");
 			movimiento.setSucursal(item.getInventario().getSucursal());
-			movimiento.setTipoMovimiento("S");
+			movimiento.setTipoMovimiento("S"); comentado el 16/08/2017 */
 			
-			item.setCantidad(1);//Cantidad que va a reducir
+			//item.setCantidad(1);//Cantidad que va a reducir
 			
-			movimientoHome.getItemsAgregados().clear();
+			/*movimientoHome.getItemsAgregados().clear();
 			movimientoHome.setInstance(movimiento);
 			movimientoHome.getItemsAgregados().add(item);
-			movimientoHome.save();
+			movimientoHome.save(); 16/08/2017 */
+			
+			//item.setCantidad(item.getCantidad()-1);
+			
 			
 			if(cantidadActualItem>1)
 			{
@@ -610,9 +615,18 @@ public class CompraHome extends KubeDAO<Compra>{
 				//itemsAgregados.remove(item);
 				//item.setCantidad(item.getCantidad()-1);
 				//itemsAgregados.add(item);
-				itemsAgregados.get(indice).setCantidad(cantidadActualItem-1);
 				
-				getEntityManager().merge(itemsAgregados.get(indice));// nuevo
+				//itemsAgregados.get(indice).setCantidad(cantidadActualItem-1); comentado el 16/08/2017
+				item.setCantidad(cantidadActualItem-1);
+				
+				//getEntityManager().merge(itemsAgregados.get(indice));// nuevo comentado el 16/08/2017
+				
+				getEntityManager().merge(item);//nuevo 16/08/2017
+				item.getInventario().setCantidadActual(item.getInventario().getCantidadActual()-1);
+				getEntityManager().merge(item.getInventario());//nuevo 16/08/2017
+				
+				getEntityManager().flush();
+				
 				System.out.println("ESTA REGISTRADO");
 				System.out.println("REMOVIO EL ITEM DE LA DB Y REDUJO LA CANTIDAD DEL ITEM EN LA LISTA");
 				
@@ -621,6 +635,9 @@ public class CompraHome extends KubeDAO<Compra>{
 			{
 				itemsAgregados.remove(item);
 				productosAgregados.remove(item.getInventario());
+				
+				item.getInventario().setCantidadActual(item.getInventario().getCantidadActual()-1);
+				getEntityManager().merge(item.getInventario());//nuevo 16/08/2017
 				
 				getEntityManager().remove(item);
 				
@@ -690,7 +707,12 @@ public class CompraHome extends KubeDAO<Compra>{
 				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
 				
 				
-				restarItemPreguardado(item);
+				/*restarItemPreguardado(item);
+				
+				item*/
+				
+				item.getInventario().setCantidadActual(item.getInventario().getCantidadActual()-cantidadAEditar); //nuevo 16/08/2017
+				getEntityManager().merge(item.getInventario());// nuevo 16/08/2017
 				
 				item.setCantidad(cantidadEnCompra);
 				item.setModoEdicion(false);
@@ -715,14 +737,19 @@ public class CompraHome extends KubeDAO<Compra>{
 				System.out.println("CantidadAEditar: "+cantidadAEditar);
 				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
 				
-				agregarNuevoItemPreGuardado(item);
+				
+				//agregarNuevoItemPreGuardado(item); comentado el 16/08/2017
+				
+				item.getInventario().setCantidadActual(item.getInventario().getCantidadActual()+cantidadAEditar); //nuevo 16/08/2017
+				getEntityManager().merge(item.getInventario());// nuevo 16/08/2017
+				
 				
 				item.setCantidad(cantidadEnCompra);
 				item.setModoEdicion(false);
 				item.setRegistrado(true);
 				
 				getEntityManager().merge(item);
-				getEntityManager().flush();
+				//getEntityManager().flush();
 				
 			}
 			

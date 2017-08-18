@@ -130,8 +130,7 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 	
 	public void buscarCitasProgramadas()
 	{
-		System.out.println("DATE 1 ANTES: "+date1);
-		System.out.println("DATE 2 antes: "+date2);
+		
 		
 		//Calendar calTmp = new GregorianCalendar();
 		//calTmp.set(Calendar.DATE, 1);
@@ -143,24 +142,28 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 		setDate2(resetTimeDate(date2, 2));
 		
 		List<MedicalAppointment> listaConsultas = new ArrayList<MedicalAppointment>();
-		String jpql="SELECT c FROM MedicalAppointment c where 1=1 ";
+		StringBuilder jpql = new StringBuilder();
 		
-		jpql += "  AND c.dateTime BETWEEN :date1 AND :date2 ";
+		jpql.append("SELECT c FROM MedicalAppointment c where 1=1 ");
+		
+		jpql.append("  AND c.dateTime BETWEEN :date1 AND :date2 ");
 		
 		if(doctor!=null)
 		{
-			jpql+=" AND c.doctor.id="+doctor.getId()+"";
+			jpql.append(" AND c.doctor.id=").append(doctor.getId());
 		}
 		
 		if(status!=null)
 		{
-			jpql +=" AND c.status = " + status + " ";
+			jpql.append(" AND c.status ='").append(status).append("'");
 		}
 		
-		System.out.println("FECHA 1: "+date1);
-		System.out.println("Fecha 2: "+date2);
 		
-		setResultList(entityManager.createQuery(jpql).setParameter(
+		
+		jpql.append(" order by c.dateTime");
+		
+		
+		setResultList(entityManager.createQuery(jpql.toString()).setParameter(
 					"date1", date1).setParameter("date2",
 					date2).getResultList());
 	}

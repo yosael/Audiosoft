@@ -40,7 +40,7 @@
 </script> 
 
 		<rich:panel>
-			<f:facet name="header">
+			<f:facet name="header" >
 				<h:outputText
 					value="#{compraHome.managed?sainv_view_messages.get('compramast_head_edit'):sainv_view_messages.get('compramast_head_register')}" styleClass="marginhead" />
 			</f:facet>
@@ -225,28 +225,28 @@
 									readonly="#{res.registrado}"
 									onkeypress="return restrictNumDigits(event, this, 8);">
 									<a:support event="onblur"
-										action="#{compraHome.actualizarSubtotal()}" ajaxSingle="true"
+										action="#{compraHome.actualizarSubtotal()}" 
 										eventsQueue="q1" reRender="_table" />
 								</h:inputText>
 								
 								<h:inputText rendered="#{res.registrado}" value="#{res.cantidad}" size="8"
 									readonly="#{res.registrado}"
 									onkeypress="return restrictNumDigits(event, this, 8);" >
-									<!-- <a:support event="ondblclick"
-										action="#{compraHome.activarEdicion(res)}" ajaxSingle="true"
-										eventsQueue="q1" reRender="_table" /> -->
+									<a:support event="ondblclick"
+										action="#{compraHome.activarEdicion(res)}" 
+										eventsQueue="q1" reRender="_table" /> 
 								</h:inputText>
 								
-								<!-- 
+								 
 								<rich:spacer width="6" height="0" ></rich:spacer>
 								<a:commandLink value="Cancelar" rendered="#{res.modoEdicion}">
-									<a:support event="onclick" ajaxSingle="true" reRender="formcompra" action="#{compraHome.cancelarEdicionItemRegistrado(res)}" ></a:support>
+									<a:support event="onclick"  reRender="formcompra" action="#{compraHome.cancelarEdicionItemRegistrado(res)}" ></a:support>
 								</a:commandLink>	
 								<rich:spacer width="6" height="0" ></rich:spacer>
 								<a:commandLink value="Guardar" rendered="#{res.modoEdicion}">
-									<a:support event="onclick" ajaxSingle="true" reRender="formcompra" action="#{compraHome.guardarEdicion(res)}" ></a:support>
+									<a:support event="onclick"  reRender="formcompra" action="#{compraHome.guardarEdicion(res)}" ></a:support>
 								</a:commandLink>
-								 -->
+								 
 								<h:graphicImage value="/kubeImg/DB_ok16.png" rendered="#{res.registrado}"  />
 							</rich:column>
 							<rich:column>

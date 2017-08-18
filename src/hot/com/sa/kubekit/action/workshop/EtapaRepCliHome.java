@@ -67,6 +67,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			 if(loginUser.getUser().getAreaUsuario() == null && getNomCoinci()==null)
 			{
 				System.out.println("**** Entro al if numero 3 ");
+				
+				
 					/*etapasRepCli = getEntityManager().createNativeQuery(
 							"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
 									+ "	cli.nombres || ' ' || cli.apellidos nomCliente, apc.nombre nomProducto,"
@@ -150,7 +152,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 							.setParameter("nom", "%"+getNomCoinci().toUpperCase().trim()+"%")
 							//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
 							.getResultList();
-				System.out.println("Size del result list de trabajos: " +etapasRepCli.size());
+				//System.out.println("Size del result list de trabajos: " +etapasRepCli.size());
 				
 				
 			}  //para el area de negocio de taller
@@ -252,6 +254,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 							.getResultList();*/
 				
 				System.out.println("**** Entro al if numero 2 audiologa");
+				
 				etapasRepCli = getEntityManager().createNativeQuery(
 								"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
 										+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
@@ -273,7 +276,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )  
 						.getResultList();
 						
-						System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
+						//System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
 						
 					
 					
@@ -282,6 +285,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			else if (loginUser.getUser().getAreaUsuario().getId() == 1 && getNomCoinci()!=null)
 			{	
 					System.out.println("**** Entro al if numero 2 audiologa + busqueda");
+					
 					etapasRepCli = getEntityManager().createNativeQuery(
 									"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
 											+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
@@ -305,7 +309,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 							.getResultList();
 				
 						
-						System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
+						//System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
 						
 						
 			}
@@ -860,7 +864,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 									+ "	AND er <> :currEta ORDER BY er.etapaRep.orden ASC")
 					.setParameter("rep", instance.getReparacionCli())
 					.setParameter("currEta", instance).getResultList();
-			System.out.println("Tamabio etapas"+siguienteEtapa.size());
+			
+			
 			
 			if(siguienteEtapa != null && siguienteEtapa.size() > 0) 
 			{
@@ -902,7 +907,9 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						
 					}
 					else
-					{   System.out.println("Entro al else de comparacion etapa Reparacion y molde");
+					{ 
+						
+						//System.out.println("Entro al else de comparacion etapa Reparacion y molde");
 						tmpEta.setEstado("PEN");
 						
 								Calendar cal = new GregorianCalendar();
@@ -936,7 +943,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						// actualizamos el estado
 				reparacionClienteHome.getInstance().setEstado("FIN");
 				reparacionClienteHome.getInstance().setFechaFin(new Date());
-				System.out.println("Entro a tamanuo ceroo ");
+				
+				//System.out.println("Entro a tamanuo ceroo ");
 			/*
 				// Adicionamos una garantia de reparacion si es que no tiene o
 				// tiene una no vigente
@@ -1072,7 +1080,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 				}
 			}
 
-				FacesMessages.instance().clear();
+			FacesMessages.instance().clear();
 			FacesMessages.instance().add(
 					sainv_messages.get("etarepcli_etapa_fin"));
 		} 
@@ -1080,7 +1088,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		//Codigo para no aprobar una orden de laboratorio que no tiene reparacion
 		else if(accionEta.equals("NAP"))
 		{
-			System.out.println("Entro a NAP Pos Modify");
+			//System.out.println("Entro a NAP Pos Modify");
 			
 			// Consultamos todas las etapas pendientes
 			List<EtapaRepCliente> siguienteEtapa = getEntityManager()
@@ -1182,7 +1190,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					getEntityManager().persist(tmpSrvR);
 			}
 
-				FacesMessages.instance().clear();
+			FacesMessages.instance().clear();
 			FacesMessages.instance().add(
 					sainv_messages.get("etarepcli_etapa_fin"));
 			
@@ -1191,7 +1199,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		else {
 			
-			System.out.println("Entro al else en posModify");
+			//System.out.println("Entro al else en posModify");
 			
 			String tmpDesc = "";
 			// Limpiamos la fecha de finalizacion de la etapa y los comentarios,
@@ -1223,6 +1231,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			}
 			
 			getEntityManager().flush();
+			
 			FacesMessages.instance().clear();
 			FacesMessages.instance().add(
 					sainv_messages.get("etarepcli_etapa_rec"));

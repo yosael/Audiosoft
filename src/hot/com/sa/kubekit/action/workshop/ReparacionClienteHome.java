@@ -1036,8 +1036,6 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			return false;
 		}
 		
-		
-		System.out.println("ENTRO AL PRESAVE ");
 		if(instance.getFechaIngreso()==null)
 		{
 			FacesMessages.instance().add(Severity.WARN,"Especifique la fecha de ingreso");
@@ -1085,7 +1083,6 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			return false;
 		}
 		
-		System.out.println("ALGO *******");
 		
 		
 		
@@ -1107,7 +1104,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		instance.setTipoRep("NML");
 		instance.setAprobada(true);
 		
-		System.out.println("ADELTANTO *********** "+instance.getAdelanto());
+		System.out.println("PRESAVE Trabajo taller");
 		
 		return true; 
 	}
@@ -1165,10 +1162,13 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 	
 	@Override
-	public void posSave() {
+	public void posSave() 
+	{
+		
 		FacesMessages.instance().clear();
 		
 		saveCaracteristicasAparato();
+		
 		//Si se seleccionaron servicios para cobrar, se adicionan a los servicios ya cobrados
 		if(servsCobro != null && servsCobro.size() > 0) {
 			for(Service srC : servsCobro) {
@@ -1185,10 +1185,13 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 					"	WHERE e.procesoTll = :proceso ORDER BY e.orden ASC")
 					.setParameter("proceso", instance.getProceso())
 					.getResultList();
-		EtapaRepCliente etRepCli = null; 
+		
+		EtapaRepCliente etRepCli = null;
+		
 		Calendar fechaEst = new GregorianCalendar();
 		fechaEst.setTime(instance.getFechaIngreso());
 		boolean isFirst = true;
+		
 		for(EtapaReparacion etapaRep: lstEtapas){
 			etRepCli = new EtapaRepCliente();
 			if(isFirst) { //Seteamos la primera 
@@ -1246,7 +1249,6 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			getEntityManager().persist(det);
 			
 			
-			System.out.println("Se genero el adelanto");
 			
 			FacesMessages.instance().add(Severity.INFO,"Cobro de adelanto registrado");
 			
@@ -1290,8 +1292,6 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			tmpDfc.setDefCapsula(defCap);
 			getEntityManager().persist(tmpDfc);
 		}
-		
-		
 		
 		
 	}

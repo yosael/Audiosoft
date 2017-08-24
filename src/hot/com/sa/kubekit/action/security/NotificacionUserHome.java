@@ -42,7 +42,9 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 	}
 	
 	public void notificacionesInicio() {
-		if(loginUser.getUser() != null && loginUser.getUser().isNotificacionInv()) {
+		if(loginUser.getUser() != null && loginUser.getUser().isNotificacionInv()) 
+		{
+			
 			//Sacamos la lista de items que estan abajo del limite de existencias
 			String hql = "SELECT x FROM Inventario x WHERE 1 = 1 " +
 					"	AND x.producto.cantidadMinima > x.cantidadActual " +
@@ -74,22 +76,24 @@ public class NotificacionUserHome extends KubeDAO<Usuario>{
 			{
 				//System.out.println("Entro a taller");
 				try {
-					
 						//List<Object[]> etapasRepCli = new ArrayList<Object[]>();
-						etapasRepCli = getEntityManager().createNativeQuery(
-								"SELECT prt.nombre nomProceso, etr.nombre nomEtapa, "
-										+ "	cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,"
-										+ "	rpc.fecha_ingreso fechaEstFin, etc.fecha_real_fin fechaReaFin, etc.etarepcli_id id,"
-										+ "	prt.codigo codProceso, rpc.repcli_id idRep, suc.nombre nomSucursal" 
-										+ " FROM  cliente cli, sucursal suc,"
-										+ " reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, "
-										+ " etapa_rep_cliente etc"
-										+ " WHERE rpc.cli_id = cli.cliente_id "
-										+ " and rpc.repcli_id = etc.repcli_id "
-										+ " and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) "
-										+ " and suc.id = rpc.sucursal_id " 
-										+ " and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico')"
-										+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
+						StringBuilder jpql = new StringBuilder();
+						
+						jpql.append("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, ")
+						.append(" cli.nombres || ' ' || cli.apellidos nomCliente, cli.telefono1 telefono,")
+						.append(" rpc.fecha_ingreso fechaEstFin, etc.fecha_real_fin fechaReaFin, etc.etarepcli_id id,")
+						.append(" prt.codigo codProceso, rpc.repcli_id idRep, suc.nombre nomSucursal")
+						.append(" FROM  cliente cli, sucursal suc,")
+						.append(" reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, ")
+						.append(" etapa_rep_cliente etc")
+						.append(" WHERE rpc.cli_id = cli.cliente_id ")
+						.append(" and rpc.repcli_id = etc.repcli_id ")
+						.append(" and etr.prctll_id = prt.prctll_id and ((etr.etarep_id = etc.etarep_id and etr.areneg_id = :neg) or (etr.etarep_id = etc.etarep_id and etc.etarep_id = 102)) ")
+						.append(" and suc.id = rpc.sucursal_id ")
+						.append(" and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico')")
+						.append(" ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ");
+					
+						etapasRepCli = getEntityManager().createNativeQuery(jpql.toString())
 						.setParameter("neg", loginUser.getUser().getAreaUsuario().getId())
 						.getResultList();
 						

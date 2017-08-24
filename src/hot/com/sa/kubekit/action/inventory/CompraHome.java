@@ -381,7 +381,9 @@ public class CompraHome extends KubeDAO<Compra>{
 					else if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() != null || !tmpCod.getNumSerie().trim().equals("")))
 					{
 						
-						if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+						if(codsStrPrd.contains(tmpCod.getNumSerie())) 
+						{
+							
 							System.out.println("Entro a if raro");
 							FacesMessages.instance().add(Severity.WARN,
 									sainv_messages.get("compra_error_prdcoddupli"));
@@ -474,11 +476,8 @@ public class CompraHome extends KubeDAO<Compra>{
 	
 	public boolean preGuardar()
 	{
-		
 		instance.setEstado("Pre-Guardada");
-		
 		return save();
-		
 	}
 	
 	
@@ -700,11 +699,24 @@ public class CompraHome extends KubeDAO<Compra>{
 				
 				cantidadAEditar=cantidadActualItem-item.getCantidad();// para obtener la cantidad que se va a editar en inventario
 				cantidadEnCompra=item.getCantidad();//para mostrar la cantidad realizada en la compra
+				
+				
+				//Validar si no tiene codigos
+				
+				if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+				{
+					FacesMessages.instance().add(Severity.WARN,"Para restar debe seleccionar desde numero de serie o lote");
+					return;
+				}
+				
 				item.setCantidad(cantidadAEditar);
 				
 				System.out.println("CantidadActual: "+cantidadActualItem);
 				System.out.println("CantidadAEditar: "+cantidadAEditar);
 				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
+				
+				
+				
 				
 				
 				/*restarItemPreguardado(item);
@@ -733,6 +745,17 @@ public class CompraHome extends KubeDAO<Compra>{
 				
 				item.setCantidad(cantidadAEditar);
 				
+				if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+				{
+					
+					CodProducto codigo = new CodProducto();
+					codigo.setEnTransferencia(true);
+					codigo.setEstado("ACT");
+					codigo.setInventario(item.getInventario());
+					lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).add(codigo);
+					
+				}
+				
 				System.out.println("CantidadActual: "+cantidadActualItem);
 				System.out.println("CantidadAEditar: "+cantidadAEditar);
 				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
@@ -749,7 +772,7 @@ public class CompraHome extends KubeDAO<Compra>{
 				item.setRegistrado(true);
 				
 				getEntityManager().merge(item);
-				//getEntityManager().flush();
+				getEntityManager().flush();
 				
 			}
 			

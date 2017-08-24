@@ -323,11 +323,12 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 
 	@Override
 	public boolean preSave() {
+		
 		getInstance().setStatus(0);
 		System.out.println("INFORMACION INSTANCE");
-		System.out.println(instance.getSucursal() != null ? instance.getSucursal().getNombre() : "Suc nula");
-		System.out.println(instance.getComment() != null ? instance.getComment() : "Comment nula");
-		System.out.println("FIN INFORMACION INSTANCE");
+		//System.out.println(instance.getSucursal() != null ? instance.getSucursal().getNombre() : "Suc nula");
+		//System.out.println(instance.getComment() != null ? instance.getComment() : "Comment nula");
+		//System.out.println("FIN INFORMACION INSTANCE");
 		// valida campos vacios
 		if (getInstance().getDoctor() == null) {
 			FacesMessages.instance().add(
@@ -339,7 +340,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			return false;
 		}
 		
-		System.out.println("Este es el cliente de la cita antes de guardar"+instance.getCliente().getNombres());
+		//System.out.println("Este es el cliente de la cita antes de guardar"+instance.getCliente().getNombres());
 		
 		return validateDate();
 	}
@@ -523,6 +524,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			med.setMedicalAppointmentServiceId(id);
 			med.setMedicalAppointment(getInstance());
 			med.setService(serv);
+			
 			instance.getMedicalAppointmentServices().add(med);
 			getEntityManager().merge(med);
 		}

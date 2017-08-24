@@ -664,7 +664,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	}
 	
 	public void loadPaisDefault(){		
-		System.out.println("ACtualizo el pais por defecto");
+		//System.out.println("ACtualizo el pais por defecto");
 		instance.setPais((Pais)getEntityManager().createQuery("SELECT p FROM Pais p WHERE p.id = 68").getSingleResult());
 	}
 	
@@ -782,6 +782,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			}
 			
 			System.out.println("Entro a SaveClear");
+			
 			if(!save())
 			{
 				System.out.println("Ocurrio una validacion al guardar");
@@ -798,7 +799,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 			
 			//loadPaisDefault(); //comentado el 20/02/2017
 			//instance.setTipoDoc("DUI"); //comentado el 20/02/2017 
-			System.out.println("paso por null cliente if ** ");
+			//System.out.println("paso por null cliente if ** ");
 			
 		}else{
 			medicalAppointmentDAO.getInstance().setCliente(instance);
@@ -812,11 +813,11 @@ public class ClienteHome extends KubeDAO<Cliente>{
 	
 	public void updateMunicipios(){
 		Departamento depto = instance.getDepto();
-		System.out.println("Entré a getMunicipios");
+		//System.out.println("Entré a getMunicipios");
 		if (depto!=null){
 			municipios.clear();
 			municipios.addAll(depto.getMunicipios());
-			System.out.println("Size de getMunicipios: " + depto.getMunicipios().size() + " size de municipios: "+ municipios.size());
+			//System.out.println("Size de getMunicipios: " + depto.getMunicipios().size() + " size de municipios: "+ municipios.size());
 		}
 	}
 	
@@ -893,7 +894,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		
 		 		//getEntityManager().clear();
 		 		
-		 	System.out.println("num "+ resultList.size());	
+		 	//System.out.println("num "+ resultList.size());	
 		 		//				.setParameter("dui","%"+this.getNomCoinci().toUpperCase()+"%")
 		 		//.setParameter("nom","%"+this.getNomCoinci().toUpperCase()+"%")
 				//.setParameter("ape", "%"+this.getNomCoinci().toUpperCase()+"%")
@@ -972,7 +973,7 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		 if(o.toString().contains(" "))
 		 {
 			 
-			 System.out.println("Cadena contiene espacios");
+			 //System.out.println("Cadena contiene espacios");
 			 
 			 String[] cadenas = o.toString().split(" ");
 			 

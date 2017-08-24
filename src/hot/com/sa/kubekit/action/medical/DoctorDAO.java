@@ -51,7 +51,7 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 		setDeletedMessage(createValueExpression(sainv_messages
 				.get("doctorDAO_deleted")));
 		
-		System.out.println("ENTRO AL METODO CREATE DEL DOCTOR: TIMEOUT: "+Conversation.instance().getTimeout());
+		//System.out.println("ENTRO AL METODO CREATE DEL DOCTOR: TIMEOUT: "+Conversation.instance().getTimeout());
 	}
 	
 	public Doctor doctorInSession() {
@@ -164,7 +164,6 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 	{
 		
 		try {
-			
 			
 		
 			if(loginUser.getUser().getSucursal().getSucursalSuperior()!=null)

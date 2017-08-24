@@ -13,13 +13,13 @@
 	
 		<script type="text/javascript">
 		  function showReport(conversationId) {
-		  if (document.getElementById("messages") != null) {
-		    return;
-		  }
-		  var reportWin = window.open('#{transferenciaHome.transferPendingSendPDF}' + '&amp;cid=' + conversationId);
-		  if (!reportWin) {
-		    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
-		  }
+			  if (document.getElementById("messages") != null) {
+			    return;
+			  }
+			  var reportWin = window.open('#{transferenciaHome.transferPendingSendPDF}' + '&amp;cid=' + conversationId);
+			  if (!reportWin) {
+			    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
+			  }
 		  }
 		</script>
 	
@@ -39,12 +39,32 @@
 						styleClass="refreshBtn" value="Actualizar" action="#{transferenciasPendientesList.init()}" propagation="begin"  view="/sainv/transferSend/transferPendingSend.xhtml"   rendered="true"  >
 					</s:button>
 				</s:decorate>
+				
+				<rich:spacer height="20" />
+				
+					<h:panelGrid columns="2" style="margin:0 auto;" >
+					
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transferenciamast_send_date}:</ui:define>
+							<rich:calendar value="#{transferenciasPendientesList.fechaInicio}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1"  action="#{transferenciasPendientesList.init()}" />
+							</rich:calendar>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.transferenciamast_send_date}:</ui:define>
+							<rich:calendar value="#{transferenciasPendientesList.fechaFin}" datePattern="dd/MM/yyyy" >
+								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1" action="#{transferenciasPendientesList.init()}" />
+							</rich:calendar>
+						</s:decorate>
+					</h:panelGrid>
+					
 				<rich:spacer height="20" />
 			
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-				<rich:dataTable var="res" value="#{transferenciasPendientesList.resultList}"
+				<rich:dataTable var="res" id="_table" value="#{transferenciasPendientesList.resultList}"
 					rows="20" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">#{app.transfer_send_list_list}</f:facet>
@@ -53,9 +73,18 @@
 						<f:facet name="header">#{app.transfer_send_list_col1}</f:facet>
 						<h:outputText value="#{res.sucursalDestino.nombre}" />
 					</rich:column>
-					<rich:column width="85 px" filterBy="#{res.estado}"
-						filterEvent="onkeyup">
-						<f:facet name="header">Estado</f:facet>
+					<rich:column width="85px" filterBy="#{transferenciasPendientesList.estadoFilter}" filterEvent="onkeyup" filterExpression="#{empty transferenciasPendientesList.estadoFilter?(true):(transferenciasPendientesList.estadoFilter==res.estado)}">
+						<f:facet name="header">#{app.transferencialist_col2}
+							<h:panelGroup>
+								#{app.vtaprs_estado}<br/>
+								 <h:selectOneMenu value="#{transferenciasPendientesList.estadoFilter}">
+		                        	<f:selectItem itemLabel=" " itemValue="" />
+		                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
+									<f:selectItem itemLabel="Enviada" itemValue="S" />
+		                            <a:support reRender="_table" event="onchange" ajaxSingle="true" eventsQueue="q1" />
+		                        </h:selectOneMenu>
+							</h:panelGroup>
+						</f:facet>
 						<h:outputText value="#{msn.status_pending}"
 							rendered="#{res.estado=='P'}" />
 						<h:outputText value="#{msn.status_sent}"

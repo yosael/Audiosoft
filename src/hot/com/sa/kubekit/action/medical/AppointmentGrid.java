@@ -133,8 +133,10 @@ public class AppointmentGrid {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void createGridDay() {
+	public void createGridDay() 
+	{
 		System.out.println("Entre a createGridDay");
+		
 		if (dateSel == null || doctorSel == null)
 			return;
 		Calendar cal = Calendar.getInstance();
@@ -153,6 +155,7 @@ public class AppointmentGrid {
 						"select s from MedicalAppointment s where s.dateTime between :date1 and :date2 and s.doctor = :doctor order by s.dateTime ASC, s.status DESC")
 				.setParameter("date1", date1).setParameter("date2", date2)
 				.setParameter("doctor", doctorSel).getResultList();
+		
 		// creando la grilla
 		int cont = initialHour;
 		while (cont < finalHour) {
@@ -220,13 +223,18 @@ public class AppointmentGrid {
 			takeSelection();
 			Iterator<Object> it = transferApp.getSelection().getKeys();
 			List <MedicalAppointment> med = new ArrayList<MedicalAppointment>();
-			if (it.hasNext()){
+			if (it.hasNext())
+			{
 				med.add(transferApp.getListAppointments().get((Integer)it.next()));
-				System.out.println("Doctor a transferir: "+ med.get(0).getDoctor() + " Sucursal: "+med.get(0).getSucursal() +  " Fecha: "+ med.get(0).getDateTime());
+				
+				//System.out.println("Doctor a transferir: "+ med.get(0).getDoctor() + " Sucursal: "+med.get(0).getSucursal() +  " Fecha: "+ med.get(0).getDateTime());
+				
 				medicalAppointmentDAO.getInstance().setDoctor(med.get(0).getDoctor());
 				medicalAppointmentDAO.getInstance().setSucursal(transferApp.getSucSel());
 				medicalAppointmentDAO.getInstance().setDateTime(med.get(0).getDateTime());
-				System.out.println("(MedicalAppointmentDAO) Doctor a transferir: "+ medicalAppointmentDAO.getInstance().getDoctor() + " Sucursal: "+ medicalAppointmentDAO.getInstance().getSucursal() +  " Fecha: "+ medicalAppointmentDAO.getInstance().getDateTime() );
+				
+				//System.out.println("(MedicalAppointmentDAO) Doctor a transferir: "+ medicalAppointmentDAO.getInstance().getDoctor() + " Sucursal: "+ medicalAppointmentDAO.getInstance().getSucursal() +  " Fecha: "+ medicalAppointmentDAO.getInstance().getDateTime() );
+				
 				medicalAppointmentDAO.modify();
 				createGridDay();
 				transferApp.createGridDay();
@@ -260,27 +268,27 @@ public class AppointmentGrid {
 	
 	public void takeSelection() {
 		
-		System.out.println("Selection size: "+ selection.size() );
+		//System.out.println("Selection size: "+ selection.size() );
 	
 		Iterator<Object> it = selection.getKeys();
 		List <MedicalAppointment> med = new ArrayList<MedicalAppointment>();
 		
 		while (it.hasNext()) {
 			Integer num = (Integer)it.next();
-			System.out.println("*** num = " + num + " \n");
+			//System.out.println("*** num = " + num + " \n");
 			med.add(listAppointments.get(num));	
 		}
 		
 		if (med.get(0).getId() == null){
 			
 			medicalAppointmentDAO.select(med.get(0));
-			System.out.println("id de la cita medica if"+med.get(0).getId());
+			//System.out.println("id de la cita medica if"+med.get(0).getId());
 		}
 		else
 		{
 			medicalAppointmentDAO.select(med.get(0));
 			medicalAppointmentDAO.setAppointmentId(med.get(0).getId());
-			System.out.println("id de la cita medica else "+med.get(0).getId());
+			//System.out.println("id de la cita medica else "+med.get(0).getId());
 			
 		}
 		

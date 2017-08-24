@@ -183,10 +183,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			servsCobro = new ArrayList<Service>();
 			
 			procesosTaller = getEntityManager().createQuery("select p from ProcesoTaller p ").getResultList();
-			if(procesosTaller.isEmpty())
-				System.out.println("El proceso taller esta vacio ");
-			else
-				System.out.println("El proceso taller esta lleno");
+			
 			
 			if(repCliId!=null)
 			{
@@ -222,8 +219,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						Calendar calMan = new GregorianCalendar();
 						calMan.setTime(instance.getAparatoRep().getFechaGarRep());
 						calMan.add(Calendar.DATE, -1);
-						System.out.println("Mira esta es la fecha: "+ calMan.getTime());
-						System.out.println("Mira esta es la fecha de base de datos "+ instance.getAparatoRep().getFechaAdquisicion().getTime());
+						//System.out.println("Mira esta es la fecha: "+ calMan.getTime());
+						//System.out.println("Mira esta es la fecha de base de datos "+ instance.getAparatoRep().getFechaAdquisicion().getTime());
 						garRepVigente = tieneGarantiaVigente(calMan.getTime(), instance.getAparatoRep().getPeriodoGarantiaRep());
 					}
 					else if (instance.getAparatoRep().getFechaGarRep()!= null) {
@@ -270,7 +267,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 					
 				}
 				
-				System.out.println("Tamanio de lista de servicios agregados"+instance.getServiciosRep().size());
+				//System.out.println("Tamanio de lista de servicios agregados"+instance.getServiciosRep().size());
 				if(instance.getServiciosRep().size()>0)
 				{
 					setServiciosRep(instance.getServiciosRep());
@@ -360,7 +357,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		//String jpqx = "select x from ReparacionCliente x WHERE id >= 2000 ";
 		//String jpqy = "select x from ReparacionCliente x WHERE id > 1 ";
 
-	
+		System.out.println("Orden de laboratorio");
 		
 		/*if(taller!=null && !taller.equals(""))
 		{
@@ -411,7 +408,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		    fltFch = " x.fechaIngreso BETWEEN :fch1 AND :fch2 ";
 		}
 		*/
-		System.out.println("NomCoinci: " +getNomCoinci());
+		//System.out.println("NomCoinci: " +getNomCoinci());
 		try {
 			if (getNomCoinci()==null){
 				resultList = getEntityManager().createQuery(jpql2)
@@ -440,7 +437,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			System.out.println(e);
 		}
 		
-		System.out.println("Normal = "+ jpql);
+		//System.out.println("Normal = "+ jpql);
 
 	}
 	
@@ -514,7 +511,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			}
 		}
 		for (EtapaRepCliente tmpEta : instance.getEtapasReparacion()) {
-			System.out.println("IDS de las etapas: "+ tmpEta.getEtapaRep().getId());
+			
 				// SI la etapa es "Esperando Aprobación"
 			if (tmpEta.getEtapaRep().getId().equals(102)) {
 				tmpEta.setUsuario(loginUser.getUser());//Nuevo el 08/06/2017
@@ -543,7 +540,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	public void entregaCliente() {
 		
 		//Extraer etapa de entrega de cliente para actualizar la fecha.
-		System.out.println(instance.getCurrEtapa());
+		//System.out.println(instance.getCurrEtapa());
 		
 		if(instance.getProceso().getNombre().equals("Reparacion"))
 		{
@@ -584,29 +581,21 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		
 		if(instance.getTipoRep().equals("CRE"))
 		{
-		  
-			
-			
-				if(!validarEntregaCredito())
-					return;
-			
+			if(!validarEntregaCredito())
+				return;
 		}
 		
 		if(instance.getTipoRep().equals("PRE"))
 		{
-			
-			
+
 			//Actualizar la cotizacion
 			List<CotizacionComboApa> cotiRep = getEntityManager().createQuery("SELECT c FROM CotizacionComboApa c where c.id=:idCot").setParameter("idCot", instance.getIdCot()).getResultList();
 			
 			if(cotiRep.size()>0 && cotiRep!=null)
 			{
-				
-				
 				cotiRep.get(0).setEstado("TFN");
 				getEntityManager().merge(cotiRep.get(0));
-				
-				System.out.println("Actualizo estado de cotizacion luego de trabajo de taller");
+				//System.out.println("Actualizo estado de cotizacion luego de trabajo de taller");
 			}
 			
 			

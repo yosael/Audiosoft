@@ -63,6 +63,7 @@ public class CompraHome extends KubeDAO<Compra>{
 	private MovimientoHome movimientoHome;
 	
 	private Integer cantidadActualItem;
+	private boolean codigosNuevosEnPreguardar=false;
 	
 	@Override
 	public void create() {
@@ -185,7 +186,7 @@ public class CompraHome extends KubeDAO<Compra>{
 			fltFch += " AND x.sucursal = :suc ";
 		
 		setResultList(getEntityManager()
-				.createQuery("SELECT x FROM Compra x WHERE 1 = 1 " + fltFch + " ORDER BY x.fecha DESC ")
+				.createQuery("SELECT x FROM Compra x WHERE 1 = 1 " + fltFch + " ORDER BY x.id DESC ")
 					.setParameter("suc", loginUser.getUser().getSucursal())
 					.setParameter("fch1", getFechaPFlt1())
 					.setParameter("fch2", getFechaPFlt2())
@@ -220,6 +221,40 @@ public class CompraHome extends KubeDAO<Compra>{
 		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
 		System.out.println("Producto cantidad dps"+prdItm.getCantidad());
 		System.out.println("Tamanios Cod fuera"+codsProds.size());
+		
+		if(codsProds == null) 
+			codsProds = new ArrayList<CodProducto>();
+		
+		while(codsProds.size() < prdItm.getCantidad()) 
+		{
+			System.out.println("Entro al while");
+			CodProducto codPrd = new CodProducto();
+			codPrd.setEstado("ACT");
+			codPrd.setInventario(prdItm.getInventario());
+			codsProds.add(codPrd);
+		}
+				
+		currCodigos = codsProds;
+		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+	}
+	
+	public void cargarListaCodigosItemsPreguardados(Item prdItm)// agregado el 25/08/2017
+	{
+		selectedItem = prdItm;
+		ArrayList<CodProducto> codsProds = null;
+		
+		//Buscamos primero si ya esta la lista en la lista madre
+			codsProds = (ArrayList<CodProducto>)getEntityManager().createQuery("SELECT c FROM CodProducto c " +
+					"	WHERE c.inventario = :inv AND c.movimiento = :mov AND c.estado='ACT'")
+					.setParameter("inv", prdItm.getInventario())
+					.setParameter("mov", prdItm.getMovimiento())
+					.getResultList();
+			
+		 if(codsProds!=null && codsProds.size()>0)	
+			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
+		 else
+			codsProds = lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia());
+		
 		
 		if(codsProds == null) 
 			codsProds = new ArrayList<CodProducto>();
@@ -669,6 +704,12 @@ public class CompraHome extends KubeDAO<Compra>{
 			cantidadActualItem = item.getCantidad();
 			item.setModoEdicion(true);
 			item.setRegistrado(false);//para quitar el readonly
+			
+			
+			if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
+			{
+				cargarListaCodigos(item);
+			}
 		}
 	}
 	
@@ -689,7 +730,7 @@ public class CompraHome extends KubeDAO<Compra>{
 				item.setModoEdicion(false);
 				item.setRegistrado(true);
 				
-				FacesMessages.instance().add(Severity.WARN,"Para reducir la cantidad debe ser desde los numeros de serie");
+				FacesMessages.instance().add(Severity.WARN,"Para reducir la cantidad debe seleccionar cada numero de serie");
 				return;
 			}
 			else if(cantidadActualItem>item.getCantidad())//Restar. Se restaran los items de la comprar que no tengan numeros de serie
@@ -748,12 +789,22 @@ public class CompraHome extends KubeDAO<Compra>{
 				if(item.getInventario().getProducto().getCategoria().isTieneNumLote() || item.getInventario().getProducto().getCategoria().isTieneNumSerie())
 				{
 					
-					CodProducto codigo = new CodProducto();
-					codigo.setEnTransferencia(true);
-					codigo.setEstado("ACT");
-					codigo.setInventario(item.getInventario());
-					lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).add(codigo);
+					while(lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).size() < cantidadAEditar) 
+					{
+						
+						CodProducto codigo = new CodProducto();
+						codigo.setEnTransferencia(true);
+						codigo.setEstado("ACT");
+						codigo.setInventario(item.getInventario());
+						System.out.println("Lista codigos "+lstCodsProductos.get(item.getInventario().getProducto().getReferencia()));// Solucion: al preparar la edicion, veirificar si el producto tiene serie/lote y cargar metodo de listarcodigos
+						lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).add(codigo);
+					}
 					
+					
+					item.setCodigoNuevoPreguardar(true);//Para indicar que deben guardarse los nuevos codigos agregados
+					
+					//cargarListaCodigos(item);
+					//System.out.println("CARGO LA LISTA DE NUEVO");
 				}
 				
 				System.out.println("CantidadActual: "+cantidadActualItem);
@@ -852,7 +903,8 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 		System.out.println("PAso de la prevalidacion********");
 		
-		for(Item item: itemsAgregados){
+		for(Item item: itemsAgregados)
+		{
 			
 			if(item.getRegistrado()==null)
 			{
@@ -864,23 +916,52 @@ public class CompraHome extends KubeDAO<Compra>{
 				itemHome.modificarCantidadInventario();
 				itemHome.save();
 				int numItemsCods = item.getCantidad();
+				
 				//Guardamos los codigos si es que tienen codigos
-				if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || 
-						item.getInventario().getProducto().getCategoria().isTieneNumLote()) {
-					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) {
+				if(item.getInventario().getProducto().getCategoria().isTieneNumSerie() || item.getInventario().getProducto().getCategoria().isTieneNumLote()) 
+				{
+					for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) 
+					{
 						if(numItemsCods <= 0)
 							break;
 						
 						tmpCod.setMovimiento(instance);
+						
 						if(tmpCod.getId() != null && tmpCod.getId() > 0) 
 							getEntityManager().merge(tmpCod);
 						else
 							getEntityManager().persist(tmpCod);
+						
+						
 						numItemsCods--;
 					}
 					
+					//getEntityManager().flush();
+					
 				}
 				
+			}
+			else if(item.getCodigoNuevoPreguardar()!=null && item.getCodigoNuevoPreguardar())
+			{
+				int numItemsCods = item.getCantidad();
+				
+				for(CodProducto tmpCod : lstCodsProductos.get(item.getInventario().getProducto().getReferencia())) 
+				{
+					if(numItemsCods <= 0)
+						break;
+					
+					tmpCod.setMovimiento(instance);
+					
+					if(tmpCod.getId() != null && tmpCod.getId() > 0) 
+						getEntityManager().merge(tmpCod);
+					else
+						getEntityManager().persist(tmpCod);
+					
+					
+					numItemsCods--;
+				}
+				
+				item.setCodigoNuevoPreguardar(false);
 			}
 		}
 		
@@ -989,8 +1070,9 @@ public class CompraHome extends KubeDAO<Compra>{
 		
 						tmpItm.setCodsSerie("");
 						//Verificamos que no vengan vacios los codigos ni repetidos
-						for(CodProducto tmpCod : lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia())) {
-							System.out.println("Num Serie for"+tmpCod.getNumSerie());
+						for(CodProducto tmpCod : lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia())) 
+						{
+							
 							if(tmpCod.getNumSerie() != null && !tmpCod.getNumSerie().trim().equals("")) 
 								tmpItm.setCodsSerie(tmpItm.getCodsSerie().concat(tmpCod.getNumSerie()+","));
 							
@@ -1004,8 +1086,10 @@ public class CompraHome extends KubeDAO<Compra>{
 							else if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() != null || !tmpCod.getNumSerie().trim().equals("")))
 							{
 								
-								if(codsStrPrd.contains(tmpCod.getNumSerie())) {
+								if(codsStrPrd.contains(tmpCod.getNumSerie())) 
+								{
 									System.out.println("Entro a if raro");
+									
 									FacesMessages.instance().add(Severity.WARN,
 											sainv_messages.get("compra_error_prdcoddupli"));
 									return false;
@@ -1088,7 +1172,67 @@ public class CompraHome extends KubeDAO<Compra>{
 					}
 			
 		
-			}		
+			}
+			else if(tmpItm.getCodigoNuevoPreguardar()!=null && tmpItm.getCodigoNuevoPreguardar())
+			{
+				Set<String> codsStrPrd = new HashSet<String>();
+				
+				//Verificamos que no vengan vacios los codigos ni repetidos
+				for(CodProducto tmpCod : lstCodsProductos.get(tmpItm.getInventario().getProducto().getReferencia())) 
+				{
+					
+					
+					if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() == null || tmpCod.getNumSerie().trim().equals("") && tmpCod.getId()==null)) 
+					{
+						
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdnoser"));
+						return false;
+					}
+					else if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumSerie() && (tmpCod.getNumSerie() != null || !tmpCod.getNumSerie().trim().equals("") && tmpCod.getId()==null))
+					{
+						
+						if(codsStrPrd.contains(tmpCod.getNumSerie())) 
+						{
+							System.out.println("El numero serie ya existe");
+							
+							FacesMessages.instance().add(Severity.WARN,
+									sainv_messages.get("compra_error_prdcoddupli"));
+							return false;
+						}
+						else
+						{
+							codsStrPrd.add(tmpCod.getNumSerie().toUpperCase());
+						}
+					}
+					
+					
+					
+					if(tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && (tmpCod.getNumLote() == null || tmpCod.getNumLote().trim().equals("") && tmpCod.getId()==null)) 
+					{
+						FacesMessages.instance().add(Severity.WARN,
+								sainv_messages.get("compra_error_prdnolot"));
+						return false;
+					}
+					else if (tmpItm.getInventario().getProducto().getCategoria().isTieneNumLote() && (tmpCod.getNumLote() != null || !tmpCod.getNumLote().trim().equals("") && tmpCod.getId()==null))
+					{
+						if(codsStrPrd.contains(tmpCod.getNumLote())) {
+							System.out.println("El numero lote ya existe");
+							FacesMessages.instance().add(Severity.WARN,
+									sainv_messages.get("compra_error_prdcoddupli"));
+							return false;
+						}
+						else
+						{
+							codsStrPrd.add(tmpCod.getNumLote().toUpperCase());
+						}
+					}
+					
+					
+				}
+				
+			}
+				
 			
 		}
 		
@@ -1423,6 +1567,14 @@ public class CompraHome extends KubeDAO<Compra>{
 
 	public void setCantidadActualItem(Integer cantidadActualItem) {
 		this.cantidadActualItem = cantidadActualItem;
+	}
+
+	public boolean isCodigosNuevosEnPreguardar() {
+		return codigosNuevosEnPreguardar;
+	}
+
+	public void setCodigosNuevosEnPreguardar(boolean codigosNuevosEnPreguardar) {
+		this.codigosNuevosEnPreguardar = codigosNuevosEnPreguardar;
 	}
 
 	

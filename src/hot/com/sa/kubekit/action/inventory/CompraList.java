@@ -20,10 +20,10 @@ public class CompraList extends KubeQuery<Compra>{
 	@Create
 	public void init() {
 		if(loginUser.getUser().getSucursal()==null){
-			setJpql("select e from Compra e order by e.fecha desc ");
+			setJpql("select e from Compra e order by e.id desc ");
 		}else{
 			setJpql("select e from Compra e where e.sucursal.id = " + loginUser.getUser().getSucursal().getId() + 
-					" order by e.fecha desc");
+					" order by e.id desc");
 		}		
 	}
 }

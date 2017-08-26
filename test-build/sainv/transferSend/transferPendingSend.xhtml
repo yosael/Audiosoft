@@ -45,16 +45,16 @@
 					<h:panelGrid columns="2" style="margin:0 auto;" >
 					
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.transferenciamast_send_date}:</ui:define>
+							<ui:define name="label">Fecha inicio:</ui:define>
 							<rich:calendar value="#{transferenciasPendientesList.fechaInicio}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"  action="#{transferenciasPendientesList.init()}" />
+								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1"  action="#{transferenciasPendientesList.buscar()}" />
 							</rich:calendar>
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">#{app.transferenciamast_send_date}:</ui:define>
+							<ui:define name="label">Fecha fin:</ui:define>
 							<rich:calendar value="#{transferenciasPendientesList.fechaFin}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1" action="#{transferenciasPendientesList.init()}" />
+								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1" action="#{transferenciasPendientesList.buscar()}" />
 							</rich:calendar>
 						</s:decorate>
 					</h:panelGrid>
@@ -80,7 +80,7 @@
 								 <h:selectOneMenu value="#{transferenciasPendientesList.estadoFilter}">
 		                        	<f:selectItem itemLabel=" " itemValue="" />
 		                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
-									<f:selectItem itemLabel="Enviada" itemValue="S" />
+									<f:selectItem itemLabel="Enviado(a)" itemValue="S" />
 		                            <a:support reRender="_table" event="onchange" ajaxSingle="true" eventsQueue="q1" />
 		                        </h:selectOneMenu>
 							</h:panelGroup>

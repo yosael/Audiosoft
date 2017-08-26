@@ -47,6 +47,9 @@ public class Item implements Serializable, Cloneable{
 	private Boolean registrado;
 	private Boolean modoEdicion;
 	
+	//25/08/2018
+	private Boolean codigoNuevoPreguardar;
+	
 	@EmbeddedId
 	public ItemId getItemId() {
 		return itemId;
@@ -235,6 +238,15 @@ public class Item implements Serializable, Cloneable{
 
 	public void setModoEdicion(Boolean modoEdicion) {
 		this.modoEdicion = modoEdicion;
+	}
+
+	@Transient
+	public Boolean getCodigoNuevoPreguardar() {
+		return codigoNuevoPreguardar;
+	}
+
+	public void setCodigoNuevoPreguardar(Boolean codigoNuevoPreguardar) {
+		this.codigoNuevoPreguardar = codigoNuevoPreguardar;
 	}
 
 	

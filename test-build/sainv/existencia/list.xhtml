@@ -36,8 +36,8 @@
 							</h:selectOneMenu> -->
 					
 						
-						<s:decorate template="/layout/kEditSpace.xhtml">
-							<a:commandButton value="#{app.bt_rep_exis_prd}" action="#{productoHome.loadConsolidadoExis()}"
+						<s:decorate template="/layout/kEditSpace.xhtml"><!-- #{app.bt_rep_exis_prd} -->
+							<a:commandButton value="Existencias" action="#{productoHome.loadConsolidadoExis()}"
 								oncomplete="showReport('listadoExistencias', '#{conversation.id}');" styleClass="pdfBtn"   />
 						</s:decorate>
 							<!-- 

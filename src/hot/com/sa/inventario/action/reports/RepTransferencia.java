@@ -104,6 +104,7 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	}
 	
 	
+	
 	public void cargarSucursales()
 	{
 		sucursales = entityManager.createQuery("SELECT s FROM Sucursal s where s.bodega=true").getResultList();

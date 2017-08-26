@@ -840,7 +840,7 @@ public class RepMovimiento extends MasterRep implements Serializable {
 		}
 		
 		if(empresaSeleccionada!=null){
-			sucursales=entityManager.createQuery("select s from Sucursal s where s.empresa = :empresa")
+			sucursales=entityManager.createQuery("select s from Sucursal s where s.empresa = :empresa and s.bodega=true")
 												.setParameter("empresa", empresaSeleccionada)
 												.getResultList();
 		}

@@ -386,7 +386,9 @@
 					
 					</a:commandButton>
 					
+					<!-- action="#{etapaRepCliHome.siguienteEtapaUsuario()}" -->
 					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
+						reRender="fm5"
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna==null || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='FIN')}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
 						
@@ -561,8 +563,8 @@
 				</f:facet>
 				
 				<h:form id="fm5">
-					<p>ESTA SEGURO QUE DESEA PASAR A LA SIGUIENTE ETAPA? UNA VEZ HECHO ESTO, NO PODRÃ³ DESHACER LOS CAMBIOS
-					NI REGRESAR PARA AGREGAR REQUISICIONES O SERVICIOS EN ESTA ETAPA.</p>
+					<p>SIGUIENTE ETAPA: <span style="font-weight:bold;">#{etapaRepCliHome.nombreSiguienteEtapa.toUpperCase()}</span> </p>
+					<p>ESTA SEGURO DE PASAR A LA SIGUIENTE ETAPA?</p>
 					<s:decorate template="/layout/kActions.xhtml" id="m5">
 						<a:commandButton styleClass="cancelBtn"
 							value="#{msn.button_cancel}"
@@ -573,6 +575,25 @@
 							value="Aprobar"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
+						 
+						 <!-- 
+						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}" ignoreDupResponses="true"  reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}" styleClass="doCancelBtn"
+							value="Aprobar y continuar"
+							onclick="#{rich:component('confirmAprob')}.hide();">
+						</a:commandButton>
+						 
+						  
+						 
+						<s:link title="Aprobar y continuar"  styleClass="doCancelBtn" 
+							view="/taller/etasReparacion/master.xhtml" propagation="begin"
+							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}"
+							value="Aprobar y continuar"
+							>
+							<a:support event="onclick" action="#{etapaRepCliHome.aprobarEtapaContinuar()}" ></a:support>
+							<f:param name="id" value="#{etapaRepCliHome.etaRepId}" />
+						</s:link>
+						  -->
 					</s:decorate>
 				</h:form>
 			</rich:modalPanel>

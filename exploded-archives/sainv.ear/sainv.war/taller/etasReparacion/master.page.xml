@@ -23,6 +23,14 @@
 			<redirect view-id="/taller/etasReparacion/list.xhtml" />
 		</rule>
 	</navigation>
+	 
+	 <!-- 
+	<navigation from-action="#{etapaRepCliHome.aprobarEtapaContinuar()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/master.xhtml"  />
+		</rule>
+	</navigation>
+	  -->
 	
 	<navigation from-action="#{etapaRepCliHome.noAprobarEtapa()}">
 		<rule if-outcome="true">

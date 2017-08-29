@@ -902,18 +902,26 @@ public class RepTaller extends MasterRep implements Serializable {
 	
 	
 	//nuevo el 28/07/2017
-	
 	public void reporteReparacionesTaller()
 	{
 		
 		
-		String jpql="";
+		StringBuilder jpql= new StringBuilder();
 		
-		List<Object[]> contenidoDiagnostico;
-		List<Object[]> contenidoReparacion;
+		//List<Object[]> contenidoDiagnostico;
+		//List<Object[]> contenidoReparacion;
 		
 		
-		jpql="SELECT c";
+		jpql.append("SELECT e FROM EtapaRepCliente e where e.reparacionCli.proceso.id=1");
+		
+		if(fechaInicio != null && fechaFin == null) 
+			jpql.append(" AND x.reparacionCli.fechaIngreso >= :f1 AND (:f2 IS NULL OR 1 = 1) ");
+		else if(fechaInicio == null && fechaFin != null)
+			jpql.append(" AND x.reparacionCli.fechaIngreso <= :f2 AND (:f1 IS NULL OR 1 = 1) ");
+		else if(fechaInicio != null && fechaFin != null)
+			jpql.append(" AND x.reparacionCli.fechaIngreso BETWEEN :f1 AND :f2 ");
+		else 
+			jpql.append("  AND (:f1 = :f2 OR 1 = 1) ");
 				
 		
 		
@@ -942,7 +950,6 @@ public class RepTaller extends MasterRep implements Serializable {
 			{
 				contenido.append(item.getProducto().getNombre()).append(" + ");
 			}
-				
 		}
 		
 		return contenido.toString();

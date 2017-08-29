@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -15,7 +14,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import sun.security.jca.GetInstance;
 
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
@@ -40,8 +38,10 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	private String accionEta;
 	private String descRechazo;
 	private String nomCoinci;
-	private boolean noTieneRep;
 	private String comentarioAnterior="";
+	private String nombreSiguienteEtapa;
+	private boolean btnAceptarContinuar;
+	private Integer areaUsuario;
 
 	@In
 	private LoginUser loginUser;
@@ -100,6 +100,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 								+ " and etc.estado = 'PEN' and (etc.historico is null or etc.historico<>'historico') "
 								+ " ORDER BY rpc.fecha_ingreso,rpc.repcli_id ASC ")
 				.getResultList();	
+				
 					
 				
 			}
@@ -126,6 +127,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					.setParameter("nom", "%"+getNomCoinci().toUpperCase()+"%")
 					//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
 					.getResultList();
+					
 			}
 			//Para taller + busqueda
 			else if (getNomCoinci()!=null && loginUser.getUser().getAreaUsuario().getId() == 3){ //  se agrega validdacion de nomCoinci, variable de filtro (buscador de ordenes de trabajo por nombre de cliente)
@@ -153,6 +155,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 							//.setParameter(2, (loginUser.getUser().getAreaUsuario() != null)?loginUser.getUser().getAreaUsuario().getId():0 )
 							.getResultList();
 				//System.out.println("Size del result list de trabajos: " +etapasRepCli.size());
+				
 				
 				
 			}  //para el area de negocio de taller
@@ -227,6 +230,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						.getResultList();
 						*/
 					//System.out.println("ETAPAS ESPERANDO APROBACION TAM: "+etapasEsperandoAprobacion.size());
+						
 					
 			}// para audiologa
 			else if (loginUser.getUser().getAreaUsuario().getId() == 1 && getNomCoinci()==null)
@@ -279,7 +283,6 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 						//System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
 						
 					
-					
 			}
 			// para audiologa + busqueda
 			else if (loginUser.getUser().getAreaUsuario().getId() == 1 && getNomCoinci()!=null)
@@ -310,7 +313,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 				
 						
 						//System.out.println(" *** AREA DE NEGOCIO USUARIO" + loginUser.getUser().getAreaUsuario().getId());
-						
+				
 						
 			}
 			/*else if (loginUser.getUser().getAreaUsuario().getId() == 2 && getNomCoinci()==null)
@@ -595,16 +598,20 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 
 	public void load() {
 		try {
+			
+			System.out.println("ENTRO A LOAD() ");
+			
 			setInstance((EtapaRepCliente) getEntityManager()
 					.createQuery(
 							"select e from EtapaRepCliente e where e.id = :id")
 					.setParameter("id", etaRepId).getSingleResult());
-			reparacionClienteHome.setRepCliId(instance.getReparacionCli()
-					.getId());
+			
+			reparacionClienteHome.setRepCliId(instance.getReparacionCli().getId());
 			reparacionClienteHome.load();
 			
 			
 			System.out.println("Orden"+instance.getEtapaRep().getOrden());
+			System.out.println("ID ETAPA ACTUAL");
 			
 			int orderAct=instance.getEtapaRep().getOrden();
 			int idEtpAnt=instance.getId()-1;
@@ -745,6 +752,17 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		
 		return this.modify();
+	}
+	
+	public String aprobarEtapaContinuar()
+	{
+		
+		if(!aprobarEtapa())
+			return "";
+		
+		load();
+		
+		return "/taller/etasReparacion/master.xhtml"; 
 	}
 
 	public boolean rechazarEtapa() {
@@ -1247,6 +1265,48 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		// Reseteamos la lista de las reparaciones pendientes para el usuario
 		repsPendientes();
 	}
+	
+	
+	public void siguienteEtapaUsuario()
+	{
+		// Colocamos la siguiente etapa como pendiente
+		List<EtapaRepCliente> etapas = getEntityManager()
+				.createQuery(
+						"SELECT er FROM EtapaRepCliente er "
+								+ "	WHERE er.reparacionCli = :rep AND (er.estado is null or er.estado <> 'APR' and er.estado <> 'NAP' and er.estado <> 'REC') "
+								+ "	AND er <> :currEta ORDER BY er.etapaRep.orden ASC")
+				.setParameter("rep", instance.getReparacionCli())
+				.setParameter("currEta", instance).getResultList();
+		
+		
+		nombreSiguienteEtapa = etapas.get(0).getEtapaRep().getNombre();
+		
+		//System.out.println("Area usuario "+ loginUser.getUser().getAreaUsuario().getId());
+		
+		System.out.println("Nombre "+nombreSiguienteEtapa);
+		System.out.println("ID siguiente etapa "+etapas.get(0).getId());
+		System.out.println("Area negocio usuario "+loginUser.getUser().getAreaUsuario().getId());
+		System.out.println("Area negocio etapa "+etapas.get(0).getEtapaRep().getAreaEncargada().getId());
+		
+		if(etapas!=null && etapas.size()>0)
+		{
+			if(loginUser.getUser().getAreaUsuario()==null || (etapas.get(0).getEtapaRep().getAreaEncargada().getId().equals(loginUser.getUser().getAreaUsuario().getId())))
+			{
+		
+				btnAceptarContinuar = true;
+				System.out.println("Boton aceptar true");
+				etaRepId = etapas.get(0).getId();
+				
+				System.out.println("ID ETAPA boton "+etaRepId);
+				
+				return;
+			}
+		}
+		
+		
+		btnAceptarContinuar = false;
+	}
+	
 
 	@Override
 	public void posDelete() {
@@ -1301,6 +1361,28 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	public void setComentarioAnterior(String comentarioAnterior) {
 		this.comentarioAnterior = comentarioAnterior;
 	}
+
+
+	public String getNombreSiguienteEtapa() {
+		return nombreSiguienteEtapa;
+	}
+
+
+	public void setNombreSiguienteEtapa(String nombreSiguienteEtapa) {
+		this.nombreSiguienteEtapa = nombreSiguienteEtapa;
+	}
+
+
+	public boolean isBtnAceptarContinuar() {
+		return btnAceptarContinuar;
+	}
+
+
+	public void setBtnAceptarContinuar(boolean btnAceptarContinuar) {
+		this.btnAceptarContinuar = btnAceptarContinuar;
+	}
+	
+	
 	
 	
 

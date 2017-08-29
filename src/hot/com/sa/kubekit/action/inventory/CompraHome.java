@@ -661,8 +661,8 @@ public class CompraHome extends KubeDAO<Compra>{
 				
 				getEntityManager().flush();
 				
-				System.out.println("ESTA REGISTRADO");
-				System.out.println("REMOVIO EL ITEM DE LA DB Y REDUJO LA CANTIDAD DEL ITEM EN LA LISTA");
+				//System.out.println("ESTA REGISTRADO");
+				//System.out.println("REMOVIO EL ITEM DE LA DB Y REDUJO LA CANTIDAD DEL ITEM EN LA LISTA");
 				
 			}
 			else //Si el item es solo 1 se quita de la lista 
@@ -675,8 +675,8 @@ public class CompraHome extends KubeDAO<Compra>{
 				
 				getEntityManager().remove(item);
 				
-				System.out.println("ESTA REGISTRADO");
-				System.out.println("REMOVIO EL ITEM DE LA DB Y LISTA YA QUE ERA IGUAL A 1");
+				//System.out.println("ESTA REGISTRADO");
+				//System.out.println("REMOVIO EL ITEM DE LA DB Y LISTA YA QUE ERA IGUAL A 1");
 			}
 			
 			//System.out.println("Cantidad ITEM MOV "+itemMov.getCantidad());
@@ -698,7 +698,7 @@ public class CompraHome extends KubeDAO<Compra>{
 		if(item.getRegistrado()!=null && item.getRegistrado()==true)
 		{
 			
-			System.out.println("CantidadActualItem: "+item.getCantidad());
+			//System.out.println("CantidadActualItem: "+item.getCantidad());
 			
 			cantidadActualItem=0;
 			cantidadActualItem = item.getCantidad();
@@ -752,12 +752,9 @@ public class CompraHome extends KubeDAO<Compra>{
 				
 				item.setCantidad(cantidadAEditar);
 				
-				System.out.println("CantidadActual: "+cantidadActualItem);
+				/*System.out.println("CantidadActual: "+cantidadActualItem);
 				System.out.println("CantidadAEditar: "+cantidadAEditar);
-				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
-				
-				
-				
+				System.out.println("CantidadEnCompra: "+cantidadEnCompra);*/
 				
 				
 				/*restarItemPreguardado(item);
@@ -796,7 +793,7 @@ public class CompraHome extends KubeDAO<Compra>{
 						codigo.setEnTransferencia(true);
 						codigo.setEstado("ACT");
 						codigo.setInventario(item.getInventario());
-						System.out.println("Lista codigos "+lstCodsProductos.get(item.getInventario().getProducto().getReferencia()));// Solucion: al preparar la edicion, veirificar si el producto tiene serie/lote y cargar metodo de listarcodigos
+						//System.out.println("Lista codigos "+lstCodsProductos.get(item.getInventario().getProducto().getReferencia()));// Solucion: al preparar la edicion, veirificar si el producto tiene serie/lote y cargar metodo de listarcodigos
 						lstCodsProductos.get(item.getInventario().getProducto().getReferencia()).add(codigo);
 					}
 					
@@ -807,9 +804,9 @@ public class CompraHome extends KubeDAO<Compra>{
 					//System.out.println("CARGO LA LISTA DE NUEVO");
 				}
 				
-				System.out.println("CantidadActual: "+cantidadActualItem);
+				/*System.out.println("CantidadActual: "+cantidadActualItem);
 				System.out.println("CantidadAEditar: "+cantidadAEditar);
-				System.out.println("CantidadEnCompra: "+cantidadEnCompra);
+				System.out.println("CantidadEnCompra: "+cantidadEnCompra);*/
 				
 				
 				//agregarNuevoItemPreGuardado(item); comentado el 16/08/2017

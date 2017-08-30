@@ -100,6 +100,12 @@
 					</rich:column>
 					
 					<rich:column >
+						<f:facet name="header">Marca</f:facet>
+						<h:outputText
+							value="#{res.reparacionCli.aparatoRep.marca}" />
+					</rich:column>
+					
+					<rich:column >
 						<f:facet name="header">Modelo</f:facet>
 						<h:outputText
 							value="#{res.reparacionCli.aparatoRep.modelo}" />
@@ -110,6 +116,12 @@
 						<h:outputText value="#{res.reparacionCli.aparatoRep.numSerie}" />
 					</rich:column>
 					
+					<rich:column >
+						<f:facet name="header">Lado</f:facet>
+						<h:outputText
+							value="#{res.reparacionCli.aparatoRep.ladoAparato}" />
+					</rich:column>
+					
 					<rich:column filterBy="#{res.reparacionCli.sucursal.nombre}" filterEvent="onkeyup">
 						<f:facet name="header">Sucursal</f:facet>
 						<h:outputText value="#{res.reparacionCli.sucursal.nombre}" />
@@ -117,16 +129,17 @@
 					
 					<rich:column filterBy="#{res.usuario.nombreCompleto}" filterEvent="onkeyup">
 						<f:facet name="header">Tecnico</f:facet>
-						<h:outputText value="#{res.usuario.nombreCompleto}" />
+						<h:outputText  rendered="#{res.fechaRealFin!=null}" value="#{res.usuario.nombreCompleto}" />
 					</rich:column>
 					
+					<!-- 
 					<rich:column >
 						<f:facet name="header">Servicios</f:facet>
 						<h:outputText value="#{repTaller.obtenerContenidoReparacionEtapa(res)}" />
-					</rich:column>
+					</rich:column> -->
 					
 					<rich:column >
-						<f:facet name="header">Valor reparacion</f:facet>
+						<f:facet name="header">total trabajo taller</f:facet>
 						<h:outputText value="#{res.reparacionCli.ingresosTaller}" >
 							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
 									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
@@ -134,10 +147,8 @@
 					</rich:column>
 					
 					<rich:column >
-						<f:facet name="header">Garantia </f:facet>
-						<h:outputText value="#{res.reparacionCli.descuentos_garantia}" >
-							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
-									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						<f:facet name="header">Fecha ensamble</f:facet>
+						<h:outputText value="#{res.fechaRealFin}" >
 						</h:outputText>
 					</rich:column>
 					

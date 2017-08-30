@@ -75,6 +75,10 @@ public class ReparacionCliente implements Serializable {
 	//nuevo agregado el 20/07/2017
 	private Usuario usuarioRecibe;
 	
+	//nuevo el 30/08/2017
+	private Boolean moldeAparatoNuevo; // true=si  false=no
+	
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -379,7 +383,17 @@ public class ReparacionCliente implements Serializable {
 	public void setUsuarioRecibe(Usuario usuarioRecibe) {
 		this.usuarioRecibe = usuarioRecibe;
 	}
+
+	@Column(name="molde_aparato_nuevo")
+	public Boolean getMoldeAparatoNuevo() {
+		return moldeAparatoNuevo;
+	}
+
+	public void setMoldeAparatoNuevo(Boolean moldeAparatoNuevo) {
+		this.moldeAparatoNuevo = moldeAparatoNuevo;
+	}
 		
+	
 	
 	
 }

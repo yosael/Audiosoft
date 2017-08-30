@@ -1201,7 +1201,10 @@ public class RepTaller extends MasterRep implements Serializable {
 						hoja.autoSizeColumn(7);
 						
 						celda=fila.createCell(8); //Tecnico
-						celda.setCellValue(rep.getUsuario().getNombreCompleto());
+						if(rep.getFechaRealFin()!=null)
+							celda.setCellValue(rep.getUsuario().getNombreCompleto());
+						else
+							celda.setCellValue("");
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(8);
 						
@@ -1212,7 +1215,7 @@ public class RepTaller extends MasterRep implements Serializable {
 						hoja.autoSizeColumn(9);
 						
 						celda=fila.createCell(10); //Valor reparacion
-						celda.setCellValue(rep.getReparacionCli().getIngresosTaller());
+						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?rep.getReparacionCli().getIngresosTaller():0f);
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(10);
 						
@@ -1252,14 +1255,588 @@ public class RepTaller extends MasterRep implements Serializable {
 					FacesContext.getCurrentInstance().responseComplete();
 	}
 	
-	public void exportarRepEnsamblesExcel()
+	public void exportarRepEnsamblesExcel() throws IOException
 	{
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 0);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) context
+				.getExternalContext().getResponse();
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader(
+				"Content-Disposition",
+				"attachment;filename=TrabajosTaller-"
+						+ sdf.format(cal.getTime()) + ".xls");
 		
+		
+		HSSFWorkbook libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		CreationHelper ch = libro.getCreationHelper();
+
+		HSSFRow fila;
+		HSSFCell celda;
+
+		// definicion de estilos para las celdas
+		HSSFFont headfont = libro.createFont(), headfont2 = libro
+				.createFont(),headfontW = libro.createFont(), headfont3 = libro.createFont();
+		headfont.setFontName("Arial");
+		headfont.setFontHeightInPoints((short) 8);
+		headfont2.setFontName("Arial");
+		headfont2.setFontHeightInPoints((short) 10);
+		headfont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		headfontW.setFontName("Arial");
+		headfontW.setFontHeightInPoints((short) 10);
+		headfontW.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		headfontW.setColor(HSSFColor.WHITE.index);
+		
+		headfont3.setFontName("Arial");
+		headfont3.setFontHeightInPoints((short) 8);
+		//headfont3.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+
+					HSSFCellStyle stAling = libro.createCellStyle(), stDate = libro
+							.createCellStyle(), stAlingRight = libro.createCellStyle(), stTitles = libro.createCellStyle(),stTitlesD = libro
+							.createCellStyle(),stTitlesI = libro.createCellStyle(), stTotals = libro.createCellStyle(), stList = libro
+							.createCellStyle(), stFinal = libro.createCellStyle(), stPorcent = libro
+							.createCellStyle();
+
+					// Para Formatos de dolar y porcentaje
+					DataFormat estFormato = libro.createDataFormat();
+
+					stAling.setFont(headfont);
+					stAling.setWrapText(true);
+					stAling.setAlignment(stAling.ALIGN_RIGHT);
+					stAling.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					stDate.setDataFormat(ch.createDataFormat().getFormat("dd/mm/yy"));
+					stDate.setFont(headfont3);
+
+					stTitles.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitles.setAlignment(stTitles.ALIGN_CENTER);
+					stTitles.setFont(headfontW);
+					stTitles.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitles.setFillForegroundColor(HSSFColor.GREEN.index);
+					
+					stTitlesD.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesD.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesD.setFont(headfontW);
+					stTitlesD.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesD.setFillForegroundColor(HSSFColor.RED.index);
+					
+					stTitlesI.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesI.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesI.setFont(headfontW);
+					stTitlesI.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesI.setFillForegroundColor(HSSFColor.BLUE.index);
+
+					stList.setAlignment(stList.ALIGN_CENTER);
+					//stList.setVerticalAlignment(stList.VERTICAL_TOP);
+					stList.setWrapText(true);
+					stList.setFont(headfont3);
+
+					stFinal.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stFinal.setAlignment(stTitles.ALIGN_RIGHT);
+					stFinal.setFont(headfont2);
+					stFinal.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					// Estilo para porcentaje
+					stPorcent.setFont(headfont);
+					stPorcent.setWrapText(true);
+					stPorcent.setAlignment(stAlingRight.ALIGN_RIGHT);
+					stPorcent.setDataFormat(estFormato.getFormat("#0.#00%"));
+					
+					
+					// agregando la lista de productos, srv, combos.
+					fila = hoja.createRow(1);
+					
+					celda = fila.createCell(0);
+					celda.setCellValue("Id");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(1);
+					celda.setCellValue("Usuario recibe");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(2);
+					celda.setCellValue("Fecha ingreso");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(3);
+					celda.setCellValue("Cliente");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(4);
+					celda.setCellValue("Aparato");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(5);
+					celda.setCellValue("Marca");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(6);
+					celda.setCellValue("Modelo");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(7);
+					celda.setCellValue("# Serie");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(8);
+					celda.setCellValue("Lado");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(9);
+					celda.setCellValue("Sucursal");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(10);
+					celda.setCellValue("Tecnico");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(11);
+					celda.setCellValue("Total trabajo taller");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(12);
+					celda.setCellValue("Fecha ensamble");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(13);
+					celda.setCellValue("Fecha entrega");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(14);
+					celda.setCellValue("Estado");
+					celda.setCellStyle(stTitles);
+					
+					
+					
+					//celda = fila.createCell(7);
+					
+					//						0    1              2      3    4                5                                  6
+					/*String jpql="SELECT r.estado,r.fechaEntrega,r.fechaIngreso,cond.condAparato.nombre,CONCAT(r.cliente.nombres,' ',r.cliente.apellidos),
+					 * r.aparatoRep.marca,r.aparatoRep.modelo,r.aparatoRep.numSerie,r.id,r.costo,r,r.proceso.nombre FROM ReparacionCliente r,
+					 * CondAparatoRep cond where r.id=cond.repCliente.id";*/
+					
+					int contFila=2;//,contCelda=0;
+					
+					for(EtapaRepCliente rep: resultList)
+					{
+						fila = hoja.createRow(contFila);
+						//System.out.println("Fila "+contFila);
+						
+						
+						celda=fila.createCell(0); //id
+						celda.setCellValue(rep.getReparacionCli().getId());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(0);
+						
+						celda=fila.createCell(1); //recibe
+						celda.setCellValue(rep.getReparacionCli().getUsuarioRecibe()!=null?rep.getReparacionCli().getUsuarioRecibe().getNombreCompleto():null);
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(1);
+						 
+						celda=fila.createCell(2); //Fecha Ingreso
+						celda.setCellValue((Date)rep.getReparacionCli().getFechaIngreso());
+						celda.setCellStyle(stDate);
+						hoja.autoSizeColumn(2);
+						
+						celda=fila.createCell(3); //paciente
+						celda.setCellValue(rep.getReparacionCli().getCliente().getNombreCompleto());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(3);
+						
+						celda=fila.createCell(4); //aparatos 
+						celda.setCellValue(rep.getReparacionCli().getAparatoRep().getNombre());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(4);
+						
+						celda=fila.createCell(5); //marca
+						celda.setCellValue(rep.getReparacionCli().getAparatoRep().getMarca());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(5);
+						
+						
+						celda=fila.createCell(6); //modelo
+						celda.setCellValue(rep.getReparacionCli().getAparatoRep().getModelo());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(6);
+						
+						celda=fila.createCell(7); //serie
+						celda.setCellValue(rep.getReparacionCli().getAparatoRep().getNumSerie());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(7);
+						
+						celda=fila.createCell(8); //lado
+						celda.setCellValue(rep.getReparacionCli().getAparatoRep().getLadoAparato());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(8);
+						
+						celda=fila.createCell(9); //Sucursal	
+						celda.setCellValue(rep.getReparacionCli().getSucursal().getNombre());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(9);
+						
+						celda=fila.createCell(10); //Tecnico
+						if(rep.getFechaRealFin()!=null)
+							celda.setCellValue(rep.getUsuario().getNombreCompleto());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(10);
+						
+						
+						celda=fila.createCell(11); //Valor ensamble
+						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?rep.getReparacionCli().getIngresosTaller():0f);
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(11);
+						
+						celda=fila.createCell(12); //Fecha ensamble
+						if(rep.getFechaRealFin()!=null)
+							celda.setCellValue((Date)rep.getFechaRealFin());
+						else 
+							celda.setCellValue("");
+						
+						celda.setCellStyle(stDate);
+						hoja.autoSizeColumn(12);
+						
+						
+						celda=fila.createCell(13); //entrega
+						
+						if(rep.getReparacionCli().getFechaEntrega()!=null)
+							celda.setCellValue((Date)rep.getReparacionCli().getFechaEntrega());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stDate);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(13);
+						
+						celda=fila.createCell(14); //estado 
+						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda.setCellStyle(stList);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(14);
+						
+						
+						contFila++;
+						
+					}
+					
+					hoja.createFreezePane(3, 0);
+
+					OutputStream os = response.getOutputStream();
+					libro.write(os);
+					os.close();
+					
+					
+					FacesContext.getCurrentInstance().responseComplete();
 	}
 	
-	public void exportarRepMoldesExcel()
+	public void exportarRepMoldesExcel() throws IOException
 	{
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, 0);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) context
+				.getExternalContext().getResponse();
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader(
+				"Content-Disposition",
+				"attachment;filename=TrabajosTaller-"
+						+ sdf.format(cal.getTime()) + ".xls");
 		
+		
+		HSSFWorkbook libro = new HSSFWorkbook();
+		HSSFSheet hoja = libro.createSheet();
+		CreationHelper ch = libro.getCreationHelper();
+
+		HSSFRow fila;
+		HSSFCell celda;
+
+		// definicion de estilos para las celdas
+		HSSFFont headfont = libro.createFont(), headfont2 = libro
+				.createFont(),headfontW = libro.createFont(), headfont3 = libro.createFont();
+		headfont.setFontName("Arial");
+		headfont.setFontHeightInPoints((short) 8);
+		headfont2.setFontName("Arial");
+		headfont2.setFontHeightInPoints((short) 10);
+		headfont2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+		headfontW.setFontName("Arial");
+		headfontW.setFontHeightInPoints((short) 10);
+		headfontW.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		headfontW.setColor(HSSFColor.WHITE.index);
+		
+		headfont3.setFontName("Arial");
+		headfont3.setFontHeightInPoints((short) 8);
+		//headfont3.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+		
+
+					HSSFCellStyle stAling = libro.createCellStyle(), stDate = libro
+							.createCellStyle(), stAlingRight = libro.createCellStyle(), stTitles = libro.createCellStyle(),stTitlesD = libro
+							.createCellStyle(),stTitlesI = libro.createCellStyle(), stTotals = libro.createCellStyle(), stList = libro
+							.createCellStyle(), stFinal = libro.createCellStyle(), stPorcent = libro
+							.createCellStyle();
+
+					// Para Formatos de dolar y porcentaje
+					DataFormat estFormato = libro.createDataFormat();
+
+					stAling.setFont(headfont);
+					stAling.setWrapText(true);
+					stAling.setAlignment(stAling.ALIGN_RIGHT);
+					stAling.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					stDate.setDataFormat(ch.createDataFormat().getFormat("dd/mm/yy"));
+					stDate.setFont(headfont3);
+
+					stTitles.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitles.setAlignment(stTitles.ALIGN_CENTER);
+					stTitles.setFont(headfontW);
+					stTitles.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitles.setFillForegroundColor(HSSFColor.GREEN.index);
+					
+					stTitlesD.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesD.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesD.setFont(headfontW);
+					stTitlesD.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesD.setFillForegroundColor(HSSFColor.RED.index);
+					
+					stTitlesI.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stTitlesI.setAlignment(stTitles.ALIGN_CENTER);
+					stTitlesI.setFont(headfontW);
+					stTitlesI.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+					//stTitlesD.setFillBackgroundColor(HSSFColor.RED.index);
+					stTitlesI.setFillForegroundColor(HSSFColor.BLUE.index);
+
+					stList.setAlignment(stList.ALIGN_CENTER);
+					//stList.setVerticalAlignment(stList.VERTICAL_TOP);
+					stList.setWrapText(true);
+					stList.setFont(headfont3);
+
+					stFinal.setVerticalAlignment(stTitles.VERTICAL_CENTER);
+					stFinal.setAlignment(stTitles.ALIGN_RIGHT);
+					stFinal.setFont(headfont2);
+					stFinal.setDataFormat(estFormato.getFormat("$#,#0.00"));
+
+					// Estilo para porcentaje
+					stPorcent.setFont(headfont);
+					stPorcent.setWrapText(true);
+					stPorcent.setAlignment(stAlingRight.ALIGN_RIGHT);
+					stPorcent.setDataFormat(estFormato.getFormat("#0.#00%"));
+					
+					
+					// agregando la lista de productos, srv, combos.
+					fila = hoja.createRow(1);
+					
+					celda = fila.createCell(0);
+					celda.setCellValue("Id");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(1);
+					celda.setCellValue("Usuario recibe");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(2);
+					celda.setCellValue("Fecha ingreso");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(3);
+					celda.setCellValue("Cliente");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(4);
+					celda.setCellValue("Aparato");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(5);
+					celda.setCellValue("Marca");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(6);
+					celda.setCellValue("Modelo");
+					celda.setCellStyle(stTitles);
+					
+					
+					celda = fila.createCell(7);
+					celda.setCellValue("Lado");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(8);
+					celda.setCellValue("Sucursal");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(9);
+					celda.setCellValue("Tecnico");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(10);
+					celda.setCellValue("Precio");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(11);
+					celda.setCellValue("Tipo elaboracion");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(12);
+					celda.setCellValue("Fecha realizacion");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(13);
+					celda.setCellValue("Fecha entrega");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(14);
+					celda.setCellValue("Estado");
+					celda.setCellStyle(stTitles);
+					
+					
+					
+					//celda = fila.createCell(7);
+					
+					//						0    1              2      3    4                5                                  6
+					/*String jpql="SELECT r.estado,r.fechaEntrega,r.fechaIngreso,cond.condAparato.nombre,CONCAT(r.cliente.nombres,' ',r.cliente.apellidos),
+					 * r.aparatoRep.marca,r.aparatoRep.modelo,r.aparatoRep.numSerie,r.id,r.costo,r,r.proceso.nombre FROM ReparacionCliente r,
+					 * CondAparatoRep cond where r.id=cond.repCliente.id";*/
+					
+					int contFila=2;//,contCelda=0;
+					
+					for(EtapaRepCliente rep: resultList)
+					{
+						fila = hoja.createRow(contFila);
+						System.out.println("Fila "+contFila);
+						
+						
+						celda=fila.createCell(0); //id
+						celda.setCellValue(rep.getReparacionCli().getId());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(0);
+						
+						celda=fila.createCell(1); //recibe
+						celda.setCellValue(rep.getReparacionCli().getUsuarioRecibe()!=null?rep.getReparacionCli().getUsuarioRecibe().getNombreCompleto():null);
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(1);
+						 
+						celda=fila.createCell(2); //Fecha Ingreso
+						celda.setCellValue((Date)rep.getReparacionCli().getFechaIngreso());
+						celda.setCellStyle(stDate);
+						hoja.autoSizeColumn(2);
+						
+						celda=fila.createCell(3); //paciente
+						celda.setCellValue(rep.getReparacionCli().getCliente().getNombreCompleto());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(3);
+						
+						celda=fila.createCell(4); //aparatos 
+						if(rep.getReparacionCli().getAparatoRep()!=null)
+							celda.setCellValue(rep.getReparacionCli().getAparatoRep().getNombre());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(4);
+						
+						celda=fila.createCell(5); //marca
+						if(rep.getReparacionCli().getAparatoRep()!=null)
+							celda.setCellValue(rep.getReparacionCli().getAparatoRep().getMarca());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(5);
+						
+						
+						celda=fila.createCell(6); //modelo
+						if(rep.getReparacionCli().getAparatoRep()!=null)
+							celda.setCellValue(rep.getReparacionCli().getAparatoRep().getModelo());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(6);
+						
+						
+						celda=fila.createCell(7); //lado
+						if(rep.getReparacionCli().getAparatoRep()!=null)
+							celda.setCellValue(rep.getReparacionCli().getAparatoRep().getLadoAparato());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(7);
+						
+						celda=fila.createCell(8); //Sucursal	
+						celda.setCellValue(rep.getReparacionCli().getSucursal().getNombre());
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(8);
+						
+						celda=fila.createCell(9); //Tecnico
+						if(rep.getFechaRealFin()!=null)
+							celda.setCellValue(rep.getUsuario().getNombreCompleto());
+						else
+							celda.setCellValue("");
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(9);
+						
+						
+						celda=fila.createCell(10); //Valor molde
+						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?rep.getReparacionCli().getIngresosTaller():0f);
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(10);
+						
+						celda=fila.createCell(11); //Tipo elaboracion
+						if(rep.getReparacionCli().getMoldeAparatoNuevo()!=null && rep.getReparacionCli().getMoldeAparatoNuevo())
+							celda.setCellValue("Molde de aparato nuevo");
+						else 
+							celda.setCellValue("Molde individual");
+						
+						celda.setCellStyle(stList);
+						hoja.autoSizeColumn(11);
+						
+						celda=fila.createCell(12); //Fecha molde
+						if(rep.getFechaRealFin()!=null)
+							celda.setCellValue((Date)rep.getFechaRealFin());
+						else 
+							celda.setCellValue("");
+						
+						celda.setCellStyle(stDate);
+						hoja.autoSizeColumn(12);
+						
+						
+						celda=fila.createCell(13); //entrega
+						
+						if(rep.getReparacionCli().getFechaEntrega()!=null)
+							celda.setCellValue((Date)rep.getReparacionCli().getFechaEntrega());
+						else
+							celda.setCellValue("");
+						//celda.setCellStyle(stList);
+						celda.setCellStyle(stDate);
+						hoja.autoSizeColumn(13);
+						
+						celda=fila.createCell(14); //estado 
+						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda.setCellStyle(stList);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(14);
+						
+						
+						contFila++;
+						
+					}
+					
+					hoja.createFreezePane(3, 0);
+
+					OutputStream os = response.getOutputStream();
+					libro.write(os);
+					os.close();
+					
+					
+					FacesContext.getCurrentInstance().responseComplete();
 	}
 	
 	public String obtenerEstadoRep(ReparacionCliente rep)

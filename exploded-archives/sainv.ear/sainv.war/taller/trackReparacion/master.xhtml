@@ -92,8 +92,8 @@
 												label="#{_sis.nombre}" noSelectionLabel=" " />
 											<s:convertEntity />
 											<a:support event="onchange" ajaxSingle="true"
-												eventsQueue="q1" reRender="_precioRep"
-												action="#{reparacionClienteHome.editarCosto()}" />
+												eventsQueue="q1" reRender="formreparacioncli"
+												action="#{reparacionClienteHome.editarCosto()}" /><!-- _precioRep -->
 										</h:selectOneMenu>
 									</s:decorate>
 								</td>
@@ -291,7 +291,15 @@
 										</h:inputText>
 									</s:decorate>
 								</td>
-								<td colspan="2">
+								<td>
+									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionClienteHome.instance.proceso.id==3}" >
+										<ui:define name="label">Molde de aparato nuevo?</ui:define>
+										<h:selectBooleanCheckbox value="#{reparacionClienteHome.instance.moldeAparatoNuevo}" >
+											<a:support event="onclick" ajaxSingle="true"  ></a:support>
+										</h:selectBooleanCheckbox>
+									</s:decorate>
+								</td>
+								<td >
 									
 								</td>
 							</tr>

@@ -44,7 +44,7 @@
 							</td>
 							<td>
 								<s:decorate template="/layout/kActions.xhtml">
-									<s:button action="#{repTaller.exportarReparacionesExcel()}" ajax="false" propagation="join"
+									<s:button action="#{repTaller.exportarRepMoldesExcel()}" ajax="false" propagation="join"
 										styleClass="excBtn" value="#{msn.button_excel}" >
 										<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
 									</s:button>
@@ -100,14 +100,15 @@
 					</rich:column>
 					
 					<rich:column >
-						<f:facet name="header">Modelo</f:facet>
+						<f:facet name="header">Marca</f:facet>
 						<h:outputText
-							value="#{res.reparacionCli.aparatoRep.modelo}" />
+							value="#{res.reparacionCli.aparatoRep.marca}" />
 					</rich:column>
 					
-					<rich:column filterBy="#{res.reparacionCli.aparatoRep.numSerie}" filterEvent="onkeyup">
-						<f:facet name="header"># Serie</f:facet>
-						<h:outputText value="#{res.reparacionCli.aparatoRep.numSerie}" />
+					<rich:column >
+						<f:facet name="header">Lado</f:facet>
+						<h:outputText
+							value="#{res.reparacionCli.aparatoRep.ladoAparato}" />
 					</rich:column>
 					
 					<rich:column filterBy="#{res.reparacionCli.sucursal.nombre}" filterEvent="onkeyup">
@@ -117,16 +118,16 @@
 					
 					<rich:column filterBy="#{res.usuario.nombreCompleto}" filterEvent="onkeyup">
 						<f:facet name="header">Tecnico</f:facet>
-						<h:outputText value="#{res.usuario.nombreCompleto}" />
+						<h:outputText  rendered="#{res.fechaRealFin!=null}" value="#{res.usuario.nombreCompleto}" />
 					</rich:column>
-					
+					`<!-- 
 					<rich:column >
 						<f:facet name="header">Servicios</f:facet>
 						<h:outputText value="#{repTaller.obtenerContenidoReparacionEtapa(res)}" />
-					</rich:column>
+					</rich:column> -->
 					
 					<rich:column >
-						<f:facet name="header">Valor reparacion</f:facet>
+						<f:facet name="header">Precio</f:facet>
 						<h:outputText value="#{res.reparacionCli.ingresosTaller}" >
 							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
 									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
@@ -134,11 +135,14 @@
 					</rich:column>
 					
 					<rich:column >
-						<f:facet name="header">Garantia </f:facet>
-						<h:outputText value="#{res.reparacionCli.descuentos_garantia}" >
-							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
-									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
-						</h:outputText>
+						<f:facet name="header">Tipo elaboracion </f:facet>
+						<h:outputText rendered="#{res.reparacionCli.moldeAparatoNuevo}" value="Molde de aparato nuevo" />
+						<h:outputText rendered="#{res.reparacionCli.moldeAparatoNuevo==null || res.reparacionCli.moldeAparatoNuevo==false}" value="Molde individual" />
+					</rich:column>
+					
+					<rich:column >
+						<f:facet name="header">Fecha realizado</f:facet>
+						<h:outputText value="#{res.fechaRealFin}" />
 					</rich:column>
 					
 					<rich:column >

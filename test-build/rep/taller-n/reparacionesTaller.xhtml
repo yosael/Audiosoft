@@ -117,7 +117,7 @@
 					
 					<rich:column filterBy="#{res.usuario.nombreCompleto}" filterEvent="onkeyup">
 						<f:facet name="header">Tecnico</f:facet>
-						<h:outputText value="#{res.usuario.nombreCompleto}" />
+						<h:outputText  rendered="#{res.fechaRealFin!=null}" value="#{res.usuario.nombreCompleto}" />
 					</rich:column>
 					
 					<rich:column >

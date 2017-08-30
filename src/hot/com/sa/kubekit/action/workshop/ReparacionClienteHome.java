@@ -1093,6 +1093,9 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		instance.setTipoRep("NML");
 		instance.setAprobada(true);
 		
+		instance.setUsuarioRecibe(loginUser.getUser()!=null?loginUser.getUser():null);
+		
+		
 		System.out.println("PRESAVE Trabajo taller");
 		
 		return true; 

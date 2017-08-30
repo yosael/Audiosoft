@@ -379,12 +379,7 @@ public class ReparacionCliente implements Serializable {
 	public void setUsuarioRecibe(Usuario usuarioRecibe) {
 		this.usuarioRecibe = usuarioRecibe;
 	}
-
-	
-
-	
-	
-	
+		
 	
 	
 }

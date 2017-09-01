@@ -77,9 +77,9 @@
 						<h:outputText rendered="#{res.reparacionCli.usuarioRecibe!=null}" value="#{res.reparacionCli.usuarioRecibe.nombreCompleto}" />
 					</rich:column>
 
-					<rich:column filterBy="#{res.reparacionCli.fechaIngreso}" >
+					<rich:column >
 						<f:facet name="header">#{app.repcli_fechaIng}</f:facet>
-						<h:outputText value="#{res.reparacionCli.fechaIngreso}">
+						<h:outputText value="#{repTaller.obtenerFechaIngresoTaller(res.reparacionCli)}">
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>

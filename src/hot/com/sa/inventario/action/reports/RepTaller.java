@@ -1169,8 +1169,11 @@ public class RepTaller extends MasterRep implements Serializable {
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(1);
 						 
-						celda=fila.createCell(2); //Fecha Ingreso
-						celda.setCellValue((Date)rep.getReparacionCli().getFechaIngreso());
+						celda=fila.createCell(2); //Fecha Ingreso'
+						if(obtenerFechaIngresoTaller(rep.getReparacionCli())!=null)
+							celda.setCellValue(obtenerFechaIngresoTaller(rep.getReparacionCli()));
+						else
+							celda.setCellValue("");
 						celda.setCellStyle(stDate);
 						hoja.autoSizeColumn(2);
 						
@@ -1443,7 +1446,7 @@ public class RepTaller extends MasterRep implements Serializable {
 						hoja.autoSizeColumn(1);
 						 
 						celda=fila.createCell(2); //Fecha Ingreso
-						celda.setCellValue((Date)rep.getReparacionCli().getFechaIngreso());
+						celda.setCellValue(rep.getReparacionCli().getFechaIngreso());
 						celda.setCellStyle(stDate);
 						hoja.autoSizeColumn(2);
 						
@@ -1726,8 +1729,8 @@ public class RepTaller extends MasterRep implements Serializable {
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(1);
 						 
-						celda=fila.createCell(2); //Fecha Ingreso
-						celda.setCellValue((Date)rep.getReparacionCli().getFechaIngreso());
+						celda=fila.createCell(2); //Fecha Ingreso'
+						celda.setCellValue(rep.getReparacionCli().getFechaIngreso());
 						celda.setCellStyle(stDate);
 						hoja.autoSizeColumn(2);
 						
@@ -1837,6 +1840,23 @@ public class RepTaller extends MasterRep implements Serializable {
 					
 					
 					FacesContext.getCurrentInstance().responseComplete();
+	}
+	
+	public Date obtenerFechaIngresoTaller(ReparacionCliente rep)
+	{
+	
+		System.out.println("Entro al metodo obtenerFechaIngreso ******");
+		for(EtapaRepCliente etapa:rep.getEtapasReparacion())
+		{
+			//System.out.println("Entro al for ******");
+			if(etapa.getEtapaRep().getId()==101 && etapa.getFechaRealFin()!=null)
+			{
+				System.out.println("Entro al if del metodo "+etapa.getEtapaRep().getNombre());
+				return etapa.getFechaRealFin();
+			}
+		}
+		
+		return null;
 	}
 	
 	public String obtenerEstadoRep(ReparacionCliente rep)

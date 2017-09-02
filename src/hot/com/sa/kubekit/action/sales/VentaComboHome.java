@@ -2947,7 +2947,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				
 				for(ComboAparatoAdaptacion adp: cmb.getAdaptaciones())
 				{
-					if(adp.getOpcional()==null || adp.getOpcional()==false && !lsAdaptacionesPorComboSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
+					if(adp.getOpcional()==null || adp.getOpcional()==false && lsAdaptacionesPorComboSel.get(cmb.getId())==null || !lsAdaptacionesPorComboSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
 					{
 						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo");
 						return false;
@@ -2967,7 +2967,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 			{
 				for(ComboAparatoAdaptacion adp: cmb.getAdaptaciones())
 				{
-					if(adp.getOpcional()==null || adp.getOpcional()==false && !lsAdaptacionesPorComboBinSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
+					if(adp.getOpcional()==null || adp.getOpcional()==false && lsAdaptacionesPorComboBinSel.get(cmb.getId())==null || !lsAdaptacionesPorComboBinSel.get(cmb.getId()).contains(adp))//si la adaptacion no es opcional y no se ha agregado se valida
 					{
 						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural");
 						return false;

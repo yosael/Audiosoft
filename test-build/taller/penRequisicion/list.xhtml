@@ -48,7 +48,6 @@
 							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
 						</h:outputText>
 					</rich:column>
-					
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<s:link title="#{msn.button_edit}" 
@@ -56,7 +55,6 @@
 							<h:graphicImage value="/kubeImg/table_edit16.png" />
 							<f:param name="id" value="#{res[6]}" />
 						</s:link>
-						
 					</rich:column>
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />

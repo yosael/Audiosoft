@@ -319,6 +319,65 @@ public class ClienteHome extends KubeDAO<Cliente>{
 		}
 	}
 	
+
+	public void loadHistory(boolean detail,int idNum) {
+		//Conversation.instance().begin();
+		
+		System.out.println("Entro a cargar el historial");
+		System.out.println("nmuuu@@@@@@@@@@@@@"+idNum);
+		
+		loadAntecendentes();
+		loadOcupaciones();
+		
+		try {
+			Cliente cliente = (Cliente) getEntityManager().createQuery(
+							"select c from Cliente c where c.id = :numId")
+							.setParameter("numId",idNum)
+							.getSingleResult();		
+			setInstance(cliente);
+			updateMunicipios();
+			
+			//Si tiene los datos del encargado es un infante
+			if(instance.getNombresEncargado() != null && !instance.getNombresEncargado().trim().equals(""))
+				setEsDependiente(true);
+			//Ventas de productos hechas al paciente
+			ventasEfectuadas = getEntityManager()
+					.createQuery("SELECT v FROM VentaProdServ v WHERE v.cliente = :cli")
+					.setParameter("cli", instance)
+					.getResultList();
+			
+			
+			sumarVentascliente();
+			
+			
+			
+			// cargamos historiales y citas medicas y los servicios
+			System.out.println("Entrando en load: " + detail);
+			if (detail) {
+				clinicalHistoryList.clear();
+				medicalAppointmentList.clear();
+				servicesAttended.clear();
+				servicesPending.clear();
+				clinicalHistoryList.addAll(instance.getHistoriasClinicas());
+				medicalAppointmentList.addAll(instance.getCitasMedicas());
+				for (MedicalAppointment med : medicalAppointmentList) {
+					for (MedicalAppointmentService serv : med
+							.getMedicalAppointmentServices()) {
+						if (serv.getServiceClinicalHistory() != null)
+							servicesAttended.add(serv);
+						else
+							servicesPending.add(serv);
+					}
+				}				
+			}
+			System.out.println("Terminando en load: " + detail);
+		} catch (Exception e) {
+			e.printStackTrace();
+			setInstance(new Cliente());
+			loadPaisDefault();
+			instance.setTipoDoc("DUI");
+		}
+	}
 	
 	//Metodo para sumar el total de ventas de un cliente 
 	public void sumarVentascliente()

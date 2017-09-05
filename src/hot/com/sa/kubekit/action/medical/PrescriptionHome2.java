@@ -24,10 +24,12 @@ import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.medical.Medicamento;
 import com.sa.model.medical.MedicamentoConsulta;
+import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.Prescription;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.RecomendacionMed;
 import com.sa.model.sales.Service;
+import com.sa.model.workshop.ServicioReparacion;
 
 @Name("prescriptionHome2")
 @Scope(ScopeType.CONVERSATION)
@@ -41,21 +43,27 @@ public class PrescriptionHome2 extends KubeDAO<Prescription>{
 	private List<DiagnosticoConsulta> diagnosticosAgregados = new ArrayList<DiagnosticoConsulta>();
 	private List<ExamenConsulta> examenesAgregados = new ArrayList<ExamenConsulta>();
 	
+	private List<MedicamentoLaboratorios> medicamentosLaboratorios = new ArrayList<MedicamentoLaboratorios>();
+	
 	private List<Prescription> prescriptionsPendingList = new ArrayList<Prescription>();
 	private Integer prescriptionId;
 	private boolean diagnSordera;
+	private List<MedicalAppointmentService> serviciosYexamenesEliminados = new ArrayList<MedicalAppointmentService>();
 	
 	@In(required=false, create=true)
 	private ClienteHome2 clienteHome2;
 	
 	@In(required=false, create=true)
-	private MovimientoHome movimientoHome;//pueda que de error y sea necesario duplicar
+	private MovimientoHome movimientoHome;
 	
 	@In(required=false, create=true)
 	private MedicalAppointmentDAO2 medicalAppointmentDAO2;
 	
 	@In
 	private LoginUser loginUser;
+	
+	private Float totalServicios;
+	private Float totalExamenes;
 	
 	@Override
 	@Begin(join=true)
@@ -128,6 +136,7 @@ public class PrescriptionHome2 extends KubeDAO<Prescription>{
 	}
 	
 	public void agregarMedicamento(Medicamento medicm) {
+		
 		for(MedicamentoConsulta tmpMed : itemsAgregados)
 			if(tmpMed.getMedicamento().equals(medicm)){
 				
@@ -139,11 +148,15 @@ public class PrescriptionHome2 extends KubeDAO<Prescription>{
 				return;
 			}
 		
+		//Revisar porque toman el indice cero, siempre estaria agarrando solo el primero de la lista????? 04/04/2017: Solo es para mostrarlo en el select, luego se selecciona
 		MedicamentoConsulta item = new MedicamentoConsulta();
 		item.setCantidad((short) 1);
 		item.setMedicamento(medicm);
 		item.setSelDosif(medicm.getDosificaciones().get(0));
 		item.setSelPresen(medicm.getPresentaciones().get(0));
+		item.setSelLab(medicm.getMedicamentosLab().get(0));
+		item.setObservacion("");
+		
 		itemsAgregados.add(item);
 	}
 	
@@ -253,12 +266,108 @@ public class PrescriptionHome2 extends KubeDAO<Prescription>{
 	}
 	
 	public void removerExamen(ExamenConsulta exc) {
-		examenesAgregados.remove(exc);
+		
+		
+		List<MedicalAppointmentService> mService = new ArrayList<MedicalAppointmentService>();
+		mService = getEntityManager().createQuery("SELECT s FROM MedicalAppointmentService s where s.medicalAppointmentServiceId.medicalAppointmentId="+medicalAppointmentDAO2.getInstance().getId()+" and s.medicalAppointmentServiceId.serviceId="+exc.getExamen().getId()+" ").getResultList();
+		
+		//if(exc.getExamen().getId()!=null)
+		if(mService.size()>0)
+		{
+			System.out.println("SERVICIO DE EXAMEN DIFERENTE DE NULL");
+			
+			//Remover de la lista
+			
+			examenesAgregados.remove(exc);
+			//serviciosAgregados.re
+			
+			//remover de la db el MedicalAppointmentService que se ha registrador
+			
+			//List<MedicalAppointmentService> paraRemover = medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices(); 
+		
+			//medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().
+			
+			/*for(MedicalAppointmentService mService:paraRemover)
+			{
+				if(mService.getService().equals(exc.getExamen()))
+				{*/
+					//getEntityManager().remove(mService.getServiceClinicalHistory());
+					System.out.println("ENTRO AL IF DENTRO DEL FOR PARA REMOVER DESDE LA DB");
+					medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().remove(mService.get(0));
+					//serviciosYexamenesEliminados.add(mService);
+					serviciosAgregados.remove(mService.get(0));
+					getEntityManager().remove(mService.get(0));
+					getEntityManager().flush();
+					
+			/*	}
+			}*/
+			
+			
+		}
+		else
+		{
+			System.out.println("NO entro a eliminar a la db");
+			examenesAgregados.remove(exc);
+		}
+		
+	}
+	
+	public void verificarServiciosExamenesEliminados()
+	{
+		
+		if(serviciosYexamenesEliminados.size()>0)
+		{
+			medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().removeAll(serviciosYexamenesEliminados);
+			System.out.println("Elimino servicios y/o examenes");
+		}
 	}
 	
 	public void removerServicioExam(Service srv)
 	{
 		examenesAgregados.remove(srv);
+	}
+	
+	public void removerServicioS(MedicalAppointmentService srv)//Nuevo, agregado el 07/06/2017
+	{
+		if(srv.getMedicalAppointmentServiceId()!=null)
+		{
+			//getEntityManager().getTransaction().begin();
+			
+			medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().remove(srv);
+			//serviciosYexamenesEliminados.add(srv);
+			getEntityManager().remove(srv);
+			serviciosAgregados.remove(srv);
+			getEntityManager().flush();
+			//getEntityManager().getTransaction().commit();
+			//getEntityManager().close();
+			
+		}
+		else
+		{
+			serviciosAgregados.remove(srv);
+		}
+	}
+	
+	
+	public Float calcularTotalCobro()
+	{
+		Float total=0F;
+		totalExamenes=0F;
+		totalServicios=0F;
+		
+		for(ExamenConsulta ex: examenesAgregados)
+		{
+			total+=ex.getExamen().getCosto().floatValue();
+			totalExamenes+=ex.getExamen().getCosto().floatValue();
+		}
+		
+		for(MedicalAppointmentService mService: serviciosAgregados)
+		{
+			total+=mService.getService().getCosto().floatValue();
+			totalServicios+=mService.getService().getCosto().floatValue();
+		}
+		
+		return total;
 	}
 	
 	public void removerServicioConsul(Service srv)
@@ -413,4 +522,32 @@ public class PrescriptionHome2 extends KubeDAO<Prescription>{
 		this.diagnSordera = diagnSordera;
 	}
 
+	public List<MedicalAppointmentService> getServiciosYexamenesEliminados() {
+		return serviciosYexamenesEliminados;
+	}
+
+	public void setServiciosYexamenesEliminados(
+			List<MedicalAppointmentService> serviciosYexamenesEliminados) {
+		this.serviciosYexamenesEliminados = serviciosYexamenesEliminados;
+	}
+
+	public Float getTotalServicios() {
+		return totalServicios;
+	}
+
+	public void setTotalServicios(Float totalServicios) {
+		this.totalServicios = totalServicios;
+	}
+
+	public Float getTotalExamenes() {
+		return totalExamenes;
+	}
+
+	public void setTotalExamenes(Float totalExamenes) {
+		this.totalExamenes = totalExamenes;
+	}
+
+	
+	
+	
 }

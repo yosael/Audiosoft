@@ -16,16 +16,16 @@
 	</script>
 		<rich:panel style="padding:1px;">
 			<f:facet name="header">#{app.general_step1_head}</f:facet>
-				<s:div rendered="#{generalMedicalDAO2.managed}">
+				<s:div rendered="#{generalMedicalDAO.managed}">
 				<h:outputText
-						value="#{app.history_consecutive}: #{generalMedicalDAO2.instance.consecutive}"
+						value="#{app.history_consecutive}: #{generalMedicalDAO.instance.consecutive}"
 						styleClass="consecutive" />		
 				<!-- 	
 					<rich:spacer width="30px;"></rich:spacer>
 					
 					 <a:commandButton
 				        value="Expandir"
-				        action="#{generalMedicalDAO2.openToggle(true)}"
+				        action="#{generalMedicalDAO.openToggle(true)}"
 				        ajaxSingle="true"
 				        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../kubeImg/arrow_down16.png);
 								background-position: 5px 4px;
@@ -37,7 +37,7 @@
 				        <rich:spacer width="14px;"></rich:spacer>
 				        <a:commandButton
 				        value="Ocultar"
-				        action="#{generalMedicalDAO2.openToggle(false)}"
+				        action="#{generalMedicalDAO.openToggle(false)}"
 				        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../kubeImg/arrow_up16.png);
 								background-position: 5px 4px;
 								background-repeat: no-repeat;
@@ -47,63 +47,286 @@
 				        />	 -->
 								
 				</s:div>
-					<rich:simpleTogglePanel eventsQueue="q1"  switchType="ajax" label="#{app.general_step1_tab1}" id="toggle1" opened="#{generalMedicalDAO2.toggle}" >
-						<h:panelGrid columns="2" style="padding-left:50px;">
+					<rich:simpleTogglePanel eventsQueue="q1"  switchType="ajax" styleClass="letra15"  label="#{app.general_step1_tab1}" id="toggle1" opened="#{generalMedicalDAO.toggle}" >
+						<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1" ><!-- style="padding-left:50px;font-size:14px" -->
+						
+							<h:panelGroup>
+								<h:outputLabel value="Consulta #: " style="font-weight:bold;" />
+								<h:outputText value="#{medicalAppointmentDAO.instance.id}" />
+							</h:panelGroup>	
+							
+							<h:panelGroup>
+								<h:outputLabel value="Ultima consulta: " style="font-weight:bold;" />
+								<h:outputText
+										value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
+								<h:outputText
+								value="Primera vez" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
+							</h:panelGroup>	
+							
+							<h:column />
+							<h:column />
+							<h:column />
+							<h:column />
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="Nombre: " style="font-weight:bold;" />
+								<h:outputText  value="#{clienteHome.instance.nombres} #{clienteHome.instance.apellidos}"
+											required="true" disabled="#{wizardGeneralMedical.mode == 'r'}"   />
+							</h:panelGroup>				
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="Sexo: "  style="font-weight:bold;"/>
+								<h:outputText value="Masculino" rendered="#{clienteHome.instance.genero==1}" />
+								<h:outputText value="Femenino" rendered="#{clienteHome.instance.genero==0}" />
+							</h:panelGroup>				
+										
+										
+							<h:panelGroup>			
+								<h:outputLabel value="Fecha de nacimiento: " style="font-weight:bold;" />
+									<!-- 
+									<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
+										 datePattern="dd/MM/yyyy"
+										disabled="true" /> -->
+								<h:outputText
+									value="#{clienteHome.instance.fechaNacimiento}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+								<h:outputText
+									value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
+							</h:panelGroup>		
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="Edad: " style="font-weight:bold;" />	
+								<!-- <h:outputText
+									value="#{clienteHome.calcularEdad()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  /> -->
+								<h:outputText
+								value="#{clienteHome.calcularEdadRealAlmacenada()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+								<h:outputText
+									value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
+							</h:panelGroup>		
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="Ocupacion: " style="font-weight:bold;" />		
+								<h:outputText
+									value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
+								<h:outputText
+								value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
+							</h:panelGroup>	
+								
+								
+							<h:panelGroup>	
+								<h:outputLabel value="#{app.patimast_telephone}: " style="font-weight:bold;" />
+									<!-- <h:inputText value="#{clienteHome.instance.telefono1}"
+										disabled="true" /> -->
+								<h:outputText value="#{clienteHome.instance.telefono1}"/>
+							</h:panelGroup>	
+								
+							<h:panelGroup>	
+								<h:outputLabel value="Referido por: " style="font-weight:bold;" />
+								<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
+							</h:panelGroup>	
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="#{app.patimast_telephone2}: " style="font-weight:bold;" />
+								<h:outputText value="#{clienteHome.instance.telefono2}"/>
+							</h:panelGroup>	
+							
+							
+							<h:column />
+							<h:column />
+							<h:column />
+							<h:column />
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="#{app.patimast_address}: " style="font-weight:bold;" />
+									
+									<!--<h:inputText value="#{clienteHome.instance.direccion}"
+										disabled="true" />-->
+								<h:outputText value="#{clienteHome.instance.direccion}"
+									disabled="true" />
+							</h:panelGroup>		
+								
+							<h:panelGroup>	
+								<h:outputLabel value="Municipio: " style="font-weight:bold;" />	
+								<h:outputText value="#{clienteHome.instance.municipio.nombre}"
+									disabled="true" />
+							</h:panelGroup>		
+								
+								
+							
+							<h:panelGroup>
+								<h:outputLabel value="Departamento: "  style="font-weight:bold;" />
+								<h:outputText value="#{clienteHome.instance.depto.nombre}"
+									disabled="true" />
+							</h:panelGroup>		
+								
+								
+							<h:panelGroup>	
+								<h:outputLabel value="Pais: " style="font-weight:bold;" />
+								<h:outputText value="#{clienteHome.instance.pais.nombreEsp}"
+									disabled="true" />
+							</h:panelGroup>		
+							
+							
+							
+							
+							<h:panelGroup>
+								<h:outputLabel value="Encargado: " rendered="#{clienteHome.instance.nombresEncargado!=null}" style="font-weight:bold;" />
+									<!-- <h:inputText value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
+										disabled="true" /> -->
+								<h:outputText rendered="#{clienteHome.instance.nombresEncargado!=null}" value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
+									disabled="true" />
+							</h:panelGroup>
+								
+										
+										
+						
+							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label"># Consulta:</ui:define>
+									<h:outputText value="#{medicalAppointmentDAO.instance.id}" />
+							</s:decorate>
+							
+							
+							
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Ultima consulta:</ui:define>
+								<h:outputText
+									value="#{medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)!=null}" />
+									<h:outputText
+									value="No se encontraron citas anteriores" rendered="#{clienteHome.managed and medicalAppointmentDAO.ultimaConsultaCliente(clienteHome.instance)==null}" />
+							</s:decorate>
+							
+							 
 						
 							<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">Nombre Completo:</ui:define>
-									<h:outputText value="#{clienteHome2.instance.nombres} #{clienteHome2.instance.apellidos}"
-										required="true" disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									<h:outputText  value="#{clienteHome.instance.nombres} #{clienteHome.instance.apellidos}"
+										required="true" disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
-								
-								
-								<s:decorate template="/layout/kEditSpace.xhtml">
-									<ui:define name="label">Ultima consulta:</ui:define>
-									<h:outputText
-										value="#{medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome2.instance)}" rendered="#{clienteHome2.managed and medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome2.instance)!=null}" />
-										<h:outputText
-										value="No se encontraron citas anteriores" rendered="#{clienteHome2.managed and medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome2.instance)==null}" />
-								</s:decorate>
-								
+							
+							-->
+							
+									
 								<!-- <s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">#{app.patimast_lastname1}:</ui:define>
-									<h:outputText value="#{clienteHome2.instance.apellidos}"
-										disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									<h:outputText value="#{clienteHome.instance.apellidos}"
+										disabled="#{wizardGeneralMedical.mode == 'r'}" />
 								</s:decorate> -->
 								
-							<s:decorate template="/layout/kEditSpace.xhtml">
+							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.patimast_type_id}:</ui:define>
 								<h:outputText
-									value="#{clienteHome2.instance.tipoDoc}" rendered="#{clienteHome2.managed}" />
+									value="#{clienteHome.instance.tipoDoc}" rendered="#{clienteHome.managed}" />
 							</s:decorate>	
 								
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.patimast_num_id}:</ui:define>
-								<h:outputText value="#{clienteHome2.instance.docId}"
-									rendered="#{clienteHome2.managed}" />
+								<h:outputText value="#{clienteHome.instance.docId}"
+									rendered="#{clienteHome.managed}" />
+							</s:decorate> comentadoNuevo-->
+							
+							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Fecha nac:</ui:define> -->
+								<!-- 
+								<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
+									 datePattern="dd/MM/yyyy"
+									disabled="true" /> -->
+									<!-- <h:outputText
+										value="#{clienteHome.instance.fechaNacimiento}"  />
+									<h:outputText
+										value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
 							</s:decorate>
+							
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">Ocupacion:</ui:define>
+									<h:outputText
+										value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
+										<h:outputText
+										value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
+								</s:decorate>
+								
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Edad:</ui:define>
+									<h:outputText
+										value="#{clienteHome.calcularEdad()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+									<h:outputText
+										value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_address}:</ui:define>-->
+								<!--<h:inputText value="#{clienteHome.instance.direccion}"
+									disabled="true" />
+								<h:outputText value="#{clienteHome.instance.direccion}"
+									disabled="true" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+							</s:decorate>-->
+							
+							<!--  <s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Municipio:</ui:define>
+								<h:outputText value="#{clienteHome.instance.municipio.nombre}"
+									disabled="true" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Departamento:</ui:define>
+								<h:outputText value="#{clienteHome.instance.depto.nombre}"
+									disabled="true" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_telephone}:</ui:define>-->
+								<!-- <h:inputText value="#{clienteHome.instance.telefono1}"
+									disabled="true" /> -->
+							<!--  		<h:outputText value="#{clienteHome.instance.telefono1}"/>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
+									<h:outputText value="#{clienteHome.instance.telefono2}"/>
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not (clienteHome.instance.nombresEncargado==null)}">
+								<ui:define name="label">Encargado:</ui:define>-->
+								<!-- <h:inputText value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
+									disabled="true" /> -->
+						<!--  <h:outputText value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
+									disabled="true" />
+							</s:decorate>-->
+							
 							
 							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Correo:</ui:define>
-								<h:outputText value="#{clienteHome2.instance.email}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								<h:outputText value="#{clienteHome.instance.email}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate> -->
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab2}" id="toggle2" opened="#{generalMedicalDAO2.toggle}" >
-						<h:panelGrid columns="2" style="padding-left:50px;">
+					<!-- <rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" styleClass="letra15" label="#{app.general_step1_tab2}" id="toggle2" opened="#{generalMedicalDAO.toggle}" >
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 						
 							<s:decorate template="/layout/kEditSpace.xhtml">
 									<ui:define name="label">Ocupacion:</ui:define>
 									<h:outputText
-										value="#{clienteHome2.instance.ocupacion}" rendered="#{clienteHome2.managed and clienteHome2.instance.ocupacion!=null}" />
+										value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
 										<h:outputText
-										value="No especifico" rendered="#{clienteHome2.managed and clienteHome2.instance.ocupacion==null}" />
+										value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
 								</s:decorate>
-						
+						 -->
 							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.patimast_bg}:</ui:define>
-								<h:selectOneMenu value="#{clienteHome2.instance.grupoSanguineo}"
+								<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
 									required="true" disabled="true">
 									<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
 									<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
@@ -116,8 +339,8 @@
 								</h:selectOneMenu> //solo esta parte no estaba comentada
 
 								
-								<h:selectOneMenu value="#{clienteHome2.instance.grupoSanguineo}"
-									required="true" disabled="#{wizardGeneralMedical2.mode == 'r'}">
+								<h:selectOneMenu value="#{clienteHome.instance.grupoSanguineo}"
+									required="true" disabled="#{wizardGeneralMedical.mode == 'r'}">
 									<f:selectItem itemLabel="#{app.patimast_bg_1}" itemValue="0" />
 									<f:selectItem itemLabel="#{app.patimast_bg_2}" itemValue="1" />
 									<f:selectItem itemLabel="#{app.patimast_bg_3}" itemValue="2" />
@@ -128,16 +351,20 @@
 									<f:selectItem itemLabel="#{app.patimast_bg_8}" itemValue="7" />
 								</h:selectOneMenu>
 							</s:decorate> -->
-							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.patimast_dob}:</ui:define>
-								<rich:calendar value="#{clienteHome2.instance.fechaNacimiento}"
+						<!-- Nuevo	<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.patimast_dob}:</ui:define>-->
+								<!-- 
+								<rich:calendar value="#{clienteHome.instance.fechaNacimiento}"
 									 datePattern="dd/MM/yyyy"
-									disabled="true" />
+									disabled="true" /> -->
+							<!-- nuevo		<h:outputText
+										value="#{clienteHome.instance.fechaNacimiento}"  />
+										<h:outputText value="" />
 							</s:decorate>
-							
+							  -->
 						<!-- 	<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.patimast_gender}:</ui:define>
-								<h:selectOneRadio value="#{clienteHome2.instance.genero}" styleClass="radioB"
+								<h:selectOneRadio value="#{clienteHome.instance.genero}" styleClass="radioB"
 									required="true" disabled="true">
 									<f:selectItem itemLabel="#{app.patimast_sex_1}" itemValue="1" />
 									<f:selectItem itemLabel="#{app.patimast_sex_2}" itemValue="0" />
@@ -146,67 +373,77 @@
 							</s:decorate>
 							 -->
 							 
-							 <s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not (clienteHome2.instance.nombresEncargado==null)}">
+						<!-- nuevo <s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not (clienteHome.instance.nombresEncargado==null)}">
 								<ui:define name="label">Encargado:</ui:define>
-								<h:inputText value="#{clienteHome2.instance.nombresEncargado} #{clienteHome2.instance.apellidosEncargado}"
+								<h:inputText value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
 									disabled="true" />
 							</s:decorate>
 							 
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.patimast_telephone}:</ui:define>
-								<h:inputText value="#{clienteHome2.instance.telefono1}"
-									disabled="true" />
+								<ui:define name="label">#{app.patimast_telephone}:</ui:define> -->
+								<!-- <h:inputText value="#{clienteHome.instance.telefono1}"
+									disabled="true" /> -->
+						<!-- Nuevo			<h:outputText value="#{clienteHome.instance.telefono1}"/>
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.patimast_telephone2}:</ui:define>
-								<h:inputText value="#{clienteHome2.instance.telefono2}"
-									disabled="true" />
+								<ui:define name="label">#{app.patimast_telephone2}:</ui:define>-->
+								<!--<h:inputText value="#{clienteHome.instance.telefono2}"
+									disabled="true" />-->
+					<!-- Nuevo	<h:outputText value="#{clienteHome.instance.telefono2}"/>
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.patimast_address}:</ui:define>
-								<h:inputText value="#{clienteHome2.instance.direccion}"
+								<ui:define name="label">#{app.patimast_address}:</ui:define> -->
+								<!--<h:inputText value="#{clienteHome.instance.direccion}"
+									disabled="true" />-->
+					<!-- Nuevo 			<h:outputText value="#{clienteHome.instance.direccion}"
 									disabled="true" />
 							</s:decorate>
 						</h:panelGrid>
-				    </rich:simpleTogglePanel>										
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab3}" id="toggle3" opened="#{generalMedicalDAO2.toggle}" >
-						<h:panelGrid columns="2" style="padding-left:50px;">
+				    </rich:simpleTogglePanel>--> 										<!-- #{generalMedicalDAO.toggle} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" styleClass="letra15" label="#{app.general_step1_tab3}" id="toggle3" opened="false" >
+						<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1"  >
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Antecedentes</ui:define>
-								<rich:dataTable style="font-size:12px"  value="#{antecedenteHome2.resultListPA}" var="ant" id="antPa"  >
-									<rich:column style="width:100px;" >
+								<!-- <h:inputTextarea id="ant"
+									value="#{clienteHome.instance.generalInformation.familyHeritage}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" 
+									/>
+								-->
+								<rich:dataTable style="font-size:12px" cellpadding="10" cellspacing="2"  value="#{antecedenteHome.resultListPA}" var="ant" id="antPa"  >
+									<rich:column >
 										<f:facet name="header">Nombre</f:facet>
 										<h:outputText style="font-size:12px;" value="#{ant.antecedente.nombreAntecedente}" />
 									</rich:column>
-									<!-- <rich:column>
+									<rich:column rendered="#{wizardGeneralMedical.mode != 'r'}">
 										<f:facet name="header">#{msn.col_actions}</f:facet>
 										<a:commandLink value="Quitar" reRender="antPa"
-											action="#{antecedenteHome2.quitarPacienteAntecedente(ant)}" ajaxSingle="true" eventsQueue="q1">
+											action="#{antecedenteHome.quitarPacienteAntecedente(ant)}" ajaxSingle="true" eventsQueue="q1">
 										</a:commandLink>
-									</rich:column> -->
+									</rich:column>
 								</rich:dataTable>
 							</s:decorate>
-							<!-- <s:decorate template="/layout/kEditSpace.xhtml">
+							 
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical.mode != 'r'}" >
 								<ui:define name="label">Agregar</ui:define>
 								<a:commandButton onclick="#{rich:component('selAnt')}.show();"
-									ajaxSingle="true" action="#{clienteHome2.loadAntecendentes()}"
+									ajaxSingle="true" 
 									reRender="ant" styleClass="modifyBtn" value="Nuevo Antecedente"
 									style="width:135px;">
 								</a:commandButton>
-							</s:decorate> -->
-							
+							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">Notas</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.personalPathologies}"
+									value="#{clienteHome.instance.generalInformation.personalPathologies}"
 									cols="75" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							
-							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome2.instance.diagnosSordera!=null}">
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.diagnosSordera!=null}">
 									<ui:define name="label">Se diagnostico sordera:</ui:define>
 									<h:outputText
-										value="#{clienteHome2.instance.diagnosSordera}" />
+										value="#{clienteHome.instance.diagnosSordera}" />
 							</s:decorate>
 							
 						</h:panelGrid>
@@ -217,94 +454,94 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_alcholism}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.get(0).nopatAlcoholism}"
+									value="#{clienteHome.instance.generalInformation.nopatAlcoholism}"
 									cols="30" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_smoking}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.get(0).nopatSmoking}"
+									value="#{clienteHome.instance.generalInformation.nopatSmoking}"
 									cols="30" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_addiction}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.get(0).nopatAddiction}"
+									value="#{clienteHome.instance.generalInformation.nopatAddiction}"
 									cols="30" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_allergies}:</ui:define>
 								<h:inputTextarea
-									value="#{clienteHome2.instance.generalInformation.get(0).nopatAllergies}"
+									value="#{clienteHome.instance.generalInformation.nopatAllergies}"
 									cols="30" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>
-					</rich:simpleTogglePanel> -->
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab5}" id="toggle4" opened="#{generalMedicalDAO2.toggle}" >
-						<h:panelGrid columns="2" style="padding-left:50px;">
+					</rich:simpleTogglePanel> -->	<!-- #{generalMedicalDAO.toggle} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab5}" styleClass="letra15" id="toggle4" opened="false" >
+						<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1" >
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenarche}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femMenarche}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_development}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femSexualDevelopment}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femSexualDevelopment}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_rhythm}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenstrualRhythm}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femMenstrualRhythm}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_last_menstruation}:</ui:define>
 								<rich:calendar
-									value="#{clienteHome2.instance.generalInformation.femLastMenstruation}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femLastMenstruation}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_sexual_life}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femSexualLife}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femSexualLife}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_cesarean}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femCesarean}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femCesarean}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_birth}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femBirth}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femBirth}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_abortions}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femAbortions}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femAbortions}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_contraceptive_method}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femContraceptiveMethod}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femContraceptiveMethod}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step1_menopause}:</ui:define>
 								<h:inputText
-									value="#{clienteHome2.instance.generalInformation.femMenopause}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{clienteHome.instance.generalInformation.femMenopause}"
+									disabled="#{wizardGeneralMedical.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>
 					</rich:simpleTogglePanel>					
@@ -324,25 +561,30 @@
 				<p:focus />
 				<a:queue name="q1" />
 								
-				<rich:dataTable var="res" value="#{clienteHome2.antecedentes}" id="_table"
+				<!-- <rich:dataTable var="res" value="#{clienteHome.antecedentes}" id="_table" -->
+				<rich:dataTable var="res" value="#{antecedenteHome.resultList}" id="_table"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 					headerClass="tablaHeader" footerClass="tableScroll">
 					<f:facet name="header">Tipos de Antecedentes</f:facet>
-					<rich:column filterBy="#{res.nombre}" filterEvent="onkeyup">
+					<rich:column filterBy="#{res.nombreAntecedente}" filterEvent="onkeyup">
 						<f:facet name="header">Nombre</f:facet>
-						<h:outputText value="#{res.nombre}" />
+						<h:outputText value="#{res.nombreAntecedente}" />
 					</rich:column>
 									
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
-						<a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
-							action="#{clienteHome2.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="antPa"
+							action="#{antecedenteHome.addPacienteAntecedente(res,clienteHome.instance)}" ajaxSingle="true" eventsQueue="q1"							
 							onclick="#{rich:component('selAnt')}.hide();">
 						</a:commandLink>
+						<!-- <a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
+							action="#{clienteHome.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
+							onclick="#{rich:component('selAnt')}.hide();">
+						</a:commandLink> -->
 						<!--  --> 
-						<!--<h:selectBooleanCheckbox value="#{clienteHome2.anteceDenteSl}">
+						<!--<h:selectBooleanCheckbox value="#{clienteHome.anteceDenteSl}">
 							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  reRender="ant" 
-									action="#{clienteHome2.addAntecedente(res)}" />
+									action="#{clienteHome.addAntecedente(res)}" />
 						</h:selectBooleanCheckbox>  -->
 					</rich:column>
 					<f:facet name="footer">

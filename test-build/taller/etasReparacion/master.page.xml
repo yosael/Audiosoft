@@ -11,18 +11,20 @@
 		</rule>
 	</navigation>
 	
+	<!-- 
 	<navigation from-action="#{etapaRepCliHome.modify()}">
 		<rule if-outcome="true">
 			<redirect view-id="/taller/etasReparacion/list.xhtml" />
 		</rule>
-	</navigation>
+	</navigation> 
 	
 	
 	<navigation from-action="#{etapaRepCliHome.aprobarEtapa()}">
 		<rule if-outcome="true">
 			<redirect view-id="/taller/etasReparacion/list.xhtml" />
 		</rule>
-	</navigation>
+	</navigation> -->
+	
 	 
 	 <!-- 
 	<navigation from-action="#{etapaRepCliHome.aprobarEtapaContinuar()}">

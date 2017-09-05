@@ -1,5 +1,6 @@
 package com.sa.kubekit.action.medical;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +14,11 @@ import org.jboss.seam.faces.FacesMessages;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.crm.Cliente;
+import com.sa.model.medical.ClinicalHistory;
+import com.sa.model.medical.DiagnosticoConsulta;
 import com.sa.model.medical.MedicalAppointment;
 import com.sa.model.medical.MedicalAppointmentService;
+import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.id.MedicalAppointmentServiceId;
 import com.sa.model.sales.Service;
 import com.sa.model.security.Sucursal;
@@ -34,6 +38,10 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 	private Sucursal selectedSuc;
 	private String search ="";
 	private String comentStatus;
+	private ClinicalHistory clinicalHistoryReceta;
+	
+	private int contadorExamenReceta=1;
+	private int contadorMedicamentoReceta=1;
 	
 	//Nuevo prueba 21/12/2016
 	
@@ -73,6 +81,18 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 		instance.setSucursal(loginUser.getUser().getSucursal().getSucursalSuperior());
 	}
 	
+	
+	
+	public void refreshCitaMedicaStepDiag()
+	{
+		System.out.println("Actualizo Step Diagn");
+	}
+	
+	public void refreshCitaMedicaStep1()
+	{
+		System.out.println("Actualizo Steap 1");
+	}
+	
 	public void load2() {
 		try {
 			selMedAps.clear();
@@ -93,7 +113,7 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 				select(medicalAppointment);
 				
 		System.out.println("Tamanio servicio consulta "+medicalAppointment.getServiciosMedicos().size());
-		List<Service> listaServicios;
+		List<Service> listaServicios= new ArrayList<Service>();
 		
 		listaServicios=getEntityManager().createQuery("SELECT m.service FROM MedicalAppointmentService m where m.medicalAppointment.id="+medicalAppointment.getId()+"").getResultList();
 		/*for(MedicalAppointmentService serv:medicalAppointment.getServiciosMedicos())
@@ -101,6 +121,7 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 			listaServicios.add(serv.getService());
 		}
 		*/
+		
 		
 		setServicios(listaServicios);
 				
@@ -110,6 +131,85 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 		System.out.println("cliente "+medicalAppointment.getStatus());
 	}
 	
+	
+	public String obtenerSoloFecha(Date date)
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy");
+		
+		String dateF = sdf.format(date);
+		
+		return dateF;
+	}
+	
+	
+	public void cargarRecetaMedica()
+	{
+		MedicalAppointment medicalAppointment = getEntityManager().find(MedicalAppointment.class, appointmentId);
+		clinicalHistoryReceta = medicalAppointment.getClinicalHistory();
+		
+		System.out.println("Entro a cargar receta medica");
+		
+		System.out.println("Clinical history "+clinicalHistoryReceta.getConsultationReason());
+		
+	}
+	
+	public String crearDiagnostico()
+	{
+		
+		
+		
+		if(clinicalHistoryReceta.getDiagnosticos().size()>0)
+		{
+			StringBuilder diagnostico = new StringBuilder();
+		
+			for(DiagnosticoConsulta diag:clinicalHistoryReceta.getDiagnosticos())
+			{
+				diagnostico.append(diag.getDiagnostico().getNombre());
+				diagnostico.append(" / ");
+			}
+			
+			return diagnostico.toString().toUpperCase();
+		
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
+	
+	public String crearRecomendaciones()
+	{
+		
+		
+		
+		if(clinicalHistoryReceta.getRecomendaciones().size()>0)
+		{
+			StringBuilder recomendacion = new StringBuilder();
+		
+			for(RecomendacionConsulta rec:clinicalHistoryReceta.getRecomendaciones())
+			{
+				recomendacion.append(rec.getRecomendacion().getNombre());
+				recomendacion.append(". ");
+			}
+			
+			return recomendacion.toString().toUpperCase();
+		
+		}
+		else
+		{
+			return "";
+		}
+	}
+	
+	
+	public void verificarEstadoPorDefecto()
+	{
+		if(instance.getStatus()==0)
+		{
+			instance.setStatus(4);
+		}
+	}
 	
 	public boolean validateSucursal(){
 		try {
@@ -149,6 +249,31 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 	public void removerServicio(Service serv) {
 		servicios.remove(serv);
 	}
+	
+	public void enviarCorreo()
+	{
+		
+		String contenido="<h1>PRUEBA</h1></br>" +
+				"<table>" +
+				"<tr>" +
+				"	<td>columna1</td> " +
+				"	<td>columna2</td> " +
+				"	<td>columna3</td> " +
+				"	<td>columna4</td> " +
+				"</tr>" +
+				"<tr>" +
+				"	<td>contenido1</td>" +
+				"	<td>contenido2</td>" +
+				"	<td>contenido3</td>" +
+				"	<td>contenido4</td>" +
+				"</tr>";
+		
+		CorreoAgenda correo= new CorreoAgenda("yosael.gutierrez@gmail.com", "Asunto prueba simple", contenido);
+		correo.enviarCorreoSimple();
+	}
+	
+	
+	//public void addServicioEdit
 
 	@Override
 	public void select(MedicalAppointment medicalAppointment) {
@@ -198,11 +323,12 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 
 	@Override
 	public boolean preSave() {
+		
 		getInstance().setStatus(0);
 		System.out.println("INFORMACION INSTANCE");
-		System.out.println(instance.getSucursal() != null ? instance.getSucursal().getNombre() : "Suc nula");
-		System.out.println(instance.getComment() != null ? instance.getComment() : "Comment nula");
-		System.out.println("FIN INFORMACION INSTANCE");
+		//System.out.println(instance.getSucursal() != null ? instance.getSucursal().getNombre() : "Suc nula");
+		//System.out.println(instance.getComment() != null ? instance.getComment() : "Comment nula");
+		//System.out.println("FIN INFORMACION INSTANCE");
 		// valida campos vacios
 		if (getInstance().getDoctor() == null) {
 			FacesMessages.instance().add(
@@ -213,6 +339,9 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 			FacesMessages.instance().add("No ha seleccionado una sucursal");
 			return false;
 		}
+		
+		//System.out.println("Este es el cliente de la cita antes de guardar"+instance.getCliente().getNombres());
+		
 		return validateDate();
 	}
 	
@@ -252,20 +381,78 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 					.setParameter("cliente", med.getCliente().getId())
 					.getSingleResult();
 		if (res != null && (Long)res > 1) {
-			subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")  + res + ". "
-		+ sainv_messages.get("medicalAppointmentDAO_fecCreac")+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
+			//subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")  + res + ". "
+			subsecuencia = sainv_messages.get("medicalAppointmentDAO_subsecuente")
+		+ sainv_messages.get("medicalAppointmentDAO_fecCreac");//+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10); comentado el 03/07/2017
 			
 			return subsecuencia;
 		} else
-			subsecuencia=sainv_messages.get("medicalAppointmentDAO_nuevo") + ". "
-					+ sainv_messages.get("medicalAppointmentDAO_fecCreac")+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
+			subsecuencia=sainv_messages.get("medicalAppointmentDAO_nuevo")
+					+ sainv_messages.get("medicalAppointmentDAO_fecCreac");//+ " " + med.getCliente().getFechaCreacion().toString().substring(0, 10);
 			return subsecuencia;
 		}
 		catch(Exception E){
 			System.out.println(E.getMessage());
-			subsecuencia=sainv_messages.get("medicalAppointmentDAO_error6");
+			//subsecuencia=sainv_messages.get("medicalAppointmentDAO_error6"); comentado el 03/07/2017
+			subsecuencia=" ";
 			return subsecuencia;
 		}
+	}
+	
+	public String verificarReferenciaPaciente()
+	{
+		StringBuilder bl = new StringBuilder();
+		
+		if(instance.getCliente().getMdif()!=null)
+		{
+			if(instance.getCliente().getMdif().getId()==3)
+			{
+				bl.append("Dr. ");
+				bl.append(instance.getCliente().getDoctorRef().getNombres());
+				bl.append(" ");
+				bl.append(instance.getCliente().getDoctorRef().getApellidos());
+			}
+			else if(instance.getCliente().getMdif().getId()==7)
+			{
+				bl.append("Paciente. ");
+				bl.append(instance.getCliente().getReferidoPor().getNombreCompleto());
+			}
+			else
+			{
+				bl.append("Medio. ");
+				bl.append(instance.getCliente().getMdif().getNombre());
+			}
+		}
+		else
+		{
+			bl.append("No especifico");
+		}
+		
+		return bl.toString();
+	}
+	
+	public boolean pacienteSubsecuente(Cliente cliente)
+	{
+		
+		List<Integer> lsNm = new ArrayList<Integer>();
+		lsNm = (List<Integer>) getEntityManager()
+				.createQuery(
+						"select COUNT(s.cliente.id) from MedicalAppointment s where s.cliente.id = :cliente")
+				.setParameter("cliente", cliente.getId())
+				.getSingleResult();
+		
+		if(lsNm.size()>0 && lsNm.get(0)>1)
+		{
+			System.out.println("Es subsecuente");
+			return true;
+			
+		}
+		else
+		{
+			System.out.println("NOO es subsecuente");
+			return false;
+		}
+		
 	}
 	
 	public Date ultimaConsultaCliente(Cliente cliente)
@@ -337,12 +524,18 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 			med.setMedicalAppointmentServiceId(id);
 			med.setMedicalAppointment(getInstance());
 			med.setService(serv);
+			
 			instance.getMedicalAppointmentServices().add(med);
 			getEntityManager().merge(med);
 		}
 		getEntityManager().flush();
 		
-		setInstance(null); //nuevo 20/12/2016
+		//instance.setCliente(null); // Nuevo el 20/02/2017
+		//setInstance(null); //nuevo 20/12/2016   comentado para prueba
+
+		servicios.removeAll(servicios);  // nuevo el 20/02/2017
+		servicios.clear(); //21/02/2017
+		
 	} catch (Exception e){
 		System.out.println("Entré al catch de saveServices()");
 		e.printStackTrace();
@@ -428,7 +621,9 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 			
 			//getEntityManager().flush();
 			
-
+			servicios.removeAll(servicios);
+			//servicios.clear();
+			setServicios(new ArrayList<Service>()); //nuevo el 23/02/2017
 			
 		} catch (Exception e){
 			System.out.println("Entré al catch de saveModifyServices()");
@@ -442,11 +637,13 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 	public void clearServices() {
 		try{
 
-				instance.setCliente(null);//nuevo el 30/11/2016
-				servicios.removeAll(servicios);
-				getEntityManager().flush();
+				instance.setCliente(new Cliente()); // nuevo el 20/02/2017
+				//instance.setCliente(null);//nuevo el 30/11/2016 // comentado el 20/02/2017  este null ya debio haberse realizado al finalizar la transaccion
+				//servicios.removeAll(servicios);
+				setServicios(new ArrayList<Service>()); //nuevo el 23/02/2017
+				//getEntityManager().flush(); // comentado el 20/02/2017
 				
-				
+				System.out.println("Entro al try vacio***"); // es posible dejar de utlizar esta funcion
 				
 			} catch (Exception e){
 				System.out.println("No hay servicios cargados");
@@ -470,6 +667,8 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 	}
 
 	public void cleanForNew() {
+		
+		
 		System.out.println("Pasé por cleanForNew() de MedicalAppointmentDAO");
 		selMedAps.clear();
 		this.servicios.clear();
@@ -561,8 +760,37 @@ public class MedicalAppointmentDAO2 extends KubeDAO<MedicalAppointment> {
 		this.comentStatus = comentStatus;
 	}
 
+	public ClinicalHistory getClinicalHistoryReceta() {
+		return clinicalHistoryReceta;
+	}
+
+	public void setClinicalHistoryReceta(ClinicalHistory clinicalHistoryReceta) {
+		this.clinicalHistoryReceta = clinicalHistoryReceta;
+	}
+	
+	
 	
 
+	public int getContadorExamenReceta() {
+		return contadorExamenReceta++;
+	}
+
+	public void setContadorExamenReceta(int contadorExamenReceta) {
+		this.contadorExamenReceta = contadorExamenReceta;
+	}
+
+	public int getContadorMedicamentoReceta() {
+		return contadorMedicamentoReceta++;
+	}
+
+	public void setContadorMedicamentoReceta(int contadorMedicamentoReceta) {
+		this.contadorMedicamentoReceta = contadorMedicamentoReceta;
+	}
+
+	
+
+	
+	
 	
 	
 	

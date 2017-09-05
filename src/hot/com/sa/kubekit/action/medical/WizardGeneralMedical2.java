@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -28,6 +27,7 @@ import com.sa.model.sales.VentaProdServ;
 
 @Name("wizardGeneralMedical2")
 @Scope(ScopeType.CONVERSATION)
+//@Scope(ScopeType.SESSION)
 public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	@In(create = true)
 	protected MedicalAppointmentDAO2 medicalAppointmentDAO2;
@@ -36,10 +36,13 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	private GeneralMedicalDAO2 generalMedicalDAO2;
 	
 	@In(create = true)
+	protected ClienteHome2 clienteHome2;
+	
+	@In(create = true)
 	protected AntecedenteHome2 antecedenteHome2;
 	
 	@In(create = true)
-	protected ClienteHome2 clienteHome2;
+	protected MotivoConsultaHome motivoConsultaHome;
 	
 	@In(required=false, create=true)
 	private PrescriptionHome2 prescriptionHome2;
@@ -47,14 +50,22 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	@In(required = true)
 	protected KubeBundle sainv_messages;
 	
+	
+	List<ClinicalHistory> historialAnterior = new ArrayList<ClinicalHistory>();
+	
+	
 	private String paginaAnterior;
+	private String observacionVenta;
+	private boolean subsecuente=false;
+	private String motivoConsultaAnterior="";
+	private String resumenPaciente="";
 
 	public WizardGeneralMedical2() {
 		// cofiguramos las vistas de navegacion generales
-		/*linkDiagBack = "/medical/clinicalHistory/generalMedical/step2.xhtml";
+		linkDiagBack = "/medical/clinicalHistory/generalMedical/step2.xhtml";
 		linkDiagNext = "/medical/clinicalHistory/generalMedical/stepFinal.xhtml";
 		linkEndBack = "/medical/clinicalHistory/generalMedical/stepDiagnostic.xhtml";
-		linkEndNext = "/medical/clinicalHistory/generalMedical/stepFinal.xhtml";*/
+		linkEndNext = "/medical/clinicalHistory/generalMedical/stepFinal.xhtml";
 	}
 
 	/*public void load() {
@@ -86,7 +97,6 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 			super.setMode("w");
 			quitado 21/12/2016 cuando se puso? */
 		
-			//clienteHome2.setNumId(numId)
 		
 			System.out.println("*** Cargo el evento load principal: ");
 			
@@ -102,15 +112,23 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 					}
 				}
 				System.out.println("Paso3");
+				
+				generarResumen();
+				
 			} else {
+				
 				this.init();
 				antecedenteHome2.load();//Para carcar la lista de antecedentes disponibles
+				motivoConsultaHome.load();
+				
+				motivoConsultaAnterior();
 			}
 			
 			antecedenteHome2.cargarAntecedentesPaciente(clienteHome2.getInstance());//Para cargar antecedente de pacientes
 			
-			prescriptionHome2.setInstance(generalMedicalDAO2.getInstance().getMedicalAppointment().getPrescription());
+			motivoConsultaHome.cargarMotivosUltimaConsulta(clienteHome2.getInstance().getId());
 			
+			prescriptionHome2.setInstance(generalMedicalDAO2.getInstance().getMedicalAppointment().getPrescription());
 			
 		System.out.println("Id ConversationLoad "+ Conversation.instance().getId());
 		
@@ -140,6 +158,92 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 		System.out.println("Paso3");
 	}
 	
+	public void motivoConsultaAnterior()
+	{
+		
+		System.out.println("ENTRO A MOTIVO CONSULTA ANTERIOR ************");
+		historialAnterior=(List<ClinicalHistory>) entityManager.createQuery("SELECT c FROM ClinicalHistory c where c.consecutive=(SELECT MAX(m.consecutive) FROM ClinicalHistory m where m.cliente.id="+clienteHome2.getInstance().getId()+" ) ").getResultList();
+		
+		
+		if(historialAnterior.size()>0)
+		{
+			System.out.println("ENTRO A ES SUBSECUENTE ************");
+			motivoConsultaAnterior = historialAnterior.get(0).getConsultationReason();
+			subsecuente=true;
+			
+		}
+	}
+	
+	
+	public void generarResumen()
+	{
+		System.out.println("Entro a resumen paciente");
+		
+		
+		StringBuilder bl = new StringBuilder();
+		//resumenPaciente="";
+		
+		
+		
+		if(clienteHome2.getInstance().getGenero()==1)
+		{
+			bl.append("Masculino. ");
+		}
+		else
+		{
+			bl.append("Femenina. ");
+		}
+		
+		bl.append("De ");
+		bl.append(clienteHome2.calcularEdad());
+		bl.append(" años. ");
+		
+		
+		if(clienteHome2.getInstance().getOcupacion()!=null)
+		{
+			bl.append(clienteHome2.getInstance().getOcupacion());
+			bl.append(". ");
+		}
+			
+		if(generalMedicalDAO2.getInstance().getHeight()!=null)
+		{
+			bl.append("Estatura ");
+			bl.append(generalMedicalDAO2.getInstance().getHeight());
+			bl.append("cm. ");
+		}
+		
+		if(generalMedicalDAO2.getInstance().getWeight()!=null)
+		{
+			bl.append("Peso ");
+			bl.append(generalMedicalDAO2.getInstance().getWeight());
+			bl.append("kg. ");
+		}
+		
+		if(generalMedicalDAO2.getInstance().getConsultationReason()!=null)
+		{
+			bl.append("Consulta por ");
+			bl.append(generalMedicalDAO2.getInstance().getConsultationReason());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO2.getInstance().getObservation()!=null)
+		{
+			bl.append("Evolucion ");
+			bl.append(generalMedicalDAO2.getInstance().getObservation());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO2.getInstance().getEnfermedadActual()!=null)
+		{
+			bl.append("Enfermedad actual ");
+			bl.append(generalMedicalDAO2.getInstance().getEnfermedadActual());
+			bl.append(". ");
+		}
+		
+		resumenPaciente=bl.toString();
+		
+		System.out.println(resumenPaciente);
+	}
 	
 	
 	public void load2() {
@@ -162,9 +266,9 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 			System.out.println("entro a crear el .init()");
 			this.init();
 		}
-		prescriptionHome2.setInstance(generalMedicalDAO2.getInstance().getMedicalAppointment().getPrescription());
 		
 		antecedenteHome2.cargarAntecedentesPaciente(clienteHome2.getInstance());//Para cargar antecedente de pacientes
+		prescriptionHome2.setInstance(generalMedicalDAO2.getInstance().getMedicalAppointment().getPrescription());
 		
 		System.out.println("Id ConversationLoad2 "+ Conversation.instance().getId());
 	}
@@ -178,16 +282,38 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	{
 		System.out.println("Id conversation "+idC);
 	}
+	
+	public void metodoPrueba()
+	{
+		System.out.println("Ingreso a metodo prueba");
+	}
 
 	public void init() {
+		
+		
 		super.init();
+		
+		
 		// configuraciones iniciales
 		if (clienteHome2.getInstance().getGeneralInformation() == null) {
 			GeneralInformation gi = new GeneralInformation(clienteHome2.getInstance());
 			/*List<GeneralInformation> giLis = new ArrayList<GeneralInformation>();
 			giLis.add(gi);*/
-			entityManager.persist(gi);
-			clienteHome2.getInstance().setGeneralInformation(gi);
+			
+			
+			//Nuevo agregado el 05/07/2017
+			List<GeneralInformation> giLisComprobar = entityManager.createQuery("SELECT g FROM GeneralInformation g where g.cliente.id=:idCliente").setParameter("idCliente", clienteHome2.getInstance().getId()).getResultList();
+			
+			if(giLisComprobar.size()<=0)
+			{
+				System.out.println("Lista general information VACIA ");
+				
+				entityManager.persist(gi);
+				clienteHome2.getInstance().setGeneralInformation(gi);
+			}
+			
+			
+			System.out.println("REgistro el GeneralInformation *********");
 			
 		}
 		generalMedicalDAO2.getInstance().setCliente(
@@ -195,6 +321,8 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 		generalMedicalDAO2.getInstance().setMedicalAppointment(
 				medicalAppointmentDAO2.getInstance());
 		
+		
+		System.out.println("ENTRO al INIT wizardGeneralMedical2 *******");
 		//Nuevo
 		//generalMedicalDAO2.getInstance().getMedicalAppointment().set
 	}
@@ -231,6 +359,9 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	}
 	
 	public String allSteps(){
+		
+		FacesMessages.instance().clear();
+		
 		if(prescriptionHome2.getExamenesAgregados().isEmpty() && prescriptionHome2.getServiciosAgregados().isEmpty()){
 			FacesMessages.instance().add("No hay ningun examen o servicio agregado");
 			
@@ -283,13 +414,23 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 									entityManager.persist(digCon);
 								}
 								
+								/*for(MedicamentoLaboratorios medLabs : prescriptionHome2.getM) {
+									digCon.setConsulta(generalMedicalDAO2.getInstance());
+									digCon.setNomDiagnostico(digCon.getDiagnostico().getNombre());
+									entityManager.persist(digCon);
+								}*/
+								
+								System.out.println("TAMANIO EXAMENES AGREGADOS: "+prescriptionHome2.getExamenesAgregados().size());
 								//Examenes
 								for(ExamenConsulta exaCon : prescriptionHome2.getExamenesAgregados()) {
+									
 									exaCon.setConsulta(generalMedicalDAO2.getInstance());
 									exaCon.setNomExamen(exaCon.getExamen().getName());
 									entityManager.persist(exaCon);
+									System.out.println("PERSISTIO NUEVO EXAMEN ******");
 								}
 								
+								System.out.println("TAMANIO SERVICIOS AGREGADOS: "+prescriptionHome2.getServiciosAgregados().size());
 								for(MedicalAppointmentService srv : prescriptionHome2.getServiciosAgregados()) {
 									if(medicalAppointmentDAO2.getAppointmentItems().contains(srv)) 
 										medicalAppointmentDAO2.getAppointmentItems().remove(srv);
@@ -305,7 +446,30 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 									}
 								}
 								
+								
+								//Nuevo agregado el 09/06/2017
+								//prescriptionHome2.verificarServiciosExamenesEliminados();
+								/*if(prescriptionHome2.getServiciosYexamenesEliminados().size()>0)
+								{
+									//medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().removeAll(prescriptionHome2.getServiciosYexamenesEliminados());
+									
+									
+									for(MedicalAppointmentService srv:prescriptionHome2.getServiciosYexamenesEliminados())
+									{
+										System.out.println("SERVICIO A ELIMINAR: "+srv.getService().getName());
+										medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices().remove(srv);
+										entityManager.remove(srv);
+									}
+									entityManager.flush();
+									System.out.println("ELIMINO LOS SERVICIOS DESDE EL WIZARD **********");
+								}
+								*/
+								
+								//Guardar aqui los nuevos motivos de consulta
+								
 								saveDiagnostics();
+								
+								
 								prescriptionHome2.getInstance().setMedicalAppointment(generalMedicalDAO2.getInstance().getMedicalAppointment());
 								prescriptionHome2.save();
 								FacesMessages.instance().add(sainv_messages
@@ -313,26 +477,49 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 								//Generamos un detalle de la venta
 								Double totalReparacion = 0d;
 								VentaProdServ vta = new VentaProdServ();
-								vta.setCliente(clienteHome2.getInstance());
-								vta.setDetalle("Servicios medicos - " + medicalAppointmentDAO2.getInstance().getComment());
-								vta.setEmpresa(medicalAppointmentDAO2.getLoginUser().getUser().getSucursal().getEmpresa());
 								
-								vta.setEstado("PEN");
-								vta.setFechaVenta(new Date());
-								vta.setIdDetalle(medicalAppointmentDAO2.getInstance().getId());
-								vta.setMonto(0.0f);
-								//vta.setSucursal(medicalAppointmentDAO2.getLoginUser().getUser().getSucursal()); //Cambiar para que al gaurdar reparacion guarde la sucursal
-								vta.setSucursal(medicalAppointmentDAO2.getInstance().getSucursal());//Se cambio a que la venta sera tomada en cuenta segun la sucursal especificada en la cita, esta sera espeficiada por la persona que la prog
-								System.out.println("*******************1111 sucursal "+ medicalAppointmentDAO2.getInstance().getSucursal());
-								vta.setTipoVenta("CST");
-								vta.setUsrEfectua(medicalAppointmentDAO2.getLoginUser().getUser());
-								entityManager.persist(vta);
+								
+								//nuevo el 17/07/2017
+								//Verificar si no existe una venta existente
+								List<VentaProdServ> vtaExis = entityManager.createQuery("SELECT v FROM VentaProdServ v where v.cliente.id=:idCliente and DATE(v.fechaVenta)=:fechaHoy and v.tipoVenta<>'CMB' and v.estado='PEN'").setParameter("idCliente", clienteHome2.getInstance().getId()).setParameter("fechaHoy", new Date()).getResultList();
+								
+								if(vtaExis.size()>0)
+								{
+									vta = vtaExis.get(0);
+									vta.setObservacion(observacionVenta);
+								}
+								else
+								{
+									vta.setCliente(clienteHome2.getInstance());
+									vta.setDetalle("Servicios medicos - " + medicalAppointmentDAO2.getInstance().getComment());
+									vta.setEmpresa(medicalAppointmentDAO2.getLoginUser().getUser().getSucursal().getEmpresa());
+									
+									vta.setEstado("PEN");
+									vta.setFechaVenta(new Date());
+									vta.setIdDetalle(medicalAppointmentDAO2.getInstance().getId());
+									vta.setMonto(0.0f);
+									//vta.setSucursal(medicalAppointmentDAO2.getLoginUser().getUser().getSucursal()); //Cambiar para que al gaurdar reparacion guarde la sucursal
+									vta.setSucursal(medicalAppointmentDAO2.getInstance().getSucursal());//Se cambio a que la venta sera tomada en cuenta segun la sucursal especificada en la cita, esta sera espeficiada por la persona que la prog
+									System.out.println("*******************1111 sucursal "+ medicalAppointmentDAO2.getInstance().getSucursal());
+									vta.setTipoVenta("CST");
+									vta.setUsrEfectua(medicalAppointmentDAO2.getLoginUser().getUser());
+									
+									//Agregado el 09/02/2017
+									vta.setObservacion(observacionVenta);
+									entityManager.persist(vta);
+								
+								}
+								
 								//Servicios registrados 
 								entityManager.flush();
 								entityManager.refresh(medicalAppointmentDAO2.getInstance());
 								entityManager.refresh(generalMedicalDAO2.getInstance());
 								List<Service> serviciosCobrados = new ArrayList<Service>();
+								
 								for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices()) {
+									
+									System.out.println("Nombre Servicio: "+tmpSrv.getService().getName());
+									
 									serviciosCobrados.add(tmpSrv.getService());
 									DetVentaProdServ dtVta = new DetVentaProdServ();
 									dtVta.setCantidad(1);
@@ -345,11 +532,13 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 									dtVta.setDetalle(bld.toString());
 									dtVta.setMonto(tmpSrv.getService().getCosto().floatValue());
 									dtVta.setVenta(vta);
+									dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
 									totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 									entityManager.persist(dtVta);
 								}
 								//Y los examenes tambien se adjuntan al cobro
 								for(ExamenConsulta tmpSrv: generalMedicalDAO2.getInstance().getExamenes()) {
+									System.out.println("Nombre examen "+tmpSrv.getExamen().getName());
 									if(!serviciosCobrados.contains(tmpSrv.getExamen())) {
 										DetVentaProdServ dtVta = new DetVentaProdServ();
 										dtVta.setCantidad(1);
@@ -362,14 +551,21 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 										dtVta.setDetalle(bld.toString());
 										dtVta.setMonto(tmpSrv.getExamen().getCosto().floatValue());
 										dtVta.setVenta(vta);
+										dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
+										
 										totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 										entityManager.persist(dtVta);
 									}
 								}
+								
 								//Actualizamos el monto de la venta
 								entityManager.refresh(vta);
-								vta.setMonto(new VentaProdServHome().moneyDecimal(totalReparacion).floatValue());
+								vta.setMonto(vta.getMonto()+(new VentaProdServHome().moneyDecimal(totalReparacion).floatValue()));
 								entityManager.merge(vta);
+								
+								motivoConsultaHome.persistirMotivosLista();
+								antecedenteHome2.persistirAntecedentesLista();
+								
 							}
 						} else if (generalMedicalDAO2.modify()){
 							saveDiagnostics();
@@ -455,6 +651,9 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 				System.out.println("*******************2222 sucursal "+ medicalAppointmentDAO2.getInstance().getSucursal());
 				vta.setTipoVenta("CST");
 				vta.setUsrEfectua(medicalAppointmentDAO2.getLoginUser().getUser());
+				//Agregado el 09/02/2017
+				vta.setObservacion(observacionVenta);
+				
 				entityManager.persist(vta);
 				//Servicios registrados 
 				entityManager.flush();
@@ -523,6 +722,48 @@ public class WizardGeneralMedical2 extends WizardClinicalHistory2 {
 	public void setPaginaAnterior(String paginaAnterior) {
 		this.paginaAnterior = paginaAnterior;
 	}
+
+	public String getObservacionVenta() {
+		return observacionVenta;
+	}
+
+	public void setObservacionVenta(String observacionVenta) {
+		this.observacionVenta = observacionVenta;
+	}
+
+	public boolean isSubsecuente() {
+		return subsecuente;
+	}
+
+	public void setSubsecuente(boolean subsecuente) {
+		this.subsecuente = subsecuente;
+	}
+
+	public List<ClinicalHistory> getHistorialAnterior() {
+		return historialAnterior;
+	}
+
+	public void setHistorialAnterior(List<ClinicalHistory> historialAnterior) {
+		this.historialAnterior = historialAnterior;
+	}
+
+	public String getMotivoConsultaAnterior() {
+		return motivoConsultaAnterior;
+	}
+
+	public void setMotivoConsultaAnterior(String motivoConsultaAnterior) {
+		this.motivoConsultaAnterior = motivoConsultaAnterior;
+	}
+
+	public String getResumenPaciente() {
+		return resumenPaciente;
+	}
+
+	public void setResumenPaciente(String resumenPaciente) {
+		this.resumenPaciente = resumenPaciente;
+	}
+
+	
 
 	
 	

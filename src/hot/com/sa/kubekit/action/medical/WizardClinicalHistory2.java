@@ -6,9 +6,6 @@ import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Out;
-import org.jboss.seam.core.Conversation;
-
-import sun.security.jca.GetInstance;
 
 import com.sa.model.medical.ClinicalHistory;
 import com.sa.model.medical.DiagnosticoConsulta;
@@ -24,7 +21,7 @@ public abstract class WizardClinicalHistory2 {
 	private Integer typeId;
 	private Integer numeroId;
 
-	/*@Out(required = false)
+	@Out(required = false)
 	protected String linkDiagBack;
 
 	@Out(required = false)
@@ -34,7 +31,7 @@ public abstract class WizardClinicalHistory2 {
 	protected String linkEndBack;
 
 	@Out(required = false)
-	protected String linkEndNext;*/
+	protected String linkEndNext;
 
 	@In(create = true)
 	protected ClienteHome2 clienteHome2;
@@ -49,7 +46,7 @@ public abstract class WizardClinicalHistory2 {
 	private PrescriptionHome2 prescriptionHome2;
 
 	@In(create = true)
-	private DoctorDAO doctorDAO; //pueda que de error
+	private DoctorDAO doctorDAO;
 
 	@In(create = true)
 	private PastHistory pastHistory;
@@ -142,7 +139,7 @@ public abstract class WizardClinicalHistory2 {
 			prescriptionHome2.setRecomendacionesAgregadas(medicalAppointmentDAO2.getInstance().getClinicalHistory().getRecomendaciones());
 			prescriptionHome2.setItemsAgregados(medicalAppointmentDAO2.getInstance().getClinicalHistory().getMedicamentos());
 			prescriptionHome2.setDiagnosticosAgregados(medicalAppointmentDAO2.getInstance().getClinicalHistory().getDiagnosticos());*/
-			
+			System.out.println("ENTRO HA WizardClinicalHistory--->loadMedicalAppointment if != null ");
 		} 
 		
 		//Cargamos los servicios y separamos los que son examenes de los que no son examenes
@@ -207,11 +204,13 @@ public abstract class WizardClinicalHistory2 {
 	// metodo para el registro de diagnosticos
 
 	public void createDiagnostics() {
-		if (generalContainer2.getDiagnostics() == null) {
-			generalContainer2
-					.setDiagnostics(new ArrayList<ServiceClinicalHistory>());
-			for (MedicalAppointmentService serv : medicalAppointmentDAO2
-					.getInstance().getMedicalAppointmentServices()) {
+		
+		if (generalContainer2.getDiagnostics() == null) 
+		{
+			generalContainer2.setDiagnostics(new ArrayList<ServiceClinicalHistory>());
+			
+			for (MedicalAppointmentService serv : medicalAppointmentDAO2.getInstance().getMedicalAppointmentServices()) 
+			{
 				ServiceClinicalHistory servClinicalHistory = new ServiceClinicalHistory();
 				servClinicalHistory.setService(serv.getService());
 				servClinicalHistory.setMedicalAppointmentService(serv);

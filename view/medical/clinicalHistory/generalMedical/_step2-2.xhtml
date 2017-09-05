@@ -8,8 +8,13 @@
 	xmlns:a="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
+	<!-- <script type="text/javascript"> 
+		funtion agregarAntecedente(){
+			var cadena= document.getElementById("formA:ant").value;
+			cadena+= " "+;
+		}
+	</script> -->
 		<rich:panel style="padding:1px;">
-				<f:facet name="header">#{app.general_step2_head}</f:facet>
 				<s:div rendered="#{generalMedicalDAO2.managed}">
 				
 					<h:outputText
@@ -41,100 +46,612 @@
 				        />	 -->
 						
 				</s:div>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab1}" id="toggles21" opened="#{generalMedicalDAO2.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px;">
+				<!-- 
+				<a:poll id="autoRefreshStep1" interval="50000" enabled="true" reRender="txtTiempoEvolucion" action="#{medicalAppointmentDAO2.refreshCitaMedicaStep1()}"  />
+					 -->
+					 <!-- 
+						<rich:simpleTogglePanel eventsQueue="q1"  switchType="ajax" styleClass="letra15"  label="#{app.general_step1_tab1}" id="toggle1-1" opened="true" >
+							<h:panelGrid columns="1" style="margin:0 auto;font-size:15px" cellpadding="1" cellspacing="1" >
+							
+								<h:panelGrid columns="3" >
+									<h:panelGroup>
+										<h:outputLabel value="Consulta #: " style="font-weight:bold;" />
+										<h:outputText value="#{medicalAppointmentDAO2.instance.id}" />
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>	
+									
+									<h:panelGroup>
+										<h:outputLabel value="Ultima consulta: " style="font-weight:bold;" />
+										<h:outputText
+												value="#{medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome.instance)}" rendered="#{clienteHome.managed and medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome.instance)!=null}" />
+										<h:outputText
+										value="Primera vez" rendered="#{clienteHome.managed and medicalAppointmentDAO2.ultimaConsultaCliente(clienteHome.instance)==null}" />
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>	
+									
+									<h:panelGroup>	
+										<h:outputLabel value="Referido por: " style="font-weight:bold;" />
+										<h:outputText value="#{medicalAppointmentDAO2.verificarReferenciaPaciente()}" />
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>
+								</h:panelGrid>
+								<hr />
+								<h:panelGroup>
+									<h:outputLabel value="Paciente: " style="font-weight:bold;" />
+									<h:outputText  value="#{clienteHome.instance.nombres} #{clienteHome.instance.apellidos}"
+												required="true" disabled="#{wizardGeneralMedical2.mode == 'r'}"   />
+									<h:outputText value=", Masculino" rendered="#{clienteHome.instance.genero==1}" />
+									<h:outputText value=", Femenino" rendered="#{clienteHome.instance.genero==0}" />
+									<h:outputText
+										value=", de #{clienteHome.calcularEdadRealAlmacenada()}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+								</h:panelGroup>				
+											
+								<hr />
+								
+								<h:panelGrid columns="3" >	
+											
+									<h:panelGroup>			
+										<h:outputLabel value="Fecha nacimiento: " style="font-weight:bold;" />
+										
+										<h:outputText
+											value="#{clienteHome.instance.fechaNacimiento}" rendered="#{clienteHome.instance.fechaNacimiento!=null}"  />
+										<h:outputText
+											value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>		
+									
+									<h:panelGroup>
+										<h:outputLabel value="Ocupacion: " style="font-weight:bold;" />		
+										<h:outputText
+											value="#{clienteHome.instance.ocupacion}" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion!=null}" />
+										<h:outputText
+										value="No especifico" rendered="#{clienteHome.managed and clienteHome.instance.ocupacion==null}" />
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>	
+										
+										
+									<h:panelGroup>	
+										<h:outputLabel value="Telefonos: " style="font-weight:bold;" />
+										<h:outputText value="#{clienteHome.instance.telefono1}"/>
+										<h:outputText value=" / #{clienteHome.instance.telefono2}" rendered="#{clienteHome.instance.telefono2!=null}"/>
+										<rich:spacer width="60" height="0" ></rich:spacer>
+									</h:panelGroup>	
+								</h:panelGrid>
+								
+								<hr />
+								<h:panelGroup>
+									<h:outputLabel value="#{app.patimast_address}: " style="font-weight:bold;" />
+										
+									<h:outputText value="#{clienteHome.instance.direccion}"
+										disabled="true"  />
+									<h:outputText value=", #{clienteHome.instance.municipio.nombre}"
+										disabled="true" rendered="#{clienteHome.instance.municipio!=null}" />
+									<h:outputText value=", #{clienteHome.instance.depto.nombre}"
+										disabled="true" rendered="#{clienteHome.instance.depto!=null}" />
+									<h:outputText value=", #{clienteHome.instance.pais.codIso2}"
+									disabled="true" rendered="#{clienteHome.instance.pais!=null}" />
+									<rich:spacer width="60" height="0" ></rich:spacer>
+								</h:panelGroup>		
+									
+								<hr />
+
+								<h:panelGroup>
+									<h:outputLabel value="Encargado: " rendered="#{clienteHome.instance.nombresEncargado!=null}" style="font-weight:bold;" />
+										
+									<h:outputText rendered="#{clienteHome.instance.nombresEncargado!=null}" value="#{clienteHome.instance.nombresEncargado} #{clienteHome.instance.apellidosEncargado}"
+										disabled="true" />
+								</h:panelGroup>
+									
+							</h:panelGrid>
+					</rich:simpleTogglePanel> -->	
+					
+					<!-- #{app.general_step2_tab1} -->
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" style="font-size:14px;" label="HISTORIA CLINICA ACTUAL" id="toggles21" opened="true">
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
+						
+							<!--  
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_reason}:</ui:define>
-								<h:inputTextarea
-									value="#{generalMedicalDAO2.instance.consultationReason}"
-									cols="75" rows="5"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
-							</s:decorate>
+								<h:panelGrid columns="1" >
+								
+									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='') }" >
+										<ui:define name="label">Motivo consulta anterior:</ui:define>	
+										<h:inputTextarea
+											value="#{wizardGeneralMedical2.motivoConsultaAnterior}" style="width:780px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" />	
+									</s:decorate>								
+
+								</h:panelGrid>
+							</s:decorate>-->
+							
+							<h:outputLabel value="Motivo anterior: " style="font-weight:bold" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='') }" />
+							<h:inputTextarea
+											value="#{wizardGeneralMedical2.motivoConsultaAnterior}" style="width:625px;height:70px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='')}" />	
+							
+							<h:panelGrid columns="1" >
+								<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
+								
+							</h:panelGrid>
+							
+							<h:inputTextarea
+								value="#{generalMedicalDAO2.instance.consultationReason}"
+								disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtMotivoConsulta" >
+									<a:support event="onchange" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+							</h:inputTextarea>
+							
+
+									<!-- <rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivPa"  >
+										<rich:column >
+											<f:facet name="header">Motivo</f:facet>
+											<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
+										</rich:column>
+										<rich:column rendered="#{wizardGeneralMedical2.mode != 'r'}" >
+											<f:facet name="header">#{msn.col_actions}</f:facet>
+											<a:commandLink value="Quitar" reRender="motivPa"
+												 ajaxSingle="true" eventsQueue="q1">
+											</a:commandLink>
+										</rich:column>
+								</rich:dataTable>
+								<a:commandButton  styleClass="addBtn" value="+" 
+									onclick="#{rich:component('selMotiv')}.show();"
+								 	ajaxSingle="true"
+								 	reRender="_table-2Motiv"
+								 	action="#{motivoConsultaHome.load()}"
+								/> -->
+							
+							<!-- 
+							<h:outputLabel value="#{app.general_step2_observation}:" style="font-weight:bold" />
+							
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_observation}:</ui:define>
 								<h:inputTextarea
-									value="#{generalMedicalDAO2.instance.observation}" cols="75"
-									rows="5" disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									value="#{generalMedicalDAO2.instance.observation}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtTiempoEvolucion" style="width:625px;height:85px;font-size:14px" >
+									 <a:support event="onkeyup" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
 							</s:decorate>
+							 -->
+							 
+							<h:outputLabel value="Enfermedad actual: " style="font-weight:bold" />
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea
+									value="#{generalMedicalDAO2.instance.enfermedadActual}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtEnfermedadActual" style="width:625px;height:85px;font-size:14px" >
+									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtEnfermedadActual,txtResumenPaciente" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
+							</s:decorate>
+							
+							<h:outputLabel value="Antecedentes medicos: " style="font-weight:bold" />
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea
+									value="#{generalMedicalDAO2.instance.antecedentesMedicos}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtAntecedentesMedicos" style="width:625px;height:85px;font-size:14px" readonly="true" >
+									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtAntecedentesMedicos" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
+							</s:decorate>
+							
+							<h:outputLabel value="Antecedentes no patologicos: " style="font-weight:bold" />
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea
+									value="#{generalMedicalDAO2.instance.antecedentesNoPatologicos}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtAntecedentesNoPato" style="width:625px;height:85px;font-size:14px" readonly="true" >
+									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtAntecedentesNoPato" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
+							</s:decorate>
+							
+							<h:outputLabel value="Antecedentes patologicos: " style="font-weight:bold" />
+							
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea
+									value="#{generalMedicalDAO2.instance.antecedentesPatologicos}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtAntecedentesPato" style="width:625px;height:85px;font-size:14px" readonly="true" >
+									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtAntecedentesPato" ajaxSingle="true" ></a:support>
+								</h:inputTextarea>	
+							</s:decorate>
+							
+							
+							
+							<!-- 
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Motivos de consulta anteriores:</ui:define>
+								<rich:dataTable rendered="#{not empty (motivoConsultaHome.motivosUltimaConsultaPA)}" style="font-size:12px"  value="#{motivoConsultaHome.motivosUltimaConsultaPA}" var="mot" id="motivPa"  >
+											<rich:column >
+												<f:facet name="header">Motivo</f:facet>
+												<h:outputText style="font-size:12px;" value="#{mot.motivo.descripcion}" />
+											</rich:column>
+											<rich:column rendered="#{wizardGeneralMedical2.mode != 'r'}" >
+												<f:facet name="header">#{msn.col_actions}</f:facet>
+												<a:commandLink value="Quitar" reRender="motivPa"
+													 ajaxSingle="true" eventsQueue="q1">
+												</a:commandLink>
+											</rich:column>
+									</rich:dataTable>
+									
+									<h:outputLabel value="No se encontraron registros anteriores..." rendered="#{empty (motivoConsultaHome.motivosUltimaConsultaPA)}" />
+									
+							</s:decorate>
+							 -->
+							
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab2}" id="toggles22" opened="#{generalMedicalDAO2.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px;">
-							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_height}:</ui:define>
-								<h:inputText value="#{generalMedicalDAO2.instance.height}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="EXPLORACION FISICA" id="toggles22" opened="false"><!-- #{app.general_step2_tab2} -->
+						
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px" >
+						
+							<h:outputLabel value="Signos vitales: " style="font-weight:bold" />
+					
+							<h:panelGrid columns="7" cellpadding="0" cellspacing="0" >
+								
+								<h:panelGroup >
+									<h:outputLabel value="T/A:" />
+									<h:inputText value="#{generalMedicalDAO2.instance.height}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" >
+										<a:support event="onkeyup" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>	
+									</h:inputText>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="FC:" />
+									<h:inputText value="#{generalMedicalDAO2.instance.heartRate}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" />
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="FR:" />
+									<h:inputText
+										value="#{generalMedicalDAO2.instance.respiratoryRate}"
+										style="width:58px;" 
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" />
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="Pulso:" />
+									<h:inputText
+										value="#{generalMedicalDAO2.instance.pulso}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" />
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="#{app.general_step2_weight}:" />
+									<h:inputText value="#{generalMedicalDAO2.instance.weight}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" >
+										<a:support event="onkeyup" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
+									</h:inputText>
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="Talla:" />
+									<h:inputText
+										value="#{generalMedicalDAO2.instance.talla}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" />
+								</h:panelGroup>
+								
+								<h:panelGroup>
+									<h:outputLabel value="Temp" /><!-- #{app.general_step2_temperature}: -->
+									<h:inputText value="#{generalMedicalDAO2.instance.temperature}"
+										style="width:58px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" />
+								</h:panelGroup>
+								
+								
+								<!-- 
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.general_step2_blood1}:</ui:define>
+									<h:inputText
+										value="#{generalMedicalDAO2.instance.bloodPressureSystole}"
+										style="width:60px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<ui:define name="label">#{app.general_step2_blood2}:</ui:define>
+									<h:inputText
+										value="#{generalMedicalDAO2.instance.bloodPressureDiastole}"
+										style="width:60px;"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								</s:decorate>
+								 -->
+							</h:panelGrid>
+							
+							<rich:spacer width="0" height="30" ></rich:spacer>
+							<rich:spacer width="0" height="30" ></rich:spacer>
+							
+							<h:outputLabel value="Inspeccion general: " style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml"  >
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.inspeccionGeneral}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
-							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_weight}:</ui:define>
-								<h:inputText value="#{generalMedicalDAO2.instance.weight}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							
+							
+							<h:outputLabel value="Oidos" style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml"  >
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.oidos}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
+							
+							<h:outputLabel value="Nariz - Fosas nasales:" style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_temperature}:</ui:define>
-								<h:inputText value="#{generalMedicalDAO2.instance.temperature}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.narizFosasNasales}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
+							
+							<h:outputLabel value="Boca - Faringe:" style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml"  >
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.bocaFaringe}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}"  style="width:625px;height:85px;font-size:14px" readonly="true" />
+							</s:decorate>
+							
+							<h:outputLabel value="Laringe:" style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_heart_rate}:</ui:define>
-								<h:inputText value="#{generalMedicalDAO2.instance.heartRate}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								<h:inputTextarea
+									value="#{generalMedicalDAO2.instance.laringe}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
+							
+							<h:outputLabel value="Cabeza - Cuello Y Torax:" style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_respiratory_rate}:</ui:define>
-								<h:inputText
-									value="#{generalMedicalDAO2.instance.respiratoryRate}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.cabezaCuello}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
+							
+							<h:outputLabel value="Sistema Nervioso:" style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_blood1}:</ui:define>
-								<h:inputText
-									value="#{generalMedicalDAO2.instance.bloodPressureSystole}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.sistemaNervioso}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
 							</s:decorate>
-							<s:decorate template="/layout/kEditSpace.xhtml">
-								<ui:define name="label">#{app.general_step2_blood2}:</ui:define>
-								<h:inputText
-									value="#{generalMedicalDAO2.instance.bloodPressureDiastole}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
-							</s:decorate>
+							
 						</h:panelGrid>
 					</rich:simpleTogglePanel>
-					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="#{generalMedicalDAO2.toggle2}">
-						<h:panelGrid columns="2" style="padding-left:50px; ">					
+					
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="EXAMENES COMPLEMENTARIOS. RESULTADOS" id="togglesExamenesCompl" opened="false">
+						
+						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
+						
+							<h:outputLabel value="Audiologia:" style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.exaAudiologia}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
+							</s:decorate>
+							
+							<h:outputLabel value="Otoneurologia: " style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.exaOtoneurologia}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px"  readonly="true" />
+							</s:decorate>
+							
+							<h:outputLabel value="Laboratorio Clinico: " style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.labClinico}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
+							</s:decorate>
+							
+							<h:outputLabel value="Radiografias-Imagenologias" style="font-weight:bold" />
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<h:inputTextarea value="#{generalMedicalDAO2.instance.radioImagenologia}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
+							</s:decorate>
+							
+						</h:panelGrid>
+						
+					</rich:simpleTogglePanel>
+					
+					<!--  
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step2_tab3}" id="toggles23" opened="false">
+						<h:panelGrid columns="1" style="padding-left:50px;font-size:14px ">					
+							<s:decorate template="/layout/kEditSpace.xhtml" >
 								<ui:define name="label">#{app.general_step2_reg_head}:</ui:define>
 								<h:inputTextarea value="#{generalMedicalDAO2.instance.regHead}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="font-size:14px;width:780px;"  />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_neck}:</ui:define>
 								<h:inputTextarea value="#{generalMedicalDAO2.instance.regNeck}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical2.mode == 'r'}"  style="font-size:14px;width:780px;" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_thorax}:</ui:define>
 								<h:inputTextarea value="#{generalMedicalDAO2.instance.regThorax}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="font-size:14px;width:780px;" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_abdomen}:</ui:define>
 								<h:inputTextarea
 									value="#{generalMedicalDAO2.instance.regAbdomen}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="font-size:14px;width:780px;" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_tips}:</ui:define>
 								<h:inputTextarea value="#{generalMedicalDAO2.instance.regTips}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="font-size:14px;width:780px;" />
 							</s:decorate>
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<ui:define name="label">#{app.general_step2_reg_genitals}:</ui:define>
 								<h:inputTextarea
 									value="#{generalMedicalDAO2.instance.regGenitals}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="font-size:14px;width:780px;" />
+							</s:decorate>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>-->
+					
+					<!-- comentado el 07/08/2017
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" styleClass="letra15" label="#{app.general_step1_tab3}" id="toggle3-3" opened="false" >
+						<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1"  >
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Antecedentes</ui:define>-->
+								<!-- <h:inputTextarea id="ant"
+									value="#{clienteHome.instance.generalInformation.familyHeritage}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" 
+									/>
+								-->
+						<!-- 		
+								<rich:dataTable style="font-size:12px" cellpadding="10" cellspacing="2"  value="#{antecedenteHome.resultListPA}" var="ant" id="antPa-2"  >
+									<rich:column >
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText style="font-size:12px;" value="#{ant.antecedente.nombreAntecedente}" />
+									</rich:column>
+									<rich:column rendered="#{wizardGeneralMedical2.mode != 'r'}">
+										<f:facet name="header">#{msn.col_actions}</f:facet>
+										<a:commandLink value="Quitar" reRender="antPa-2"
+											action="#{antecedenteHome.quitarPacienteAntecedente(ant)}" ajaxSingle="true" eventsQueue="q1">
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+							</s:decorate>
+							 
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{wizardGeneralMedical2.mode != 'r'}" >
+								<ui:define name="label">Agregar</ui:define>
+								<a:commandButton onclick="#{rich:component('selAnt-2')}.show();"
+									ajaxSingle="true" 
+									reRender="ant" styleClass="modifyBtn" value="Nuevo Antecedente"
+									style="width:135px;">
+								</a:commandButton>
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">Notas</ui:define>
+								<h:inputTextarea
+									value="#{clienteHome.instance.generalInformation.personalPathologies}"
+									cols="75" rows="5"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							
+							<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{clienteHome.instance.diagnosSordera!=null}">
+									<ui:define name="label">Se diagnostico sordera:</ui:define>
+									<h:outputText
+										value="#{clienteHome.instance.diagnosSordera}" />
+							</s:decorate>
+							
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+					<rich:simpleTogglePanel switchType="ajax" eventsQueue="q1" label="#{app.general_step1_tab5}" styleClass="letra15" id="toggle4-4" opened="false" >
+						<h:panelGrid columns="2" style="margin:0 auto;font-size:15px" cellpadding="10" cellspacing="1" >
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_menarche}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenarche}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_sexual_development}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femSexualDevelopment}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_rhythm}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenstrualRhythm}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_last_menstruation}:</ui:define>
+								<rich:calendar
+									value="#{clienteHome.instance.generalInformation.femLastMenstruation}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_sexual_life}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femSexualLife}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_cesarean}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femCesarean}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_birth}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femBirth}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_abortions}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femAbortions}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_contraceptive_method}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femContraceptiveMethod}"
+									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
+							</s:decorate>
+							<s:decorate template="/layout/kEditSpace.xhtml">
+								<ui:define name="label">#{app.general_step1_menopause}:</ui:define>
+								<h:inputText
+									value="#{clienteHome.instance.generalInformation.femMenopause}"
 									disabled="#{wizardGeneralMedical2.mode == 'r'}" />
 							</s:decorate>
 						</h:panelGrid>
-					</rich:simpleTogglePanel>
+					</rich:simpleTogglePanel>-->
+					
 		</rich:panel>
+		
+		<rich:modalPanel id="selMotiv" width="600" moveable="true" autosized="true"  top="40"
+			onmaskclick="#{rich:component('selMotiv')}.hide();"
+			onbeforeshow="activeModal.setActiveModalPanel('selMotiv');">
+			<f:facet name="header">Motivos consulta</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selMotiv')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="dMotivoConsulta"><ui:include src="addMotivoConsulta.xhtml" /></s:div>			
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="selAnt-2" width="400" moveable="true" autosized="true"  top="40"
+			onmaskclick="#{rich:component('selAnt-2')}.hide();"
+			onbeforeshow="activeModal.setActiveModalPanel('selAnt-2');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selAnt-2')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form id="frmSelDoc-2">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+								
+				<!-- <rich:dataTable var="res" value="#{clienteHome.antecedentes}" id="_table-2" -->
+				<rich:dataTable var="res" value="#{antecedenteHome.resultList}" id="_table-2"
+					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">Tipos de Antecedentes</f:facet>
+					<rich:column filterBy="#{res.nombreAntecedente}" filterEvent="onkeyup">
+						<f:facet name="header">Nombre</f:facet>
+						<h:outputText value="#{res.nombreAntecedente}" />
+					</rich:column>
+									
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<a:commandLink value="#{app.movimientomast_select_product}" reRender="antPa-2"
+							action="#{antecedenteHome.addPacienteAntecedente(res,clienteHome.instance)}" ajaxSingle="true" eventsQueue="q1"							
+							onclick="#{rich:component('selAnt-2')}.hide();">
+						</a:commandLink>
+						<!-- <a:commandLink value="#{app.movimientomast_select_product}" reRender="ant"
+							action="#{clienteHome.addAntecedente(res)}" ajaxSingle="true" eventsQueue="q1"							
+							onclick="#{rich:component('selAnt-2')}.hide();">
+						</a:commandLink> -->
+						<!--  --> 
+						<!--<h:selectBooleanCheckbox value="#{clienteHome.anteceDenteSl}">
+							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  reRender="ant" 
+									action="#{clienteHome.addAntecedente(res)}" />
+						</h:selectBooleanCheckbox>  -->
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1Ant" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>				
+			</h:form>			
+		</rich:modalPanel>
 </ui:composition>

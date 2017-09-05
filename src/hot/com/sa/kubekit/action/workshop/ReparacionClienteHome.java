@@ -161,7 +161,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	public void load(){
 		try{
 			
-			if(!getRepCliId2().equals(""))
+			if(!getRepCliId2().equals("") && getRepCliId2()!=null)
 			{
 				//System.out.println("Entro al if ******");
 				if(!isNumeric(repCliId2))
@@ -177,6 +177,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				
 			}
 			
+			
 			//instance.getEtapasReparacion().get(index)
 			
 			
@@ -187,6 +188,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			
 			if(repCliId!=null)
 			{
+				System.out.println("CARGO la REPARACION ******");
+				
 				
 				setInstance((ReparacionCliente) getEntityManager().createQuery("select r from ReparacionCliente r where r.id = :id")
 						.setParameter("id", repCliId).getSingleResult());

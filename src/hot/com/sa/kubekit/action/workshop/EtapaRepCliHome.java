@@ -613,6 +613,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			System.out.println("Orden"+instance.getEtapaRep().getOrden());
 			System.out.println("ID ETAPA ACTUAL");
 			
+			System.out.println("Reparacion ID"+etaRepId);
+			
 			int orderAct=instance.getEtapaRep().getOrden();
 			int idEtpAnt=instance.getId()-1;
 			
@@ -738,7 +740,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 				.getResultList();
 	}
 
-	public boolean aprobarEtapa() {
+	/*public boolean aprobarEtapa() {
 		
 		//if(instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) && instance.getEstado().equals("PEN"))
 		//if(reparacionClienteHome.getServiciosRep().size()<=0 && (instance.getEtapaRep().getProcesoTll().getNombre().equals("Diagnostico") || instance.getEtapaRep().getProcesoTll().getNombre().equals("Limpieza")))
@@ -752,17 +754,36 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		
 		return this.modify();
+	}*/
+	
+	public String aprobarEtapa() {
+		
+		//if(instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) && instance.getEstado().equals("PEN"))
+		//if(reparacionClienteHome.getServiciosRep().size()<=0 && (instance.getEtapaRep().getProcesoTll().getNombre().equals("Diagnostico") || instance.getEtapaRep().getProcesoTll().getNombre().equals("Limpieza")))
+		if(reparacionClienteHome.getServiciosRep().size()<=0 && (instance.getEtapaRep().getId().equals((41)) || instance.getEtapaRep().getId().equals((47)) || instance.getEtapaRep().getId().equals((53)) && instance.getEstado().equals("PEN")))	
+		{
+			FacesMessages.instance().add(Severity.WARN,"Debe agregar al menos un servicio...");//para validar que agrege al menos un servicio. sebe ser solo en diagnos
+			return "";
+		}
+			
+		setAccionEta("APR");
+		
+		if(this.modify())
+			return "/taller/etasReparacion/list.xhtml";
+		else
+			return "";
+		
 	}
 	
-	public String aprobarEtapaContinuar()
+	public void aprobarEtapaContinuar()
 	{
 		
-		if(!aprobarEtapa())
-			return "";
+		if(aprobarEtapa().equals(""))
+			return;
 		
 		load();
 		
-		return "/taller/etasReparacion/master.xhtml"; 
+		//return "/taller/etasReparacion/master.xhtml"; 
 	}
 
 	public boolean rechazarEtapa() {
@@ -1285,8 +1306,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		System.out.println("Nombre "+nombreSiguienteEtapa);
 		System.out.println("ID siguiente etapa "+etapas.get(0).getId());
-		System.out.println("Area negocio usuario "+loginUser.getUser().getAreaUsuario().getId());
-		System.out.println("Area negocio etapa "+etapas.get(0).getEtapaRep().getAreaEncargada().getId());
+		//System.out.println("Area negocio usuario "+loginUser.getUser().getAreaUsuario().getId());
+		//System.out.println("Area negocio etapa "+etapas.get(0).getEtapaRep().getAreaEncargada().getId());
 		
 		if(etapas!=null && etapas.size()>0)
 		{

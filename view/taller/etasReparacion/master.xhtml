@@ -387,7 +387,8 @@
 					</a:commandButton>
 					
 					<!-- action="#{etapaRepCliHome.siguienteEtapaUsuario()}" -->
-					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();" 
+					<a:commandButton onclick="#{rich:component('confirmAprob')}.show();"
+						action="#{etapaRepCliHome.siguienteEtapaUsuario()}"
 						reRender="fm5"
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre!='Pendiente de entrega' and etapaRepCliHome.instance.etapaRep.nombre!='Esperando Aprobación' and (etapaRepCliHome.instance.reparacionCli.estadoRepExterna==null || etapaRepCliHome.instance.reparacionCli.estadoRepExterna=='FIN')}" styleClass="saveBtn" ignoreDupResponses="true"
 						value="#{msn.button_approve}"  />
@@ -548,6 +549,8 @@
 				</h:panelGroup>
 				</fieldset>
 			</h:form>
+			<!-- se movio el form desde aqui -->
+			
 			</center>
 			<rich:modalPanel id="confirmAprob" width="400" moveable="false"
 				autosized="true" top="50px"
@@ -570,21 +573,22 @@
 							value="#{msn.button_cancel}"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
+						
 						<a:commandButton action="#{etapaRepCliHome.aprobarEtapa()}" ignoreDupResponses="true" reRender="formreparacioncli"
 							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn"
 							value="Aprobar"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
-						 
-						 <!-- 
-						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}" ignoreDupResponses="true"  reRender="formreparacioncli"
+						
+						<!-- 
+						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}"  ignoreDupResponses="true"  reRender="formreparacioncli"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}" styleClass="doCancelBtn"
 							value="Aprobar y continuar"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
 						 
 						  
-						 
+						  
 						<s:link title="Aprobar y continuar"  styleClass="doCancelBtn" 
 							view="/taller/etasReparacion/master.xhtml" propagation="begin"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}"

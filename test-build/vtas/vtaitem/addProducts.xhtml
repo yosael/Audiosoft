@@ -51,6 +51,8 @@
 						<f:facet name="header">#{app.productolist_col5}</f:facet>
 						<h:outputText value="#{res.producto.marca.nombre}" />
 					</rich:column>
+					
+					<!-- 
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.compramast_select_product}" reRender="formvtitm"
@@ -58,6 +60,11 @@
 							onclick="#{rich:component('selItem')}.hide();">
 						</a:commandLink>
 					</rich:column>
+					 -->
+					
+					<a:support action="#{ventaItemHome.agregarProducto(res)}" event="onRowClick" reRender="formvtitm" eventsQueue="q1" oncomplete="#{rich:component('selItem')}.hide();" >
+					</a:support>
+					
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>

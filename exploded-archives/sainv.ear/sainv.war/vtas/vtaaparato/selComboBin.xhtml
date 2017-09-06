@@ -52,14 +52,19 @@
 				<h:outputText value="#{res.nombre}" />
 			</rich:column>
 
+			<!-- 
 			<rich:column>
 				<f:facet name="header">Seleccionar</f:facet>
-				<a:commandLink id="addCombo" title="#{msn.combapa_legend}" reRender="comboDetBinBin,frmSelCmbBin"
+				<a:commandLink id="addCombo" title="#{msn.combapa_legend}" reRender="comboDetBin,frmSelCmbBin"
 					eventsQueue="q1" action="#{ventaComboHome.fillComboListBin(res)}"
 					ajaxSingle="true" update="growl1">
 					<h:graphicImage value="/kubeImg/table_detail2.png" />
 				</a:commandLink>
-			</rich:column>
+			</rich:column> -->
+			
+			<a:support action="#{ventaComboHome.fillComboListBin(res)}" event="onRowClick"  reRender="comboDetBin,frmSelCmbBin,growl1" eventsQueue="q1" >
+			</a:support>
+			
 			<f:facet name="footer">
 				<rich:datascroller id="ds1" renderIfSinglePage="true" />
 			</f:facet>

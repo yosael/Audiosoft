@@ -64,6 +64,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	private Float totalServicios;
 	private Float totalExamenes;
+	private Float totalCobroConsulta;
 	
 	@Override
 	@Begin(join=true)
@@ -370,6 +371,27 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		return total;
 	}
 	
+	public void calcularTotalCobroC()
+	{
+		totalCobroConsulta=0F;
+		totalExamenes=0F;
+		totalServicios=0F;
+		
+		for(ExamenConsulta ex: examenesAgregados)
+		{
+			totalCobroConsulta+=ex.getExamen().getCosto().floatValue();
+			totalExamenes+=ex.getExamen().getCosto().floatValue();
+		}
+		
+		for(MedicalAppointmentService mService: serviciosAgregados)
+		{
+			totalCobroConsulta+=mService.getService().getCosto().floatValue();
+			totalServicios+=mService.getService().getCosto().floatValue();
+		}
+		
+		
+	}
+	
 	public void removerServicioConsul(Service srv)
 	{
 		
@@ -545,6 +567,14 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 
 	public void setTotalExamenes(Float totalExamenes) {
 		this.totalExamenes = totalExamenes;
+	}
+
+	public Float getTotalCobroConsulta() {
+		return totalCobroConsulta;
+	}
+
+	public void setTotalCobroConsulta(Float totalCobroConsulta) {
+		this.totalCobroConsulta = totalCobroConsulta;
 	}
 
 	

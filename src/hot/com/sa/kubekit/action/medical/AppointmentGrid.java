@@ -111,6 +111,9 @@ public class AppointmentGrid {
 	}
 	
 	public void loadDoctorSched(Doctor selDoc) {
+		
+		System.out.println("Entro a loadDoctorSched");
+		
 		doctorDAO.setNumId(selDoc.getId());
 		doctorDAO.load();
 		doctorSel = doctorDAO.getInstance();

@@ -173,7 +173,7 @@
 							
 							<h:inputTextarea
 								value="#{generalMedicalDAO2.instance.consultationReason}"
-								disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtMotivoConsulta" >
+								disabled="#{wizardGeneralMedical2.mode == 'r'}" readonly="true" style="width:625px;height:85px;font-size:14px" id="txtMotivoConsulta" >
 									<a:support event="onchange" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
 							</h:inputTextarea>
 							
@@ -214,7 +214,7 @@
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
 									value="#{generalMedicalDAO2.instance.enfermedadActual}" 
-									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtEnfermedadActual" style="width:625px;height:85px;font-size:14px" >
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtEnfermedadActual" readonly="true" style="width:625px;height:85px;font-size:14px" >
 									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtEnfermedadActual,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>

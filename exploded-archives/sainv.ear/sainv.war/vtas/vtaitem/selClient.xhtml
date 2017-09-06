@@ -73,6 +73,7 @@
 				<h:outputText value="#{res.email}" />
 			</rich:column>
 
+			<!-- 
 			<rich:column>
 				<f:facet name="header">#{msn.col_actions}</f:facet>
 				<a:commandLink value="#{app.movimientomast_select_product}"
@@ -81,7 +82,11 @@
 					ajaxSingle="true" eventsQueue="q1"
 					onclick="#{rich:component('selClient')}.hide();">
 				</a:commandLink>
-			</rich:column>
+			</rich:column> -->
+			
+			<a:support action="#{ventaItemHome.instance.setCliente(res)}" event="onRowClick" reRender="formvtitm" eventsQueue="q1" oncomplete="#{rich:component('selClient')}.hide();" >
+			</a:support>
+					
 			<f:facet name="footer">
 				<rich:datascroller id="ds1" renderIfSinglePage="true" />
 			</f:facet>

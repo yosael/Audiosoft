@@ -44,6 +44,12 @@ public class AdaptacionComboHome extends KubeDAO<AdaptacionCombo> {
 		resultList = getEntityManager().createQuery("SELECT a FROM AdaptacionCombo a").getResultList();
 	}
 	
+	public void buscarTodosActivos()
+	{
+		resultList = new ArrayList<AdaptacionCombo>();
+		resultList = getEntityManager().createQuery("SELECT a FROM AdaptacionCombo a where a.estado='ACT'").getResultList();
+	}
+	
 	public void cargar()
 	{
 		

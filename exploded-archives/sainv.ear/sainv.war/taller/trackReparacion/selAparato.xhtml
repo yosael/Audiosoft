@@ -47,10 +47,11 @@
 						<f:facet name="header">Detalle aparato</f:facet>
 						<h:outputText value="#{res.detalleAparato}" />
 					</rich:column>
-					<rich:column>
+					<rich:column filterBy="#{res.numSerie}" filterEvent="onkeyup" >
 						<f:facet name="header">#{app.producto_codser}</f:facet>
 						<h:outputText value="#{res.numSerie}" />
 					</rich:column>
+					<!-- 
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.compramast_select_product}" reRender="formreparacioncli"
@@ -58,9 +59,14 @@
 							onclick="#{rich:component('confirmation')}.hide();">
 						</a:commandLink>
 					</rich:column>
+					 -->
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>
+					
+					<a:support action="#{reparacionClienteHome.seleccionarAparato(res)}" event="onRowClick" reRender="formreparacioncli" eventsQueue="q1" oncomplete="#{rich:component('confirmation')}.hide();" >
+					</a:support>
+					
 				</rich:dataTable>
 				<h:panelGrid rendered="#{empty reparacionClienteHome.aparatosCli}}" columns="1" style="margin:0 auto;">
 					<h:outputText value="No se encontraron aparatos" style="color:green;font-size:18px;"  />

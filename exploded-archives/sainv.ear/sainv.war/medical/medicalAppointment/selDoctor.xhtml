@@ -46,7 +46,7 @@
 				<rich:dataTable var="res" value="#{doctorDAO.resultList}" id="_table"
 					rendered="#{not empty doctorDAO.resultList}" rows="10"
 					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
-					headerClass="tablaHeader" footerClass="tableScroll">
+					headerClass="tablaHeader" footerClass="tableScroll" >
 					<f:facet name="header">#{app.docint_list}</f:facet>
 					<rich:column filterBy="#{res.nombres}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.patimast_firstname1}</f:facet>
@@ -82,7 +82,8 @@
 						<f:facet name="header">#{app.docext_email}</f:facet>
 						<h:outputText value="#{res.email}" />
 					</rich:column>	
-						 -->			
+						 -->	
+					<!-- comentado el 05/09/2017	 		
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						 <a:commandLink  value="#{app.movimientomast_select_product}" reRender="formA"
@@ -90,11 +91,13 @@
 							onclick="#{rich:component('selDoc')}.hide();">
 						</a:commandLink>
 					</rich:column>
+					 -->
 					
 					<!-- 
 					<a:support actionListener="#{appointmentGrid.loadDoctorSched(res)}" event="onRowClick" ajaxSingle="true" reRender="formA" eventsQueue="q1" oncomplete="#{rich:component('selDoc')}.hide();" >
 					</a:support> -->
-					
+					<a:support action="#{appointmentGrid.loadDoctorSched(res)}" event="onRowClick" reRender="formA" eventsQueue="q1" oncomplete="#{rich:component('selDoc')}.hide();" >
+					</a:support>
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>

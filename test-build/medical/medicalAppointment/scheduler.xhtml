@@ -65,6 +65,11 @@
 											<f:param name="idDoctor" value="#{appointmentGrid.doctorSel.id}"	/>
 										</s:button>
 										
+										<rich:spacer width="10" height="0" ></rich:spacer>
+										
+										<h:outputLabel value="AGENDA DE: " style="font-size:13px;" rendered="#{appointmentGrid.doctorSel!=null}" />
+										<h:outputLabel value="#{appointmentGrid.doctorSel.nombres} #{appointmentGrid.doctorSel.apellidos}" rendered="#{appointmentGrid.doctorSel!=null}" style="font-weight:bold;font-size:13px;" />
+										
 										<!-- <a:commandButton value="Enviar correo" action="#{medicalAppointmentDAO.enviarCorreo()}" ajaxSingle="true" eventsQueue="q1" styleClass="upBtn"  reRender="formA" /> -->
 										
 										

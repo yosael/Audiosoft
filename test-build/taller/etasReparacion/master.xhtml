@@ -556,7 +556,7 @@
 				autosized="true" top="50px"
 				onbeforeshow="activeModal.setActiveModalPanel('confirmAprob');">
 				<f:facet name="header">
-					ConfirmaciÃ³n de aprobaciÃ³n de etapa
+					Confirmar aprobacion de etapa
 				</f:facet>
 				<f:facet name="controls">
 					<h:panelGroup>
@@ -580,7 +580,7 @@
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
 						
-						<!-- 
+						 
 						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}"  ignoreDupResponses="true"  reRender="formreparacioncli"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}" styleClass="doCancelBtn"
 							value="Aprobar y continuar"
@@ -588,7 +588,7 @@
 						</a:commandButton>
 						 
 						  
-						  
+						<!--  
 						<s:link title="Aprobar y continuar"  styleClass="doCancelBtn" 
 							view="/taller/etasReparacion/master.xhtml" propagation="begin"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}"

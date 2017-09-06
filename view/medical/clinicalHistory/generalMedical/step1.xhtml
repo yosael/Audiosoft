@@ -147,11 +147,13 @@
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton> -->
 					 	
-						<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
+						<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
 							value="Finalizar Consulta" styleClass="saveBtn"
-							onclick="terminar();#{rich:component('modalLoading')}.show();"
-							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+							onclick="#{rich:component('modalConfirmConsulta')}.show();"
+							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="dvConfirmC">												
 						</a:commandButton>
+						
+						
 					
 					<!-- 
 					<a:commandButton 
@@ -464,7 +466,9 @@
 						</s:div>
 					</s:div>
 					
-					<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+				</rich:modalPanel> 
+				
+				<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
 						onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
 						<h:form id="formModalLoading" style="margin:0;padding:0;" >
 							<h:panelGrid columns="1" style="margin:0">
@@ -472,9 +476,26 @@
 								<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
 							</h:panelGrid>	
 						</h:form>			
-					</rich:modalPanel>
+				</rich:modalPanel>
+				
+				
+				<!-- Modal confirmacion -->
+				<rich:modalPanel id="modalConfirmConsulta" width="610" height="425" moveable="true"
+					 top="40"
+					 style="overflow-y:scroll;"
+					onbeforeshow="activeModal.setActiveModalPanel('modalConfirmConsulta');">
+					<f:facet name="header">
+						CONFIRMAR CONSULTA
+					</f:facet>
+					
+					<s:div id="dvConfirmC" >
+						<s:div id="dvConfirmC1" >
+							<ui:include src="../confirmarFinConsulta.xhtml" />
+						</s:div>
+					</s:div>
 					
 				</rich:modalPanel> 
+				
 		</rich:panel>
 		
 	</ui:define>

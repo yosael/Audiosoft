@@ -51,6 +51,7 @@
 				<h:outputText value="#{res.nombre}" />
 			</rich:column>
 
+			<!-- 
 			<rich:column>
 				<f:facet name="header">Seleccionar</f:facet>
 				<a:commandLink id="addCombo" title="#{msn.combapa_legend}" reRender="comboDet,frmSelCmb"
@@ -58,7 +59,11 @@
 					ajaxSingle="true" update="growl1">
 					<h:graphicImage value="/kubeImg/table_detail2.png" />
 				</a:commandLink>
-			</rich:column>
+			</rich:column> -->
+			
+			<a:support action="#{ventaComboHome.fillComboList(res)}" event="onRowClick"  reRender="comboDet,frmSelCmb,growl1" eventsQueue="q1" >
+			</a:support>
+			
 			<f:facet name="footer">
 				<rich:datascroller id="ds1" renderIfSinglePage="true" />
 			</f:facet>

@@ -88,17 +88,18 @@
 									</h:inputText>
 								</s:decorate>
 							</td>	
-						</tr>	
+						</tr>
+						<!-- 	
 						<tr>
 							<td style="width:100%" >
 								<s:decorate template="/layout/kEditSpace.xhtml"  style="margin-left:40%" rendered="#{clienteHome2.instance.diagnosSordera==null}">
-									<ui:define name="label"><span style="font-size:14px">DIAGNOSTICAR SORDERA</span></ui:define><!-- #{app.diagn_sordera_d}: -->
+									<ui:define name="label"><span style="font-size:14px">DIAGNOSTICAR SORDERA</span></ui:define>
 									<h:selectBooleanCheckbox value="#{prescriptionHome2.diagnSordera}"  style="width:170px;height:24px;" >
 										<a:support event="onchange" ajaxSingle="true" eventsQueue="q1"  />
 									</h:selectBooleanCheckbox>
 								</s:decorate>
 							</td>
-						</tr>	
+						</tr> -->	
 						<tr>	
 							<td style="width:100%" >
 								<s:div >
@@ -106,7 +107,7 @@
 										<h:panelGrid columns="1" >
 											<h:outputLabel value="PLAN DE ATENCION"  style="font-size:14px;margin-left:33%;font-weight:bold" /><!-- #{app.diagnostic_treatment}: -->
 											<h:inputTextarea value="#{generalMedicalDAO2.instance.treatmentDescriptive}" style="width:500px;font-size:16px"
-												rows="6" disabled="#{generalContainer.mode=='r' || medicalAppointmentDAO2.instance.clinicalHistory!=null}" >
+												rows="6" disabled="#{generalContainer.mode=='r' || medicalAppointmentDAO2.instance.clinicalHistory!=null}" readonly="true" >
 												<a:support event="onblur" ajaxSingle="true"/>
 											</h:inputTextarea>
 										</h:panelGrid>	

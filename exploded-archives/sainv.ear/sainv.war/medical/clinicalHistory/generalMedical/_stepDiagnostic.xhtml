@@ -353,9 +353,6 @@
 							<tr>
 								<td style="width:50%" >
 									
-									
-									
-									
 									<s:decorate template="/layout/kActions.xhtml"  style="margin-left:250px;" >
 										<a:commandButton onclick="#{rich:component('selExam')}.show();" ajaxSingle="true" 
 											rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"									
@@ -423,7 +420,8 @@
 										</rich:column>						
 										<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
 											<f:facet name="header">Quitar</f:facet>
-											<a:commandLink reRender="_tblServ" 
+											<a:commandLink reRender="_tblServ"
+												rendered="#{not empty prescriptionHome.serviciosAgregados and prescriptionHome.serviciosAgregados.size()>1}" 
 												action="#{prescriptionHome.removerServicioS(res)}" ajaxSingle="true">
 												<h:graphicImage value="/kubeImg/table_delete16.png"  /><!-- rendered="#{res.medicalAppointmentServiceId==null}" -->
 											</a:commandLink>
@@ -444,11 +442,13 @@
 						<s:label style="margin:0 auto;text-align:center;font-weight:bold;" >PROXIMA CITA</s:label>
 						<h:inputTextarea style="width:355px;height:50px;" value="#{generalMedicalDAO.instance.proximaCita}" disabled="#{wizardGeneralMedical.mode=='r'}" />
 						
+						<!-- 
 						<rich:spacer height="20" width="0" ></rich:spacer>
 						
 						<s:label style="margin:0 auto;text-align:center;font-weight:bold;" >OBSERVACION PARA COBRO</s:label>
 						<h:inputTextarea style="width:355px;height:50px;" value="#{wizardGeneralMedical.observacionVenta}" disabled="#{wizardGeneralMedical.mode=='r'}" />
-						
+						 -->
+						 
 					</h:panelGrid>
 				</rich:simpleTogglePanel>
 	

@@ -1,0 +1,76 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="formConfirmC">
+		
+				<h:panelGrid columns="1" style="width:600px;margin:0 auto;" >
+				
+					<rich:spacer height="10" width="0" ></rich:spacer>
+					<h:outputLabel value="DESEA FINALIZAR LA CONSULTA?" style="font-weight:bold;text-align:center;" />
+					
+					<rich:spacer height="5" width="0" ></rich:spacer>
+					<h:outputLabel value="DETALLE DEL COBRO" />
+									
+						<rich:dataTable var="res" value="#{prescriptionHome.examenesAgregados}" rendered="#{not empty prescriptionHome.examenesAgregados}" id="_tblExamC" 
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll">
+							<f:facet name="header" style="background-color:gray;"><span style="font-size:12px;" >EXAMENES MEDICOS</span></f:facet>
+							<rich:column width="420" ><!-- #{app.examed_list_sel} -->
+								<f:facet name="header">#{app.medicm_name}</f:facet>
+								<h:outputText value="#{res.examen.name}" />
+							</rich:column>
+							<rich:column width="130" ><!-- #{app.examed_list_sel} -->
+								<f:facet name="header">Costo</f:facet>
+								<h:outputText value="#{res.examen.costo}" />
+							</rich:column>			
+						</rich:dataTable>
+						
+						<rich:spacer height="10" />
+					
+						<rich:dataTable var="res" value="#{prescriptionHome.serviciosAgregados}" id="_tblServC" 
+							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+							headerClass="tablaHeader" footerClass="tableScroll" rendered="#{not empty prescriptionHome.serviciosAgregados}" >
+							<f:facet name="header"><span style="font-size:12px;" >SERVICIOS MEDICOS</span></f:facet>
+							<rich:column width="420"><!-- #{app.serv_list_selmed} -->
+								<f:facet name="header">#{app.medicm_name}</f:facet>
+								<h:outputText value="#{res.service.name}" />
+							</rich:column>		
+							<rich:column width="130"><!-- #{app.serv_list_selmed} -->
+								<f:facet name="header">Costo</f:facet>
+								<h:outputText value="#{res.service.costo}" />
+							</rich:column>						
+						</rich:dataTable>
+						
+						<rich:spacer height="5" width="0" ></rich:spacer>
+						<h:outputLabel value="TOTAL A COBRAR:#{'$'}#{prescriptionHome.totalCobroConsulta}" style="font-size:14px;font-weight:bold;" />
+						<rich:spacer height="5" width="0" ></rich:spacer>
+						
+						<s:label style="margin:0 auto;text-align:center;font-weight:bold;" >OBSERVACION PARA COBRO</s:label>
+						<h:inputTextarea style="width:355px;height:50px;margin:0 auto;" value="#{wizardGeneralMedical.observacionVenta}" disabled="#{wizardGeneralMedical.mode=='r'}" />
+						
+						<s:decorate template="/layout/kActions.xhtml" id="m2">
+							<a:commandButton styleClass="cancelBtn" value="Cancelar"
+								onclick="#{rich:component('modalConfirmConsulta')}.hide();">
+							</a:commandButton>
+							<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
+								value="Aceptar" styleClass="saveBtn"
+								onclick="terminar();#{rich:component('modalLoading')}.show();"
+								rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+							</a:commandButton>
+						</s:decorate>
+						
+						<rich:spacer height="10" width="0" ></rich:spacer>
+									
+				</h:panelGrid>					
+			</h:form>
+			
+			
+</ui:composition>

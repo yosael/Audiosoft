@@ -143,16 +143,15 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-						<rich:spacer height="10" />
-						<s:decorate template="/layout/kActions.xhtml" rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}">
+						<rich:spacer height="10" /><!-- rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}" -->
+						<s:decorate template="/layout/kActions.xhtml" >
 							<a:commandButton onclick="#{rich:component('selItem')}.show();" ajaxSingle="true" 
 								action="#{productoHome.cargarListaProductos()}" reRender="m1"
 								styleClass="addBtn" value="#{msn.button_add_product}">
 							</a:commandButton>
 						</s:decorate>
-						<rich:spacer height="10" />
+						<rich:spacer height="10" /><!-- rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}" -->
 						<rich:dataTable var="res" value="#{aparatoClienteHome.items}" id="_tblItemsCmb" rows="10"
-							rendered="#{not (aparatoClienteHome.instance.customApa==true || aparatoClienteHome.instance.hechoMedida==true)}"
 							align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
 							headerClass="tablaHeader" footerClass="tableScroll">
 							<f:facet name="header">#{app.aparcli_listitms}</f:facet>

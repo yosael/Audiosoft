@@ -161,11 +161,12 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		detalleReparacion.add(detalle);*/
 		
-		if(aparato.getCategoria()==null || !aparato.getCategoria().isTieneNumSerie())
+		if(aparato.getCategoria()==null || (!aparato.getCategoria().isTieneNumSerie() && !aparato.getCategoria().isTieneNumLote()))
 		{
 			FacesMessages.instance().add(Severity.WARN,"Debe seleccionar un aparato");
 			return; 
 		}
+		
 		
 		
 		nuevoDetalle.setAparato(aparato);
@@ -246,6 +247,8 @@ public class ReparacionExternaHome extends KubeDAO<ReparacionExterna> {
 		
 		
 	}
+	
+	
 	
 	public void cargarCodigosProductoNoUsados(Producto aparato)
 	{

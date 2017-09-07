@@ -65,6 +65,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				setTieneGarantiaRep(true);
 			
 			if(!instance.isCustomApa() && !instance.isHechoMedida()) {
+				
 				//Agregamos el aparato principal a la lista
 				PiezaAparatoCliente prpalPz = new PiezaAparatoCliente();
 				prpalPz.setIdPrd(instance.getIdPrd());
@@ -75,6 +76,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				prpalPz.setNumSerie(instance.getNumSerie());
 				instance.getPiezasApa().add(prpalPz);
 				prpalPz.setPrincipal(true);
+				
 				if (items.size()==0)
 					for(PiezaAparatoCliente tmpPz : instance.getPiezasApa()) {
 						Item itm = new Item();
@@ -98,7 +100,9 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 							itm.setPrincipal(true);
 						items.add(itm);
 					}
+				
 			}
+			
 		}catch (Exception e) {
 			clearInstance();
 			setInstance(new AparatoCliente());
@@ -324,6 +328,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		
 		System.out.println("ISCUSTOMAPA"+instance.isCustomApa());
 		System.out.println("ISHECHOMEDIDA"+instance.isHechoMedida());
+		
 		if(!instance.isCustomApa() && !instance.isHechoMedida()) { //Si no es externo y no es hecho a la medida.  Si es externo no entra o si es hecho a la medida tampoco
 		
 			System.out.println("Entro al if. No es a la medida ni es externo");
@@ -352,6 +357,7 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			//Seteamos los datos del aparato del cliente a guardar
 			
 			instance.setIdPrd(apaPrpal.getInventario().getProducto().getId());
+			
 			if(apaPrpal.getCodProducto() != null) {
 				instance.setNumSerie(apaPrpal.getCodProducto().getNumSerie());
 				instance.setNumLote(apaPrpal.getCodProducto().getNumLote());
@@ -387,6 +393,26 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 			instance.setActivo(true);
 			
 			instance.setIdPrd(null);
+			
+			
+			/// nuevo agregado el 06/09/2017
+			if(getItems()!=null && getItems().size()>0)
+			{
+				//Validamos que todas lleven producto
+				for(Item tmpItm : getItems()) {
+					//Vamos buscando el aparato principal
+					if(tmpItm.isPrincipal())
+						apaPrpal = tmpItm;
+				}
+				
+				if(apaPrpal == null) {
+					FacesMessages.instance().add(Severity.WARN,
+							sainv_messages.get("aparcli_error_noprpal"));
+					return false;
+				}
+				
+				instance.setIdPrd(apaPrpal.getInventario().getProducto().getId());
+			}
 		}
 		
 		instance.setFechaAdquisicion(new Date());
@@ -430,7 +456,13 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 	public void posSave() {
 		System.out.println("Activo "+instance.isActivo());
 		getEntityManager().refresh(instance);
-		if(!instance.isCustomApa() && !instance.isHechoMedida()) {
+		
+		
+		//if(!instance.isCustomApa() && !instance.isHechoMedida()) { comentado el 06/09/2017
+		
+		if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
+		{
+		
 			//Guardamos los demas accesorios del combo y el detalle de los costos en un solo texto
 			for(Item tmpItm : getItems()) {
 				
@@ -449,7 +481,13 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 					getEntityManager().persist(piezaApa);
 				}
 			}
+			
 		}
+		
+		
+		//}
+		
+		
 		System.out.println("Activo2 "+instance.isActivo());
 		getItems().clear();
 		getEntityManager().flush();
@@ -461,7 +499,10 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		for(PiezaAparatoCliente tmpPiz : instance.getPiezasApa())
 			getEntityManager().remove(tmpPiz);
 		
-		if(!instance.isCustomApa() && !instance.isHechoMedida()) {		
+		//if(!instance.isCustomApa() && !instance.isHechoMedida()) { comentado el 06/09/2017
+			
+		if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
+		{
 			//Guardamos los demas accesorios del combo y el detalle de los costos en un solo texto
 			for(Item tmpItm : getItems()) {
 				if(!tmpItm.isPrincipal()) {
@@ -480,7 +521,10 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				
 				}
 			}
+			
 		}
+		
+		//}
 		getEntityManager().flush();
 		
 	}

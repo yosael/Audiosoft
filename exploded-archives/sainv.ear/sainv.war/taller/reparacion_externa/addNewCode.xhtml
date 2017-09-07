@@ -1,0 +1,38 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmAddNewCod">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<center>
+				
+				<h:panelGrid columns="2" style="margin:0 auto;" >
+				
+					<h:outputLabel value="Ingresar manualmente: " style="font-weight:lighter;font-size:14px;" />
+					<h:selectBooleanCheckbox value="#{reparacionExternaHome.ingresarCodigoManualmente}" style="width:20px;height:20px;" >
+						<a:support event="onchange" reRender="frmAddNewCod" ajaxSingle="true" ></a:support>
+					</h:selectBooleanCheckbox>
+					
+					<!-- <h:column rendered="#{reparacionExternaHome.ingresarCodigoManualmente}"  id="col" /> -->
+					<h:inputText value="#{reparacionExternaHome.codigoNuevoManual}" style="font-weight:lighter;font-size:14px;" id="txtCodNuevo"  rendered="#{reparacionExternaHome.ingresarCodigoManualmente}"  >
+						<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+					</h:inputText>
+					<a:commandButton styleClass="saveBtn" action="#{reparacionExternaHome.registrarCodigoNuevoManual()}" rendered="#{reparacionExternaHome.ingresarCodigoManualmente}" value="Aceptar" onclick="#{rich:component('selCode')}.hide();" reRender="frmAddNewCod,formDetalle" ajaxSingle="true" />
+					
+				</h:panelGrid>
+				
+				</center>
+				
+			</h:form>
+	
+</ui:composition>

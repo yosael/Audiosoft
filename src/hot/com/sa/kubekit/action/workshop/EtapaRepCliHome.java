@@ -42,6 +42,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	private String nombreSiguienteEtapa;
 	private boolean btnAceptarContinuar;
 	private Integer areaUsuario;
+	private Integer idSiguienteEtapa;
 
 	@In
 	private LoginUser loginUser;
@@ -611,9 +612,13 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			
 			
 			System.out.println("Orden"+instance.getEtapaRep().getOrden());
-			System.out.println("ID ETAPA ACTUAL");
+			//System.out.println("ID ETAPA ACTUAL");
 			
-			System.out.println("Reparacion ID"+etaRepId);
+			System.out.println("Reparacion ID"+instance.getReparacionCli().getId());
+			
+			
+			System.out.println("ID ETAPA CARGADA: "+instance.getId());
+			System.out.println("NOMBRE ETAPA CARGADA: "+instance.getEtapaRep().getNombre());
 			
 			int orderAct=instance.getEtapaRep().getOrden();
 			int idEtpAnt=instance.getId()-1;
@@ -775,15 +780,17 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 	}
 	
-	public void aprobarEtapaContinuar()
+	public boolean aprobarEtapaContinuar()
 	{
 		
 		if(aprobarEtapa().equals(""))
-			return;
+			return false;
 		
-		load();
+		//load();
 		
-		//return "/taller/etasReparacion/master.xhtml"; 
+		etaRepId = idSiguienteEtapa;
+		
+		return true; 
 	}
 
 	public boolean rechazarEtapa() {
@@ -1301,6 +1308,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		
 		nombreSiguienteEtapa = etapas.get(0).getEtapaRep().getNombre();
+		idSiguienteEtapa = etapas.get(0).getId();
 		
 		//System.out.println("Area usuario "+ loginUser.getUser().getAreaUsuario().getId());
 		
@@ -1401,6 +1409,16 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 
 	public void setBtnAceptarContinuar(boolean btnAceptarContinuar) {
 		this.btnAceptarContinuar = btnAceptarContinuar;
+	}
+
+
+	public Integer getIdSiguienteEtapa() {
+		return idSiguienteEtapa;
+	}
+
+
+	public void setIdSiguienteEtapa(Integer idSiguienteEtapa) {
+		this.idSiguienteEtapa = idSiguienteEtapa;
 	}
 	
 	

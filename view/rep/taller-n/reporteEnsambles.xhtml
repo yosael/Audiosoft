@@ -157,8 +157,14 @@
 						<h:outputText value="#{res.reparacionCli.fechaEntrega}" />
 					</rich:column>
 					
+					<rich:column >
+						<f:facet name="header">Estado Ensamble</f:facet>
+						<h:outputText value="Finalizado" rendered="#{res.estado=='APR'}" />
+						<h:outputText value="Pendiente" rendered="#{res.estado==null || res.estado=='PEN'}" />
+					</rich:column>
+					
 					<rich:column>
-						<f:facet name="header">Estado/Etapa actual</f:facet>
+						<f:facet name="header">Estado Trabajo Taller</f:facet>
 						<h:outputText value="Esperando aprobacion de inicio"
 							rendered="#{res.reparacionCli.aprobada==false and res.reparacionCli.estado!='REC'}" />
 						<h:outputText value="Cancelado por el cliente"

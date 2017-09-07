@@ -47,14 +47,14 @@
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Fecha inicio:</ui:define>
 							<rich:calendar value="#{transferenciasPendientesList.fechaInicio}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1"  action="#{transferenciasPendientesList.buscar()}" />
+								<a:support event="oncollapse" ajaxSingle="true" reRender="formA" eventsQueue="q1"  action="#{transferenciasPendientesList.buscar()}" />
 							</rich:calendar>
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Fecha fin:</ui:define>
 							<rich:calendar value="#{transferenciasPendientesList.fechaFin}" datePattern="dd/MM/yyyy" >
-								<a:support event="oncollapse" ajaxSingle="true" reRender="_table" eventsQueue="q1" action="#{transferenciasPendientesList.buscar()}" />
+								<a:support event="oncollapse" ajaxSingle="true" reRender="formA" eventsQueue="q1" action="#{transferenciasPendientesList.buscar()}" />
 							</rich:calendar>
 						</s:decorate>
 					</h:panelGrid>

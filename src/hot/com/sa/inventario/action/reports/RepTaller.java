@@ -1139,7 +1139,11 @@ public class RepTaller extends MasterRep implements Serializable {
 					celda.setCellStyle(stTitles);
 					
 					celda = fila.createCell(13);
-					celda.setCellValue("Estado");
+					celda.setCellValue("Estado Reparacion");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(14);
+					celda.setCellValue("Estado Trabajo Taller");
 					celda.setCellStyle(stTitles);
 					
 					
@@ -1218,12 +1222,12 @@ public class RepTaller extends MasterRep implements Serializable {
 						hoja.autoSizeColumn(9);
 						
 						celda=fila.createCell(10); //Valor reparacion
-						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?rep.getReparacionCli().getIngresosTaller():0f);
+						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?moneyDecimal(rep.getReparacionCli().getIngresosTaller()):0f);
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(10);
 						
 						celda=fila.createCell(11); //
-						celda.setCellValue(rep.getReparacionCli().getDescuentos_garantia()!=null?rep.getReparacionCli().getDescuentos_garantia():0f);
+						celda.setCellValue(rep.getReparacionCli().getDescuentos_garantia()!=null?moneyDecimal(rep.getReparacionCli().getDescuentos_garantia()):0f);
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(11);
 						
@@ -1235,13 +1239,23 @@ public class RepTaller extends MasterRep implements Serializable {
 							celda.setCellValue("");
 						//celda.setCellStyle(stList);
 						//celda.setCellStyle(stFinal);
+						celda.setCellStyle(stDate);
 						hoja.autoSizeColumn(12);
 						
-						celda=fila.createCell(13); //entrega
-						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda=fila.createCell(13); //Estado reparacion
+						if(rep.getEstado()!=null && rep.getEstado().equals("APR"))
+							celda.setCellValue("Finalizado");
+						else
+							celda.setCellValue("Pendiente");
 						celda.setCellStyle(stList);
 						//celda.setCellStyle(stFinal);
 						hoja.autoSizeColumn(13);
+						
+						celda=fila.createCell(14); //Estado trabajo taller
+						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda.setCellStyle(stList);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(14);
 						
 						
 						contFila++;
@@ -1415,7 +1429,11 @@ public class RepTaller extends MasterRep implements Serializable {
 					celda.setCellStyle(stTitles);
 					
 					celda = fila.createCell(14);
-					celda.setCellValue("Estado");
+					celda.setCellValue("Estado Ensamble");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(15);
+					celda.setCellValue("Estado Trabajo Taller");
 					celda.setCellStyle(stTitles);
 					
 					
@@ -1496,7 +1514,7 @@ public class RepTaller extends MasterRep implements Serializable {
 						
 						
 						celda=fila.createCell(11); //Valor ensamble
-						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?rep.getReparacionCli().getIngresosTaller():0f);
+						celda.setCellValue(rep.getReparacionCli().getIngresosTaller()!=null?moneyDecimal(rep.getReparacionCli().getIngresosTaller()):0f);
 						celda.setCellStyle(stList);
 						hoja.autoSizeColumn(11);
 						
@@ -1520,11 +1538,21 @@ public class RepTaller extends MasterRep implements Serializable {
 						//celda.setCellStyle(stFinal);
 						hoja.autoSizeColumn(13);
 						
-						celda=fila.createCell(14); //estado 
-						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda=fila.createCell(14); //estado emsable
+						if(rep.getEstado()!=null && rep.getEstado().equals("APR"))
+							celda.setCellValue("Finalizado");
+						else
+							celda.setCellValue("Pendiente");
 						celda.setCellStyle(stList);
 						//celda.setCellStyle(stFinal);
 						hoja.autoSizeColumn(14);
+						
+						celda=fila.createCell(15); //estado trabajo taller
+						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda.setCellStyle(stList);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(15);
+						
 						
 						
 						contFila++;
@@ -1699,7 +1727,11 @@ public class RepTaller extends MasterRep implements Serializable {
 					celda.setCellStyle(stTitles);
 					
 					celda = fila.createCell(14);
-					celda.setCellValue("Estado");
+					celda.setCellValue("Estado Molde");
+					celda.setCellStyle(stTitles);
+					
+					celda = fila.createCell(15);
+					celda.setCellValue("Estado Trabajo Taller");
 					celda.setCellStyle(stTitles);
 					
 					
@@ -1820,12 +1852,23 @@ public class RepTaller extends MasterRep implements Serializable {
 						//celda.setCellStyle(stList);
 						celda.setCellStyle(stDate);
 						hoja.autoSizeColumn(13);
+					
 						
-						celda=fila.createCell(14); //estado 
-						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda=fila.createCell(14); //estado molde 
+						if(rep.getEstado()!=null && rep.getEstado().equals("APR"))
+							celda.setCellValue("Finalizado");
+						else
+							celda.setCellValue("Pendiente");
 						celda.setCellStyle(stList);
 						//celda.setCellStyle(stFinal);
 						hoja.autoSizeColumn(14);
+						
+						
+						celda=fila.createCell(15); //estado trabajo taller
+						celda.setCellValue(obtenerEstadoRep(rep.getReparacionCli()));
+						celda.setCellStyle(stList);
+						//celda.setCellStyle(stFinal);
+						hoja.autoSizeColumn(15);
 						
 						
 						contFila++;

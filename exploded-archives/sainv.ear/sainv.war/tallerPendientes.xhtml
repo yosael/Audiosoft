@@ -34,7 +34,7 @@
 					headerClass="tablaHeader" footerClass="tableScroll">
 					
 					<f:facet name="header">Lista de trabajos de taller pendientes</f:facet>
-					<rich:column width="20px;" filterBy="#{res[7]}#{res[8]}" filterEvent="onkeyup">
+					<rich:column width="20px;" filterBy="#{res[8]}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.repcli_id}</f:facet>
 						<h:outputText value="#{res[7]}#{res[8]}" />
 					</rich:column>

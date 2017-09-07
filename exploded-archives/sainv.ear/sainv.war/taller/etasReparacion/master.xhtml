@@ -580,15 +580,15 @@
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
 						
-						 
+						 <!-- 
 						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}"  ignoreDupResponses="true"  reRender="formreparacioncli"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}" styleClass="doCancelBtn"
 							value="Aprobar y continuar"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
-						 
+						  -->
 						  
-						<!--  
+						  <!-- 
 						<s:link title="Aprobar y continuar"  styleClass="doCancelBtn" 
 							view="/taller/etasReparacion/master.xhtml" propagation="begin"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}"
@@ -597,7 +597,8 @@
 							<a:support event="onclick" action="#{etapaRepCliHome.aprobarEtapaContinuar()}" ></a:support>
 							<f:param name="id" value="#{etapaRepCliHome.etaRepId}" />
 						</s:link>
-						  -->
+						 -->
+						  
 					</s:decorate>
 				</h:form>
 			</rich:modalPanel>

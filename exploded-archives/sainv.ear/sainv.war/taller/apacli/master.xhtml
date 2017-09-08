@@ -66,14 +66,14 @@
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px; margin-left:60px;">
 								<ui:define name="label">#{app.aparcli_customapa}:</ui:define>
-								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.customApa}" disabled="#{aparatoClienteHome.managed}" >
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.instance.customApa}"  ><!-- disabled="#{aparatoClienteHome.managed}" -->
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="formapaclidet,_fldCustom" />
 								</h:selectBooleanCheckbox>
 							</s:decorate>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;">
 								<ui:define name="label">#{app.combapa_tiene_gar}:</ui:define>
-								<h:selectBooleanCheckbox value="#{aparatoClienteHome.tieneGarantia}" disabled="#{aparatoClienteHome.managed}" >
+								<h:selectBooleanCheckbox value="#{aparatoClienteHome.tieneGarantia}"  ><!-- disabled="#{aparatoClienteHome.managed}" -->
 									<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tmGar" />
 								</h:selectBooleanCheckbox>
 							</s:decorate>
@@ -91,7 +91,7 @@
 														
 							<s:decorate template="/layout/kEditSpace.xhtml" style="width:180px;" id="_tmGarRep" rendered="#{aparatoClienteHome.tieneGarantiaRep==true}" >
 								<ui:define name="label" >#{app.aparcli_gar_tll_p}:</ui:define>
-								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantiaRep}" style="width:160px;" disabled="true">
+								<h:selectOneMenu value="#{aparatoClienteHome.instance.periodoGarantiaRep}" style="width:160px;" ><!-- disabled="true" -->
 									<f:selectItem itemLabel="#{app.combapa_gar_30d}" itemValue="30" />
 									<f:selectItem itemLabel="#{app.combapa_gar_60d}" itemValue="60" />
 									<f:selectItem itemLabel="#{app.combapa_gar_183d}" itemValue="183" />

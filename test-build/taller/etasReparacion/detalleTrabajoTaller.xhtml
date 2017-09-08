@@ -10,17 +10,17 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui">
 	
-		<rich:panel>
+		<rich:panel  >
 			<f:facet name="header"><span  class="marginhead" >DETALLE DEL TRABAJO DE TALLER</span></f:facet>
 			<rich:spacer height="20" />
 			<center>
-			<h:form id="formDetTrabajo">
+			<h:form id="formDetTrabajo" >
 				<a:queue name="q1" />
 				<table style="width:1000px;">
 				<tr>
 				<td style="width:400px;" rowspan="2">
-				<p:accordionPanel autoHeight="false" style="width:500px;">  
-					<c:forEach items="#{etapaRepCliHome.etapasRepCli}" var="eta">
+				<p:accordionPanel autoHeight="false" style="width:500px;" >  
+					<c:forEach items="#{etapaRepCliHome.etapasRepCliRequi}" var="eta">
 					<p:tab title="#{eta.etapaRep.nombre}">
 						<s:label value="#{app.etarepcli_estado}" style="font-weight:bold;" />:
 			            <h:outputText value="#{msn.status_pending}" rendered="#{eta.estado==null}" />
@@ -67,7 +67,7 @@
 				<td>
 				<rich:dataTable var="res" value="#{reparacionClienteHome.instance.serviciosRep}"
 					rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  id="_tblSrvs" 
-					headerClass="tablaHeader" footerClass="tableScroll">
+					headerClass="tablaHeader" footerClass="tableScroll" rendered="#{not empty reparacionClienteHome.instance.serviciosRep}" >
 					<f:facet name="header">#{app.etarepcli_costossrv}</f:facet>
 					<rich:column  filterBy="#{res.servicio.name}" filterEvent="onkeyup">
 						<f:facet name="header">#{app.reqeta_fechaIng}</f:facet>
@@ -96,7 +96,7 @@
 				<td>
 					<rich:dataTable var="res" value="#{etapaRepCliHome.itmsRequi}" 
 							rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
-							headerClass="tablaHeader" footerClass="tableScroll">
+							headerClass="tablaHeader" footerClass="tableScroll" rendered="#{not empty etapaRepCliHome.itmsRequi}" >
 							<f:facet name="header">#{app.etarepcli_itmsrequi}</f:facet>
 							<rich:column>
 								<f:facet name="header">#{app.movimiento_itemlist_col1}</f:facet>

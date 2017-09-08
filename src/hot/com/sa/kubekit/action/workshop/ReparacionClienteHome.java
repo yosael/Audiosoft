@@ -90,6 +90,12 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	private Float descuentoCobro;
 	
 	
+	//nuevo agregado el 07/09/2017
+	private List<CondAparatoRep> selCondicionesApaN = new ArrayList<CondAparatoRep>();
+	private List<ComponenteDefRep> selComponentesDefN = new ArrayList<ComponenteDefRep>();
+	private List<DefCapsulaRep> selDefectosCapN = new ArrayList<DefCapsulaRep>();
+	
+	
 	@In
 	private LoginUser loginUser;
 	
@@ -1068,7 +1074,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 		}
 		
 		
-		if(selCondicionesApa.isEmpty() && (instance.getProceso().getNombre().equals("Reparacion") || instance.getProceso().getNombre().equals("Limpieza") || instance.getProceso().getNombre().equals("Ensamblaje de aparato")))
+		if(selCondicionesApaN.isEmpty() && (instance.getProceso().getNombre().equals("Reparacion") || instance.getProceso().getNombre().equals("Limpieza") || instance.getProceso().getNombre().equals("Ensamblaje de aparato")))
 		{
 			
 			FacesMessages.instance().add(Severity.WARN,"Debe indicar la condición del aparato");
@@ -1257,38 +1263,102 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	
 	private void saveCaracteristicasAparato() {
 		
-		if(instance.getId() != null && instance.getId() > 0) {
+		
+		//Comentado el 07/09/2017
+		/*if(instance.getId() != null && instance.getId() > 0) {
 			for(ComponenteDefRep tmpDf : instance.getCompsDefAparato()) 
 				getEntityManager().remove(tmpDf);
 			for(CondAparatoRep tmpCn : instance.getCondsAparatorep()) 
 				getEntityManager().remove(tmpCn);
 			for(DefCapsulaRep tmpDf : instance.getDefCapsAparato()) 
 				getEntityManager().remove(tmpDf);
-		}
+		}*/
+		
 		
 		//Guardamos todos los componentes defectuosos, defectos de capsula y condiciones del aparato
-		for(ComponenteAparato cmpApa : selComponentesDef) {
-			ComponenteDefRep tmpCmp = new ComponenteDefRep();
-			tmpCmp.setRepCliente(instance);
-			tmpCmp.setCmpAparato(cmpApa);
-			getEntityManager().persist(tmpCmp);
+		for(ComponenteDefRep cmpApa : selComponentesDefN) {
+			
+			if(cmpApa.getId()==null)//nueva condicion el 07/09/2017
+			{
+				/*ComponenteDefRep tmpCmp = new ComponenteDefRep();
+				tmpCmp.setRepCliente(instance);
+				tmpCmp.setCmpAparato(cmpApa);*/
+				getEntityManager().persist(cmpApa);
+			}
 		}
 				
-		for(CondicionAparato cndApa : selCondicionesApa) {
-			CondAparatoRep tmpCnd = new CondAparatoRep();
-			tmpCnd.setRepCliente(instance);
-			tmpCnd.setCondAparato(cndApa);
-			getEntityManager().persist(tmpCnd);
+		for(CondAparatoRep cndApa : selCondicionesApaN) {
+			
+			if(cndApa.getId()==null)//nueva condicion el 07/09/2017
+			{
+				/*System.out.println("GUARDO LA CONDICION");
+				CondAparatoRep tmpCnd = new CondAparatoRep();
+				tmpCnd.setRepCliente(instance);
+				tmpCnd.setCondAparato(cndApa);*/
+				getEntityManager().persist(cndApa);
+			}
 		}
 				
-		for(DefectoCapsula defCap : selDefectosCap) {
+		for(DefCapsulaRep defCap : selDefectosCapN) {
+			
+			if(defCap.getId()==null)//nueva condicion el 07/09/2017
+			{
+				/*DefCapsulaRep tmpDfc = new DefCapsulaRep();
+				tmpDfc.setRepCliente(instance);
+				tmpDfc.setDefCapsula(defCap);*/
+				getEntityManager().persist(defCap);
+				
+			}
+		}
+		
+		
+	}
+	
+	public void addComponenteDefN(ComponenteAparato componenteApa){
+		//if(selComponentesDefN.indexOf(componenteApa) == -1)
+		
+		ComponenteDefRep tmpCmp = new ComponenteDefRep();
+		tmpCmp.setRepCliente(instance);
+		tmpCmp.setCmpAparato(componenteApa);
+		//getEntityManager().persist(tmpCmp);
+		
+		if(selComponentesDefN.contains(tmpCmp))
+		{
+			
+		}
+		else
+			selComponentesDefN.add(tmpCmp);
+	}
+	
+	public void addCondicionApaN(CondicionAparato condicionApa){
+		//if(selCondicionesApaN.indexOf(condicionApa) == -1)
+		
+		CondAparatoRep tmpCnd = new CondAparatoRep();
+		tmpCnd.setRepCliente(instance);
+		tmpCnd.setCondAparato(condicionApa);
+		//getEntityManager().persist(tmpCnd);
+		
+		if(selCondicionesApaN.contains(tmpCnd))
+		{
+			
+		}
+		else
+			selCondicionesApaN.add(tmpCnd);
+	}
+	
+	public void addDefectoCapN(DefectoCapsula defectoCap){
+		//if(selDefectosCapN.indexOf(defectoCap) == -1)
+			
 			DefCapsulaRep tmpDfc = new DefCapsulaRep();
 			tmpDfc.setRepCliente(instance);
-			tmpDfc.setDefCapsula(defCap);
-			getEntityManager().persist(tmpDfc);
-		}
-		
-		
+			tmpDfc.setDefCapsula(defectoCap);
+			//getEntityManager().persist(tmpDfc);
+			if(selDefectosCapN.contains(tmpDfc))
+			{
+				
+			}
+			else
+				selDefectosCapN.add(tmpDfc);
 	}
 
 	@Override
@@ -1859,6 +1929,30 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 
 	public void setDescuentoCobro(Float descuentoCobro) {
 		this.descuentoCobro = descuentoCobro;
+	}
+
+	public List<CondAparatoRep> getSelCondicionesApaN() {
+		return selCondicionesApaN;
+	}
+
+	public void setSelCondicionesApaN(List<CondAparatoRep> selCondicionesApaN) {
+		this.selCondicionesApaN = selCondicionesApaN;
+	}
+
+	public List<ComponenteDefRep> getSelComponentesDefN() {
+		return selComponentesDefN;
+	}
+
+	public void setSelComponentesDefN(List<ComponenteDefRep> selComponentesDefN) {
+		this.selComponentesDefN = selComponentesDefN;
+	}
+
+	public List<DefCapsulaRep> getSelDefectosCapN() {
+		return selDefectosCapN;
+	}
+
+	public void setSelDefectosCapN(List<DefCapsulaRep> selDefectosCapN) {
+		this.selDefectosCapN = selDefectosCapN;
 	}
 
 	

@@ -580,13 +580,13 @@
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
 						
-						 <!-- 
+						 
 						<a:commandButton  action="#{etapaRepCliHome.aprobarEtapaContinuar()}"  ignoreDupResponses="true"  reRender="formreparacioncli"
 							rendered="#{etapaRepCliHome.managed and etapaRepCliHome.btnAceptarContinuar}" styleClass="doCancelBtn"
 							value="Aprobar y continuar"
 							onclick="#{rich:component('confirmAprob')}.hide();">
 						</a:commandButton>
-						  -->
+						  
 						  
 						  <!-- 
 						<s:link title="Aprobar y continuar"  styleClass="doCancelBtn" 
@@ -1002,6 +1002,7 @@
 					</h:form>
 				</rich:modalPanel>
 				
+				<!-- PRUEBA -->
 				<rich:modalPanel id="modDetTrabajo" width="1100" moveable="true"
 					 top="40"  height="450" style="overflow-y:scroll"
 					 onmaskclick="#{rich:component('modDetTrabajo')}.hide();"
@@ -1013,7 +1014,7 @@
 								onclick="#{rich:component('modDetTrabajo')}.hide();" />
 						</h:panelGroup>
 					</f:facet>
-					<s:div id="dvDetTrabajo">
+					<s:div id="dvDetTrabajo" >
 						<ui:include src="detalleTrabajoTaller.xhtml" />
 					</s:div>
 				</rich:modalPanel>

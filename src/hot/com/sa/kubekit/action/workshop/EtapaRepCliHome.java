@@ -43,6 +43,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	private boolean btnAceptarContinuar;
 	private Integer areaUsuario;
 	private Integer idSiguienteEtapa;
+	private List<EtapaRepCliente> etapasRepCliRequi = new ArrayList<EtapaRepCliente>() ;
 
 	@In
 	private LoginUser loginUser;
@@ -641,7 +642,9 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	}
 
 	public void cargarEtapasRep() {
-		etapasRepCli = getEntityManager()
+		
+		
+		etapasRepCliRequi = getEntityManager()
 				.createQuery(
 						"SELECT e FROM EtapaRepCliente e "
 								+ "	WHERE e.reparacionCli = :rep ORDER BY e.etapaRep.orden ASC")
@@ -780,17 +783,19 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 	}
 	
-	public boolean aprobarEtapaContinuar()
+	public String aprobarEtapaContinuar()
 	{
 		
 		if(aprobarEtapa().equals(""))
-			return false;
-		
-		//load();
+			return "";
 		
 		etaRepId = idSiguienteEtapa;
 		
-		return true; 
+		//load();
+		
+		//cargarEtapasRep();
+		
+		return "/taller/etasReparacion/master.xhtml"; 
 	}
 
 	public boolean rechazarEtapa() {
@@ -1419,6 +1424,17 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 
 	public void setIdSiguienteEtapa(Integer idSiguienteEtapa) {
 		this.idSiguienteEtapa = idSiguienteEtapa;
+	}
+
+
+	
+	public List<EtapaRepCliente> getEtapasRepCliRequi() {
+		return etapasRepCliRequi;
+	}
+
+
+	public void setEtapasRepCliRequi(List<EtapaRepCliente> etapasRepCliRequi) {
+		this.etapasRepCliRequi = etapasRepCliRequi;
 	}
 	
 	

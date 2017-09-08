@@ -76,7 +76,7 @@
 								action="#{reparacionExternaHome.cargarCodigosProducto(reparacionExternaHome.nuevoDetalle.aparato)}"
 								ajaxSingle="true"
 								reRender="mCode" styleClass="addBtn"
-								value="# Serie" rendered="false" >
+								value="# Serie" rendered="#{reparacionExternaHome.nuevoDetalle.codigo==null || reparacionExternaHome.nuevoDetalle.codigo.numSerie==null}" >
 							</a:commandButton>
 							<h:inputText readonly="true" value="#{reparacionExternaHome.nuevoDetalle.codigo.numSerie}" />
 						</s:decorate>

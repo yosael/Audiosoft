@@ -458,10 +458,10 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		getEntityManager().refresh(instance);
 		
 		
-		//if(!instance.isCustomApa() && !instance.isHechoMedida()) { comentado el 06/09/2017
+		if(!instance.isCustomApa() && !instance.isHechoMedida()) { //comentado el 06/09/2017
 		
-		if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
-		{
+		/*if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
+		{*/
 		
 			//Guardamos los demas accesorios del combo y el detalle de los costos en un solo texto
 			for(Item tmpItm : getItems()) {
@@ -482,10 +482,10 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				}
 			}
 			
-		}
-		
-		
 		//}
+		
+		
+		}
 		
 		
 		System.out.println("Activo2 "+instance.isActivo());
@@ -499,10 +499,10 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 		for(PiezaAparatoCliente tmpPiz : instance.getPiezasApa())
 			getEntityManager().remove(tmpPiz);
 		
-		//if(!instance.isCustomApa() && !instance.isHechoMedida()) { comentado el 06/09/2017
+		if(!instance.isCustomApa() && !instance.isHechoMedida()) { //comentado el 06/09/2017
 			
-		if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
-		{
+		/*if(getItems()!=null && getItems().size()>0)// nuevo agregado el 06/09/2017
+		{*/
 			//Guardamos los demas accesorios del combo y el detalle de los costos en un solo texto
 			for(Item tmpItm : getItems()) {
 				if(!tmpItm.isPrincipal()) {
@@ -522,9 +522,9 @@ public class AparatoClienteHome extends KubeDAO<AparatoCliente>{
 				}
 			}
 			
-		}
-		
 		//}
+		
+		}
 		getEntityManager().flush();
 		
 	}

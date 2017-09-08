@@ -21,7 +21,7 @@
 				<tr>
 				<td style="width:400px;" rowspan="2">
 				<p:accordionPanel autoHeight="false" style="width:500px;">  
-					<c:forEach items="#{etapaRepCliHome.etapasRepCli}" var="eta">
+					<c:forEach items="#{etapaRepCliHome.etapasRepCliRequi}" var="eta">
 					<p:tab title="#{eta.etapaRep.nombre}">
 						<s:label value="#{app.etarepcli_estado}" style="font-weight:bold;" />:
 			            <h:outputText value="#{msn.status_pending}" rendered="#{eta.estado==null}" />

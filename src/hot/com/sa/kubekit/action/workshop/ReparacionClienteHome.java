@@ -189,21 +189,20 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			
 			servsCobro = new ArrayList<Service>();
 			
-			procesosTaller = getEntityManager().createQuery("select p from ProcesoTaller p ").getResultList();
+			procesosTaller = getEntityManager().createQuery("SELECT p from ProcesoTaller p ").getResultList();
 			
 			
 			if(repCliId!=null)
 			{
 				System.out.println("CARGO la REPARACION ******");
 				
-				
-				setInstance((ReparacionCliente) getEntityManager().createQuery("select r from ReparacionCliente r where r.id = :id")
-						.setParameter("id", repCliId).getSingleResult());
+				setInstance((ReparacionCliente) getEntityManager().createQuery("SELECT r FROM ReparacionCliente r where r.id = :id")
+						.setParameter("id", repCliId).getResultList().get(0));
 			
-				//Verificamos si aun se tiene la garantia vigente
+				
 				if(instance.getAparatoRep()!=null)
 				{
-					
+					//Verificamos si aun se tiene la garantia vigente
 					garVtaVigente = tieneGarantiaVigente(instance.getAparatoRep().getFechaAdquisicion(), instance.getAparatoRep().getPeriodoGarantia());
 				
 
@@ -224,7 +223,8 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 					*/
 					
 					Date fa = new Date();		
-					if (instance.getAparatoRep().getFechaGarRep()!=null && instance.getAparatoRep().getFechaGarRep().after(fa)){
+					if (instance.getAparatoRep().getFechaGarRep()!=null && instance.getAparatoRep().getFechaGarRep().after(fa))
+					{
 						Calendar calMan = new GregorianCalendar();
 						calMan.setTime(instance.getAparatoRep().getFechaGarRep());
 						calMan.add(Calendar.DATE, -1);
@@ -232,20 +232,38 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 						//System.out.println("Mira esta es la fecha de base de datos "+ instance.getAparatoRep().getFechaAdquisicion().getTime());
 						garRepVigente = tieneGarantiaVigente(calMan.getTime(), instance.getAparatoRep().getPeriodoGarantiaRep());
 					}
-					else if (instance.getAparatoRep().getFechaGarRep()!= null) {
+					else if (instance.getAparatoRep().getFechaGarRep()!= null) 
+					{
 						garRepVigente = tieneGarantiaVigente(instance.getAparatoRep().getFechaGarRep(), instance.getAparatoRep().getPeriodoGarantiaRep());
 					}
 					
+					/*System.out.println("TAMANIO Componentes INS " + instance.getCompsDefAparato().size());
+					System.out.println("TAMANIO CONDICIONES INS " + instance.getCondsAparatorep().size());
+					System.out.println("TAMANIO DEFECTOS INS " + instance.getDefCapsAparato().size());
+					System.out.println("Tamanio de los servicios "+instance.getServiciosRep().size());*/
+					
+					
 					//Cargamos lista de comopnentes defectuosos, partes de capsulas defectuosas and so on 
-					selComponentesDef.clear(); selCondicionesApa.clear(); selDefectosCap.clear();
+					selComponentesDefN.clear(); selCondicionesApaN.clear(); selDefectosCapN.clear();
+					
+					
+					//nuevo agregado el 08/09/2017
+					
+					instance.setCompsDefAparato(getEntityManager().createQuery("SELECT c FROM ComponenteDefRep c where c.repCliente.id=:idRep").setParameter("idRep",repCliId).getResultList());
+					instance.setCondsAparatorep(getEntityManager().createQuery("SELECT cm FROM CondAparatoRep cm where cm.repCliente.id=:idRep").setParameter("idRep", repCliId).getResultList());
+					instance.setDefCapsAparato(getEntityManager().createQuery("SELECT d FROM DefCapsulaRep d where d.repCliente.id=:idRep").setParameter("idRep", repCliId).getResultList());
+					
+					instance.setServiciosRep(getEntityManager().createQuery("SELECT s FROM ServicioReparacion s where s.reparacion.id=:idRep").setParameter("idRep", repCliId).getResultList());
+					
 					for(ComponenteDefRep tmpCmp : instance.getCompsDefAparato())
-						selComponentesDef.add(tmpCmp.getCmpAparato());
+						selComponentesDefN.add(tmpCmp);
 							
 					for(CondAparatoRep tmpCnd : instance.getCondsAparatorep())
-						selCondicionesApa.add(tmpCnd.getCondAparato());
+						selCondicionesApaN.add(tmpCnd);
 					
 					for(DefCapsulaRep tmpDef : instance.getDefCapsAparato())
-						selDefectosCap.add(tmpDef.getDefCapsula());
+						selDefectosCapN.add(tmpDef);
+					
 					serviciosRep.clear();
 					serviciosRep.addAll(instance.getServiciosRep());
 					
@@ -968,16 +986,45 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			selDefectosCap.add(defectoCap);
 	}
 	
-	public void delComponenteDef(ComponenteAparato componenteApa){
-		selComponentesDef.remove(componenteApa);
+	public void delComponenteDef(ComponenteDefRep componenteApa){
+		
+		if(componenteApa.getId()!=null)
+		{
+			selComponentesDefN.remove(componenteApa);
+			getEntityManager().remove(componenteApa);
+		}
+		else 
+		{
+			selComponentesDefN.remove(componenteApa);
+		}
 	}
 	
-	public void delCondicionApa(CondicionAparato condicionApa){
-		selCondicionesApa.remove(condicionApa);
+	public void delCondicionApa(CondAparatoRep condicionApa){
+		
+		if(condicionApa.getId()!=null)
+		{
+			selCondicionesApaN.remove(condicionApa);
+			getEntityManager().remove(condicionApa);
+		}
+		else
+		{
+			selCondicionesApaN.remove(condicionApa);
+		}
+		
 	}
 	
-	public void delDefectoCap(DefectoCapsula defectoCap){
-		selDefectosCap.remove(defectoCap);
+	public void delDefectoCap(DefCapsulaRep defectoCap){
+		
+		if(defectoCap.getId()!=null)
+		{
+			selDefectosCapN.remove(defectoCap);
+			getEntityManager().remove(defectoCap);
+		}
+		else
+		{
+			selDefectosCapN.remove(defectoCap);
+		}
+		
 	}
 	
 	public void addServicioCbr(Service srv) {
@@ -1311,7 +1358,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			}
 		}
 		
-		
+		//getEntityManager().flush();
 	}
 	
 	public void addComponenteDefN(ComponenteAparato componenteApa){

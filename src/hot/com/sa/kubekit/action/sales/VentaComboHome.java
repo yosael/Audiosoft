@@ -1718,6 +1718,8 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									
 									repCli.setProceso(procesoTall);
 									repCli.setIdCot(cotizacion.getId());
+									repCli.setMoldeAparatoNuevo(true);
+									
 									
 									getEntityManager().persist(repCli);
 									
@@ -1940,6 +1942,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 									
 									repCliBin.setProceso(procesoTall);
 									repCliBin.setIdCot(cotizacion.getHijoBin().get(0).getId());
+									repCliBin.setMoldeAparatoNuevo(true);
 									
 									getEntityManager().persist(repCliBin);
 									
@@ -4506,6 +4509,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 								ProcesoTaller procesoTall = (ProcesoTaller) getEntityManager().createQuery("SELECT p FROM ProcesoTaller p where p.nombre='Fabricacion de molde'").getSingleResult();
 								
 								repCli.setProceso(procesoTall);
+								repCli.setMoldeAparatoNuevo(true);
 								
 								getEntityManager().persist(repCli);
 								reparacionCombo1 = repCli;
@@ -4732,6 +4736,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 													ProcesoTaller procesoTall = (ProcesoTaller) getEntityManager().createQuery("SELECT p FROM ProcesoTaller p where p.nombre='Fabricacion de molde'").getSingleResult();
 													
 													repCli.setProceso(procesoTall);
+													repCli.setMoldeAparatoNuevo(true);
 													
 													getEntityManager().persist(repCli);
 													reparacionCombo2 = repCli;

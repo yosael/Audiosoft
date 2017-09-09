@@ -783,19 +783,19 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 	}
 	
-	public String aprobarEtapaContinuar()
+	public void aprobarEtapaContinuar()
 	{
 		
 		if(aprobarEtapa().equals(""))
-			return "";
+			return;
 		
 		etaRepId = idSiguienteEtapa;
 		
-		//load();
+		load();
 		
 		//cargarEtapasRep();
 		
-		return "/taller/etasReparacion/master.xhtml"; 
+		//return true; 
 	}
 
 	public boolean rechazarEtapa() {

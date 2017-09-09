@@ -294,7 +294,7 @@
 								<td>
 									<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{reparacionClienteHome.instance.proceso.id==3}" >
 										<ui:define name="label">Molde de aparato nuevo?</ui:define>
-										<h:selectBooleanCheckbox value="#{reparacionClienteHome.instance.moldeAparatoNuevo}" >
+										<h:selectBooleanCheckbox value="#{reparacionClienteHome.instance.moldeAparatoNuevo}" disabled="#{reparacionClienteHome.managed}" >
 											<a:support event="onclick" ajaxSingle="true"  ></a:support>
 										</h:selectBooleanCheckbox>
 									</s:decorate>

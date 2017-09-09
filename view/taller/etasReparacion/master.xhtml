@@ -288,12 +288,12 @@
 												</a:commandButton>
 												<br />
 											</s:decorate>
-											<rich:dataTable var="res" value="#{reparacionClienteHome.selCondicionesApa}"
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selCondicionesApaN}"
 												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 												headerClass="tablaHeader" footerClass="tableScroll" id="tblCondiciones" >
 												<f:facet name="header">#{app.repcli_lstcnds}</f:facet>
 												<rich:column>
-													<h:outputText value="#{res.nombre}">
+													<h:outputText value="#{res.condAparato.nombre}">
 													</h:outputText>
 												</rich:column>
 												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">
@@ -316,12 +316,12 @@
 												</a:commandButton>
 												<br />
 											</s:decorate>
-											<rich:dataTable var="res" value="#{reparacionClienteHome.selComponentesDef}"
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selComponentesDefN}"
 												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 												headerClass="tablaHeader" footerClass="tableScroll">
 												<f:facet name="header">#{app.repcli_lstcmps}</f:facet>
 												<rich:column >
-													<h:outputText value="#{res.nombre}">
+													<h:outputText value="#{res.cmpAparato.nombre}">
 													</h:outputText>
 												</rich:column>
 												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">
@@ -344,12 +344,12 @@
 												</a:commandButton>
 												<br />
 											</s:decorate>
-											<rich:dataTable var="res" value="#{reparacionClienteHome.selDefectosCap}"
+											<rich:dataTable var="res" value="#{reparacionClienteHome.selDefectosCapN}"
 												rows="10" align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"  
 												headerClass="tablaHeader" footerClass="tableScroll">
 												<f:facet name="header">#{app.repcli_lstcpds}</f:facet>
 												<rich:column >
-													<h:outputText value="#{res.nombre}">
+													<h:outputText value="#{res.defCapsula.nombre}">
 													</h:outputText>
 												</rich:column>
 												<rich:column rendered="#{etapaRepCliHome.instance.etapaRep.codEta=='EVA'}">

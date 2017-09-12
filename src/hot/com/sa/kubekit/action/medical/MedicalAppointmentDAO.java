@@ -153,6 +153,11 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		
 	}
 	
+	public void cargarRecetaDesdeConsulta()
+	{
+		
+	}
+	
 	public String crearDiagnostico()
 	{
 		

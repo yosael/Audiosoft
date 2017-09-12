@@ -66,6 +66,9 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	private Float totalExamenes;
 	private Float totalCobroConsulta;
 	
+	
+	//nuevo
+	
 	@Override
 	@Begin(join=true)
 	public void create() {

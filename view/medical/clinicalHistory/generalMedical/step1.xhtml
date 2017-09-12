@@ -146,6 +146,13 @@
 							value="#{app.diagnostic_save}" styleClass="saveBtn"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton> -->
+						
+						
+						<a:commandButton value="Receta" action="#{medicalAppointmentDAO.cargarRecetaMedica()}" rendered="#{(medicalAppointmentDAO.managed) and 
+						(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
+							oncomplete="showReport('recetaMedica', '#{conversation.id}');" styleClass="pdfBtn" style="font-size:15px;"   >
+						</a:commandButton>
+								
 					 	
 						<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
 							value="Finalizar Consulta" styleClass="saveBtn"

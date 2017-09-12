@@ -234,7 +234,9 @@
 									onkeypress="return restrictNumDigits(event, this, 8);" >
 									<a:support event="ondblclick"
 										action="#{compraHome.activarEdicion(res)}" 
-										eventsQueue="q1" reRender="_table" /> 
+										eventsQueue="q1" reRender="_table" />
+										
+									<a:support event="onkeyup" /> 
 								</h:inputText>
 								
 								 

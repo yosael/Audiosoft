@@ -72,6 +72,7 @@
 						enableContextMenu="false" 
 						activeClass="selectRow"
 						selectedClass="selectRow"
+						onRowClick="enfocarEnter(res.status);"
 						>
 						<f:facet name="header"><span class="letra15" >#{app.schedlist_header}</span></f:facet>
 						<rich:column width="100px" styleClass="letra15">
@@ -120,10 +121,10 @@
 								rendered="#{res.status==2}" styleClass="canceled" style="font-size:15px;" />
 							<h:outputText value="#{app.sched_absence}"
 								rendered="#{res.status==3}" style="font-size:15px;" />
-						</rich:column>
-						<a:support reRender="action,renderImp,action2,dvActionBtn" immediate="true"
+						</rich:column><!-- immediate="true" ajaxSingle="true"  onselectionchange-->
+						<a:support reRender="action,renderImp,action2,dvActionBtn" 
 							action="#{appointmentGrid.takeSelection}" ignoreDupResponses="true"
-							event="onselectionchange" ajaxSingle="true" oncomplete="#{rich:component('btnCambiarEstado')}.focus();"   />
+							event="onclick"     /><!-- #{rich:component('btnCambiarEstado')}.focus(); -->
 					</rich:extendedDataTable><!-- oncomplete="mostrarAcciones()" -->
 					<rich:spacer height="10" />
 					<s:decorate template="/layout/kActions.xhtml" id="action" style="margin-left:120px;">
@@ -158,6 +159,7 @@
 						</s:button> -->
 						
 						<s:button propagation="begin"
+							id="btnAtender"
 							view="/medical/clinicalHistory/generalMedical/step1.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
@@ -167,7 +169,7 @@
 						</s:button>
 						
 						<!--  cambiar estados-->
-						<a:commandButton value="#{app.sched_state}" reRender="fm2"
+						<a:commandButton value="#{app.sched_state}"  reRender="fm2"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status != 1) and (medicalAppointmentDAO.instance.status != 2)}"
 							styleClass="cancelBtn" ajaxSingle="true"
@@ -207,20 +209,25 @@
 					</s:decorate>
 				</s:div>
 					<s:div id="val" >
-						<script type="text/javascript"> 
-							function mostrarAcciones(){
-								/*alert('Numero'+#{appointmentGrid.selection.size()});
-								if(#{(appointmentGrid.selection.size())} == 1)
-								{*/
-									#{rich:component('modActionBtn')}.show();
-									/*alert('Entro');					
-								}
-								else
+						<script type="text/javascript">//<![CDATA[ 
+
+							function enfocarEnter(estado)
+							{
+								alert('Entro a enfocar enter');
+								
+								console.log('Entro a enfocar enter'+estado);
+								/*
+								if(estado==4)
 								{
-									alert('No entro');
+									#{rich:component('btnAtender')}.focus();//atender cita
 								}
-								*/					
+								else if(estado!=4  estado!=1)
+								{
+									#{rich:component('btnCambiarEstado')}.focus(); //cambiar estado
+								}*/									
 							}
+							
+							//]]>
 						</script>
 					</s:div>	
 					

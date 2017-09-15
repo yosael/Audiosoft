@@ -989,6 +989,13 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		}
 		
 	}
+	
+	public String verPendientesEnvio(int idTransferencia)
+	{
+		transferenciaId = idTransferencia;
+		
+		return "/sainv/transferSend/transferSend.xhtml";
+	}
 
 	public Integer getTransferenciaId() {
 		return transferenciaId;

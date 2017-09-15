@@ -29,7 +29,7 @@
 					<rich:spacer width="0" />
 					<s:decorate></s:decorate>
 					<h:inputText styleClass="busProd"
-						value="#{ventaComboHome.nomCoinci}" id="_nomCoinci" autocomplete="off" >
+						value="#{ventaComboHome.nomCoinci}" id="_nomCoinci" autocomplete="off"  >
 						<a:support event="onkeydown"
 							reRender="#{rich:clientId('aparatosList')}" ajaxSingle="true"
 							action="#{ventaComboHome.getCotizacionesPendByName()}" />

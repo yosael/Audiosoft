@@ -104,18 +104,37 @@
 							<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
 						</h:outputText>
 					</rich:column>
-					<rich:column>
+					
+					<rich:column  >
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<s:link title="#{app.transfer_send_list_detail}"
+							id="btnDesplazar"
 							view="/sainv/transferSend/transferSend.xhtml" propagation="begin">
 							<h:graphicImage value="/kubeImg/detail16.png" />
 							<f:param name="id" value="#{res.id}" />
 						</s:link>
 					</rich:column>
+					
+					<!-- 
+					<a:support action="#{transferenciaHome.verPendientesEnvio(res.id)}" event="onRowClick"   eventsQueue="q1"  >
+					</a:support> -->
+					
 					<f:facet name="footer">
 						<rich:datascroller id="ds1" renderIfSinglePage="true" />
 					</f:facet>
 				</rich:dataTable>
+				
+				<s:div>
+					<script type="text/javascript">
+						function desplazar(elemento)
+						{
+							//elemento.click();
+							console.log('Entro al evento desplazar');
+							document.location.replace("/sainv/transferSend/transferSend.xhtml?cid="+#{conversation.id}+""); 
+								
+						}
+					</script>
+				</s:div>
 			</h:form>
 			
 		</rich:panel>

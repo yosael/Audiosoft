@@ -211,9 +211,9 @@ public class CompraHome extends KubeDAO<Compra>{
 					.getResultList();
 			
 			lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
-			System.out.println("Referencia prodycto"+prdItm.getInventario().getProducto().getReferencia());
+			//System.out.println("Referencia prodycto"+prdItm.getInventario().getProducto().getReferencia());
 			System.out.println("Asigno el valor a la lista codigo");
-			System.out.println("Tambn codsProds dentro"+codsProds.size());
+			//System.out.println("Tambn codsProds dentro"+codsProds.size());
 			
 		} 
 		/*else if(lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()) != null && prdItm.getItemId() == null  && lstCodsProductos.get(prdItm.getInventario().getProducto().getReferencia()).size()>prdItm.getCantidad())
@@ -228,10 +228,10 @@ public class CompraHome extends KubeDAO<Compra>{
 			System.out.println("NOO Asigno el valor a la lista codigo");
 		}
 		
-		System.out.println("Producto cantidad antes"+prdItm.getCantidad());
+		//System.out.println("Producto cantidad antes"+prdItm.getCantidad());
 		prdItm.setCantidad( (prdItm.getCantidad() == null?1:prdItm.getCantidad()) );
-		System.out.println("Producto cantidad dps"+prdItm.getCantidad());
-		System.out.println("Tamanios Cod fuera"+codsProds.size());
+		/*System.out.println("Producto cantidad dps"+prdItm.getCantidad());
+		System.out.println("Tamanios Cod fuera"+codsProds.size());*/
 		
 		
 		if(codsProds == null) 
@@ -246,37 +246,37 @@ public class CompraHome extends KubeDAO<Compra>{
 		/*if(codsProds.size()>prdItm.getCantidad())
 			resetCodigos();*/
 		
-		/*if(codsProds.size() < prdItm.getCantidad())
-		{*/
+		if(codsProds.size() < prdItm.getCantidad())
+		{
 			while(codsProds.size() < prdItm.getCantidad()) 
 			{
-				System.out.println("Entro al while");
+				//System.out.println("Entro al while");
 				CodProducto codPrd = new CodProducto();
 				codPrd.setEstado("ACT");
 				codPrd.setInventario(prdItm.getInventario());
 				codsProds.add(codPrd);
 			}
-		/*}
+		}
 		else
 		{
-			0    1    2 = size()=3
-			212 3232 232
-						 cant = 2
-			
+		
 			System.out.println("Lista mayor que cantidad productos");
+			
 			List<Integer> indices = new ArrayList<Integer>();
+			
 			for(int i=(codsProds.size());i>prdItm.getCantidad();i--)
 			{
 				if(codsProds.get(i-1).getId()==null)
 					indices.add(i-1);
 			}
 			
-			for(Integer i:indices)
+			for(int i:indices)
 			{
 				System.out.println("Eliminado");
 				codsProds.remove(i);
 			}
-		}*/
+			
+		}
 		
 				
 		currCodigos = codsProds;

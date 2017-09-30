@@ -45,40 +45,19 @@
 				<h:panelGroup id="details">
 				
 					<rich:tabPanel switchType="client" width="1000px" style="margin:0 auto;" >
+						<!-- 
 						<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
 							<rich:spacer width="250px;"></rich:spacer>
 								<s:div>
 								
-									<!-- <a:commandButton
-							        value="Expandir"
-							        action="#{generalMedicalDAO.openToggle(true)}"
-							        propagation="join"
-							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_down16.png);
-									background-position: 5px 4px;
-									background-repeat: no-repeat;
-									text-indent: 20px;"
-							        ajaxSingle="true"
-							        reRender="toggle1,toggle2,toggle3,toggle4"
-							        />
-							        <rich:spacer width="14px;"></rich:spacer>
-							        <a:commandButton
-							        value="Ocultar"
-							        action="#{generalMedicalDAO.openToggle(false)}"
-							        style="font-size:10px;-webkit-border-radius: 15px;height: 22px;background-image: url(../../../kubeImg/arrow_up16.png);
-									background-position: 5px 4px;
-									background-repeat: no-repeat;
-									text-indent: 20px;"
-							        ajaxSingle="true"
-							        reRender="toggle1,toggle2,toggle3,toggle4"
-							        /> -->
-							        
 								</s:div>
 								 <rich:spacer height="7px;"></rich:spacer>
 							<s:div>
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
 							</s:div>	
-						</rich:tab>
-						<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+						</rich:tab> -->
+						
+						<rich:tab name="tabHi_2" label="#{app.general_step2_head}" styleClass="letra15" >
 							<s:div>
 							<!-- 
 								<a:commandButton
@@ -112,7 +91,7 @@
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
 							</s:div>
 						</rich:tab>
-						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15" >
 							<s:div>
 								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
 							</s:div>

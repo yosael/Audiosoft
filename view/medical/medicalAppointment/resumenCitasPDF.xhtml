@@ -1,0 +1,93 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Resumen de citas" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="16" style="bold">
+		<p:paragraph alignment="center">RESUMEN DE CITAS PROGRAMADAS</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="10">
+		<p:table columns="6" widthPercentage="100" headerRows="1"  widths="0.8 2 1 1.4 0.8 2" >
+			<p:font color="black" style="bold" size="11">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.schedlist_col1}</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.schedlist_col2}</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="right">#{app.schedlist_col3}</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.schedlist_col4}</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">#{app.schedlist_col5}</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Medico</p:paragraph>
+				</p:cell>
+			</p:font>
+			
+		<ui:repeat var="res" value="#{medicalAppointmentSearch.resultList}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text value="#{res.dateTime}" >
+						<s:convertDateTime pattern="dd/MM/yyyy HH:mm a" />
+					</p:text>
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.cliente.fullName}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.cliente.telefono1}</p:paragraph>
+			</p:cell>		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.comment}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{medicalAppointmentSearch.obtenerEstado(res.status)}</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.doctor.nombres}#{' '}#{res.doctor.apellidos}</p:paragraph>
+			</p:cell>
+		</ui:repeat>
+		<!-- 
+			<p:font color="black" style="bold" size="12">
+			<p:cell horizontalAlignment="right" colspan="7" verticalAlignment="middle" paddingBottom="4"  paddingRight="4" backgroundColor="#E4E4E4">
+				<p:paragraph alignment="center">TOTAL</p:paragraph>
+			</p:cell>
+			
+			<p:cell verticalAlignment="middle" horizontalAlignment="right" backgroundColor="#E4E4E4">
+				<p:paragraph><p:text value="#{productoHome.totalInventario}">
+					<f:convertNumber  locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="0" />
+				</p:text></p:paragraph>
+			</p:cell>
+			</p:font> -->
+	</p:table>
+	
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                Sistema de Inventario, Clínica, Contabilidad y Ventas - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                <p:text value="Pag. " /><p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

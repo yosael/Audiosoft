@@ -174,8 +174,6 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal.sucursalSuperior = :searchSucOb  order by e.nombres")
 						.setParameter("searchSucOb",searchSucOb)
 						.getResultList();
-				
-				
 			}
 			else
 			{
@@ -185,8 +183,6 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 						.createQuery("SELECT  e from Doctor e where  e.usuario.sucursal = :searchSucOb  order by e.nombres")
 						.setParameter("searchSucOb",searchSucOb)
 						.getResultList();
-				
-				
 			}
 		
 		
@@ -210,7 +206,6 @@ public class DoctorDAO extends KubeDAO<Doctor> {
 			resultList = getEntityManager()
 					.createQuery("select e from Doctor e order by e.nombres")
 					.getResultList();
-			
 			
 		}
 		

@@ -16,8 +16,9 @@
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
-				<fieldset><legend>#{app.sched_search_data}</legend> <h:panelGrid
-					columns="2" style="padding-left:100px;">
+				<fieldset><legend>#{app.sched_search_data}</legend> 
+				<h:panelGrid
+					columns="2" style="padding-left:200px;">
 					<s:decorate template="/layout/kEditSpace.xhtml">
 						<ui:define name="label">#{app.sched_search_date1}:</ui:define>
 						<rich:calendar value="#{medicalAppointmentSearch.date1}"
@@ -43,18 +44,26 @@
 							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
 						</h:selectOneMenu>
 					</s:decorate>
-					<s:decorate template="/layout/kEditSpace.xhtml">
-						<ui:define name="label">#{app.sched_search_status}:</ui:define>
-						<h:selectOneRadio value="#{medicalAppointmentSearch.status}" styleClass="radioB">
-							<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0"  />
-							<f:selectItem itemLabel="Confirmada" itemValue="4" />
-							<f:selectItem itemLabel="#{app.sched_served}" itemValue="1" />
-							<f:selectItem itemLabel="#{app.sched_canceled}" itemValue="2" />
-							<f:selectItem itemLabel="#{app.sched_absence}" itemValue="3" />
-							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
-						</h:selectOneRadio>
-					</s:decorate>
-				</h:panelGrid> <s:decorate template="/layout/kActions.xhtml">
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">#{app.sched_search_status}:</ui:define>
+							<h:selectOneRadio value="#{medicalAppointmentSearch.status}" styleClass="radioB">
+								<f:selectItem itemLabel="Todos" itemValue="5"  />
+								<f:selectItem itemLabel="#{app.sched_scheduled}" itemValue="0"  />
+								<f:selectItem itemLabel="Confirmada" itemValue="4" />
+								<f:selectItem itemLabel="#{app.sched_served}" itemValue="1" />
+								<f:selectItem itemLabel="#{app.sched_canceled}" itemValue="2" />
+								<f:selectItem itemLabel="#{app.sched_absence}" itemValue="3" />
+								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}" reRender="table" />
+							</h:selectOneRadio>
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+						</s:decorate>
+						<s:decorate template="/layout/kEditSpace.xhtml">
+								<a:commandButton value="Exportar" action="#{medicalAppointmentSearch.buscarCitasProgramadas()}"
+									oncomplete="showReport('resumenCitasPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						</s:decorate>
+				</h:panelGrid> 
+				<s:decorate template="/layout/kActions.xhtml">
 					<!-- <s:button propagation="begin" view="#{conversation.viewId}"
 						styleClass="newBtn" value="#{msn.button_new}" /> -->
 					<!--<a:commandButton action="#{medicalAppointmentSearch.search()}"
@@ -69,6 +78,7 @@
 				</s:decorate></fieldset>
 				<rich:spacer height="20" /><!-- rendered="#{not empty medicalAppointmentSearch.resultList}" -->
 				<rich:extendedDataTable style="margin:0 auto;"
+					noDataLabel="No se encontraron resultados"
 					value="#{medicalAppointmentSearch.resultList}"
 					var="res" id="table" width="1100px" height="300px" sortMode="single"
 					selectionMode="single"
@@ -121,7 +131,6 @@
 						action="#{medicalAppointmentSearch.takeSelection()}"
 						event="onselectionchange" ajaxSingle="true" />
 				</rich:extendedDataTable>
-				<h:outputLabel value="No se encontraron resultados..." rendered="#{empty medicalAppointmentSearch.resultList}" />
 				<rich:spacer height="10" />
 				<s:decorate template="/layout/kActions.xhtml" id="action">
 					<!--  ver el modal de detalle de las citas-->

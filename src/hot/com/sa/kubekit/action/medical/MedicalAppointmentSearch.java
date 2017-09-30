@@ -153,7 +153,7 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 			jpql.append(" AND c.doctor.id=").append(doctor.getId());
 		}
 		
-		if(status!=null)
+		if(status!=null && status!=5)
 		{
 			jpql.append(" AND c.status ='").append(status).append("'");
 		}
@@ -166,6 +166,24 @@ public class MedicalAppointmentSearch extends KubeSearcher<MedicalAppointment> {
 		setResultList(entityManager.createQuery(jpql.toString()).setParameter(
 					"date1", date1).setParameter("date2",
 					date2).getResultList());
+	}
+	
+	public String obtenerEstado(int num)
+	{
+		String estado="";
+		
+		if(num==0)
+			estado="Agendada";
+		else if(num==1)
+			estado="Atendida";
+		else if(num==2)
+			estado="Cancelada";
+		else if(num==3)
+			estado="Inasistencia";
+		else if(num==4)
+			estado="Confirmada";
+		
+		return estado;
 	}
 	
 	public void load()

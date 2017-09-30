@@ -18,7 +18,7 @@
 				<p:focus />
 				<a:queue name="q1" />
 				<center>
-					<h:panelGrid columns="6">
+					<h:panelGrid columns="3">
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Estado:</ui:define>
 							<h:selectOneMenu value="#{repTransferencia.estado}" >
@@ -69,6 +69,10 @@
 							</rich:calendar>
 						</s:decorate>
 						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+								<a:commandButton value="Exportar" action="#{repTransferencia.buscarTransferencias()}"
+									oncomplete="showReport('reporteTransferenciasPDF', '#{conversation.id}');" styleClass="pdfBtn"   />
+						</s:decorate>
 						
 						<!-- 				
 						<s:decorate template="/layout/kActions.xhtml">
@@ -109,6 +113,7 @@
 					
 					
 					<rich:column width="85px" >
+						<f:facet name="header" >Estado</f:facet>
 						<h:outputText value="#{msn.status_generated}" rendered="#{res.estado=='G'}" />
 						<h:outputText value="#{msn.status_pending}" rendered="#{res.estado=='P'}" />
 						<h:outputText value="#{msn.status_finished}" rendered="#{res.estado=='A'}" />

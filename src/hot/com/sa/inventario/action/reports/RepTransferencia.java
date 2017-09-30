@@ -66,6 +66,8 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	
 	public void buscarTransferencias()
 	{
+		
+		System.out.println("Entro a buscar transferencias");
 		StringBuilder jpql = new StringBuilder();
 		
 		jpql.append("SELECT t FROM Transferencia t where 1=1 "); //filtrar por fechas, sucursal y estado;
@@ -104,10 +106,52 @@ public class RepTransferencia extends MasterRep implements Serializable {
 	}
 	
 	
-	
 	public void cargarSucursales()
 	{
 		sucursales = entityManager.createQuery("SELECT s FROM Sucursal s where s.bodega=true").getResultList();
+	}
+	
+	
+	public String obtenerEstado(String st)
+	{
+		
+		String estado = "";
+		
+		if(st.equals("G"))
+			estado = "Generada";
+		else if(st.equals("P"))
+			estado = "Pendiente";
+		else if(st.equals("A"))
+			estado = "Finalizado";
+		else if(st.equals("D"))
+			estado = "Descartado";
+		else if(st.equals("R"))
+			estado = "Rechazado";
+		else if(st.equals("S"))
+			estado = "Enviado(a)";
+		
+		
+		return estado;
+	}
+	
+	public String obtenerDescripcionEstado(String st)
+	{
+		String descripcion = "";
+		
+		if(st.equals("G"))
+			descripcion = "Creada pero sin autorizar";
+		else if(st.equals("P"))
+			descripcion = "Pendiente de enviarse desde sucursal origen";
+		else if(st.equals("A"))
+			descripcion = "Se confirmo de recibido en sucursal destino";
+		else if(st.equals("D"))
+			descripcion = "Transferencia rechazada";
+		else if(st.equals("S"))
+			descripcion = "Enviada pero sin confirmar como recibido";
+		else if(st.equals("R"))
+			descripcion = "...";
+		
+		return descripcion;
 	}
 
 

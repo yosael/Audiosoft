@@ -156,9 +156,31 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		MedicamentoConsulta item = new MedicamentoConsulta();
 		item.setCantidad((short) 1);
 		item.setMedicamento(medicm);
-		item.setSelDosif(medicm.getDosificaciones().get(0));
-		item.setSelPresen(medicm.getPresentaciones().get(0));
-		item.setSelLab(medicm.getMedicamentosLab().get(0));
+		
+		if(medicm.getDosificaciones()!=null && medicm.getDosificaciones().size()>0)
+			item.setSelDosif(medicm.getDosificaciones().get(0));
+		else
+		{
+			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene dosificacion");
+			return;
+		}
+		
+		if(medicm.getPresentaciones()!=null && medicm.getPresentaciones().size()>0)
+			item.setSelPresen(medicm.getPresentaciones().get(0));
+		else
+		{
+			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene presentacion");
+			return;
+		}
+		
+		if(medicm.getMedicamentosLab()!=null && medicm.getMedicamentosLab().size()>0)
+			item.setSelLab(medicm.getMedicamentosLab().get(0));
+		else
+		{
+			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene laboratorio");
+			return;
+		}
+		
 		item.setObservacion("");
 		
 		itemsAgregados.add(item);

@@ -119,17 +119,18 @@
 						<td>
 							<h:panelGroup id="details">
 								<rich:tabPanel switchType="client" rendered="#{not empty wizardGeneralMedical.consecutive}">
+									<!-- 
 									<rich:tab name="tabHi_1" label="#{app.general_step1_head}">
 										<s:div>
 											<ui:include src="/medical/clinicalHistory/generalMedical/_step1.xhtml" />
 										</s:div>	
-									</rich:tab>
-									<rich:tab name="tabHi_2" label="#{app.general_step2_head}">
+									</rich:tab> -->
+									<rich:tab name="tabHi_2" label="#{app.general_step2_head}" styleClass="letra15" >
 										<s:div>
 											<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
 										</s:div>
 									</rich:tab>
-									<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}">
+									<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15" >
 										<s:div>
 											<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
 										</s:div>

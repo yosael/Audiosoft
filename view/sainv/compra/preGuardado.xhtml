@@ -127,12 +127,12 @@
 						<h:panelGrid columns="3" >
 						<a:commandButton 
 								reRender="fmPresave"	
-								rendered="#{compraHome.managed}"
+								rendered="true"
 								styleClass="saveBtn" onclick="upperCaseAllInputs();#{rich:component('confirmPreSave')}.show();"
 								value="Finalizar Registro" />
 							<rich:spacer width="15px;" ></rich:spacer>
 							<a:commandButton action="#{compraHome.guardarNuevosItems()}"
-								reRender="formcompra" rendered="#{compraHome.managed}"
+								reRender="formcompra" rendered="true"
 								styleClass="addBtn" onclick="upperCaseAllInputs();" eventsQueue="q1" ajaxSingle="true"
 								value="#{msn.button_modify}" />
 						</h:panelGrid>		

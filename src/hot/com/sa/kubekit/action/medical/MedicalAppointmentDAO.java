@@ -420,12 +420,16 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			else if(instance.getCliente().getMdif().getId()==7)
 			{
 				bl.append("Paciente. ");
-				bl.append(instance.getCliente().getReferidoPor().getNombreCompleto());
+				
+				if(instance.getCliente().getReferidoPor()!=null)
+					bl.append(instance.getCliente().getReferidoPor().getNombreCompleto());
 			}
 			else
 			{
 				bl.append("Medio. ");
-				bl.append(instance.getCliente().getMdif().getNombre());
+				
+				if(instance.getCliente().getMdif()!=null)
+					bl.append(instance.getCliente().getMdif().getNombre());
 			}
 		}
 		else

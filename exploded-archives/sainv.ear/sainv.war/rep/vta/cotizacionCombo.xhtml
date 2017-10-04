@@ -39,7 +39,7 @@
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
 							<ui:define name="label">#{app.compramast_branch}:</ui:define>
 							<h:selectOneMenu value="#{repVenta.sucursal}" required="false">
-								<s:selectItems value="#{sucursalHome.resultList}" var="_suc" 
+								<s:selectItems value="#{sucursalHome.notBodegasSuc}" var="_suc" 
 									label="#{_suc.nombre}" noSelectionLabel=" "/>
 								<s:convertEntity />
 								<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" action="#{repVenta.cotizacionCombo()}" reRender="_table" />

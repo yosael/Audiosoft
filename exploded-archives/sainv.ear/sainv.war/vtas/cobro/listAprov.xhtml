@@ -106,7 +106,13 @@
 										<f:param name="id" value="#{res.codTipoVenta}" />
 									</s:link>
 									<!-- <h:outputText value="#{res.codTipoVenta}" /> -->
-								</rich:column>				
+								</rich:column>
+								<rich:column >
+									<f:facet name="header">#{app.vtaprs_fecha}</f:facet>
+									<h:outputText value="#{res.fechaVenta}">
+										<s:convertDateTime pattern="dd/MM/yyyy" type="date" />
+									</h:outputText>
+								</rich:column>					
 								<rich:column >
 									<f:facet name="header">Detalle de Venta: </f:facet>
 								    <rich:dataTable var="var" value="#{res.detVenta}" id="_tblServices"  rows="15"

@@ -2690,6 +2690,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		
 		
 		instance.setSucursal(loginUser.getUser().getSucursal());
+		
+		//agregado el 03/10/2017
+		if(instance.getSucursal().getSucursalSuperior()!=null)
+		{
+			instance.setSucursal(instance.getSucursal().getSucursalSuperior());
+		}
+		
 		List<CotizacionComboItem> itemsCotizacion = new ArrayList<CotizacionComboItem>();
 		// Guardamos la cotizacion y su detalle
 		if (instance.getSucursal() == null) {
@@ -4111,6 +4118,11 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					+ instance.getDetalle());
 		}
 		
+		
+		if(instance.getSucursal().getSucursalSuperior()!=null)
+		{
+			instance.setSucursal(instance.getSucursal().getSucursalSuperior());
+		}
 		
 		
 		recalcularTotalVenta();

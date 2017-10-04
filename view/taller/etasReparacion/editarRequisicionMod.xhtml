@@ -50,7 +50,7 @@
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_branch" >
 							<ui:define name="label">Solicitar a:</ui:define>
 							<h:selectOneMenu value="#{requisicionEtaHome.instance.sucursalSol}" required="true" 
-								enabled="#{requisicionEtaHome.instance.estado == 'PEN' or requisicionEtaHome.instance.estado == null}" >
+								enabled="#{(requisicionEtaHome.instance.estado == 'PEN' or requisicionEtaHome.instance.estado == null) and requisicionEtaHome.abilitarEdicion}" >
 								
 								<f:selectItem selected="true" itemValue="#{requisicionEtaHome.instance.sucursalSol}" itemLabel="#{requisicionEtaHome.instance.sucursalSol.nombre}"  />
 								<s:selectItems value="#{requisicionEtaHome.sucursalesSoli}" var="_emp" 
@@ -65,7 +65,9 @@
 							<h:inputText value="#{msn.status_pending}" rendered="#{requisicionEtaHome.instance.estado=='PEN'}" readonly="true" />
 				            <h:inputText value="#{msn.status_approved}" rendered="#{requisicionEtaHome.instance.estado=='APR'}" readonly="true" />
 				            <h:inputText value="#{msn.status_rejected}" rendered="#{requisicionEtaHome.instance.estado=='REC'}" readonly="true" />
-						</s:decorate>						
+						</s:decorate>
+						
+						<h:outputLabel style="color:red" value="Para editar necesita solicitar que rechacen la transferencia" rendered="#{requisicionEtaHome.abilitarEdicion==false}" />						
 						
 				</h:panelGrid> 
 				
@@ -74,7 +76,7 @@
 						disabled="#{requisicionEtaHome.instance.sucursalSol==null}" id="_btnItems" 
 						action="#{productoHome.cargarListaProdsTaller(requisicionEtaHome.instance.sucursalSol)}" reRender="mprdEdit" 
 						styleClass="addBtn" value="#{msn.button_add_product}" 
-						rendered="#{requisicionEtaHome.instance.estado == 'COT'}" >  
+						rendered="#{requisicionEtaHome.instance.estado == 'COT' and requisicionEtaHome.abilitarEdicion}" >  
 					</a:commandButton>
 				</s:decorate>
 				
@@ -108,6 +110,7 @@
 					<rich:column >
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink reRender="formrequisicionModEdit"  eventsQueue="q1"
+							rendered="#{requisicionEtaHome.instance.estado == 'COT' and requisicionEtaHome.abilitarEdicion}"
 							action="#{requisicionEtaHome.quitarItemEditar(res)}" ajaxSingle="true">
 							<h:graphicImage value="/kubeImg/table_delete16.png" />
 						</a:commandLink>
@@ -118,7 +121,7 @@
 				<rich:spacer height="6"/>
 				
 				<s:decorate template="/layout/kActions.xhtml">
-						<a:commandButton action="#{requisicionEtaHome.editarRequisicion()}" ajaxSingle="true" onclick="#{rich:component('detReqEdit')}.hide();" reRender="formrequisicionModEdit, pnlRequisiciones, tblRequisiciones"
+						<a:commandButton action="#{requisicionEtaHome.editarRequisicion()}" rendered="#{requisicionEtaHome.instance.estado == 'COT' and requisicionEtaHome.abilitarEdicion}" ajaxSingle="true" onclick="#{rich:component('detReqEdit')}.hide();" reRender="formrequisicionModEdit, pnlRequisiciones, tblRequisiciones"
 						 styleClass="modifyBtn"
 						value="Actualizar"/>
 				</s:decorate>

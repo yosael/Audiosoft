@@ -15,6 +15,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.inventory.MovimientoHome;
+import com.sa.kubekit.action.inventory.TransferenciaHome;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.security.SucursalActivaList;
 import com.sa.kubekit.action.util.KubeDAO;
@@ -22,6 +23,7 @@ import com.sa.model.inventory.CodProducto;
 import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
 import com.sa.model.inventory.Producto;
+import com.sa.model.inventory.Transferencia;
 import com.sa.model.inventory.id.ItemId;
 import com.sa.model.security.Sucursal;
 import com.sa.model.workshop.AparatoCliente;
@@ -43,7 +45,11 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	@In(required=false,create=true)
 	@Out(required=false)
-	private EtapaRepCliHome etapaRepCliHome; 
+	private EtapaRepCliHome etapaRepCliHome;
+	
+	
+	@In (create= true, required=false)
+	private TransferenciaHome transferenciaHome;
 		
 	private List<ItemRequisicionEta> itemsAgregados = new ArrayList<ItemRequisicionEta>();
 	private ItemRequisicionEta selectedItem = new ItemRequisicionEta();
@@ -57,6 +63,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	private AparatoCliente aparatoRequision;
 	
 	private Integer reqId;
+	
+	private boolean abilitarEdicion;
 	
 	@Override
 	public void create() {
@@ -247,6 +255,19 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			itemsAgregados= getEntityManager().createQuery("SELECT i FROM ItemRequisicionEta i where i.reqEtapa.id=:idReq").setParameter("idReq", instance.getId()).getResultList();
 			sucursalesSoli = (List<Sucursal>)getEntityManager().createQuery("SELECT s FROM Sucursal s where s.bodega=TRUE").getResultList();
 			
+			
+			List<Transferencia> lsTransferencia = new ArrayList<Transferencia>();
+			lsTransferencia = getEntityManager().createQuery("SELECT t FROM Transferencia t where t.requisicion.id=:idRequi and t.estado!='D'").setParameter("idRequi", requi.getId()).getResultList();
+			
+			if(lsTransferencia!=null && lsTransferencia.size()>0)
+			{
+				abilitarEdicion = false;
+			}
+			else
+			{
+				abilitarEdicion = true;
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -272,6 +293,12 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 					item.setReqEtapa(instance);
 					getEntityManager().persist(item);
 				}
+			}
+			
+			//Nuevo agregado el 03/10/2017
+			if(!instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+			{
+				generarTransferencia();
 			}
 			
 			FacesMessages.instance().add(Severity.INFO,"Se actualizo la requisicion");
@@ -305,6 +332,22 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		ItemRequisicionEta newItem = new ItemRequisicionEta();
 		newItem.setProducto(prd);
 		newItem.setCantidad(1);
+		itemsAgregados.add(newItem);
+	}
+	
+	//agregado el 02/10/2017
+	public void agregarProducto(Inventario prd) {
+		
+		if(prd.getCantidadActual()<=0)
+		{
+			FacesMessages.instance().add(Severity.WARN,"No hay existencia de este producto");
+			return;
+		}
+		
+		ItemRequisicionEta newItem = new ItemRequisicionEta();
+		newItem.setProducto(prd.getProducto());
+		newItem.setCantidad(1);
+		newItem.setInventario(prd);
 		itemsAgregados.add(newItem);
 	}
 	
@@ -448,6 +491,93 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		} 
 		return false;
 	}
+	
+	
+	public boolean aprobarSalidaRequisicion() {
+		
+		List<Item> items = new ArrayList<Item>();
+		List<Item> itemsSet = null;
+		
+		//Sucursal sucursalTaller = (Sucursal) getEntityManager().createQuery("SELECT s FROM Sucursal s where s.id=101").getSingleResult();
+		
+		for (ItemRequisicionEta item : instance.getItemsRequisicion()) {
+			Item itemDescargo = new Item();
+			itemDescargo.setCantidad(item.getCantidad());
+			
+			String numsSeries = "", numsLotes = "";
+			ArrayList<CodProducto> codsProds = getLstCodsProductos().get(item.getProducto().getReferencia());
+			if(codsProds != null && codsProds.size() > 0)
+			for(CodProducto tmpCd: codsProds) {
+				if(tmpCd.isTransferido() && tmpCd.getNumSerie() != null && !tmpCd.getNumSerie().equals("")) 
+					numsSeries = numsSeries.concat(tmpCd.getNumSerie().trim() + ",");
+				if(tmpCd.isTransferido() && tmpCd.getNumLote() != null && !tmpCd.getNumLote().equals("")) 
+					numsLotes = numsLotes.concat(tmpCd.getNumLote().trim() + ",");
+			}
+			
+			if(numsSeries != null)
+				item.setNumSerie(item.getNumSerie().concat(numsSeries));
+			if(numsLotes != null)
+				item.setNumLote(item.getNumLote().concat(numsLotes));
+			
+			
+			
+			itemDescargo.setCostoUnitario(item.getProducto().getCosto());
+			itemDescargo.setPrecioVenta(item.getProducto().getPrcNormal());
+			
+			//Consultamos el inventario al cual debe de asociarse los items, en base a la sucursal
+			List invPrd = getEntityManager().createQuery("SELECT i FROM Inventario i " +
+							"	WHERE i.sucursal = :suc AND i.producto = :prd")
+							.setParameter("suc",loginUser.getUser().getSucursal())
+							//.setParameter("suc", sucursalTaller)
+							.setParameter("prd", item.getProducto())
+							.getResultList();
+			//Verificamos si alcanzan las existencias
+			if(((Inventario)invPrd.get(0)).getCantidadActual() < item.getCantidad()) {
+				
+				FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("movimientoHome_error_save0"));
+				return false;
+			} else { //Colocamos la ubicacion actual del producto
+				if(((Inventario)invPrd.get(0)).getCodUbicacion() != null)
+					item.setUbicacionActual(((Inventario)invPrd.get(0)).getCodUbicacion().getNombre());
+				else
+					item.setUbicacionActual("-");
+				getEntityManager().merge(item);
+			}
+		
+			itemDescargo.setInventario((Inventario)invPrd.get(0));
+			itemDescargo.setItemId(new ItemId());
+			itemDescargo.getItemId().setInventarioId(itemDescargo.getInventario().getId());
+			items.add(itemDescargo);
+		}
+		
+		itemsSet = new ArrayList<Item>(items);
+		
+		if(instance.getUsrAprueba()==null)
+		{
+			instance.setUsrAprueba(loginUser.getUser());
+			instance.setEstado("APR");
+		}
+		
+		instance.setFechaAprobacion(new Date());
+		
+		if (modify()) { //Generamos el movimiento
+			movimientoHome.load();
+			movimientoHome.getInstance().setObservacion("Movimiento de salida generado automaticamente " +
+					"	como aprobacion de la requisicion #" + instance.getId());
+			movimientoHome.getInstance().setTipoMovimiento("S");
+			movimientoHome.getInstance().setRazon("V");
+			movimientoHome.getInstance().setFecha(new Date());
+			movimientoHome.getInstance().setSucursal(loginUser.getUser().getSucursal()); //Colocamos que salio de la sucursal del usuario que solicita la requisicion
+			//Extraemos la sucursal taller
+			//movimientoHome.getInstance().setSucursal(sucursalTaller);//Colocamos que salio de la sucursal de taller
+			movimientoHome.getInstance().setItems(itemsSet);
+			movimientoHome.setItemsAgregados(items);
+			movimientoHome.save();
+			return true;
+		} 
+		return false;
+	}
 
 	public boolean reject() {
 		instance.setEstado("REC");
@@ -457,6 +587,14 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	@Override
 	public boolean preSave() {
 		//instance.set
+		
+		if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+		{
+			System.out.println("Entro a aprobar");
+			instance.setEstado("APR");
+			instance.setUsrAprueba(loginUser.getUser());
+		}
+		
 		return true;
 	}
 	
@@ -482,6 +620,14 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 				return false;
 			}
 		}
+		
+		if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+		{
+			System.out.println("Entro a aprobar");
+			instance.setEstado("APR");
+			instance.setUsrAprueba(loginUser.getUser());
+		}
+		
 		return true;
 	}
 
@@ -499,6 +645,42 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			getEntityManager().persist(tmpItm);
 		}
 		getEntityManager().refresh(etapaRepCliHome.getInstance());
+		
+		
+		if(!instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+		{
+			generarTransferencia();
+		}
+	}
+	
+	public void generarTransferencia()
+	{
+		Transferencia transf = new Transferencia();
+		
+		transf.setSucursal(instance.getSucursalSol());
+		transf.setFecha(new Date());
+		transf.setObservacion("Generado desde requisicion taller");
+		
+		transf.setSucursalDestino(loginUser.getUser().getSucursal());
+		transf.setUsuarioGenera(loginUser.getUser());
+		transf.setEstado("P");
+		
+		/*transf.setDesde(loginUser.getUser().getSucursal().getNombre());
+		transf.setHacia(instance.getSucursalSol().getNombre());*/
+		
+		//getEntityManager().persist(transf); 
+		
+		transf.setRequisicion(instance);
+		
+		transferenciaHome.setInstance(transf);
+		
+		for(ItemRequisicionEta item: itemsAgregados)
+		{
+			transferenciaHome.agregarProducto(item.getInventario(),item.getCantidad());
+		}
+		
+		transferenciaHome.save();
+		
 	}
 
 	@Override
@@ -600,6 +782,14 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 
 	public void setAparatoRequision(AparatoCliente aparatoRequision) {
 		this.aparatoRequision = aparatoRequision;
+	}
+
+	public boolean isAbilitarEdicion() {
+		return abilitarEdicion;
+	}
+
+	public void setAbilitarEdicion(boolean abilitarEdicion) {
+		this.abilitarEdicion = abilitarEdicion;
 	}
 
 	

@@ -16,6 +16,7 @@ import org.hibernate.annotations.ForeignKey;
 
 import com.sa.model.security.Sucursal;
 import com.sa.model.security.Usuario;
+import com.sa.model.workshop.RequisicionEtapaRep;
 
 @Entity
 @Table(name = "transferencia")
@@ -28,6 +29,9 @@ public class Transferencia extends Movimiento{
 	private Sucursal sucursalDestino;
 	private Usuario usuarioGenera;
 	private Movimiento entrada;
+	
+	//agregado el 02/10/2017
+	private RequisicionEtapaRep requisicion;
 	
 	public Transferencia(){
 		super.setFecha(new Date());
@@ -96,6 +100,20 @@ public class Transferencia extends Movimiento{
 	public void setEntrada(Movimiento entrada) {
 		this.entrada = entrada;
 	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_requisicion", nullable = true)
+	@ForeignKey(name = "fk_transferencia_requisicion")
+	public RequisicionEtapaRep getRequisicion() {
+		return requisicion;
+	}
+
+	public void setRequisicion(RequisicionEtapaRep requisicion) {
+		this.requisicion = requisicion;
+	}
+	
+	
+	
 	
 	
 	

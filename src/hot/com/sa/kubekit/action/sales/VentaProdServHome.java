@@ -1007,7 +1007,8 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		
 		for(CuentaCobrar cxc: listaCuentasPendientes)
 		{
-			totalCxcP+=cxc.getRemanente();
+			if(cxc.getRemanente()!=null)
+				totalCxcP+=cxc.getRemanente();
 		}
 		
 		return totalCxcP;

@@ -23,17 +23,16 @@
 				<a:support event="onkeydown" reRender="_tableClientes" eventsQueue="q1"
 					ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
 			</h:inputText> -->
-			<h:panelGrid columns="2">
-						<s:decorate template="/layout/kEditSpace.xhtml" >
-									<ui:define name="label">nombres</ui:define>
-									<h:inputText styleClass="busProd"  a:placeholder="Nombres" autocomplete="off" style="width:250px" value="#{clienteHome.nomCoinci}"
-										id="_nomCoinci1">
-										<a:support event="onkeydown" reRender="_tableClientes" eventsQueue="q1"
-											ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
-									</h:inputText>
-						</s:decorate>
+			<h:panelGrid columns="1">
 						
-					
+						<h:inputText styleClass="busProd"  a:placeholder="Nombres" autocomplete="off" value="#{clienteHome.nomCoinci}"
+							id="_nomCoinci1">
+							<a:support event="onkeydown" reRender="_tableClientes" eventsQueue="q1"
+								ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
+						</h:inputText>
+						
+						
+						<!-- 
 						<s:decorate template="/layout/kEditSpace.xhtml" >
 									<ui:define name="label">apellidos</ui:define>
 									<h:inputText styleClass="busProd" style="width:250px" autocomplete="off" value="#{clienteHome.apellCoinci}"
@@ -42,6 +41,7 @@
 											ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
 									</h:inputText>
 						</s:decorate>
+						 -->
 			</h:panelGrid>
 		</center>
 		<rich:dataTable var="res" value="#{clienteHome.resultList}"

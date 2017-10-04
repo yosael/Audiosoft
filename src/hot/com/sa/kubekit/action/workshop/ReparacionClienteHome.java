@@ -13,6 +13,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
+import com.sa.kubekit.action.inventory.MovimientoHome;
 import com.sa.kubekit.action.sales.VentaItemHome;
 import com.sa.kubekit.action.sales.VentaProdServHome;
 import com.sa.kubekit.action.security.LoginUser;
@@ -106,6 +107,9 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 	@In(required = false, create = true)
 	@Out(required = false)
 	private VentaProdServHome ventaProdServHome;
+	
+	@In(required=false,create=true)
+	private RequisicionEtaHome requisicionEtaHome;
 				
 	@Override
 	public void create() {
@@ -550,7 +554,28 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 				tmpEta.setFechaInicio(new Date());
 				tmpEta.setEstado("PEN");
 			}
+			
+			
+			if(tmpEta.getRequisicionesEtapa()!=null && tmpEta.getRequisicionesEtapa().size()>0)
+			{
+				for(RequisicionEtapaRep req:tmpEta.getRequisicionesEtapa())
+				{
+					requisicionEtaHome.setReqId(req.getId());
+					requisicionEtaHome.load();
+					if(!requisicionEtaHome.aprobarSalidaRequisicion())
+					{
+						FacesMessages.instance().add(Severity.WARN,"No hay existencias de la requisicion que se necesita aprobar: "+req.getId());
+						return false;
+					}
+				}
+			}
 		}
+		
+		
+		//agregado el 02/10/2017
+		//requisicionEtaHome.aprobarSalidaRequisicion();
+		
+		
 		instance.setAprobada(true);
 		boolean res = modify();
 		

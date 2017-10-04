@@ -55,7 +55,7 @@
 					<rich:column>
 						<f:facet name="header">#{msn.col_actions}</f:facet>
 						<a:commandLink value="#{app.movimientomast_select_product}" reRender="formrequisicionMod"
-							action="#{requisicionEtaHome.agregarProducto(res.producto)}" ajaxSingle="true" eventsQueue="q1"
+							action="#{requisicionEtaHome.agregarProducto(res)}" ajaxSingle="true" eventsQueue="q1"
 							onclick="#{rich:component('confirmationReq')}.hide();">
 						</a:commandLink>
 					</rich:column>

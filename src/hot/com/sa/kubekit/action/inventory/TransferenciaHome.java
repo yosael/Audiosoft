@@ -243,6 +243,40 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		productosAgregados.add(inventarioOrigen);
 	}
 	
+	
+	//nuevo agregado el 02/10/2017
+	public void agregarProducto(Inventario inventario,int cantidad){
+		if (inventario.getCantidadActual()<=0){
+			FacesMessages.instance().add(Severity.WARN,sainv_messages.get("transferenciaHome_error_outofstock"));
+			return;
+		}
+		if(productosAgregados.contains(inventario)){
+			FacesMessages.instance().add(Severity.WARN,
+				sainv_messages.get("transferenciaHome_error_additem"));
+			return;
+		}
+		Inventario inventarioOrigen = null;
+		try{
+			inventarioOrigen = (Inventario) getEntityManager().createQuery("select i from Inventario i where " +
+					"i.sucursal = :sucursal and " +
+					"i.producto = :producto")
+					.setParameter("sucursal", instance.getSucursal())
+					.setParameter("producto", inventario.getProducto())
+					.getSingleResult();
+		}catch (Exception e) {
+		}
+		
+		Item item = new Item();
+		item.setCantidad(cantidad);
+		item.setCostoUnitario(inventario.getProducto().getPrcNormal());
+		item.setInventario(inventarioOrigen);
+		
+		item.setItemId(new ItemId());
+		item.getItemId().setInventarioId(inventarioOrigen.getId());
+		itemsAgregados.add(item);
+		productosAgregados.add(inventarioOrigen);
+	}
+	
 	public void removerItem(Item item){
 		itemsAgregados.remove(item);
 		productosAgregados.remove(item.getInventario());
@@ -314,6 +348,8 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		instance.setEstado("S");
 		FacesMessages.instance().clear();
 		System.out.println("Se aprobo y se envio el producto solicitado****");
+		
+		
 		return this.modify();
 		
 	}
@@ -334,6 +370,13 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		instance.setEstado("A");
 		instance.setEntrada(movimientoHome.getInstance());
 		FacesMessages.instance().clear();
+		
+		if(instance.getRequisicion()!=null)
+		{
+			instance.getRequisicion().setEstado("APR");
+			getEntityManager().merge(instance.getRequisicion());
+		}
+		
 		return this.modify();
 	}
 	

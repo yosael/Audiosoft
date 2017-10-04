@@ -385,6 +385,12 @@ public class VentaItemHome extends KubeDAO<VentaProdServ> {
 				instance.setDetalle("Venta de productos - " + instance.getDetalle());
 			}
 			
+			
+			if(instance.getSucursal().getSucursalSuperior()!=null)
+			{
+				instance.setSucursal(instance.getSucursal().getSucursalSuperior());
+			}
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

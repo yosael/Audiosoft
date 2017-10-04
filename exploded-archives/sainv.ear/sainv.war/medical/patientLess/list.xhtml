@@ -31,21 +31,20 @@
 				
 
 				<center>
-					<s:span styleClass="busHead"  style="color:black;">#{app.patimast_searchboxtitle}:</s:span>
+					<s:span styleClass="busHead"  style="color:black;">Buscar paciente por nombre, apellido, dui o telefono:</s:span><!-- #{app.patimast_searchboxtitle}: -->
 					<rich:spacer width="0"  height="15" />
 					<s:decorate></s:decorate>
 					
-					<h:panelGrid columns="3" >
-						<s:decorate template="/layout/kEditSpace.xhtml" >
-									<ui:define name="label">nombres</ui:define>
-									<h:inputText styleClass="busProd"  a:placeholder="Nombres" style="width:250px" value="#{clienteHome.nomCoinci}"
-										id="_nomCoinci1">
-										<a:support event="onkeydown" reRender="_tblCli,dcrBuscarMas" eventsQueue="q1"
-											ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
-									</h:inputText>
-						</s:decorate>
+					<h:panelGrid columns="1" >
+					
+						<h:inputText styleClass="busProd"  value="#{clienteHome.nomCoinci}"
+							id="_nomCoinci1">
+							<a:support event="onkeydown" reRender="_tblCli,dcrBuscarMas" eventsQueue="q1"
+								ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
+						</h:inputText>
 						
 						
+						<!-- 
 						<s:decorate template="/layout/kEditSpace.xhtml" >
 									<ui:define name="label">apellidos</ui:define>
 									<h:inputText styleClass="busProd" style="width:250px" value="#{clienteHome.apellCoinci}"
@@ -54,8 +53,8 @@
 											ajaxSingle="true" action="#{clienteHome.buscarPacientes()}" />
 									</h:inputText>
 						</s:decorate>
-						
-						<rich:spacer width="10px"></rich:spacer>
+						 -->
+						 
 						
 						<s:decorate template="/layout/kEditSpace.xhtml"  id="dcrBuscarMas"  >
 							<ui:define name="label"># resultados</ui:define>

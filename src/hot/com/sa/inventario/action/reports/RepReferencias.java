@@ -180,15 +180,14 @@ public class RepReferencias extends MasterRep implements Serializable {
 			setFechaFin(resetTimeDate(calTmp.getTime(), 2));
 		}
 		
-		System.out.println("Fecha inicio: "+ fechaInicio);
-		System.out.println("Fecha fin: "+fechaFin);
+		
 		//Consultar en medicalAppointmentService Parametros: Service, MedicalAppointment-> Cliente-> Medico;
 		
 		listaClientes=entityManager.createQuery("SELECT c FROM Cliente c where c.doctorRef.id="+idDoctorSelected+" "+filtFecha+" ").setParameter("f1", fechaInicio).setParameter("f2", fechaFin).getResultList();
 		
 		List<MedicalAppointment> listaCitas = new ArrayList<MedicalAppointment>();
 		
-		System.out.println("Numero de clientes referidos: "+listaClientes.size());
+		
 		
 		
 		for(Cliente c:listaClientes)
@@ -251,7 +250,6 @@ public class RepReferencias extends MasterRep implements Serializable {
 			//idApp=(Integer) entityManager.createQuery("SELECT min(ap2.id) FROM MedicalAppointment ap2 where ap2.cliente.id="+c.getId()+"").getSingleResult();// and DATE(det.venta.fechaVenta)=(SELECT DATE(ap.dateTime) FROM MedicalAppointment ap where ap.cliente.id="+c.getId()+" and ap.id=(SELECT min(ap2.id) FROM MedicalAppointment ap2 where ap2.cliente.id="+c.getId()+"))
 			Date fecha=(Date) entityManager.createQuery("SELECT ap.dateTime FROM MedicalAppointment ap where ap.cliente.id="+c.getId()+" and ap.id=(SELECT min(ap2.id) FROM MedicalAppointment ap2 where ap2.cliente.id="+c.getId()+")").getSingleResult();
 			
-			System.out.println("Fecha venta" + fecha);
 			
 			fecha1=truncDate(fecha,false);
 			fecha2=truncDate(fecha,true);
@@ -259,7 +257,7 @@ public class RepReferencias extends MasterRep implements Serializable {
 			
 			//sumaIngreso=(Double) entityManager.createQuery("SELECT sum(det.monto) FROM DetVentaProdServ det where det.venta.cliente.id="+c.getId()+"").getSingleResult();
 			sumaIngreso=(Double) entityManager.createQuery("SELECT sum(det.monto) FROM DetVentaProdServ det where det.venta.cliente.id="+c.getId()+" and det.venta.fechaVenta BETWEEN :f1 and :f2 ").setParameter("f1", fecha1).setParameter("f2", fecha2).getSingleResult();
-			System.out.println("Monto"+sumaIngreso);
+			
 			
 			if(sumaIngreso==null || sumaIngreso<=0)
 				sumaIngreso=0d;

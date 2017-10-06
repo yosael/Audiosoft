@@ -128,10 +128,12 @@
 				
 				<rich:spacer height="20"/>
 				
+				
 				<s:decorate template="/layout/kActions.xhtml">
 					<s:button view="/taller/penRequisicion/list.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
+					 
 					<a:commandButton onclick="#{rich:component('approveConfirmation')}.show();" ajaxSingle="true" 
 						rendered="#{requisicionEtaHome.instance.estado == 'PEN' and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )}"
 						reRender="m1" styleClass="apprBtn" value="#{msn.button_approve_order}">
@@ -140,10 +142,12 @@
 						reRender="m2" rendered="#{requisicionEtaHome.instance.estado == 'PEN' and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )}"
 						styleClass="rejectBtn" value="#{msn.button_reject_order}">
 					</a:commandButton>
+					 
 					<a:commandButton oncomplete="showReport('#{conversation.id}')"
 						rendered="#{requisicionEtaHome.instance.estado=='APR'}" styleClass="pdfBtn"
 						value="#{app.comprobante_req}" />
 				</s:decorate>
+				
 				</fieldset>
 			</h:form>
 			

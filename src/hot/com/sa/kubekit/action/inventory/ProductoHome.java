@@ -761,6 +761,20 @@ public class ProductoHome extends KubeDAO<Producto> {
 					celda.setCellValue("Cantidad");
 					celda.setCellStyle(stTitles);
 					
+					fila=hoja.createRow(0);
+					celda=fila.createCell(1);
+					celda.setCellValue(new Date());
+					celda.setCellStyle(stDate);
+					
+					celda=fila.createCell(2);
+					celda.setCellValue("Usuario: ");
+					celda.setCellStyle(stTitles);
+					
+					celda=fila.createCell(2);
+					celda.setCellValue(loginUser.getUser().getNombreCompleto());
+					celda.setCellStyle(stTitles);
+					
+					
 					//celda = fila.createCell(7);
 					
 					//						0    1              2      3    4                5                                  6

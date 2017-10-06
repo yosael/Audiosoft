@@ -658,7 +658,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		// filtrado por la sucursal del usuario login
 		resultList = getEntityManager()
 				.createQuery(
-						"SELECT v FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND  v.estado = 'APR'"
+						"SELECT v FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND  v.estado != 'PEN'"
 								+ fltFch + " ORDER BY v.fechaVenta DESC ")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
@@ -668,7 +668,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 						subSucFlt == null ? new ArrayList<Sucursal>()
 								: subSucFlt).getResultList();
 
-		resultList2 = getEntityManager()
+		/*resultList2 = getEntityManager()
 				.createQuery(
 						"SELECT v FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND  v.estado = 'ABN'"
 								+ fltFch + " ORDER BY v.fechaVenta DESC ")
@@ -690,15 +690,15 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 				.setParameter(
 						"subSuc",
 						subSucFlt == null ? new ArrayList<Sucursal>()
-								: subSucFlt).getResultList();
+								: subSucFlt).getResultList();*/
 
-		for (VentaProdServ res2 : resultList2) {
+		/*for (VentaProdServ res2 : resultList2) {
 			resultList.add(res2);
 		}
 
 		for (VentaProdServ res3 : resultList3) {
 			resultList.add(res3);
-		}
+		}*/
 
 		// Asignando los pagos de las ventas pendientes
 		// List<CuentaCobrar> listaCuentas =
@@ -707,7 +707,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		// suma la cantidad de montos por ventas aprobadas
 		totalMonto = (Double) getEntityManager()
 				.createQuery(
-						"SELECT SUM(v.monto) FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado = 'APR' "
+						"SELECT SUM(v.monto) FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' "
 								+ fltFch + "")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
@@ -728,7 +728,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 								+ "WHEN v.tipoDescuento='M' AND v.totalDescuentoCorp!=null THEN (v.cantidadDescuento+v.totalDescuentoCorp)"
 								+ "WHEN v.tipoDescuento=null AND v.totalDescuentoCorp!=null THEN (v.totalDescuentoCorp)"
 								+ "END) "
-								+ "FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado = 'APR' "
+								+ "FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' "
 								+ fltFch + "")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
@@ -743,7 +743,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		totalRango = (Double) getEntityManager()
 				.createQuery(
 						"SELECT SUM(det.monto*det.cantidad) FROM DetVentaProdServ det WHERE det.venta IN "
-								+ "(SELECT v.id FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado = 'APR' "
+								+ "(SELECT v.id FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' AND v.estado != 'ABN' AND v.estado != 'ABF' "
 								+ fltFch + ")")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
@@ -791,9 +791,9 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		prodServList = getEntityManager()
 				.createQuery(
 						"SELECT det.codClasifVta, det.detalle, SUM(det.cantidad) AS cantidad, SUM(CASE WHEN det.venta.monto>0 THEN (det.monto*det.cantidad) END) AS  monto FROM DetVentaProdServ det WHERE det.venta IN "
-								+ "(SELECT ps.id FROM VentaProdServ ps WHERE (ps.sucursal = :suc or ps.sucursal IN (:subSuc) ) AND ps.estado <> 'PEN' AND ps.estado<>'PDS' AND ps.estado<>'ANU'"
+								+ "(SELECT ps.id FROM VentaProdServ ps WHERE (ps.sucursal = :suc or ps.sucursal IN (:subSuc) ) AND ps.estado <> 'PEN'  AND ps.estado<>'ANU'"
 								+ fltFch
-								+ ")  GROUP BY det.codClasifVta,det.detalle ORDER BY det.codClasifVta,det.detalle")
+								+ ")  GROUP BY det.codClasifVta,det.detalle ORDER BY det.codClasifVta,det.detalle")//AND ps.estado<>'PDS'
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
 				.setParameter("fch2", getFechaPFlt2())
@@ -1075,6 +1075,54 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 				: subSucFlt)*/
 		//.setParameter("suc", loginUser.getUser().getSucursal())
 	}
+	
+	
+	
+	public void getReporteDesc() {
+		// 4/18/2016 se pidió que las ventas con descuento se muestren por
+		// Usuario que autoriza y no por sucursal.
+		
+		List<Sucursal> subSucFlt = getEntityManager()
+				.createQuery(
+						"SELECT s FROM Sucursal s WHERE (s = :suc OR s.sucursalSuperior = :suc or s.sucursalSuperior = :otraSuc) ")
+				.setParameter("suc", loginUser.getUser().getSucursal())
+				.setParameter(
+						"otraSuc",
+						loginUser.getUser().getSucursal().getSucursalSuperior() == null ? loginUser
+								.getUser().getSucursal() : loginUser.getUser()
+								.getSucursal().getSucursalSuperior())
+				.getResultList();
+
+		if (subSucFlt == null || subSucFlt.size() <= 0)
+			subSucFlt = new ArrayList<Sucursal>();
+
+		subSucFlt.add(loginUser.getUser().getSucursal());
+		subSucFlt
+				.add(loginUser.getUser().getSucursal().getSucursalSuperior() == null ? loginUser
+						.getUser().getSucursal() : loginUser.getUser()
+						.getSucursal().getSucursalSuperior());
+
+		String fltFch = " AND (:fch1 = :fch1 OR :fch2 = :fch2) ";
+		if (getFechaPFlt1() != null && getFechaPFlt2() != null) {
+			setFechaPFlt1(truncDate(getFechaPFlt1(), false));
+			setFechaPFlt2(truncDate(getFechaPFlt2(), true));
+			fltFch = " AND v.fechaVenta BETWEEN :fch1 AND :fch2 ";
+		}
+
+		resultListDesc = getEntityManager()//(v.sucursal = :suc or v.sucursal IN (:subSuc) ) se quito de la consulta el 07/06/2017
+				.createQuery(
+						"SELECT v FROM VentaProdServ v WHERE  v.tipoDescuento != null and v.cantidadDescuento != null "
+								+ fltFch + " ORDER BY v.fechaVenta DESC ")
+				.setParameter("fch1", getFechaPFlt1())
+				.setParameter("fch2", getFechaPFlt2())
+				.getResultList();//.setParameter(
+		/*"subSuc",
+		subSucFlt == null ? new ArrayList<Sucursal>()
+				: subSucFlt)*/
+		//.setParameter("suc", loginUser.getUser().getSucursal())
+	}
+	
+	
 
 	public void fltVtasRep() {
 		//
@@ -1557,6 +1605,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 			}
 
 			instance.setEstado("PDS");
+			//instance.setEstadoDescuento("APR");
 			getEntityManager().merge(instance);
 			getEntityManager().flush();
 			res = true;
@@ -1567,6 +1616,15 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		
 		return res;
 
+	}
+	
+	
+	public void aprobarDescuentoSinAutorizacion()
+	{
+		instance.setEstado("APR");
+		instance.setEstadoDescuento("NAP");
+		getEntityManager().merge(instance);
+		getEntityManager().flush();
 	}
 
 	public void crearSolicitudImpresion() {

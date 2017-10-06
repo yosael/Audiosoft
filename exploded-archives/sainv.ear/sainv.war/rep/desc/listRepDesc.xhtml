@@ -1,0 +1,118 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml" >
+	<ui:define name="body">
+	
+		<rich:panel>
+			<f:facet name="header"><span class="marginhead" >#{app.cobrodsc_head}</span></f:facet>
+			<h:form id="formvta">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+				<rich:spacer height="0" />
+				<span style="font-weight:bold;">Fecha inicial: &nbsp;&nbsp;</span>
+				<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calIniFlt"
+					value="#{ventaProdServHome.fechaPFlt1}" inputStyle="width:120px; height:12px;">
+					<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{ventaProdServHome.getReporteDesc()}" reRender="formvta,_calIniFlt,_calFinFlt" />
+				</rich:calendar>
+				<rich:spacer width="34" />
+				<span style="font-weight:bold;">Fecha final: &nbsp;&nbsp;</span>
+				<rich:calendar datePattern="dd/MM/yyyy" tabindex="20" id="_calFinFlt"
+					value="#{ventaProdServHome.fechaPFlt2}" inputStyle="width:120px; height:12px;">
+					<a:support eventsQueue="q1" ajaxSingle="true" event="onchanged" action="#{ventaProdServHome.getReporteDesc()}" reRender="formvta,_calIniFlt,_calFinFlt" />
+				</rich:calendar>
+				<rich:dataTable var="res" value="#{ventaProdServHome.resultListDesc}"
+					rendered="#{not empty ventaProdServHome.resultListDesc}" rows="20"
+					align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+					headerClass="tablaHeader" footerClass="tableScroll">
+					<f:facet name="header">#{app.cobrodsc_list}</f:facet>
+					<rich:column filterBy="#{res.fechaVenta}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_fecha}</f:facet>
+						<h:outputText value="#{res.fechaVenta}" >
+							<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.monto}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_monto} Original</f:facet>
+						<h:outputText value="#{res.monto}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.cantidadDescuento}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.cobrodsc_descontado}</f:facet>
+						<h:outputText value="#{res.cantidadDescuento}" rendered="#{res.tipoDescuento=='M'}">
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+						<h:outputText value="#{res.cantidadDescuento}" rendered="#{res.tipoDescuento=='P'}">
+							<f:convertNumber locale="en-US" groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText><h:outputText value="%" rendered="#{res.tipoDescuento=='P'}"></h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{(res.restante)}" filterEvent="onkeyup">
+						<f:facet name="header">Monto Final</f:facet>
+						<h:outputText value="#{res.restante}" >
+							<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+								groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+						</h:outputText>
+					</rich:column>
+					<rich:column filterBy="#{res.usrDescuento.nombreCompleto}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_usrdesc}</f:facet>
+						<h:outputText value="#{res.usrDescuento.nombreCompleto}" />
+					</rich:column>
+					<rich:column filterBy="#{res.cliente.nombres} #{res.cliente.apellidos}" filterEvent="onkeyup">
+						<f:facet name="header">#{app.vtaprs_cliente}</f:facet>
+						<h:outputText value="#{res.cliente.nombres} #{res.cliente.apellidos}" />
+					</rich:column>
+					<rich:column filterBy="#{res.sucursal.nombre}" filterEvent="onkeyup">
+						<f:facet name="header">Sucursal</f:facet>
+						<h:outputText value="#{res.sucursal.nombre}" />
+					</rich:column>
+					<rich:column >
+						<f:facet name="header">Estado descuento</f:facet>
+						<h:outputText value="Autorizado" rendered="#{res.estadoDescuento=='APR'}" style="background:green;color:white;" />
+						<h:outputText value="No Autorizado" rendered="#{res.estadoDescuento=='NAP'}"  style="background:red;color:white;" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{msn.col_actions}</f:facet>
+						<s:link title="#{app.vtaprs_verdet}" rendered="true"
+							view="/rep/desc/masterRepDsc.xhtml" propagation="begin">
+							<h:graphicImage value="/kubeImg/table_edit16.png" />
+							<f:param name="id" value="#{res.id}" />
+							<f:param name="desc" value="#{true}" />
+						</s:link>
+ 						<rich:spacer width="10" />
+						<a:commandLink title="#{app.vtaprs_repvta}" rendered="true" action="#{ventaProdServHome.load(res.id)}"
+							propagation="join" oncomplete="showReport('detalleVtaDesc', '#{conversation.id}'); " >
+							<h:graphicImage value="/kubeImg/pdf20.jpg" />
+						</a:commandLink>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="ds1" renderIfSinglePage="true" />
+					</f:facet>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="confirmation" width="400" moveable="false"
+			autosized="true" top="50px"
+			onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
+			<f:facet name="header">
+				#{app.vtacomb_modal}
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('confirmation')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

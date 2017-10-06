@@ -35,6 +35,16 @@
 						<h:outputText value="#{res.ordenDe}" />
 					</rich:column>
 					
+					<rich:column filterBy="#{res.numCheque}" filterEvent="onkeyup">
+						<f:facet name="header"># Cheque</f:facet>
+						<h:outputText value="#{res.numCheque}" />
+					</rich:column>
+					
+					<rich:column filterBy="#{res.autorizadoPor.nombreCompleto}" filterEvent="onkeyup">
+						<f:facet name="header">Autorizado por</f:facet>
+						<h:outputText value="#{res.autorizadoPor.nombreCompleto}" />
+					</rich:column>
+					
 					
 					<rich:column filterBy="#{res.fecha}" filterEvent="onkeyup">
 						<f:facet name="header">Fecha</f:facet>

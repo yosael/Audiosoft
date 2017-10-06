@@ -72,6 +72,9 @@ public class VentaProdServ implements Serializable {
 	//Nuevo agregado el 10/07/2017
 	private boolean incluyeIva;
 	
+	//Nuevo agregado el 04/10/2017
+	private String estadoDescuento;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -339,6 +342,14 @@ public class VentaProdServ implements Serializable {
 	}
 	public void setIncluyeIva(boolean incluyeIva) {
 		this.incluyeIva = incluyeIva;
+	}
+	
+	@Column(name="estado_descuento",length=5,nullable = true)
+	public String getEstadoDescuento() {
+		return estadoDescuento;
+	}
+	public void setEstadoDescuento(String estadoDescuento) {
+		this.estadoDescuento = estadoDescuento;
 	}
 
 	

@@ -288,7 +288,7 @@
 									value="#{msn.button_new}" rendered="#{not (loginUser.user.areaUsuario.id eq 1)}">
 									<f:param name="numId" value="-1"/>
 								</s:button>
-								<a:commandButton  ajaxSingle="true" action="#{clienteHome.save()}" reRender="formA"
+								<a:commandButton  ajaxSingle="true" action="#{clienteHome.guardarDesdeCrm()}" reRender="formA"
 									rendered="#{clienteHome.numId==-1}" styleClass="saveBtn"
 									value="#{msn.button_save}"></a:commandButton>
 								<!-- 

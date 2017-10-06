@@ -1,7 +1,9 @@
 package com.sa.kubekit.action.vta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -52,6 +54,8 @@ public class ComprobanteImpresionHome extends KubeDAO<ComprobanteImpresion>{
 				.getResultList();
 	}
 	
+	
+	
 	public void load(){
 		try{
 			setInstance(getEntityManager().find(ComprobanteImpresion.class, comprobanteImpresionId));
@@ -59,6 +63,7 @@ public class ComprobanteImpresionHome extends KubeDAO<ComprobanteImpresion>{
 			clearInstance();
 			setInstance(new ComprobanteImpresion());
 		}
+		
 	}
 	
 	@SuppressWarnings("unchecked") 

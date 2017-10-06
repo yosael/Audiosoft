@@ -15,7 +15,7 @@
 				<h:outputText value="Detalle del cheque" />
 			</f:facet>
 			<rich:spacer height="10" />
-			<h:form id="formclicorp">
+			<h:form id="formcheque">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<p:focus />
 				<a:queue name="q1" />
@@ -24,10 +24,10 @@
 					<h:panelGrid columns="3" style="padding-left:100px;">
 
 						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_lvPrv">
-							<ui:define name="label">Proveedor:</ui:define>
+							<ui:define name="label">Proveedor:<span class="required">*</span></ui:define>
 							<h:inputText
 								value="#{chequeDocHome.instance.proveedor.razonSocial}"
-								readonly="true" required="true" style="width:200px;" />
+								readonly="true"  style="width:200px;" />
 
 							<a:commandButton onclick="#{rich:component('selProv')}.show();"
 								ajaxSingle="true"
@@ -38,14 +38,33 @@
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_ordDe">
-							<ui:define name="label">Orden De:</ui:define>
+							<ui:define name="label">Orden De:<span class="required" >*</span></ui:define>
 							<h:inputText value="#{chequeDocHome.instance.ordenDe}"
-								maxlenght="80" required="true" maxlength="40" />
+								maxlenght="80" maxlength="40" readonly="true" />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label"># Cheque: <span class="required" >*</span></ui:define>
+							<h:inputText id="cheque" value="#{chequeDocHome.instance.numCheque}" maxlength="30"  />
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Banco:</ui:define>
+							<h:selectOneMenu value="#{chequeDocHome.instance.banco}">
+							 	<f:selectItem  itemValue="America Central" itemLabel="America Central" />
+							 </h:selectOneMenu>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label"># Cuenta: <span class="required">*</span></ui:define>
+							<h:inputText id="numCuenta" value="#{chequeDocHome.instance.cuenta}" maxlength="30" >	
+								<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+							</h:inputText>
 						</s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">Monto:</ui:define>
-							<h:inputText value="#{chequeDocHome.instance.monto}" maxlength="10" required="true">
+							<ui:define name="label">Monto: <span class="required">*</span></ui:define>
+							<h:inputText value="#{chequeDocHome.instance.monto}" maxlength="10" >
 								<a:support eventsQueue="q1" ajaxSingle="true" event="onkeyup" requestDelay="1000" 
 									reRender="montoLetras" action="#{chequeDocHome.convertNumToLetter()}" />
 							</h:inputText>
@@ -53,26 +72,53 @@
 
 						<s:decorate template="/layout/kEditSpace.xhtml" id="_mntLt">
 							<ui:define name="label">Monto en Letras:</ui:define>
-							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.montoLetras}" maxlength="40"
-								required="false" />
+							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.montoLetras}" readonly="true" maxlength="40"
+								/>
 						</s:decorate>
 						
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">Lugar:</ui:define>
-							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.lugar}" maxlength="30" required="true" />
+							<ui:define name="label">Lugar:<span class="required">*</span></ui:define>
+							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.lugar}" maxlength="30"  />
 						</s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
-							<ui:define name="label">Fecha:</ui:define>
+							<ui:define name="label">Fecha:<span class="required">*</span></ui:define>
 							<rich:calendar value="#{chequeDocHome.instance.fecha}"
 								datePattern="dd/MM/yyyy">
 								<a:support event="oncollapse" ajaxSingle="true" eventsQueue="q1"
 									reRender="_table" />
 							</rich:calendar>
 						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Concepto:<span class="required">*</span></ui:define>
+							<h:inputText id="montoLetras" value="#{chequeDocHome.instance.concepto}" maxlength="30"  >
+								<a:support event="onkeyup" ajaxSingle="true" ></a:support>
+							</h:inputText>
+						</s:decorate>
+						
+						
+						
+						
+						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" >
+							<ui:define name="label">Autorizado por:<span class="required">*</span></ui:define>
+							<h:inputText id="autorizadoPor" 
+								value="#{chequeDocHome.instance.autorizadoPor.nombreCompleto}" readonly="true"  style="width:200px;"/>
+							
+							<a:commandButton onclick="#{rich:component('selUsuario')}.show();" ajaxSingle="true"  
+								action="#{usuarioHome.getUsersAuthDisc()}" reRender="usu" 
+								styleClass="modifyBtn" value=" " style="width:30px;">
+							</a:commandButton>
+						</s:decorate>
+						
+						<s:decorate template="/layout/kEditSpace.xhtml">
+							<ui:define name="label">Recibe:</ui:define>
+							<h:inputText id="recibe" value="#{chequeDocHome.instance.recibe}" maxlength="30"  />
+						</s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml" style="width:250px;" id="_slComprbt">
 							<ui:define name="label">Tipo de Comprobante:</ui:define>
+							<!-- 
 							<h:inputText value="#{chequeDocHome.instance.comprobante.nombre}" id="_tipoComprobante" 
 								readonly="true" required="true" style="width:200px;" />
 								
@@ -80,11 +126,18 @@
 								action="#{comprobanteImpresionHome.cargarListaComprobantesUsuario()}" reRender="comprbt" 
 								styleClass="modifyBtn" value=" " style="width:30px;">
 							</a:commandButton>
+							 -->
+							 <h:selectOneMenu value="#{chequeDocHome.instance.tipoComprobante}">
+							 	<f:selectItem  itemValue="Factura" itemLabel="Factura" />
+							 	<f:selectItem  itemValue="Credito Fiscal" itemLabel="Credito Fiscal" />
+							 	<f:selectItem  itemValue="Ticket" itemLabel="Ticket" />
+							 	<f:selectItem  itemValue="Recibo" itemLabel="Recibo" />
+							 </h:selectOneMenu>
 						</s:decorate>
 
 						<s:decorate template="/layout/kEditSpace.xhtml">
 							<ui:define name="label">Descripcion:</ui:define>
-							<h:inputTextarea required="true" style="width:360px;"
+							<h:inputTextarea  style="width:360px;"
 								maxlength="300" value="#{chequeDocHome.instance.descripcion}">
 								<a:support event="onblur" eventsQueue="q1" ajaxSingle="true" />
 							</h:inputTextarea>
@@ -96,29 +149,30 @@
 						<s:button view="/crm/cheque/list.xhtml" propagation="begin"
 							styleClass="listBtn" value="#{msn.button_list}">
 						</s:button>
+						<!-- 
 						<s:button view="/crm/cheque/master.xhtml" propagation="begin"
 							styleClass="newBtn" value="#{msn.button_new}">
 							<f:param name="id" value="" />
-						</s:button>
+						</s:button> 
 						<a:commandButton value="GENERAR COMPROBANTE" action="#{chequeDocHome.genCompr()}" ajaxSingle="true" eventsQueue="q1" ignoreDupResponses="true"
 								 rendered="#{chequeDocHome.managed}"
 								oncomplete="showReport('#{chequeDocHome.instance.comprobante.pagina}', '#{conversation.id}');" styleClass="pdfBtn"   />
-						
+						-->
 						<a:commandButton action="#{chequeDocHome.save()}"
-							reRender="formclicorp" rendered="#{not chequeDocHome.managed}"
+							reRender="formcheque" rendered="#{not chequeDocHome.managed}"
 							styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
 							value="#{msn.button_save}" />
 						
 						<a:commandButton action="#{chequeDocHome.modify()}"
-							reRender="formclicorp" rendered="#{chequeDocHome.managed}"
+							reRender="formcheque" rendered="#{chequeDocHome.managed}"
 							styleClass="modifyBtn" ignoreDupResponses="true" eventsQueue="q1"
 							value="#{msn.button_modify}" />
-							 
+							<!--  
 						<a:commandButton onclick="#{rich:component('confAnu')}.show();" ajaxSingle="true"  
-						rendered="#{chequeDocHome.managed}" styleClass="modifyBtn" 
-						value="Anular Cheque">
+							rendered="#{chequeDocHome.managed}" styleClass="modifyBtn" 
+							value="Anular Cheque">
+						</a:commandButton>-->
 						
-					</a:commandButton>
 					</s:decorate>
 				</fieldset>
 
@@ -195,6 +249,20 @@
 					</h:panelGroup>
 			</f:facet>
 			<s:div id="comprbt" ><ui:include src="selComprbt.xhtml" /></s:div>
-		</rich:modalPanel>	
+		</rich:modalPanel>
+		
+		
+		<rich:modalPanel id="selUsuario" width="800" moveable="true" autosized="true"  top="100"
+			onbeforeshow="activeModal.setActiveModalPanel('selUsuario');">
+			<f:facet name="header">#{app.usuariolist_modal}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('selUsuario')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="usu" ><ui:include  src="selUsuario.xhtml" /></s:div>
+		</rich:modalPanel>
+			
 	</ui:define>
 </ui:composition>

@@ -96,10 +96,59 @@ public class ChequeDocHome extends KubeDAO<ChequeDoc> {
 		instance.setMontoLetras( numalet.convertNumToLetters( instance.getMonto().toString(), false ) + " DOLARES" );
 		
 	}
+	
+	
 
 	@Override
 	public boolean preSave() {
+		
+		System.out.println("Entro a presave");
+		
+		if(instance.getAutorizadoPor()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el usuario que autoriza");
+			return false;
+		}
+		
+		if(instance.getFecha()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese la fecha");
+			return false;
+		}
+		
+		if(instance.getProveedor()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Favor ingresar el proveedor");
+			return false;
+		}
+		
+		if(instance.getNumCheque()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el numero de cheque");
+			return false;
+		}
+		
+		if(instance.getBanco()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Seleccione el banco");
+			return false;
+		}
+		
+		if(instance.getCuenta()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el numero de cuenta");
+			return false;
+		}
+		
+		if(instance.getMonto()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingrese el monto");
+			return false;
+		}
+		
 		instance.setEstado("APL");
+		instance.setElaboradoPor(loginUser.getUser());
+		
 		return true;
 	}
 

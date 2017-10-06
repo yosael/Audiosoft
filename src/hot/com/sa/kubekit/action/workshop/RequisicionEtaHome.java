@@ -78,6 +78,7 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	public void genResultList() {
 		
+		Sucursal sucursalUsuario = loginUser.getUser().getSucursal();
 		
 		List<Sucursal> subSucFlt = getEntityManager()
 				.createQuery("SELECT s FROM Sucursal s WHERE s = :suc OR s.sucursalSuperior = :suc or s.sucursalSuperior = :otraSuc")
@@ -142,8 +143,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 							.getResultList();
 		*/
 		
-		//Actual
-		resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
+		//Actual comentado el 06/10/2017
+		/*resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
 				"	rqe.descripcion, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
 				"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
 				"	prt.codigo codProceso, rpc.repcli_id idRep, rqe.estado estado " +
@@ -155,6 +156,21 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 						" and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id " +
 						" and rqe.etarepcli_id = etc.etarepcli_id and rqe.sucreq_id = suc.id " +
 						"  and ( " + fltSuc + " ) and rqe.estado = 'PEN' " +
+								"ORDER BY rqe.fecha_ingreso DESC ")
+					.getResultList();*/
+		
+		resultList = getEntityManager().createNativeQuery("SELECT prt.nombre nomProceso, etr.nombre nomEtapa, " +
+				"	rqe.descripcion, suc.nombre nomSucursal, rqe.fecha_ingreso fechaIngReq, " +
+				"	etc.fecha_est_fin fechaEstFin, rqe.reqeta_id id, " +
+				"	prt.codigo codProceso, rpc.repcli_id idRep, rqe.estado estado " +
+				" FROM  cliente cli, " +
+				" reparacion_cliente rpc, etapa_reparacion etr, proceso_taller prt, " +
+				" etapa_rep_cliente etc, requisicion_etapa_rep rqe, sucursal suc " +
+				" WHERE rpc.cli_id = cli.cliente_id " +
+						" and rpc.repcli_id = etc.repcli_id " +
+						" and etr.prctll_id = prt.prctll_id and etr.etarep_id = etc.etarep_id " +
+						" and rqe.etarepcli_id = etc.etarepcli_id and rqe.sucreq_id = suc.id " +
+						"  and rqe.sucreq_id = "+sucursalUsuario.getId()+" and rqe.estado = 'PEN' " +
 								"ORDER BY rqe.fecha_ingreso DESC ")
 					.getResultList();
 		
@@ -415,8 +431,10 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	}
 	
 	public boolean approve() {
-		List<Item> items = new ArrayList<Item>();
-		List<Item> itemsSet = null;
+		
+			List<Item> items = new ArrayList<Item>();
+			List<Item> itemsSet = null;
+		
 		for (ItemRequisicionEta item : instance.getItemsRequisicion()) {
 			Item itemDescargo = new Item();
 			itemDescargo.setCantidad(item.getCantidad());
@@ -474,7 +492,10 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		
 		instance.setFechaAprobacion(new Date());
 		
-		if (modify()) { //Generamos el movimiento
+		if (modify()) { 
+			
+			/* comentado el 06/10/2017
+			//Generamos el movimiento
 			movimientoHome.load();
 			movimientoHome.getInstance().setObservacion("Movimiento de salida generado automaticamente " +
 					"	como aprobacion de la requisicion #" + instance.getId());
@@ -486,7 +507,7 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			movimientoHome.getInstance().setSucursal((Sucursal)getEntityManager().createQuery("SELECT s FROM Sucursal s where s.id=101").getSingleResult());
 			movimientoHome.getInstance().setItems(itemsSet);
 			movimientoHome.setItemsAgregados(items);
-			movimientoHome.save();
+			movimientoHome.save();*/
 			return true;
 		} 
 		return false;
@@ -588,12 +609,12 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	public boolean preSave() {
 		//instance.set
 		
-		if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+		/*if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
 		{
 			System.out.println("Entro a aprobar");
 			instance.setEstado("APR");
 			instance.setUsrAprueba(loginUser.getUser());
-		}
+		}*/
 		
 		return true;
 	}
@@ -621,12 +642,12 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			}
 		}
 		
-		if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
+		/*if(instance.getSucursalSol().getId().equals(loginUser.getUser().getSucursal().getId()))
 		{
 			System.out.println("Entro a aprobar");
 			instance.setEstado("APR");
 			instance.setUsrAprueba(loginUser.getUser());
-		}
+		}*/
 		
 		return true;
 	}

@@ -3121,6 +3121,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	{
 		
 		
+		/* comentado el 09/10/2017 para evitar que sea obligatorio el trabajo de taller finalizado
 		if(comboVta!=null)
 		{
 			System.out.println("Entro a como venta");
@@ -3159,7 +3160,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				return false;
 			}
 			
-		}
+		}*/
 		
 		
 		if(!preSave())

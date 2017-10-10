@@ -645,13 +645,13 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			
 			if(cotiRep.size()>0 && cotiRep!=null)
 			{
-				cotiRep.get(0).setEstado("TFN");
-				getEntityManager().merge(cotiRep.get(0));
-				//System.out.println("Actualizo estado de cotizacion luego de trabajo de taller");
+				if(cotiRep.get(0).getEstado().equals("PRE") || cotiRep.get(0).getEstado().equals("COT"))
+				{
+					cotiRep.get(0).setEstado("TFN");
+					getEntityManager().merge(cotiRep.get(0));
+					//System.out.println("Actualizo estado de cotizacion luego de trabajo de taller");
+				}
 			}
-			
-			
-			
 		}
 		
 		//System.out.println("No entro");

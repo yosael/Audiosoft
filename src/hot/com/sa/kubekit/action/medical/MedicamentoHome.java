@@ -513,11 +513,15 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 		
 		cerrarModal=false;
 		
-		if(instance.getInformacionMedicamento().length()>500)
+		if(instance.getInformacionMedicamento()!=null)
 		{
+			if(instance.getInformacionMedicamento().length()>500)
+			{
+				
+				FacesMessages.instance().add(Severity.WARN,"La informacion del medicamento no debe exceder de 500 caracteres");
+				return;
+			}
 			
-			FacesMessages.instance().add(Severity.WARN,"La informacion del medicamento no debe exceder de 500 caracteres");
-			return;
 		}
 		
 		if(save())
@@ -528,13 +532,13 @@ public class MedicamentoHome extends KubeDAO<Medicamento>{
 			
 			//instance=(Medicamento) getEntityManager().createQuery("SELECT m FROM Medicamento m where m.id=:idMedi").setParameter("idMedi", instance.getId()).getResultList().get(0);
 			
-			System.out.println("DOSIFICACIONEs "+instance.getDosificaciones().size());
+			/*System.out.println("DOSIFICACIONEs "+instance.getDosificaciones().size());
 			System.out.println("Presentaciones "+instance.getPresentaciones().size());
-			System.out.println("LABORATORIOS "+instance.getMedicamentosLab().size());
+			System.out.println("LABORATORIOS "+instance.getMedicamentosLab().size());*/
 			
 			
 			cerrarModal=true;
-			System.out.println("Entro a cerrar");
+			//System.out.println("Entro a cerrar");
 		}
 		else
 		{

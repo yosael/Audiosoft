@@ -1,0 +1,114 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Cobros Pendientes" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" orientation="landscape" margins="30 30 30 30">
+	<p:font size="14" style="bold">
+		<p:paragraph alignment="center">REPORTE DE COBROS PENDIENTES</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:font size="10">
+		<p:table columns="6" widthPercentage="100" headerRows="1"  widths="1.5 2 1.5 0.7 1.8 2" >
+			<p:font color="black" style="bold" size="11">
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Fecha venta</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Cliente</p:paragraph>
+				</p:cell>
+				<!-- 
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="right">Detalle de venta</p:paragraph>
+				</p:cell>
+				 -->
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Observacion</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Monto</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Estado</p:paragraph>
+				</p:cell>
+				<p:cell horizontalAlignment="center" verticalAlignment="middle"
+					backgroundColor="#E4E4E4" paddingBottom="4">
+					<p:paragraph alignment="center">Sucursal</p:paragraph>
+				</p:cell>
+			</p:font>
+			
+		<ui:repeat var="res" value="#{repCobros.resultList}">
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text value="#{res.fechaVenta}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+					</p:text>
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.cliente.nombres} #{res.cliente.apellidos}</p:paragraph>
+			</p:cell>
+			<!-- 
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<ui:repeat var="det" value="#{res.detVenta}">
+					<p:table columns="3" widthPercentage="100" headerRows="1"  widths="1 1 1" >
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+							<p:paragraph>#{det.detalle}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+							<p:paragraph>#{det.cantidad}</p:paragraph>
+						</p:cell>
+						<p:cell verticalAlignment="middle" horizontalAlignment="center" >
+							<p:paragraph>#{det.monto}</p:paragraph>
+						</p:cell>
+					</p:table>
+				</ui:repeat>
+			</p:cell>
+			 -->		
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					#{res.observacion}
+				 </p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					<p:text value="#{res.monto}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+									groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+					</p:text>
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>
+					PENDIENTE
+					<h:graphicImage value="/kubeImg/unavailable.png" />
+				</p:paragraph>
+			</p:cell>
+			<p:cell verticalAlignment="middle" horizontalAlignment="center" paddingLeft="3" minimumHeight="16">
+				<p:paragraph>#{res.sucursal.nombre}</p:paragraph>
+			</p:cell>
+		</ui:repeat>
+	</p:table>
+	
+	
+	</p:font>
+	<f:facet name="header">
+		<p:font size="9">
+			<p:header borderWidthTop="0" borderWidthBottom="1" alignment="center">
+                AUDIOSOFT - AUDIOMED
+        	</p:header>
+			<p:footer borderWidthTop="1" borderWidthBottom="0" alignment="center">
+                <p:text value="Pag. " /><p:pageNumber />
+			</p:footer>
+		</p:font>
+	</f:facet>
+</p:document>

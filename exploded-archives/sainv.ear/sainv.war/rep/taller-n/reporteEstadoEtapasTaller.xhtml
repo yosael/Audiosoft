@@ -1,0 +1,174 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header"><span class="marginhead" >Reporte de etapas de taller pendientes de realizar</span></f:facet>
+			<rich:spacer height="10" />
+			<h:form id="formA">
+				<p:growl globalOnly="true" sticky="false" life="3000" />
+				<p:focus />
+				<a:queue name="q1" />
+			 
+				<rich:spacer height="0" />
+				<center>
+					<table border="0px">
+						<tr>
+							<td>
+								<span style="font-weight: bold;">Fecha inicio:&nbsp;&nbsp;</span> 
+								<rich:calendar datePattern="dd/MM/yyyy"
+									tabindex="20" id="_calIniFlt"
+									value="#{repTallerEtapas.fechaInicio}"
+									inputStyle="width:200px; height:12px;">
+									<a:support eventsQueue="q1" event="onchanged"
+										reRender="formA" action="#{repTallerEtapas.cargarTodasEtapas()}" />
+								</rich:calendar> 
+								<rich:spacer width="34" />
+							</td>
+							<td>
+								<span style="font-weight: bold;">Fecha fin:&nbsp;&nbsp;</span> 
+								<rich:calendar datePattern="dd/MM/yyyy"
+									tabindex="20" id="_calFinFlt"
+									value="#{repTallerEtapas.fechaFin}"
+									inputStyle="width:200px; height:12px;">
+									<a:support eventsQueue="q1" event="onchanged" reRender="formA" action="#{repTallerEtapas.cargarTodasEtapas()}" />
+								</rich:calendar>
+							</td>
+							<td>
+								<s:decorate template="/layout/kActions.xhtml">
+									<s:button action="#{repTallerEtapas.exportarReparacionesExcel()}" ajax="false" propagation="join"
+										styleClass="excBtn" value="#{msn.button_excel}" >
+										<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+									</s:button>
+								</s:decorate>
+							</td>
+						</tr>
+					</table>
+				</center>
+
+				<rich:spacer height="10" />
+
+				<h:panelGrid columns="3" style="margin:0 auto;" >
+				
+					<rich:dataTable var="res" id="tblEtapaIngreso"
+						value="#{repTallerEtapas.etapasIngresoTaller}"
+						rendered="#{not empty repTallerEtapas.etapasIngresoTaller}" rows="10"
+						align="center" rowClasses="tblEven,tblOdd"
+						cellpadding="10"
+						cellspacing="10"
+						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+						headerClass="tablaHeader" footerClass="tableScroll">
+
+						<rich:column filterBy="#{res.reparacionCli.id}"
+							filterEvent="onkeyup">
+							<f:facet name="header">PENDIENTES DE INGRESO</f:facet>
+							<s:link title="#{msn.button_edit}" rendered="true"
+								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+								<f:param name="id" value="#{res.id}" />
+							</s:link>
+						</rich:column>
+											
+						<f:facet name="footer">
+							<s:div style="width:100%">
+								<s:div style="width:70%;float:left">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</s:div>
+								<s:div style="width:30%;float:right">
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasIngresoTaller.size()}" />
+								</s:div>
+							</s:div>
+						</f:facet>
+						
+					</rich:dataTable>
+					
+					<rich:dataTable var="res" id="tblEtapaDiagnostico"
+						value="#{repTallerEtapas.etapasDiagTaller}"
+						cellpadding="10"
+						cellspacing="10"
+						rendered="#{not empty repTallerEtapas.etapasDiagTaller}" rows="10"
+						align="center" rowClasses="tblEven,tblOdd"
+						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+						headerClass="tablaHeader" footerClass="tableScroll">
+
+						<rich:column filterBy="#{res.reparacionCli.id}"
+							filterEvent="onkeyup">
+							<f:facet name="header">PENDIENTES DE DIAGNOSTICO</f:facet>
+							<s:link title="#{msn.button_edit}" rendered="true"
+								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+								<f:param name="id" value="#{res.id}" />
+							</s:link>
+						</rich:column>
+											
+						<f:facet name="footer">
+							<s:div style="width:100%">
+								<s:div style="width:70%;float:left">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</s:div>
+								<s:div style="width:30%;float:right">
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasDiagTaller.size()}" />
+								</s:div>
+							</s:div>
+						</f:facet>
+						
+					</rich:dataTable>
+					
+					<rich:dataTable var="res" id="tblEtapaReparacion"
+						value="#{repTallerEtapas.etapasRepTaller}"
+						cellpadding="10"
+						cellspacing="10"
+						rendered="#{not empty repTallerEtapas.etapasRepTaller}" rows="10"
+						align="center" rowClasses="tblEven,tblOdd"
+						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+						headerClass="tablaHeader" footerClass="tableScroll">
+
+						<rich:column filterBy="#{res.reparacionCli.id}"
+							filterEvent="onkeyup">
+							<f:facet name="header">PENDIENTE DE REPARACION</f:facet>
+							<s:link title="#{msn.button_edit}" rendered="true"
+								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+								<f:param name="id" value="#{res.id}" />
+							</s:link>
+						</rich:column>
+											
+						<f:facet name="footer">
+							<s:div style="width:100%">
+								<s:div style="width:70%;float:left">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</s:div>
+								<s:div style="width:30%;float:right">
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasRepTaller.size()}" />
+								</s:div>
+							</s:div>
+						</f:facet>
+						
+					</rich:dataTable>
+					
+				</h:panelGrid>
+			</h:form>
+		</rich:panel>
+		
+		<a:status id="stateStatus" startText="#{app.general_espere}"
+			startStyle="background-color: #c0c7d1;
+   			border-style: groove;
+			border-width:15px;
+			border-color: #818fa3 #5a687b #465160 #323a44;
+		   font-weight:bold;
+		   font-size: 12px;
+		   text-align: center;
+		   position:absolute; 
+		   right: 50%; 
+		   top: 1px; 
+		   width: auto;" />	
+	</ui:define>
+</ui:composition>

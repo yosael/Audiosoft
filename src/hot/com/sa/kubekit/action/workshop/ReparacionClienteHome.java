@@ -645,7 +645,7 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			
 			if(cotiRep.size()>0 && cotiRep!=null)
 			{
-				if(cotiRep.get(0).getEstado().equals("PRE") || cotiRep.get(0).getEstado().equals("COT"))
+				if(cotiRep.get(0).getEstado().equals("PRE") || cotiRep.get(0).getEstado().equals("COT"))//modificado el 09/10/2017
 				{
 					cotiRep.get(0).setEstado("TFN");
 					getEntityManager().merge(cotiRep.get(0));

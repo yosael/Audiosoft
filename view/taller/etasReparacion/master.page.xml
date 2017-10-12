@@ -32,6 +32,12 @@
 			<redirect view-id="/taller/etasReparacion/master.xhtml"  />
 		</rule>
 	</navigation>
+	
+	<navigation from-action="#{etapaRepCliHome.regresarEtapaDiagnostico()}">
+		<rule if-outcome="true">
+			<redirect view-id="/taller/etasReparacion/list.xhtml"  />
+		</rule>
+	</navigation>
 	  
 	
 	<navigation from-action="#{etapaRepCliHome.noAprobarEtapa()}">

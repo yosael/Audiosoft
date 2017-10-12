@@ -71,10 +71,24 @@
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
 							<f:facet name="header">PENDIENTES DE INGRESO</f:facet>
-							<s:link title="#{msn.button_edit}" rendered="true"
-								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
-								<f:param name="id" value="#{res.id}" />
-							</s:link>
+							<h:panelGroup>
+								<s:link title="#{msn.button_edit}" rendered="true"
+									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+									<f:param name="id" value="#{res.id}" />
+								</s:link>
+								<div style="display:inline-block;">
+					            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'g'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'o'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'r'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'y'}" />		
+									<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'na'}" />
+								</div>
+							</h:panelGroup>
 						</rich:column>
 											
 						<f:facet name="footer">
@@ -103,10 +117,24 @@
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
 							<f:facet name="header">PENDIENTES DE DIAGNOSTICO</f:facet>
-							<s:link title="#{msn.button_edit}" rendered="true"
-								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
-								<f:param name="id" value="#{res.id}" />
-							</s:link>
+							<h:panelGroup>
+								<s:link title="#{msn.button_edit}" rendered="true"
+									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+									<f:param name="id" value="#{res.id}" />
+								</s:link>
+								<div style="display:inline-block;">
+					            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'g'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'o'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'r'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'y'}" />		
+									<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'na'}" />
+								</div>
+							</h:panelGroup>
 						</rich:column>
 											
 						<f:facet name="footer">
@@ -135,10 +163,24 @@
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
 							<f:facet name="header">PENDIENTE DE REPARACION</f:facet>
-							<s:link title="#{msn.button_edit}" rendered="true"
-								view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
-								<f:param name="id" value="#{res.id}" />
-							</s:link>
+							<h:panelGroup>
+								<s:link title="#{msn.button_edit}" rendered="true"
+									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+									<f:param name="id" value="#{res.id}" />
+								</s:link>
+								<div style="display:inline-block;">
+					            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'g'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'o'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'r'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'y'}" />		
+									<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'na'}" />
+								</div>
+							</h:panelGroup>
 						</rich:column>
 											
 						<f:facet name="footer">

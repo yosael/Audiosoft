@@ -409,6 +409,12 @@
 					<a:commandButton onclick="#{rich:component('confirmNoAprobMod')}.show();" 
 						rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.nombre== 'Diagnóstico' and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
 						value="No aprobar" />
+						
+					<a:commandButton onclick="#{rich:component('modRegresarDiag')}.show();" 
+					rendered="#{etapaRepCliHome.managed and etapaRepCliHome.instance.etapaRep.id==42 and reparacionClienteHome.instance.estado=='PEN' and reparacionClienteHome.instance.aprobada}" styleClass="doCancelBtn" ignoreDupResponses="true"
+					value="Regresar a diagnostico" />
+						
+						
 					
 					<!-- 	
 					<a:commandButton
@@ -629,6 +635,34 @@
 							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn"
 							value="Aceptar"
 							onclick="#{rich:component('confirmNoAprobMod')}.hide();">
+						</a:commandButton>
+					</s:decorate>
+				</h:form>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="modRegresarDiag" width="400" moveable="false"
+				autosized="true" top="50px"
+				onbeforeshow="activeModal.setActiveModalPanel('modRegresarDiag');">
+				<f:facet name="header">
+					#{app.usuariolist_modal}
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+							onclick="#{rich:component('modRegresarDiag')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				
+				<h:form id="fmRegreDiag">
+					<p>Desea regresar a la etapa de diagnostico?</p>
+					<s:decorate template="/layout/kActions.xhtml" id="dvRegreDig" >
+						<a:commandButton styleClass="cancelBtn"
+							value="#{msn.button_cancel}"
+							onclick="#{rich:component('modRegresarDiag')}.hide();">
+						</a:commandButton>
+						<a:commandButton action="#{etapaRepCliHome.regresarEtapaDiagnostico()}" ignoreDupResponses="true" reRender="formreparacioncli"
+							rendered="#{etapaRepCliHome.managed}" styleClass="doCancelBtn" value="Reprobar" ajaxSingle="true"
+							onclick="#{rich:component('modRegresarDiag')}.hide();">
 						</a:commandButton>
 					</s:decorate>
 				</h:form>

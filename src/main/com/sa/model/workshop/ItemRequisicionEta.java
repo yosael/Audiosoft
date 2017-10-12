@@ -38,6 +38,8 @@ public class ItemRequisicionEta implements Serializable {
 	private String generado;
 	private boolean cobrar;
 	
+	private Boolean descargada;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "itmreq_id", nullable = false)
@@ -144,6 +146,15 @@ public class ItemRequisicionEta implements Serializable {
 
 	public void setCobrar(boolean cobrar) {
 		this.cobrar = cobrar;
+	}
+
+	@Column(name="descargada",nullable=true)
+	public Boolean getDescargada() {
+		return descargada;
+	}
+
+	public void setDescargada(Boolean descargada) {
+		this.descargada = descargada;
 	}
 	
 	

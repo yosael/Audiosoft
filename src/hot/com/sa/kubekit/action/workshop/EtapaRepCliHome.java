@@ -52,6 +52,10 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 	@Out(required = false)
 	private ReparacionClienteHome reparacionClienteHome;
 	
+	@In(required = false, create = true)
+	@Out(required = false)
+	private RequisicionEtaHome requisicionEtaHome;
+	
 	public void repsPendientes() {
 		// Formamos query para mostrar reparaciones con etapas del area de
 		// negocio del usuario logueado
@@ -820,7 +824,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		
 		
-		if(!accionEta.equals("NAP"))
+		if(!accionEta.equals("NAP") && !accionEta.equals("DAG"))
 		{
 			System.out.println("Entro a diferente de NAP");
 			
@@ -882,6 +886,11 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			instance.setFechaRealFin(new Date());
 			instance.setUsuario(loginUser.getUser());
 			
+		}
+		else if(accionEta.equals("DAG"))
+		{
+			instance.setEstado(null);
+			instance.setFechaRealFin(null);
 		}
 		else {
 			
@@ -979,7 +988,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 									// requisiciones
 									if (tmpReq.getEstado().equals("COT")) {
 										tmpReq.setEstado("PEN");
-										tmpReq.setEtapaRepCli(tmpEta);
+										tmpReq.setEtapaRepCli(tmpEta); 
 										getEntityManager().merge(tmpReq);
 									}
 								}
@@ -1251,7 +1260,10 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					sainv_messages.get("etarepcli_etapa_fin"));
 			
 		}
-		
+		else if(accionEta.equals("DAG"))//agregado el 10/10/2017
+		{
+			
+		}
 		
 		else {
 			
@@ -1297,6 +1309,88 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 		
 		// Reseteamos la lista de las reparaciones pendientes para el usuario
 		repsPendientes();
+	}
+	
+	
+	//Para regresar a la etapa de diagnostico de la reparacion
+	public boolean regresarEtapaDiagnostico()
+	{
+		
+		/*instance.setFechaRealFin(null);
+		instance.setEstado(null);*/
+		
+		System.out.println("Entro a regresar etapa diagnostico");
+		
+		accionEta = "DAG";
+		
+		// Consultamos todas las etapas pendientes
+		List<EtapaRepCliente> etapas = getEntityManager()
+				.createQuery(
+						"SELECT er FROM EtapaRepCliente er "
+								+ "	WHERE er.reparacionCli = :rep AND er.estado = 'APR' "
+								+ "	AND er <> :currEta ORDER BY er.etapaRep.orden ASC")
+				.setParameter("rep", instance.getReparacionCli())
+				.setParameter("currEta", instance).getResultList();
+		
+		int idEtapaRequi = 0;
+		EtapaRepCliente etapaDiagnostico = new EtapaRepCliente();
+		
+		System.out.println("Tamanio etapas: "+etapas.size());
+		
+		for(EtapaRepCliente etapa: etapas)
+		{
+			if(etapa.getRequisicionesEtapa()!=null && etapa.getRequisicionesEtapa().size()>0 && idEtapaRequi==0)
+			{
+				idEtapaRequi= etapa.getId();
+				System.out.println("Asigno el id de la etapa con requisiciones: "+idEtapaRequi);
+			}
+			
+			if(etapa.getEtapaRep().getId()==41)
+			{
+				etapa.setEstado("PEN");
+				etapa.setFechaRealFin(null);
+				
+				System.out.println("ENTRO a la ETAPA 41:****** ");
+				etapaDiagnostico = etapa;
+				
+				getEntityManager().merge(etapa);
+			}
+			
+			if(etapa.getEtapaRep().getId()==102)
+			{
+				etapa.setEstado(null);
+				etapa.setFechaRealFin(null);
+				getEntityManager().merge(etapa);
+			}
+			
+			if(idEtapaRequi>0)
+			{
+				
+				System.out.println("ÏD requisicion es mayor que cero: "+idEtapaRequi);
+				
+				List<RequisicionEtapaRep> requiEtapa = new ArrayList<RequisicionEtapaRep>();
+				requiEtapa = getEntityManager().createQuery("SELECT r FROM RequisicionEtapaRep r where r.etapaRepCli.id=:idEtapaRep ").setParameter("idEtapaRep", idEtapaRequi).getResultList();
+ 				
+				System.out.println("TAm requisiciones encontradas: "+requiEtapa.size());
+				
+				for (RequisicionEtapaRep tmpReq : requiEtapa) {
+
+						tmpReq.setEtapaRepCli(etapaDiagnostico); 
+						tmpReq.setEstado("COT");
+						requisicionEtaHome.reingresarItem(tmpReq.getItemsRequisicion());
+						
+						
+						getEntityManager().merge(tmpReq);
+				}
+				
+				idEtapaRequi = 0;
+			}
+		}
+		
+		if(modify())
+			return true;
+		else
+			return false;
 	}
 	
 	

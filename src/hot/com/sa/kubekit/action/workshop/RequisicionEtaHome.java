@@ -3,8 +3,10 @@ package com.sa.kubekit.action.workshop;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -22,6 +24,7 @@ import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.inventory.CodProducto;
 import com.sa.model.inventory.Inventario;
 import com.sa.model.inventory.Item;
+import com.sa.model.inventory.Movimiento;
 import com.sa.model.inventory.Producto;
 import com.sa.model.inventory.Transferencia;
 import com.sa.model.inventory.id.ItemId;
@@ -329,13 +332,15 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	{
 		if(item.getId()!=null)
 		{
-			getEntityManager().remove(item);
 			itemsAgregados.remove(item);
+			getEntityManager().remove(item);
 		}
 		else
 		{
 			itemsAgregados.remove(item);
 		}
+		
+		getEntityManager().flush();
 	}
 	
 	public void loadItemsReq(RequisicionEtapaRep req) {
@@ -525,6 +530,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			Item itemDescargo = new Item();
 			itemDescargo.setCantidad(item.getCantidad());
 			
+			item.setDescargada(true); //agregado el 10/10/2017
+			
 			String numsSeries = "", numsLotes = "";
 			ArrayList<CodProducto> codsProds = getLstCodsProductos().get(item.getProducto().getReferencia());
 			if(codsProds != null && codsProds.size() > 0)
@@ -599,6 +606,100 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		} 
 		return false;
 	}
+	
+	public void reingresarItem(ItemRequisicionEta item)
+	{
+		Item itemIngreso = new Item();
+		
+		List<Inventario> invPrd = getEntityManager().createQuery("SELECT i FROM Inventario i " +
+				"	WHERE i.sucursal = :suc AND i.producto = :prd")
+				.setParameter("suc",item.getReqEtapa().getSucursalSol())
+				.setParameter("prd", item.getProducto())
+				.getResultList();
+		
+		itemIngreso.setCantidad(item.getCantidad());
+		itemIngreso.setInventario(invPrd.get(0));
+		itemIngreso.setItemId(new ItemId());
+		itemIngreso.getItemId().setInventarioId(itemIngreso.getInventario().getId());
+		
+		
+		Movimiento mov = new Movimiento();
+		
+		mov.setUsuario(loginUser.getUser());
+		mov.setRazon("O");
+		mov.setTipoMovimiento("E");
+		mov.setFecha(new Date());
+		mov.setSucursal(loginUser.getUser().getSucursal());
+		
+		movimientoHome.setInstance(mov);
+		movimientoHome.getItemsAgregados().add(itemIngreso);
+		
+		item.setDescargada(false);
+		getEntityManager().merge(item);
+		
+		movimientoHome.save();
+		
+		//modify();
+		
+		System.out.println("REingreso el item");
+	}
+	
+	
+	
+	public void reingresarItem(Set<ItemRequisicionEta> items)
+	{
+		List<Item> itemsIngreso = new ArrayList<Item>();
+		
+		List<Inventario> invPrd = new ArrayList<Inventario>();
+		
+		/*for(ItemRequisicionEta itemReq:items)
+		{*/
+		
+		for(Iterator<ItemRequisicionEta> it = items.iterator();it.hasNext();)
+		{
+		
+			ItemRequisicionEta itemReq = it.next();
+			
+			if(invPrd.size()<=0)
+			{
+				invPrd = getEntityManager().createQuery("SELECT i FROM Inventario i " +
+						"	WHERE i.sucursal = :suc AND i.producto = :prd")
+						.setParameter("suc",itemReq.getReqEtapa().getSucursalSol())
+						.setParameter("prd", itemReq.getProducto())
+						.getResultList();
+			}
+			
+			
+			Item itemIngreso = new Item();			
+			itemIngreso.setCantidad(itemReq.getCantidad());
+			itemIngreso.setInventario(invPrd.get(0));
+			itemIngreso.setItemId(new ItemId());
+			itemIngreso.getItemId().setInventarioId(itemIngreso.getInventario().getId());
+			
+			itemsIngreso.add(itemIngreso);
+			
+			itemReq.setDescargada(false);
+			getEntityManager().merge(itemReq);
+		
+		}
+		Movimiento mov = new Movimiento();
+		
+		mov.setUsuario(loginUser.getUser());
+		mov.setRazon("O");
+		mov.setTipoMovimiento("E");
+		mov.setFecha(new Date());
+		mov.setSucursal(loginUser.getUser().getSucursal());
+		
+		movimientoHome.setInstance(mov);
+		movimientoHome.setItemsAgregados(itemsIngreso);
+		
+		
+		movimientoHome.save();
+		
+		//modify();
+		
+		//System.out.println("REingreso el item");
+	}
 
 	public boolean reject() {
 		instance.setEstado("REC");
@@ -621,6 +722,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	@Override
 	public boolean preModify() {
+		
+		System.out.println("Entro a preModify");
 		
 		for(ItemRequisicionEta tmpItm : itemsAgregados) {
 			//Validamos que para todos los productos de la venta que lleven codigo de lote o de serie, lleven uno
@@ -707,6 +810,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	@Override
 	public void posModify() {
 		// TODO Auto-generated method stub
+		
+		System.out.println("Entro a postModify");
 		
 	}
 

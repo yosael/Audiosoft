@@ -74,6 +74,11 @@ public class RepTallerEtapas extends MasterRep implements Serializable {
 	private List<EtapaRepCliente> etapasDiagTaller = new ArrayList<EtapaRepCliente>();
 	private List<EtapaRepCliente> etapasRepTaller = new ArrayList<EtapaRepCliente>();
 	
+	private List<EtapaRepCliente> etapasEsperandoApro = new ArrayList<EtapaRepCliente>();
+	private List<EtapaRepCliente> etapasControlCalidad = new ArrayList<EtapaRepCliente>();
+	private List<EtapaRepCliente> etapasInformar = new ArrayList<EtapaRepCliente>();
+	private List<EtapaRepCliente> etapasPendienteEntre = new ArrayList<EtapaRepCliente>();
+	
 	
 	public void resetClass() {
 		hql = "";
@@ -132,6 +137,54 @@ public class RepTallerEtapas extends MasterRep implements Serializable {
 				.getResultList();
 	}
 	
+	
+	public void cargarEtapasAudio()
+	{
+		cargarEtapasEsperandoApro();
+		cargarEtapasControlCalidad();
+		cargarEtapasInformar();
+		cargarEtapasPendienteEntre();
+	}
+	
+	
+	
+	//Para etapas de audiologa
+	public void cargarEtapasEsperandoApro()
+	{
+		
+		etapasEsperandoApro = entityManager.createQuery("Select e FROM EtapaRepCliente e where e.estado='PEN' AND e.etapaRep.id=102 AND e.reparacionCli.fechaIngreso>=:fechaInicio and e.reparacionCli.fechaIngreso<=:fechaFin")
+				.setParameter("fechaInicio", fechaInicio)
+				.setParameter("fechaFin", fechaFin)
+				.getResultList();
+	}
+	
+
+	public void cargarEtapasControlCalidad()
+	{
+		
+		etapasControlCalidad = entityManager.createQuery("Select e FROM EtapaRepCliente e where e.estado='PEN' AND e.etapaRep.id=44 AND e.reparacionCli.fechaIngreso>=:fechaInicio and e.reparacionCli.fechaIngreso<=:fechaFin")
+				.setParameter("fechaInicio", fechaInicio)
+				.setParameter("fechaFin", fechaFin)
+				.getResultList();
+	}
+	
+	public void cargarEtapasInformar()
+	{
+		
+		etapasInformar = entityManager.createQuery("Select e FROM EtapaRepCliente e where e.estado='PEN' AND e.etapaRep.id=103 AND e.reparacionCli.fechaIngreso>=:fechaInicio and e.reparacionCli.fechaIngreso<=:fechaFin")
+				.setParameter("fechaInicio", fechaInicio)
+				.setParameter("fechaFin", fechaFin)
+				.getResultList();
+	}
+	
+	public void cargarEtapasPendienteEntre()
+	{
+		
+		etapasPendienteEntre = entityManager.createQuery("Select e FROM EtapaRepCliente e where e.estado='PEN' AND e.etapaRep.id=104 AND e.reparacionCli.fechaIngreso>=:fechaInicio and e.reparacionCli.fechaIngreso<=:fechaFin")
+				.setParameter("fechaInicio", fechaInicio)
+				.setParameter("fechaFin", fechaFin)
+				.getResultList();
+	}
 	
 	
 
@@ -668,6 +721,38 @@ public class RepTallerEtapas extends MasterRep implements Serializable {
 
 	public void setEtapasRepTaller(List<EtapaRepCliente> etapasRepTaller) {
 		this.etapasRepTaller = etapasRepTaller;
+	}
+
+	public List<EtapaRepCliente> getEtapasEsperandoApro() {
+		return etapasEsperandoApro;
+	}
+
+	public void setEtapasEsperandoApro(List<EtapaRepCliente> etapasEsperandoApro) {
+		this.etapasEsperandoApro = etapasEsperandoApro;
+	}
+
+	public List<EtapaRepCliente> getEtapasControlCalidad() {
+		return etapasControlCalidad;
+	}
+
+	public void setEtapasControlCalidad(List<EtapaRepCliente> etapasControlCalidad) {
+		this.etapasControlCalidad = etapasControlCalidad;
+	}
+
+	public List<EtapaRepCliente> getEtapasInformar() {
+		return etapasInformar;
+	}
+
+	public void setEtapasInformar(List<EtapaRepCliente> etapasInformar) {
+		this.etapasInformar = etapasInformar;
+	}
+
+	public List<EtapaRepCliente> getEtapasPendienteEntre() {
+		return etapasPendienteEntre;
+	}
+
+	public void setEtapasPendienteEntre(List<EtapaRepCliente> etapasPendienteEntre) {
+		this.etapasPendienteEntre = etapasPendienteEntre;
 	}
 
 	

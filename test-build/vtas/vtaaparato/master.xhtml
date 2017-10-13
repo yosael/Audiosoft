@@ -428,7 +428,7 @@
 														</rich:column>
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<a:commandLink title="Seleccionar item de categoria"
 																reRender="itm" rendered="#{res.selCategoria!=null and res.selCategoria=='si'}" 
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -437,7 +437,8 @@
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink>
 															<rich:spacer width="3" height="0" ></rich:spacer>
-															<a:commandLink title="#{msn.ca_button_selcodp}"
+															<!-- #{msn.ca_button_selcodp} -->
+															<a:commandLink title="Seleccionar # Serie/Lote"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
 																action="#{ventaComboHome.selCodForItem(res)}"
@@ -573,7 +574,8 @@
 														</rich:column> -->
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<!-- #{msn.ca_button_selpzap} -->
+															<a:commandLink title="Seleccionar categoria de item"
 																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -582,7 +584,8 @@
 																<h:graphicImage value="/kubeImg/table_detail2.png" />
 															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<rich:spacer width="3" height="0" ></rich:spacer>
-															<a:commandLink title="#{msn.ca_button_selcodp}"
+															<!-- #{msn.ca_button_selcodp} -->
+															<a:commandLink title="Seleccionar # Serie/Lote"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
 																action="#{ventaComboHome.selCodForItem(res)}"
@@ -708,7 +711,8 @@
 														</rich:column> -->
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<!-- #{msn.ca_button_selpzap} -->
+															<a:commandLink title="Seleccionar item de categoria"
 																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -717,7 +721,7 @@
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!--  and (ventaComboHome.cotizacion==null) -->
 															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
 															<rich:spacer width="3" height="0" ></rich:spacer>
-															<a:commandLink title="#{msn.ca_button_selcodp}"
+															<a:commandLink title="Seleccionar # Serie/Lote"
 																reRender="cod" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
 																action="#{ventaComboHome.selCodForItem(res)}"
@@ -1096,7 +1100,7 @@
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
 															<!-- rendered="#{res.producto==null}" -->
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<a:commandLink title="Seleccionar item de categoria"
 																rendered="#{res.selCategoria!=null and res.selCategoria=='si'}"
 																reRender="itm" 
 																eventsQueue="q1"
@@ -1106,7 +1110,7 @@
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!-- and (ventaComboHome.cotizacion.getHijoBin().get(0)==null or res.principal) -->
 															</a:commandLink>
 															<rich:spacer width="3" height="0" ></rich:spacer>
-															<a:commandLink title="#{msn.ca_button_selcodp}"
+															<a:commandLink title="Seleccionar # Serie/Lote"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
 																action="#{ventaComboHome.selCodForItemBin(res)}"
@@ -1249,7 +1253,7 @@
 														
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<a:commandLink title="Seleccionar item de categoria"
 																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -1394,7 +1398,7 @@
 														
 														<rich:column>
 															<f:facet name="header">#{msn.col_actions}</f:facet>
-															<a:commandLink title="#{msn.ca_button_selpzap}"
+															<a:commandLink title="Seleccionar item de categoria"
 																reRender="itm" rendered="false"
 																eventsQueue="q1"
 																action="#{ventaComboHome.selItemFromCat(res)}"
@@ -1402,7 +1406,7 @@
 																onclick="#{rich:component('selItem')}.show();">
 																<h:graphicImage value="/kubeImg/table_detail2.png" /><!--  and (ventaComboHome.cotizacion.getHijoBin().get(0)==null) -->
 															</a:commandLink><!-- #{res.selCategoria!=null and res.selCategoria=='si'} -->
-															<a:commandLink title="#{msn.ca_button_selcodp}"
+															<a:commandLink title="Seleccionar # Serie/Lote"
 																reRender="codBin" eventsQueue="q1"
 																rendered="#{res.producto!=null and (res.producto.categoria.tieneNumSerie==true or res.producto.categoria.tieneNumLote==true)}"
 																action="#{ventaComboHome.selCodForItemBin(res)}"

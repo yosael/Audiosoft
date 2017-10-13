@@ -32,6 +32,25 @@
 					
 					</h:panelGrid>
 				</center>
+				
+				<rich:spacer width="10" height="20" />
+				
+				
+				<center>
+					<s:span styleClass="busHead"  style="color:black;">Buscar servicio</s:span>
+					<rich:spacer width="0"  height="15" />
+					<s:decorate></s:decorate>
+					<h:panelGrid columns="1" style="margin:0 auto;" >
+							<h:inputText styleClass="busProd"  a:placeholder="Nombres"  value="#{serviceQuery.buscar}"
+								id="_nomCoinci1">
+								<a:support event="onkeyup" reRender="tbl" eventsQueue="q1"
+									ajaxSingle="true" action="#{serviceQuery.buscarServicio()}" />
+							</h:inputText>
+						
+					</h:panelGrid>
+				</center>
+				
+				
 				<rich:spacer height="10" />
 				<p:growl globalOnly="true" sticky="false" life="3000" />
 				<rich:dataTable var="res" value="#{serviceQuery.resultList}"

@@ -43,10 +43,17 @@
 								</rich:calendar>
 							</td>
 							<td>
+								<!-- 
 								<s:decorate template="/layout/kActions.xhtml">
 									<s:button action="#{repTallerEtapas.exportarReparacionesExcel()}" ajax="false" propagation="join"
 										styleClass="excBtn" value="#{msn.button_excel}" >
 										<a:support event="onclick" ajaxSingle="true" eventsQueue="q1" />
+									</s:button>
+								</s:decorate>
+								 -->
+								 <s:decorate template="/layout/kEditSpace.xhtml">
+									<s:button 
+										  value="Ver etapas pendientes de Audiologia"  propagation="begin"  view="/rep/taller-n/reporteEstadoEtapasAudio.xhtml"   rendered="true"  >
 									</s:button>
 								</s:decorate>
 							</td>
@@ -60,7 +67,7 @@
 				
 					<rich:dataTable var="res" id="tblEtapaIngreso"
 						value="#{repTallerEtapas.etapasIngresoTaller}"
-						rendered="#{not empty repTallerEtapas.etapasIngresoTaller}" rows="10"
+						rendered="#{not empty repTallerEtapas.etapasIngresoTaller}" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						cellpadding="10"
 						cellspacing="10"
@@ -108,7 +115,7 @@
 						value="#{repTallerEtapas.etapasDiagTaller}"
 						cellpadding="10"
 						cellspacing="10"
-						rendered="#{not empty repTallerEtapas.etapasDiagTaller}" rows="10"
+						rendered="#{not empty repTallerEtapas.etapasDiagTaller}" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
@@ -154,7 +161,7 @@
 						value="#{repTallerEtapas.etapasRepTaller}"
 						cellpadding="10"
 						cellspacing="10"
-						rendered="#{not empty repTallerEtapas.etapasRepTaller}" rows="10"
+						rendered="#{not empty repTallerEtapas.etapasRepTaller}" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"

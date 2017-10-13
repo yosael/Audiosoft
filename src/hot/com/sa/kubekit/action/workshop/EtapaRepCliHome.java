@@ -690,7 +690,7 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 			return "y";
 		else  if (diff < 48)
 			return "o";
-		else if (diff >48)
+		else if (diff >=48)
 			return "r";
 		else return "na";
 	}

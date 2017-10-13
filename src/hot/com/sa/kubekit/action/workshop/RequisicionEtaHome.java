@@ -69,6 +69,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	private boolean abilitarEdicion;
 	
+	private String estadoRequisicion;
+	
 	@Override
 	public void create() {
 		setCreatedMessage(createValueExpression(sainv_messages
@@ -198,14 +200,21 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 	
 	public void load(){
 		try{
+			
 			System.out.println("Entré al load de RequisicionEtaHome");
 			//Cargamos la lista de sucursales
 			if(reqId == 0)
 				throw new Exception();
+			
 			itemsAgregados = new ArrayList<ItemRequisicionEta>();
+			
 			//sucursalesSoli = getEntityManager().createQuery("SELECT s FROM Sucursal s").getResultList();
 			sucursalesSoli = getEntityManager().createQuery("SELECT s FROM Sucursal s where s.bodega=TRUE").getResultList();
+			
 			setInstance(getEntityManager().find(RequisicionEtapaRep.class, reqId));
+			
+			estadoRequisicion = instance.getEstado();
+					
 			//Cargamos el listado de productos
 			loadItemsReq(instance);
 			
@@ -258,8 +267,8 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 				System.out.println("Entro 2");
 			}*/
 			
-			System.out.println("***nombre sucursal actual "+loginUser.getUser().getSucursal().getNombre());
-			System.out.println("***nombre sucursal instance "+instance.getSucursalSol().getNombre());
+			//System.out.println("***nombre sucursal actual "+loginUser.getUser().getSucursal().getNombre());
+			//System.out.println("***nombre sucursal instance "+instance.getSucursalSol().getNombre());
 			
 		}
 	}
@@ -440,14 +449,17 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			List<Item> items = new ArrayList<Item>();
 			List<Item> itemsSet = null;
 		
-		for (ItemRequisicionEta item : instance.getItemsRequisicion()) {
+		for(ItemRequisicionEta item : instance.getItemsRequisicion()) 
+		{
 			Item itemDescargo = new Item();
 			itemDescargo.setCantidad(item.getCantidad());
 			
 			String numsSeries = "", numsLotes = "";
 			ArrayList<CodProducto> codsProds = getLstCodsProductos().get(item.getProducto().getReferencia());
+			
 			if(codsProds != null && codsProds.size() > 0)
-			for(CodProducto tmpCd: codsProds) {
+			for(CodProducto tmpCd: codsProds) 
+			{
 				if(tmpCd.isTransferido() && tmpCd.getNumSerie() != null && !tmpCd.getNumSerie().equals("")) 
 					numsSeries = numsSeries.concat(tmpCd.getNumSerie().trim() + ",");
 				if(tmpCd.isTransferido() && tmpCd.getNumLote() != null && !tmpCd.getNumLote().equals("")) 
@@ -470,13 +482,20 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 							.setParameter("suc", instance.getSucursalSol())
 							.setParameter("prd", item.getProducto())
 							.getResultList();
+			
 			//Verificamos si alcanzan las existencias
-			if(((Inventario)invPrd.get(0)).getCantidadActual() < item.getCantidad()) {
+			if(((Inventario)invPrd.get(0)).getCantidadActual() < item.getCantidad()) 
+			{
 				
 				FacesMessages.instance().add(Severity.WARN,
 						sainv_messages.get("movimientoHome_error_save0"));
+				
 				return false;
-			} else { //Colocamos la ubicacion actual del producto
+				
+			} 
+			else 
+			{ 
+				//Colocamos la ubicacion actual del producto
 				if(((Inventario)invPrd.get(0)).getCodUbicacion() != null)
 					item.setUbicacionActual(((Inventario)invPrd.get(0)).getCodUbicacion().getNombre());
 				else
@@ -514,7 +533,10 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			movimientoHome.setItemsAgregados(items);
 			movimientoHome.save();*/
 			return true;
-		} 
+		}
+		
+		instance.setEstado("PEN");
+		
 		return false;
 	}
 	
@@ -534,12 +556,21 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 			
 			String numsSeries = "", numsLotes = "";
 			ArrayList<CodProducto> codsProds = getLstCodsProductos().get(item.getProducto().getReferencia());
+			
 			if(codsProds != null && codsProds.size() > 0)
 			for(CodProducto tmpCd: codsProds) {
-				if(tmpCd.isTransferido() && tmpCd.getNumSerie() != null && !tmpCd.getNumSerie().equals("")) 
+				if(tmpCd.isTransferido() && tmpCd.getNumSerie() != null && !tmpCd.getNumSerie().equals(""))
+				{
 					numsSeries = numsSeries.concat(tmpCd.getNumSerie().trim() + ",");
-				if(tmpCd.isTransferido() && tmpCd.getNumLote() != null && !tmpCd.getNumLote().equals("")) 
+					tmpCd.setEstado("USD");
+					getEntityManager().merge(tmpCd);
+				}
+				if(tmpCd.isTransferido() && tmpCd.getNumLote() != null && !tmpCd.getNumLote().equals(""))
+				{
 					numsLotes = numsLotes.concat(tmpCd.getNumLote().trim() + ",");
+					tmpCd.setEstado("USD");
+					getEntityManager().merge(tmpCd);
+				}
 			}
 			
 			if(numsSeries != null)
@@ -725,23 +756,28 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		
 		System.out.println("Entro a preModify");
 		
-		for(ItemRequisicionEta tmpItm : itemsAgregados) {
-			//Validamos que para todos los productos de la venta que lleven codigo de lote o de serie, lleven uno
-			//Y que lleven el mismo numero de codigos que de items
-			ArrayList<CodProducto> codsProds = lstCodsProductos.get(tmpItm.getProducto().getReferencia());
-			
-			if(tmpItm.getProducto().getCategoria().isTieneNumLote() && (codsProds == null ||
-					codsProds.size() < tmpItm.getCantidad())) {
-				FacesMessages.instance().add(
-						sainv_messages.get("vtaitm_error_itmnolot"));
-				return false;
-			}
-			
-			if(tmpItm.getProducto().getCategoria().isTieneNumSerie() && (codsProds == null ||
-					codsProds.size() < tmpItm.getCantidad())) {
-				FacesMessages.instance().add(
-						sainv_messages.get("vtaitm_error_itmnoser"));
-				return false;
+		if(estadoRequisicion!=null && estadoRequisicion.equals("PEN"))// agregado el 13/10/2017
+		{
+			for(ItemRequisicionEta tmpItm : itemsAgregados) {
+				//Validamos que para todos los productos de la venta que lleven codigo de lote o de serie, lleven uno
+				//Y que lleven el mismo numero de codigos que de items
+				ArrayList<CodProducto> codsProds = lstCodsProductos.get(tmpItm.getProducto().getReferencia());
+				
+				if(tmpItm.getProducto().getCategoria().isTieneNumLote() && (codsProds == null ||
+						codsProds.size() < tmpItm.getCantidad())) {
+					FacesMessages.instance().add(
+							sainv_messages.get("vtaitm_error_itmnolot"));
+					return false;
+				}
+				
+				if(tmpItm.getProducto().getCategoria().isTieneNumSerie() && (codsProds == null ||
+						codsProds.size() < tmpItm.getCantidad())) {
+					FacesMessages.instance().add(
+							sainv_messages.get("vtaitm_error_itmnoser"));
+					return false;
+				}
+				
+				System.out.println("Entro a items aagregardos--->");
 			}
 		}
 		
@@ -812,6 +848,7 @@ public class RequisicionEtaHome extends KubeDAO<RequisicionEtapaRep> {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Entro a postModify");
+		
 		
 	}
 

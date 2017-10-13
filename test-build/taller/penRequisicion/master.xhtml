@@ -134,17 +134,18 @@
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
 					 
+					 <!-- "#{requisicionEtaHome.instance.estado == 'PEN' and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )}" -->
 					<a:commandButton onclick="#{rich:component('approveConfirmation')}.show();" ajaxSingle="true" 
-						rendered="#{requisicionEtaHome.instance.estado == 'PEN' and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )}"
+						rendered="#{requisicionEtaHome.instance.estado == 'PEN'}"
 						reRender="m1" styleClass="apprBtn" value="#{msn.button_approve_order}">
 					</a:commandButton>
 					<a:commandButton onclick="#{rich:component('rejectConfirmation')}.show();" ajaxSingle="true" 
-						reRender="m2" rendered="#{requisicionEtaHome.instance.estado == 'PEN' and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )}"
-						styleClass="rejectBtn" value="#{msn.button_reject_order}">
+						reRender="m2" rendered="#{requisicionEtaHome.instance.estado == 'PEN'}"
+						styleClass="rejectBtn" value="#{msn.button_reject_order}"><!--  and (instance.getEtapaRepCli().getEtapaRep().getId() ne 102 )} -->
 					</a:commandButton>
 					 
 					<a:commandButton oncomplete="showReport('#{conversation.id}')"
-						rendered="#{requisicionEtaHome.instance.estado=='APR'}" styleClass="pdfBtn"
+						rendered="#{requisicionEtaHome.instance.estado == 'APR'}" styleClass="pdfBtn"
 						value="#{app.comprobante_req}" />
 				</s:decorate>
 				
@@ -171,7 +172,7 @@
 							onclick="#{rich:component('approveConfirmation')}.hide();">
 						</a:commandButton>
 						<a:commandButton action="#{requisicionEtaHome.approve()}" reRender="formRequisicion"
-							rendered="#{requisicionEtaHome.managed}" styleClass="apprBtn" ignoreDupResponses="true"
+							rendered="true" styleClass="apprBtn" ignoreDupResponses="true"
 							value="#{msn.button_approve}"
 							onclick="#{rich:component('approveConfirmation')}.hide();">
 						</a:commandButton>

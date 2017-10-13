@@ -707,7 +707,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		// suma la cantidad de montos por ventas aprobadas
 		totalMonto = (Double) getEntityManager()
 				.createQuery(
-						"SELECT SUM(v.monto) FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' "
+						"SELECT SUM(v.monto) FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' AND v.estado!= 'ABF' AND v.estado!='ABN' AND v.estado!='ANU' "
 								+ fltFch + "")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())
@@ -743,7 +743,7 @@ public class VentaProdServHome extends KubeDAO<VentaProdServ> {
 		totalRango = (Double) getEntityManager()
 				.createQuery(
 						"SELECT SUM(det.monto*det.cantidad) FROM DetVentaProdServ det WHERE det.venta IN "
-								+ "(SELECT v.id FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' AND v.estado != 'ABN' AND v.estado != 'ABF' "
+								+ "(SELECT v.id FROM VentaProdServ v WHERE (v.sucursal = :suc or v.sucursal IN (:subSuc) ) AND v.estado != 'PEN' AND v.estado != 'ABN' AND v.estado != 'ABF' AND v.estado!='ANU' "
 								+ fltFch + ")")
 				.setParameter("suc", loginUser.getUser().getSucursal())
 				.setParameter("fch1", getFechaPFlt1())

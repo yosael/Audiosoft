@@ -142,7 +142,7 @@ public class ProductoHome extends KubeDAO<Producto> {
 		getEntityManager().clear();
 		prdsExistencias = getEntityManager()
 				.createQuery(
-						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(TRIM(p.nombre)) like UPPER(TRIM(:ref)) or UPPER(p.categoria.codigo) like UPPER(:ref) or UPPER(TRIM(p.modelo)) like UPPER(TRIM(:ref))) order by p.referencia,p.categoria.codigo,p.nombre ")
+						"select p from Producto p where (UPPER(p.referencia) like UPPER(:ref) or UPPER(TRIM(p.nombre)) like UPPER(TRIM(:ref)) or UPPER(p.categoria.codigo) like UPPER(:ref) or UPPER(TRIM(p.marca.nombre)) like UPPER(:ref) or UPPER(TRIM(p.modelo)) like UPPER(TRIM(:ref))) order by p.referencia,p.categoria.codigo,p.nombre ")
 				.setParameter("ref", "%" + this.getNomCoinci() + "%")
 				.getResultList();
 

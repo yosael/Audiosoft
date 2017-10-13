@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="body">
 		<rich:panel>
-			<f:facet name="header"><span class="marginhead" >Reporte de etapas de taller pendientes de realizar</span></f:facet>
+			<f:facet name="header"><span class="marginhead" >Reporte de etapas de taller pendientes de realizar (Audiologia)</span></f:facet>
 			<rich:spacer height="10" />
 			<h:form id="formA">
 				<p:growl globalOnly="true" sticky="false" life="3000" />
@@ -29,7 +29,7 @@
 									value="#{repTallerEtapas.fechaInicio}"
 									inputStyle="width:200px; height:12px;">
 									<a:support eventsQueue="q1" event="onchanged"
-										reRender="formA" action="#{repTallerEtapas.cargarTodasEtapas()}" />
+										reRender="formA" action="#{repTallerEtapas.cargarEtapasAudio()}" />
 								</rich:calendar> 
 								<rich:spacer width="34" />
 							</td>
@@ -39,7 +39,7 @@
 									tabindex="20" id="_calFinFlt"
 									value="#{repTallerEtapas.fechaFin}"
 									inputStyle="width:200px; height:12px;">
-									<a:support eventsQueue="q1" event="onchanged" reRender="formA" action="#{repTallerEtapas.cargarTodasEtapas()}" />
+									<a:support eventsQueue="q1" event="onchanged" reRender="formA" action="#{repTallerEtapas.cargarEtapasAudio()}" />
 								</rich:calendar>
 							</td>
 							<td>
@@ -53,7 +53,7 @@
 								 -->
 								 <s:decorate template="/layout/kEditSpace.xhtml">
 									<s:button 
-										  value="Ver etapas pendientes de Audiologia"  propagation="begin"  view="/rep/taller-n/reporteEstadoEtapasAudio.xhtml"   rendered="true"  >
+										  value="Ver etapas de taller"  propagation="begin"  view="/rep/taller-n/reporteEstadoEtapasTaller.xhtml"   rendered="true"  >
 									</s:button>
 								</s:decorate>
 							</td>
@@ -63,11 +63,11 @@
 
 				<rich:spacer height="10" />
 
-				<h:panelGrid columns="3" style="margin:0 auto;" >
+				<h:panelGrid columns="4" style="margin:0 auto;" >
 				
-					<rich:dataTable var="res" id="tblEtapaIngreso"
-						value="#{repTallerEtapas.etapasIngresoTaller}"
-						rendered="#{not empty repTallerEtapas.etapasIngresoTaller}" rows="20"
+					<rich:dataTable var="res" id="tblEtapaEsperandoApro"
+						value="#{repTallerEtapas.etapasEsperandoApro}"
+						rendered="true" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						cellpadding="10"
 						cellspacing="10"
@@ -77,7 +77,7 @@
 
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
-							<f:facet name="header">PENDIENTES DE INGRESO</f:facet>
+							<f:facet name="header">ETAPA ESPERANDO APROBACION</f:facet>
 							<h:panelGroup>
 								<s:link title="#{msn.button_edit}" rendered="true"
 									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
@@ -104,18 +104,18 @@
 									<rich:datascroller id="ds1" renderIfSinglePage="true" />
 								</s:div>
 								<s:div style="width:30%;float:right">
-									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasIngresoTaller.size()}" />
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasEsperandoApro.size()}" />
 								</s:div>
 							</s:div>
 						</f:facet>
 						
 					</rich:dataTable>
 					
-					<rich:dataTable var="res" id="tblEtapaDiagnostico"
-						value="#{repTallerEtapas.etapasDiagTaller}"
+					<rich:dataTable var="res" id="tblEtapaControlCalidad"
+						value="#{repTallerEtapas.etapasControlCalidad}"
 						cellpadding="10"
 						cellspacing="10"
-						rendered="#{not empty repTallerEtapas.etapasDiagTaller}" rows="20"
+						rendered="true" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
@@ -123,7 +123,7 @@
 
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
-							<f:facet name="header">PENDIENTES DE DIAGNOSTICO</f:facet>
+							<f:facet name="header">PENDIENTES CONTROL DE CALIDAD</f:facet>
 							<h:panelGroup>
 								<s:link title="#{msn.button_edit}" rendered="true"
 									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
@@ -150,18 +150,18 @@
 									<rich:datascroller id="ds1" renderIfSinglePage="true" />
 								</s:div>
 								<s:div style="width:30%;float:right">
-									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasDiagTaller.size()}" />
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasControlCalidad.size()}" />
 								</s:div>
 							</s:div>
 						</f:facet>
 						
 					</rich:dataTable>
 					
-					<rich:dataTable var="res" id="tblEtapaReparacion"
-						value="#{repTallerEtapas.etapasRepTaller}"
+					<rich:dataTable var="res" id="tblEtapaInformar"
+						value="#{repTallerEtapas.etapasInformar}"
 						cellpadding="10"
 						cellspacing="10"
-						rendered="#{not empty repTallerEtapas.etapasRepTaller}" rows="20"
+						rendered="true" rows="20"
 						align="center" rowClasses="tblEven,tblOdd"
 						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
 						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
@@ -169,7 +169,7 @@
 
 						<rich:column filterBy="#{res.reparacionCli.id}"
 							filterEvent="onkeyup">
-							<f:facet name="header">PENDIENTE DE REPARACION</f:facet>
+							<f:facet name="header">PENDIENTE DE INFORMAR A PACIENTE</f:facet>
 							<h:panelGroup>
 								<s:link title="#{msn.button_edit}" rendered="true"
 									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
@@ -196,7 +196,54 @@
 									<rich:datascroller id="ds1" renderIfSinglePage="true" />
 								</s:div>
 								<s:div style="width:30%;float:right">
-									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasRepTaller.size()}" />
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasInformar.size()}" />
+								</s:div>
+							</s:div>
+						</f:facet>
+						
+					</rich:dataTable>
+					
+					
+					<rich:dataTable var="res" id="tblEtapaPendienteEntre"
+						value="#{repTallerEtapas.etapasPendienteEntre}"
+						cellpadding="10"
+						cellspacing="10"
+						rendered="true" rows="20"
+						align="center" rowClasses="tblEven,tblOdd"
+						onRowMouseOver="this.style.backgroundColor='#A3CAF1'"
+						onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'"
+						headerClass="tablaHeader" footerClass="tableScroll">
+
+						<rich:column filterBy="#{res.reparacionCli.id}"
+							filterEvent="onkeyup">
+							<f:facet name="header">PENDIENTE DE ENTREGA</f:facet>
+							<h:panelGroup>
+								<s:link title="#{msn.button_edit}" rendered="true"
+									view="/taller/etasReparacion/master.xhtml" value="#{'RPR'}#{res.reparacionCli.id}" propagation="begin">
+									<f:param name="id" value="#{res.id}" />
+								</s:link>
+								<div style="display:inline-block;">
+					            	<h:graphicImage style="width:10px;" value="/kubeImg/enabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'g'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/alert.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'o'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/disabled.png"
+														rendered="#{etapaRepCliHome.calcTiempoRespuesta(res.id) eq 'r'}" />
+									<h:graphicImage style="width:10px;" value="/kubeImg/warn.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'y'}" />		
+									<h:graphicImage style="width:10px;" value="/kubeImg/unavailable.png"
+														rendered="#{etapaCliHome.calcTiempoRespuesta(res.id) eq 'na'}" />
+								</div>
+							</h:panelGroup>
+						</rich:column>
+											
+						<f:facet name="footer">
+							<s:div style="width:100%">
+								<s:div style="width:70%;float:left">
+									<rich:datascroller id="ds1" renderIfSinglePage="true" />
+								</s:div>
+								<s:div style="width:30%;float:right">
+									<h:outputLabel value="TOTAL= #{repTallerEtapas.etapasPendienteEntre.size()}" />
 								</s:div>
 							</s:div>
 						</f:facet>

@@ -10,6 +10,7 @@
 			<redirect view-id="/taller/penRequisicion/list.xhtml" />
 		</rule>
 	</navigation>
+
 	<navigation from-action="#{requisicionEtaHome.reject()}">
 		<rule if-outcome="true">
 			<redirect view-id="/taller/penRequisicion/list.xhtml" />

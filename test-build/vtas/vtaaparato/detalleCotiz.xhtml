@@ -228,9 +228,12 @@
 								<p:text value="Garantia: #{ventaComboHome.calcGarantia(combo)}"></p:text>
 								</h:panelGroup>
 					<p:paragraph>
-					<ui:repeat var="apaPrin" value="#{combo.itemsCombo}">
-							<p:text value="- #{apaPrin.producto.nombre}  "/>
-					</ui:repeat>
+						<!-- 
+						<ui:repeat var="apaPrin" value="#{combo.itemsCombo}">
+								<p:text value="- #{apaPrin.producto.nombre}  "/>
+						</ui:repeat>
+						-->
+						<p:text value="Combo: #{combo.nombre}  "/>
 					</p:paragraph>
 					</p:font>
 				</p:cell>

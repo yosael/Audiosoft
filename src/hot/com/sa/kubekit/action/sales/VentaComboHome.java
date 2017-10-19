@@ -675,7 +675,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 					
 					setSelBinaural((short) 2);
 					recalcularTotalVenta();
-					setSelBinaural((short) 1);
+					//setSelBinaural((short) 1); comentado el 16/10/2017
 				}
 				calcularPrecios(); //agregado el 10/07/2017
 				//recalcularTotalVenta(); comentado el 10/07/2017
@@ -1037,7 +1037,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 	}
 	
 	public void getCotizacionPendByDateN()
-	{ System.out.println("Entro a getCotizacionPendByDateN()");
+	{ //System.out.println("Entro a getCotizacionPendByDateN()");
 		String estado1="PEN";
 		String estado2="COT";
 		//sucursalFlt = loginUser.getUser().getSucursal();
@@ -1057,7 +1057,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				.setParameter("estad2", estado2)
 				.setParameter("fch1", getFechaPFlt1())
 				.setParameter("fch2", getFechaPFlt2()).getResultList();
-		System.out.println(cotizacionList.isEmpty());
+		//System.out.println(cotizacionList.isEmpty());
 		//.setParameter("suc", sucursalFlt)
 	}
 
@@ -1089,7 +1089,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		// cb),',')) LIKE :nom OR
 		// "UPPER(c.cliente.nombres) LIKE :nom OR UPPER(c.cliente.apellidos) LIKE :nom)" // ORDER BY c.fechaIngreso DESC"
 		
-		System.out.println("Buscando..");
+		//System.out.println("Buscando..");
 			cotizacionList = getEntityManager()
 					.createQuery(
 							"SELECT c FROM CotizacionComboApa c "
@@ -1293,7 +1293,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 
 	public void fillComboListBin(ComboAparato combo) {
 		
-		System.out.println("Entre a fillComboList SIZE "+ selCmbsListBin.size());
+		//System.out.println("Entre a fillComboList SIZE "+ selCmbsListBin.size());
 		
 		if (selCmbsListBin.size() >= 3) {
 			FacesMessages.instance().add(Severity.WARN,
@@ -1388,7 +1388,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 		
 		if (getSelectedComboVta() != null && getSelectedComboVta() > 0) 
 		{
-			System.out.println("Combo seleccionado: " + getSelectedComboVta());
+			//System.out.println("Combo seleccionado: " + getSelectedComboVta());
 			//System.out.println("Numero de combos: " + selCmbsList.size());
 			
 			for (ComboAparato ca : selCmbsList) 
@@ -2957,13 +2957,13 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				System.out.println("TIENE ADAOTACIONES ");
 				for(ComboAparatoAdaptacion adp: cmb.getAdaptaciones())
 				{
-					System.out.println("Adaptacion: "+adp.getAdaptacion().getNombre());
+					/*System.out.println("Adaptacion: "+adp.getAdaptacion().getNombre());
 					System.out.println("Opcional: "+adp.getOpcional());
-					System.out.println("Lista adaptacion estado: "+lsAdaptacionesPorComboSel.get(cmb.getId()	));
+					System.out.println("Lista adaptacion estado: "+lsAdaptacionesPorComboSel.get(cmb.getId()	));*/
 					
 					if((adp.getOpcional()==null || adp.getOpcional()==false) && (lsAdaptacionesPorComboSel.get(cmb.getId())==null || !lsAdaptacionesPorComboSel.get(cmb.getId()).contains(adp)))//si la adaptacion no es opcional y no se ha agregado se valida
 					{
-						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo");
+						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo "+adp.getComboAparato().getNombre());
 						return false;
 					}
 				}
@@ -2983,7 +2983,7 @@ public class VentaComboHome extends KubeDAO<VentaProdServ> {
 				{
 					if((adp.getOpcional()==null || adp.getOpcional()==false) && (lsAdaptacionesPorComboBinSel.get(cmb.getId())==null || !lsAdaptacionesPorComboBinSel.get(cmb.getId()).contains(adp)))//si la adaptacion no es opcional y no se ha agregado se valida
 					{
-						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural");
+						FacesMessages.instance().add(Severity.WARN,"Debe agregar una adaptacion para el combo binaural "+adp.getComboAparato().getNombre());
 						return false;
 					}
 				}

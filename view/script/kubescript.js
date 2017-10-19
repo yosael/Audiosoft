@@ -14,6 +14,8 @@ function upperCaseAllInputs() {
 	});
 }
 
+
+
 function lowerCaseAllInputs() {
 	jQuery("input.lower").each( function() {
 		this.value = this.value.toLowerCase();

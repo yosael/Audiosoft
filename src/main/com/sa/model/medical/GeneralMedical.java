@@ -30,7 +30,7 @@ public class GeneralMedical extends ClinicalHistory {
 	
 	//agredo el 02/08/2017  //Historia Clinica actual
 	private String enfermedadActual;
-	private String antecedentesMedicos;
+	private String antecedentesFamiliares;
 	private String antecedentesNoPatologicos;
 	private String antecedentesPatologicos;
 	
@@ -231,12 +231,12 @@ public class GeneralMedical extends ClinicalHistory {
 		this.enfermedadActual = enfermedadActual;
 	}
 
-	public String getAntecedentesMedicos() {
-		return antecedentesMedicos;
+	public String getAntecedentesFamiliares() {
+		return antecedentesFamiliares;
 	}
 
-	public void setAntecedentesMedicos(String antecedentesMedicos) {
-		this.antecedentesMedicos = antecedentesMedicos;
+	public void setAntecedentesFamiliares(String antecedentesFamiliares) {
+		this.antecedentesFamiliares = antecedentesFamiliares;
 	}
 
 	public String getAntecedentesNoPatologicos() {

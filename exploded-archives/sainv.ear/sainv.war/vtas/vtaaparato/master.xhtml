@@ -751,91 +751,104 @@
 										</td>
 									</tr>
 								</table>
-
-
-								<s:decorate id="_actionBtns" template="/layout/kActions.xhtml">
-									<a:commandButton action="#{ventaComboHome.calcularPrecios()}"
-										reRender="formapacli, formapacli2, _totMag1"
-										styleClass="saveBtn" value="#{app.vtaapa_calc_tot}" 
-										rendered="#{not empty ventaComboHome.selCmbsList}"/>
-
-									<a:commandButton action="#{ventaComboHome.porCobrar()}"
-										reRender="formapacli,_actionBtns"
-										rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and empty ventaComboHome.cotizacion.cuentaCobrar and ventaComboHome.cotizacion.estado!='APL' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN'}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="Poner a credito" />
-									<s:decorate
-										rendered="#{not empty ventaComboHome.cotizacion.cuentaCobrar}"
-										style="display:inline-block; margin:0px 10px 0px 0px; vertical-align:middle;">
-										<h:graphicImage value="/kubeImg/disabled.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
-										<h:graphicImage value="/kubeImg/alert.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente ge 0.01  and ventaComboHome.cotizacion.cuentaCobrar.remanente le (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
-										<h:graphicImage value="/kubeImg/enabled.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente lt 0.01}" />
-										<s:decorate style="vertical-align:middle; font-weight:bold;">
-											<h:outputText value="Remanente: " />
-											<h:outputText
-												value="#{ventaComboHome.cotizacion.cuentaCobrar.remanente}">
-												<f:convertNumber currencySymbol="$" groupingUsed="true"
-													integerOnly="true" type="currency" locale="en-US"
-													maxFractionDigits="2" minFractionDigits="2" />
-											</h:outputText>
-										</s:decorate>
+								
+								<h:panelGrid columns="5" >
+									<s:decorate id="_actionBtns0" template="/layout/kActions.xhtml">
+										<a:commandButton action="#{ventaComboHome.calcularPrecios()}"
+											reRender="formapacli, formapacli2, _totMag1"
+											styleClass="saveBtn" value="#{app.vtaapa_calc_tot}" 
+											rendered="#{not empty ventaComboHome.selCmbsList}"/>
 									</s:decorate>
-									<a:commandButton action="#{ventaComboHome.save()}"
-										reRender="formapacli"
-										rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='APL'}"
-										disabled="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt 0.01}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_venta}" />
-										
-									<a:commandButton action="#{ventaComboHome.finalizarVentaPorCredito()}"
-										reRender="formapacli,formapacli2"
-										rendered="#{not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.cuentaCobrar.remanente==0}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_venta}" />
-									<!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') and not (ventaComboHome.binaural)}" styleClass="binBtn"
-									 -->
-									<a:commandButton action="#{ventaComboHome.setApaBinaural()}"
-										reRender="tabsCmbAparato"
-										rendered="#{empty ventaComboHome.cotizacion and not (ventaComboHome.binaural)}" styleClass="binBtn"
-										ignoreDupResponses="true" value="#{app.vt_vtaprs_setbinral}" />
-									<a:commandButton action="#{ventaComboHome.quitApaBinaural()}"
-										reRender="tabsCmbAparato"
-										rendered="#{ventaComboHome.binaural and empty ventaComboHome.cotizacion.estado}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_qutbinral}" />
-
-									<a:commandButton propagation="join"
-										oncomplete="showReport('detalleCotiz', '#{conversation.id}'); "
-										rendered="#{not empty ventaComboHome.cotizacion}"
-										styleClass="pdfBtn" ignoreDupResponses="true"
-										value="#{app.vt_rep_cotiz}" />
-
-									<a:commandButton action="#{ventaComboHome.cotizarVenta()}"
-										reRender="formapacli"
-										rendered="#{not ventaComboHome.managed and empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN'}"
-										styleClass="saveBtn" ignoreDupResponses="false"
-										value="#{app.vt_vtaprs_cotiz}" ajaxSingle="true" />
-
-									<a:commandButton
-										rendered="#{ventaComboHome.cotizacion.estado == 'PEN' and loginUser.getUser().isAccionEspecial()==true and not ventaComboHome.managed and not empty ventaComboHome.cotizacion}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="Autorizar descuento">
-										<a:support event="onclick" ajaxSingle="true" eventsQueue="q1"
+									
+									<rich:spacer width="75" height="0" ></rich:spacer>
+									
+									<s:decorate id="_actionBtns" template="/layout/kActions.xhtml">
+								
+										<a:commandButton action="#{ventaComboHome.porCobrar()}"
+											reRender="formapacli,_actionBtns"
+											rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and empty ventaComboHome.cotizacion.cuentaCobrar and ventaComboHome.cotizacion.estado!='APL' and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN'}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="Poner a credito" />
+										<s:decorate
+											rendered="#{not empty ventaComboHome.cotizacion.cuentaCobrar}"
+											style="display:inline-block; margin:0px 10px 0px 0px; vertical-align:middle;">
+											<h:graphicImage value="/kubeImg/disabled.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
+											<h:graphicImage value="/kubeImg/alert.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente ge 0.01  and ventaComboHome.cotizacion.cuentaCobrar.remanente le (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
+											<h:graphicImage value="/kubeImg/enabled.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente lt 0.01}" />
+											<s:decorate style="vertical-align:middle; font-weight:bold;">
+												<h:outputText value="Remanente: " />
+												<h:outputText
+													value="#{ventaComboHome.cotizacion.cuentaCobrar.remanente}">
+													<f:convertNumber currencySymbol="$" groupingUsed="true"
+														integerOnly="true" type="currency" locale="en-US"
+														maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+											</s:decorate>
+										</s:decorate>
+										<a:commandButton action="#{ventaComboHome.save()}"
 											reRender="formapacli"
-											action="#{ventaComboHome.actualizarCotizacion()}"
-											update="growl" />
-									</a:commandButton>
-
-									<a:commandButton
-										action="#{ventaComboHome.cancelarCotizacion()}"
-										reRender="formapacli" rendered="#{false}"
-										styleClass="deleteBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_cotiz_can}" />
-
-								</s:decorate>
+											rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='APL'}"
+											disabled="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt 0.01}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_venta}" />
+											
+										<a:commandButton action="#{ventaComboHome.finalizarVentaPorCredito()}"
+											reRender="formapacli,formapacli2"
+											rendered="#{not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.cuentaCobrar.remanente==0}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_venta}" />
+										<!-- rendered="#{not(ventaComboHome.cotizacion.estado=='PEN') and not(ventaComboHome.cotizacion.estado=='COT') and not (ventaComboHome.binaural)}" styleClass="binBtn"
+										 -->
+										<a:commandButton action="#{ventaComboHome.setApaBinaural()}"
+											reRender="tabsCmbAparato"
+											rendered="#{empty ventaComboHome.cotizacion and not (ventaComboHome.binaural)}" styleClass="binBtn"
+											ignoreDupResponses="true" value="#{app.vt_vtaprs_setbinral}" />
+										<a:commandButton action="#{ventaComboHome.quitApaBinaural()}"
+											reRender="tabsCmbAparato"
+											rendered="#{ventaComboHome.binaural and empty ventaComboHome.cotizacion.estado}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_qutbinral}" />
+	
+	
+										<a:commandButton action="#{ventaComboHome.cotizarVenta()}"
+											reRender="formapacli"
+											rendered="#{not ventaComboHome.managed and empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='PRE' and ventaComboHome.cotizacion.estado!='TFN'}"
+											styleClass="saveBtn" ignoreDupResponses="false"
+											value="#{app.vt_vtaprs_cotiz}" ajaxSingle="true" />
+	
+	
+										<a:commandButton
+											action="#{ventaComboHome.cancelarCotizacion()}"
+											reRender="formapacli" rendered="#{false}"
+											styleClass="deleteBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_cotiz_can}" />
+	
+									</s:decorate>
+									
+									<rich:spacer width="75" height="0" ></rich:spacer>
+									
+									<s:decorate id="_actionBtns1" template="/layout/kActions.xhtml">
+										<a:commandButton
+											rendered="#{ventaComboHome.cotizacion.estado == 'PEN' and loginUser.getUser().isAccionEspecial()==true and not ventaComboHome.managed and not empty ventaComboHome.cotizacion}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="Autorizar descuento">
+											<a:support event="onclick" ajaxSingle="true" eventsQueue="q1"
+												reRender="formapacli"
+												action="#{ventaComboHome.actualizarCotizacion()}"
+												update="growl" />
+										</a:commandButton>
+										<a:commandButton propagation="join"
+											oncomplete="showReport('detalleCotiz', '#{conversation.id}'); "
+											rendered="#{not empty ventaComboHome.cotizacion}"
+											styleClass="pdfBtn" ignoreDupResponses="true"
+											value="#{app.vt_rep_cotiz}" />
+									</s:decorate>
+									
+								</h:panelGrid>
+								
 
 							</center>
 						</fieldset>
@@ -1423,82 +1436,99 @@
 										</td>
 									</tr>
 								</table>
-								<s:decorate template="/layout/kActions.xhtml">
-									<a:commandButton action="#{ventaComboHome.calcularPrecios()}"
-										reRender="formapacli, formapacli2, _totMag1"
-										styleClass="saveBtn" value="#{app.vtaapa_calc_tot}" />
-
-									<a:commandButton action="#{ventaComboHome.porCobrar()}"
-										reRender="formapacli,formapacli2,_actionBtns"
-										rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and empty ventaComboHome.cotizacion.cuentaCobrar and ventaComboHome.cotizacion.estado!='APL' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN'}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="Poner a credito" />
-									<s:decorate
-										rendered="#{not empty ventaComboHome.cotizacion.cuentaCobrar}"
-										style="display:inline-block; margin:0px 10px 0px 0px; vertical-align:middle;">
-										<h:graphicImage value="/kubeImg/disabled.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
-										<h:graphicImage value="/kubeImg/alert.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente ge 0.01  and ventaComboHome.cotizacion.cuentaCobrar.remanente le (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
-										<h:graphicImage value="/kubeImg/enabled.png"
-											rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente lt 0.01}" />
-										<s:decorate style="vertical-align:middle; font-weight:bold;">
-											<h:outputText value="Remanente: " />
-											<h:outputText
-												value="#{ventaComboHome.cotizacion.cuentaCobrar.remanente}">
-												<f:convertNumber currencySymbol="$" groupingUsed="true"
-													integerOnly="true" type="currency" locale="en-US"
-													maxFractionDigits="2" minFractionDigits="2" />
-											</h:outputText>
-										</s:decorate>
+								
+								<h:panelGrid columns="5" >
+								
+									<s:decorate template="/layout/kActions.xhtml">
+										<a:commandButton action="#{ventaComboHome.calcularPrecios()}"
+											reRender="formapacli, formapacli2, _totMag1"
+											styleClass="saveBtn" value="#{app.vtaapa_calc_tot}" />
 									</s:decorate>
-									<s:button view="/vtas/vtaaparato/master.xhtml"
-										rendered="#{empty ventaComboHome.cotizacion}"
-										propagation="begin" styleClass="newBtn"
-										value="#{msn.button_new}">
-										<f:param name="id" value="" />
-									</s:button>
-									<a:commandButton action="#{ventaComboHome.save()}"
-										reRender="formapacli2,formapacli"
-										disabled="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt 0.01}"
-										rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='APL'}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_venta}" />
-										
-									<a:commandButton action="#{ventaComboHome.finalizarVentaPorCredito()}"
-										reRender="formapacli2,formapacli"
-										rendered="#{not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.cuentaCobrar.remanente==0}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_venta}" />
-
-									<a:commandButton propagation="join"
-										oncomplete="showReport('detalleCotizBin', '#{conversation.id}'); "
-										rendered="#{not empty ventaComboHome.cotizacion}"
-										styleClass="pdfBtn" ignoreDupResponses="true"
-										value="#{app.vt_rep_cotiz}" />
-
-									<a:commandButton action="#{ventaComboHome.cotizarVenta()}"
-										reRender="formapacli,formapacli2"
-										rendered="#{not ventaComboHome.managed and empty ventaComboHome.cotizacion}"
-										styleClass="saveBtn" ignoreDupResponses="false"
-										value="#{app.vt_vtaprs_cotiz}" />
-
-									<a:commandButton
-										rendered="#{ventaComboHome.cotizacion.estado == 'PEN' and loginUser.getUser().isAccionEspecial()==true and not ventaComboHome.managed and not empty ventaComboHome.cotizacion}"
-										styleClass="saveBtn" ignoreDupResponses="true"
-										value="Guardar cotizacion">
-										<a:support event="onclick" ajaxSingle="true" eventsQueue="q1"
+									
+									<rich:spacer width="75" height="0" ></rich:spacer>
+									
+									<s:decorate template="/layout/kActions.xhtml">
+	
+										<a:commandButton action="#{ventaComboHome.porCobrar()}"
+											reRender="formapacli,formapacli2,_actionBtns"
+											rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and empty ventaComboHome.cotizacion.cuentaCobrar and ventaComboHome.cotizacion.estado!='APL' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='PRE' and ventaComboHome.cotizacion.getHijoBin().get(0).getEstado()!='TFN'}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="Poner a credito" />
+										<s:decorate
+											rendered="#{not empty ventaComboHome.cotizacion.cuentaCobrar}"
+											style="display:inline-block; margin:0px 10px 0px 0px; vertical-align:middle;">
+											<h:graphicImage value="/kubeImg/disabled.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
+											<h:graphicImage value="/kubeImg/alert.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente ge 0.01  and ventaComboHome.cotizacion.cuentaCobrar.remanente le (0.9 * ventaComboHome.cotizacion.cuentaCobrar.monto)}" />
+											<h:graphicImage value="/kubeImg/enabled.png"
+												rendered="#{ventaComboHome.cotizacion.cuentaCobrar.remanente lt 0.01}" />
+											<s:decorate style="vertical-align:middle; font-weight:bold;">
+												<h:outputText value="Remanente: " />
+												<h:outputText
+													value="#{ventaComboHome.cotizacion.cuentaCobrar.remanente}">
+													<f:convertNumber currencySymbol="$" groupingUsed="true"
+														integerOnly="true" type="currency" locale="en-US"
+														maxFractionDigits="2" minFractionDigits="2" />
+												</h:outputText>
+											</s:decorate>
+										</s:decorate>
+										<s:button view="/vtas/vtaaparato/master.xhtml"
+											rendered="#{empty ventaComboHome.cotizacion}"
+											propagation="begin" styleClass="newBtn"
+											value="#{msn.button_new}">
+											<f:param name="id" value="" />
+										</s:button>
+										<a:commandButton action="#{ventaComboHome.save()}"
+											reRender="formapacli2,formapacli"
+											disabled="#{ventaComboHome.cotizacion.cuentaCobrar.remanente gt 0.01}"
+											rendered="#{not ventaComboHome.managed and not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.estado!='COT' and ventaComboHome.cotizacion.estado!='APL'}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_venta}" />
+											
+										<a:commandButton action="#{ventaComboHome.finalizarVentaPorCredito()}"
+											reRender="formapacli2,formapacli"
+											rendered="#{not empty ventaComboHome.cotizacion and ventaComboHome.cotizacion.cuentaCobrar.remanente==0}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_venta}" />
+	
+	
+										<a:commandButton action="#{ventaComboHome.cotizarVenta()}"
 											reRender="formapacli,formapacli2"
-											action="#{ventaComboHome.actualizarCotizacion()}"
-											update="growl" />
-									</a:commandButton>
-
-									<a:commandButton
-										action="#{ventaComboHome.cancelarCotizacion()}"
-										reRender="formapacli2" rendered="#{false}"
-										styleClass="deleteBtn" ignoreDupResponses="true"
-										value="#{app.vt_vtaprs_cotiz_can}" />
-								</s:decorate>
+											rendered="#{not ventaComboHome.managed and empty ventaComboHome.cotizacion}"
+											styleClass="saveBtn" ignoreDupResponses="false"
+											value="#{app.vt_vtaprs_cotiz}" />
+	
+	
+										<a:commandButton
+											action="#{ventaComboHome.cancelarCotizacion()}"
+											reRender="formapacli2" rendered="#{false}"
+											styleClass="deleteBtn" ignoreDupResponses="true"
+											value="#{app.vt_vtaprs_cotiz_can}" />
+									</s:decorate>
+									
+									<rich:spacer width="75" height="0" ></rich:spacer>
+									
+									<s:decorate template="/layout/kActions.xhtml">
+										<a:commandButton
+											rendered="#{ventaComboHome.cotizacion.estado == 'PEN' and loginUser.getUser().isAccionEspecial()==true and not ventaComboHome.managed and not empty ventaComboHome.cotizacion}"
+											styleClass="saveBtn" ignoreDupResponses="true"
+											value="Autorizar Descuento">
+											<a:support event="onclick" ajaxSingle="true" eventsQueue="q1"
+												reRender="formapacli,formapacli2"
+												action="#{ventaComboHome.actualizarCotizacion()}"
+												update="growl" />
+										</a:commandButton>
+										<a:commandButton propagation="join"
+											oncomplete="showReport('detalleCotizBin', '#{conversation.id}'); "
+											rendered="#{not empty ventaComboHome.cotizacion}"
+											styleClass="pdfBtn" ignoreDupResponses="true"
+											value="#{app.vt_rep_cotiz}" />
+									</s:decorate>
+								
+								</h:panelGrid>
+								
+								
 							</center>
 						</fieldset>
 					</h:form>

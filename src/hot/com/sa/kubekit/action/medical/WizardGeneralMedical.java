@@ -183,20 +183,32 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		StringBuilder bl = new StringBuilder();
 		//resumenPaciente="";
 		
+		bl.append("HISTORIA. ");
+		
+		if(generalMedicalDAO.getInstance().getConsultationReason()!=null)
+		{
+			bl.append("CONSULTA POR: ");
+			bl.append(generalMedicalDAO.getInstance().getConsultationReason());
+			bl.append(". ");
+		}
 		
 		
 		if(clienteHome.getInstance().getGenero()==1)
 		{
-			bl.append("Masculino. ");
+			bl.append("MASCULINO. ");
 		}
 		else
 		{
-			bl.append("Femenina. ");
+			bl.append("FEMENINO. ");
 		}
 		
-		bl.append("De ");
-		bl.append(clienteHome.calcularEdad());
-		bl.append(" años. ");
+		if(clienteHome.calcularEdad()>0)
+		{
+			bl.append("DE ");
+			bl.append(clienteHome.calcularEdad());
+			bl.append(" AÑOS. ");
+			
+		}
 		
 		
 		if(clienteHome.getInstance().getOcupacion()!=null)
@@ -207,36 +219,172 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 			
 		if(generalMedicalDAO.getInstance().getHeight()!=null)
 		{
-			bl.append("Estatura ");
-			bl.append(generalMedicalDAO.getInstance().getHeight());
-			bl.append("cm. ");
+			//bl.append("Estatura ");
+			bl.append(generalMedicalDAO.getInstance().getHeight().toString().toUpperCase());
+			bl.append("CM. ");
 		}
+		
+		if(generalMedicalDAO.getInstance().getHeartRate()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getHeartRate().toString().toUpperCase());
+			bl.append(". ");
+			
+		}
+		
+		if(generalMedicalDAO.getInstance().getRespiratoryRate()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getRespiratoryRate().toString().toUpperCase());
+			bl.append(". ");
+			
+		}
+		
+		if(generalMedicalDAO.getInstance().getPulso()!=null)
+		{
+			//bl.append("Peso ");
+			bl.append(generalMedicalDAO.getInstance().getPulso());
+			bl.append(". ");
+
+		}
+		
+		
 		
 		if(generalMedicalDAO.getInstance().getWeight()!=null)
 		{
-			bl.append("Peso ");
+			//bl.append("Peso ");
 			bl.append(generalMedicalDAO.getInstance().getWeight());
-			bl.append("kg. ");
+			bl.append(". ");
+			
 		}
 		
-		if(generalMedicalDAO.getInstance().getConsultationReason()!=null)
+		if(generalMedicalDAO.getInstance().getTalla()!=null)
 		{
-			bl.append("Consulta por ");
-			bl.append(generalMedicalDAO.getInstance().getConsultationReason());
+			//bl.append("Peso ");
+			bl.append(generalMedicalDAO.getInstance().getTalla());
 			bl.append(". ");
 		}
 		
+		if(generalMedicalDAO.getInstance().getTemperature()!=null)
+		{
+			//bl.append("Peso ");
+			bl.append(generalMedicalDAO.getInstance().getTemperature());
+			bl.append(". ");
+		}
+		
+		
 		if(generalMedicalDAO.getInstance().getObservation()!=null)
 		{
-			bl.append("Evolucion ");
+			
 			bl.append(generalMedicalDAO.getInstance().getObservation());
 			bl.append(". ");
 		}
 		
 		if(generalMedicalDAO.getInstance().getEnfermedadActual()!=null)
 		{
-			bl.append("Enfermedad actual ");
 			bl.append(generalMedicalDAO.getInstance().getEnfermedadActual());
+			bl.append(". ");
+		}
+		
+		
+		if(generalMedicalDAO.getInstance().getAntecedentesPatologicos()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getAntecedentesPatologicos());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getAntecedentesNoPatologicos()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getAntecedentesNoPatologicos());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getAntecedentesFamiliares()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getAntecedentesFamiliares());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getInspeccionGeneral()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getInspeccionGeneral());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getOidos()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getOidos());
+			bl.append(". ");
+		}
+
+		
+		if(generalMedicalDAO.getInstance().getNarizFosasNasales()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getNarizFosasNasales());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getBocaFaringe()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getBocaFaringe());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getLaringe()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getLaringe());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getCabezaCuello()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getCabezaCuello());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getSistemaNervioso()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getSistemaNervioso());
+			bl.append(". ");
+		}
+		
+		bl.append("Examenes: ");
+		
+		if(generalMedicalDAO.getInstance().getExaAudiologia()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getExaAudiologia());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getExaOtoneurologia()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getExaOtoneurologia());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getLabClinico()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getLabClinico());
+			bl.append(". ");
+		}
+		
+		if(generalMedicalDAO.getInstance().getRadioImagenologia()!=null)
+		{
+			
+			bl.append(generalMedicalDAO.getInstance().getRadioImagenologia());
 			bl.append(". ");
 		}
 		

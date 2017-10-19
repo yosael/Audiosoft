@@ -110,7 +110,7 @@
 						<rich:column >
 							<f:facet name="header">#{msn.col_actions}</f:facet>
 							<a:commandLink reRender="formrequisicionModEdit"  eventsQueue="q1"
-								rendered="#{requisicionEtaHome.instance.estado == 'COT' and requisicionEtaHome.abilitarEdicion and (res.descargada==null || res.descargada==false)}"
+								rendered="#{requisicionEtaHome.instance.estado == 'COT' and requisicionEtaHome.abilitarEdicion and (res.descargada==null || res.descargada==false) and res.generado!='GEN'}"
 								action="#{requisicionEtaHome.quitarItemEditar(res)}" ><!-- ajaxSingle="true" -->
 								<h:graphicImage value="/kubeImg/table_delete16.png" />
 							</a:commandLink>

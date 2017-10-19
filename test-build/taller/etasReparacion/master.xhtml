@@ -540,7 +540,7 @@
 						</rich:column>
 						<rich:column rendered="#{(etapaRepCliHome.instance.etapaRep.id==41 || etapaRepCliHome.instance.etapaRep.id==47 || etapaRepCliHome.instance.etapaRep.id==53 || etapaRepCliHome.instance.etapaRep.id==58)}">
 							<f:facet name="header">#{msn.col_actions}</f:facet>
-							<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" rendered="#{res.estado==null or res.estado!='CBR'}" 
+							<a:commandLink title="#{app.compralist_delete}" eventsQueue="q1" rendered="#{(res.estado==null or res.estado!='CBR') and res.generado!='GEN'}" 
 								action="#{reparacionClienteHome.delServicioRep(res)}" ajaxSingle="true" reRender="formreparacioncli" ><!-- reRender="_tblSrvs" -->
 								<h:graphicImage value="/kubeImg/table_cancel.png" />
 							</a:commandLink>

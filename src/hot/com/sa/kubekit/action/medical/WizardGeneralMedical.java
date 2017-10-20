@@ -189,7 +189,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		{
 			bl.append("CONSULTA POR: ");
 			bl.append(generalMedicalDAO.getInstance().getConsultationReason());
-			bl.append(". ");
+			bl.append("");
 		}
 		
 		

@@ -191,12 +191,12 @@
 								</h:panelGrid>
 							</s:decorate>-->
 							
-							<h:outputLabel value="Motivo anterior: " style="font-weight:bold" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='') }" />
+							<h:outputLabel value="MOTIVO ANTERIOR: " style="font-weight:bold" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='') }" />
 							<h:inputTextarea
-											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:625px;height:70px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='')}" />	
+											value="#{wizardGeneralMedical.motivoConsultaAnterior}" style="width:625px;height:35px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" rendered="#{wizardGeneralMedical.subsecuente and (wizardGeneralMedical.motivoConsultaAnterior!=null and wizardGeneralMedical.motivoConsultaAnterior!='')}" />	
 							
 							<h:panelGrid columns="2" >
-								<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
+								<h:outputLabel value="CONSULTA POR: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
 								
 								<a:commandButton  styleClass="addBtn" value=" " 
 									onclick="#{rich:component('selMotiv')}.show();"
@@ -210,9 +210,13 @@
 							
 							<h:inputTextarea
 								value="#{generalMedicalDAO.instance.consultationReason}"
-								disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtMotivoConsulta" >
+								disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:35px;font-size:14px" id="txtMotivoConsulta" >
 									<a:support event="onchange" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>
 							</h:inputTextarea>
+							
+							<rich:spacer height="50" width="0" ></rich:spacer>
+							
+							<rich:spacer height="50" width="0" ></rich:spacer>
 							
 
 									<!-- <rich:dataTable style="font-size:12px"  value="#{motivoConsultaHome.motivosConsultaPA}" var="mot" id="motivPa"  >
@@ -246,7 +250,7 @@
 							</s:decorate>
 							 -->
 							 
-							<h:outputLabel value="Enfermedad actual: " style="font-weight:bold" />
+							<h:outputLabel value="ENFERMEDAD ACTUAL: " style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -256,36 +260,36 @@
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="Antecedentes patologicos: " style="font-weight:bold" />
+							<h:outputLabel value="ANTECEDENTES PATOLOGICOS: " style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
 									onkeyup="toUpperCase(this);"
 									value="#{generalMedicalDAO.instance.antecedentesPatologicos}" 
 									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtAntecedentesPato" style="width:625px;height:85px;font-size:14px" >
-									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesPato" ajaxSingle="true" ></a:support>
+									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesPato,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="Antecedentes no patologicos: " style="font-weight:bold" />
+							<h:outputLabel value="ANTECEDENTES NO PATOLOGICOS: " style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
 									onkeyup="toUpperCase(this);"
 									value="#{generalMedicalDAO.instance.antecedentesNoPatologicos}" 
 									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtAntecedentesNoPato" style="width:625px;height:85px;font-size:14px" >
-									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesNoPato" ajaxSingle="true" ></a:support>
+									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesNoPato,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="Antecedentes familiares " style="font-weight:bold" />
+							<h:outputLabel value="ANTECEDENTES FAMILIARES" style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
 									onkeyup="toUpperCase(this);"
 									value="#{generalMedicalDAO.instance.antecedentesFamiliares}" 
 									 disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtAntecedentesMedicos" style="width:625px;height:85px;font-size:14px" >
-									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesMedicos" ajaxSingle="true" ></a:support>
+									 <a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtAntecedentesMedicos,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>
 							
@@ -325,7 +329,7 @@
 									<h:inputText value="#{generalMedicalDAO.instance.height}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente" ajaxSingle="true" ></a:support>	
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtResumenPaciente,txtResumenPaciente" ajaxSingle="true" ></a:support>	
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -334,7 +338,7 @@
 									<h:inputText value="#{generalMedicalDAO.instance.heartRate}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtHearRate" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtHearRate" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtHearRate,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -344,7 +348,7 @@
 										value="#{generalMedicalDAO.instance.respiratoryRate}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}" id="resRate" >
-											<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="resRate" ajaxSingle="true" ></a:support>
+											<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="resRate,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -354,7 +358,7 @@
 										value="#{generalMedicalDAO.instance.pulso}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="resRate" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="resRate,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -363,7 +367,7 @@
 									<h:inputText value="#{generalMedicalDAO.instance.weight}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}" id="txtWeight" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtWeight" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtWeight,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -373,7 +377,7 @@
 										value="#{generalMedicalDAO.instance.talla}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}" id="txtTalla" >
-											<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtTalla" ajaxSingle="true" ></a:support>
+											<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtTalla,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -382,7 +386,7 @@
 									<h:inputText value="#{generalMedicalDAO.instance.temperature}"
 										style="width:58px;"
 										disabled="#{wizardGeneralMedical.mode == 'r'}"  id="txtTemp" >
-											<a:support event="onkeyup" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtTemp" ajaxSingle="true" ></a:support>
+											<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtTemp,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputText>
 								</h:panelGroup>
 								
@@ -413,7 +417,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.inspeccionGeneral}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtInspec" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtInspec" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtInspec,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -423,7 +427,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.oidos}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtOidos">
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtOidos" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtOidos,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -432,7 +436,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.narizFosasNasales}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px"  id="txtNariz" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtNariz" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtNariz,txtResumenPaciente" ajaxSingle="true" ></a:support>
 									</h:inputTextarea>
 							</s:decorate>
 							
@@ -441,7 +445,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.bocaFaringe}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}"  style="width:625px;height:85px;font-size:14px" id="txtBoca" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtBoca" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtBoca,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -451,7 +455,7 @@
 									onkeyup="toUpperCase(this);"
 									value="#{generalMedicalDAO.instance.laringe}"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtLaringe" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtLaringe" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtLaringe,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -460,7 +464,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.cabezaCuello}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtCabeza" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtCabeza" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtCabeza,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -469,7 +473,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.sistemaNervioso}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtSistema" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtSistema" ajaxSingle="true" ></a:support>			
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtSistema,txtResumenPaciente" ajaxSingle="true" ></a:support>			
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -485,7 +489,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.exaAudiologia}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtExaAudio" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtExaAudio" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtExaAudio,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -494,7 +498,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.exaOtoneurologia}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtExaOtoneuro" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtExaOtoneuro" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtExaOtoneuro,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -503,7 +507,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.labClinico}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtLabClinico" >
-										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtLabClinico" ajaxSingle="true" ></a:support>
+										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtLabClinico,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							
@@ -512,7 +516,7 @@
 								<h:inputTextarea value="#{generalMedicalDAO.instance.radioImagenologia}"
 									onkeyup="toUpperCase(this);"
 									disabled="#{wizardGeneralMedical.mode == 'r'}" style="width:625px;height:85px;font-size:14px" id="txtRadioImage" >
-									<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtRadioImage" ajaxSingle="true" ></a:support>
+									<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtRadioImage,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
 							

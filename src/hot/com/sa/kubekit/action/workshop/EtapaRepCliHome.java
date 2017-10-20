@@ -938,7 +938,9 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 				
 					//tmpEta.getEtapaRep().getOrden()==7) solo estaba esta linea en la condicion hasta el 07/02/2017
 					if((tmpEta.getEtapaRep().getProcesoTll().getNombre().equals("Reparacion") && tmpEta.getEtapaRep().getOrden()==7) || (tmpEta.getEtapaRep().getProcesoTll().getNombre().equals("Fabricacion de molde") && tmpEta.getEtapaRep().getOrden()==5) || (tmpEta.getEtapaRep().getProcesoTll().getNombre().equals("Limpieza") && tmpEta.getEtapaRep().getOrden()==3) || (tmpEta.getEtapaRep().getProcesoTll().getNombre().equals("Ensamblaje de aparato") && tmpEta.getEtapaRep().getOrden()==5))
-					{			System.out.println("****Entro a condicion de reparacion y molde");
+					{			
+						
+							System.out.println("****Entro a condicion de reparacion y molde");
 								tmpEta.setEstado("PEN");
 						
 								Calendar cal = new GregorianCalendar();
@@ -975,15 +977,33 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 					{ 
 						
 						//System.out.println("Entro al else de comparacion etapa Reparacion y molde");
-						tmpEta.setEstado("PEN");
+								tmpEta.setEstado("PEN");
 						
 								Calendar cal = new GregorianCalendar();
 								cal.add(Calendar.DATE, 1);
 								tmpEta.setFechaInicio(cal.getTime());
 								getEntityManager().merge(tmpEta);
+								
+								
+								//Nuevo agregado el 19/10/2017
+								//descargar requisiciones
+								if(instance.getEtapaRep().getNombre().equals("Elaboracion de molde") || instance.getEtapaRep().getNombre().equals("Ensamblaje"))
+								{
+									for(RequisicionEtapaRep req:instance.getRequisicionesEtapa())
+									{
+										requisicionEtaHome.setReqId(req.getId());
+										requisicionEtaHome.load();
+										if(!requisicionEtaHome.aprobarSalidaRequisicion())
+										{
+											FacesMessages.instance().add(Severity.WARN,"No hay existencias de la requisicion que se necesita aprobar: "+req.getId());
+											return;
+										}
+									}
+								}
+								
 			
-								for (RequisicionEtapaRep tmpReq : instance
-										.getRequisicionesEtapa()) {
+								for (RequisicionEtapaRep tmpReq : instance.getRequisicionesEtapa()) 
+								{
 									// Si hay cotizaciones ingresadas, las convertimos a
 									// requisiciones
 									if (tmpReq.getEstado().equals("COT")) {
@@ -992,6 +1012,8 @@ public class EtapaRepCliHome extends KubeDAO<EtapaRepCliente> {
 										getEntityManager().merge(tmpReq);
 									}
 								}
+								
+								
 								getEntityManager().flush();
 								// SI se esta aprobando la evaluacion se setea el flag para que
 								// el cliente decida si se aprueba o no

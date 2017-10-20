@@ -162,12 +162,12 @@
 								</h:panelGrid>
 							</s:decorate>-->
 							
-							<h:outputLabel value="Motivo anterior: " style="font-weight:bold" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='') }" />
+							<h:outputLabel value="MOTIVO ANTERIOR: " style="font-weight:bold" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='') }" />
 							<h:inputTextarea
 											value="#{wizardGeneralMedical2.motivoConsultaAnterior}" style="width:625px;height:70px;font-size:14px" id="txtMotivoConsultaAnterior" readonly="true" rendered="#{wizardGeneralMedical2.subsecuente and (wizardGeneralMedical2.motivoConsultaAnterior!=null and wizardGeneralMedical2.motivoConsultaAnterior!='')}" />	
 							
 							<h:panelGrid columns="1" >
-								<h:outputLabel value="Consulta por: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
+								<h:outputLabel value="CONSULTA POR: " style="font-weight:bold" /><!-- #{app.general_step2_reason}: -->
 								
 							</h:panelGrid>
 							
@@ -209,7 +209,7 @@
 							</s:decorate>
 							 -->
 							 
-							<h:outputLabel value="Enfermedad actual: " style="font-weight:bold" />
+							<h:outputLabel value="ENFERMEDAD ACTUAL: " style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -219,13 +219,13 @@
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="Antecedentes medicos: " style="font-weight:bold" />
+							<h:outputLabel value="ANTECEDENTES FAMILIARES: " style="font-weight:bold" />
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
-									value="#{generalMedicalDAO2.instance.antecedentesMedicos}" 
-									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtAntecedentesMedicos" style="width:625px;height:85px;font-size:14px" readonly="true" >
-									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtAntecedentesMedicos" ajaxSingle="true" ></a:support>
+									value="#{generalMedicalDAO2.instance.antecedentesFamiliares}" 
+									 disabled="#{wizardGeneralMedical2.mode == 'r'}"  id="txtAntecedentesFamiliares" style="width:625px;height:85px;font-size:14px" readonly="true" >
+									 <a:support event="onblur" action="#{wizardGeneralMedical2.generarResumen()}" reRender="txtAntecedentesFamiliares" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>	
 							</s:decorate>
 							

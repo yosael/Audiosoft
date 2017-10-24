@@ -59,6 +59,7 @@ public class GeneralMedical extends ClinicalHistory {
 	private String labClinico;
 	private String radioImagenologia; //radiograficas, imagenologia USG-DUPLIER
 	
+	private byte[] imagenExaAudiologia;
 	
 	public GeneralMedical() {
 
@@ -317,6 +318,16 @@ public class GeneralMedical extends ClinicalHistory {
 
 	public void setRadioImagenologia(String radioImagenologia) {
 		this.radioImagenologia = radioImagenologia;
+	}
+
+	
+	@Column(name= "imagen_exa_audiologia", nullable = true)
+	public byte[] getImagenExaAudiologia() {
+		return imagenExaAudiologia;
+	}
+
+	public void setImagenExaAudiologia(byte[] imagenExaAudiologia) {
+		this.imagenExaAudiologia = imagenExaAudiologia;
 	}
 	
 	

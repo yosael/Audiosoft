@@ -101,7 +101,6 @@
 											<h:outputText
 												value="No Especifico" rendered="#{clienteHome.instance.fechaNacimiento==null}"  />
 										</td>
-												
 										<td style="width:250px;" >		
 											<h:outputLabel value="Ocupacion: " style="font-weight:bold;" />		
 											<h:outputText
@@ -250,7 +249,12 @@
 							</s:decorate>
 							 -->
 							 
-							<h:outputLabel value="ENFERMEDAD ACTUAL: " style="font-weight:bold" />
+							 <h:panelGrid columns="1" >
+								<h:outputLabel value="ENFERMEDAD ACTUAL: " style="font-weight:bold" />
+								<h:outputLabel value="(Evolucion. Frecuencia. Secuencias.
+														Recurrencia. Sintomas asociados. 
+														Tratamientos previos)." />
+							</h:panelGrid>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -260,7 +264,13 @@
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="ANTECEDENTES PATOLOGICOS: " style="font-weight:bold" />
+							<h:panelGrid columns="1" >
+								<h:outputLabel value="ANTECEDENTES PATOLOGICOS: " style="font-weight:bold" />
+								<h:outputLabel value="(Cardiometabolicas. Alergias. 
+														Quirurgicas. Traumatologicas. 
+														Del desarrollo. Obstetricos. 
+														Otras enfermedades)." />
+							</h:panelGrid>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -271,7 +281,12 @@
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="ANTECEDENTES NO PATOLOGICOS: " style="font-weight:bold" />
+							<h:panelGrid columns="1" >
+								<h:outputLabel value="ANTECEDENTES NO PATOLOGICOS: " style="font-weight:bold" />
+								<h:outputLabel value="(Habitos. Alimentacion. Vivienda. 
+														Medioambiente. Laboral. Drogas. 
+														Medicamentos)." />
+							</h:panelGrid>	
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -282,7 +297,12 @@
 								</h:inputTextarea>	
 							</s:decorate>
 							
-							<h:outputLabel value="ANTECEDENTES FAMILIARES" style="font-weight:bold" />
+							<h:panelGrid columns="1" >
+								<h:outputLabel value="ANTECEDENTES FAMILIARES" style="font-weight:bold" />
+								<h:outputLabel value="(Hipoacusia. Alergias. Sindromes. 
+														E. Autoinmunes. Cardiometabolicas. 
+														 Cancer. Otros )" />
+							</h:panelGrid>
 							
 							<s:decorate template="/layout/kEditSpace.xhtml">
 								<h:inputTextarea
@@ -492,6 +512,34 @@
 										<a:support event="onblur" action="#{wizardGeneralMedical.generarResumen()}" reRender="txtExaAudio,txtResumenPaciente" ajaxSingle="true" ></a:support>
 								</h:inputTextarea>
 							</s:decorate>
+							
+							<h:outputLabel value="Adjuntar imagen:" />
+							
+							<h:column id="idImageCol" >
+								<h:outputLabel value="#{app.productomast_imgRestri}" />
+								<rich:fileUpload fileUploadListener="#{generalMedical.loadImage}"
+									listHeight="0" maxFilesQuantity="1" ajaxSingle="true"
+									immediate="true" acceptedTypes="jpg,png,jpeg,bmp"
+									addControlLabel="Cargar imagen" id="Cargar"
+									immediateUpload="true" listWidth="300" autoclear="false"
+									doneLabel="Listo" stopButtonClassDisabled="true"
+									style="height:30px;" clearAllControlLabel="Quitar imagen"
+									cleanButtonClassDisabled="false"   >
+									<a:support event="onuploadcomplete" ajaxSingle="true"
+										eventsQueue="q1" reRender="formA" /><!-- formproducto -->
+										
+								</rich:fileUpload>
+								<br />
+								<h:outputLabel styleClass="errors"
+									value="#{sainv.productoHome_error_image}"
+									rendered="#{generalMedicalDAO.imgSize==false}" id="errorIm" />
+								<br />
+								<br />
+								<s:graphicImage id="graphPrd" width="300px" height="300px"
+									value="#{generalMedicalDAO.instance.imagenExaAudiologia}"
+									rendered="#{not empty generalMedicalDAO.instance.imagenExaAudiologia}" />
+									
+							</h:column>
 							
 							<h:outputLabel value="OTONEUROLOGIA: " style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">

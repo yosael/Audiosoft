@@ -1,5 +1,7 @@
 package com.sa.kubekit.action.medical;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.richfaces.event.UploadEvent;
 
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.medical.GeneralMedical;
@@ -27,7 +30,7 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 	private boolean toggle2=true;
 	private boolean toggle3=true;
 	private List<MotivoConsulta> motivosAgregados = new ArrayList<MotivoConsulta>();
-	
+	private boolean imgSize = true;
 
 	@Override
 	public void create() {
@@ -184,6 +187,38 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 		
 		return true;
 	}
+	
+	public void loadImage(UploadEvent e) 
+	{
+		String path = e.getUploadItem().getFileName();
+		//System.out.println("Path var: "+path);
+		
+		File file = new File(e.getUploadItem().getFile().getPath());
+		int length = e.getUploadItem().getFileName().length();
+		// validamos que la imagen no exceda los 100 KB
+		if (file.length() > 100000) {
+			FacesMessages.instance().add(Severity.WARN,
+					sainv_messages.get("productoHome_error_image"));
+			setImgSize(false);
+		}  
+		else 
+		{
+			setImgSize(true);
+			byte[] bFile = new byte[(int) file.length()];
+			try 
+			{
+				FileInputStream fileInputStream = new FileInputStream(file);
+				// convert file into array of bytes
+				fileInputStream.read(bFile);
+				fileInputStream.close();
+				instance.setImagenExaAudiologia(bFile);
+				
+				System.out.println(instance.getImagenExaAudiologia().length);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
 	public List<MedicamentoConsulta> getMedicamentos() {
 		return medicamentos;
@@ -215,6 +250,14 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 
 	public void setToggle3(boolean toggle3) {
 		this.toggle3 = toggle3;
+	}
+
+	public boolean isImgSize() {
+		return imgSize;
+	}
+
+	public void setImgSize(boolean imgSize) {
+		this.imgSize = imgSize;
 	}
 	
 	

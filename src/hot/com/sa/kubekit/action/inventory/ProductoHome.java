@@ -106,7 +106,8 @@ public class ProductoHome extends KubeDAO<Producto> {
 	public void loadImage(UploadEvent e) 
 	{
 		String path = e.getUploadItem().getFileName();
-		System.out.println("Path var: "+path);
+		//System.out.println("Path var: "+path);
+		
 		File file = new File(e.getUploadItem().getFile().getPath());
 		int length = e.getUploadItem().getFileName().length();
 		// validamos que la imagen no exceda los 100 KB

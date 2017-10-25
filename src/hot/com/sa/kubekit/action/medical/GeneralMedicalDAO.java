@@ -213,7 +213,7 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 				fileInputStream.close();
 				instance.setImagenExaAudiologia(bFile);
 				
-				System.out.println(instance.getImagenExaAudiologia().length);
+				//System.out.println(instance.getImagenExaAudiologia().length);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

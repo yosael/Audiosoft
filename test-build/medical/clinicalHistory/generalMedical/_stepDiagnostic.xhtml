@@ -467,6 +467,31 @@
 					</h:panelGrid>
 				</rich:simpleTogglePanel>
 				
+				
+			<rich:spacer height="80" width="0" ></rich:spacer>
+				
+				
+			<!-- Se movieron de steap1 -->
+			<h:panelGrid style="margin:0 auto;" columns="2" >	
+				<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
+							ajaxSingle="true"
+							reRender="modHst1,frmHistorial"
+							onclick="#{rich:component('verHistorialMod')}.show();" >
+				</a:commandButton>
+					
+					
+				<a:commandButton styleClass="cancelBtn" value="Cancelar"
+							ajaxSingle="true"
+							onclick="#{rich:component('confirmCancel')}.show();">
+				</a:commandButton>
+					
+				<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
+					value="Finalizar Consulta" styleClass="saveBtn"
+					onclick="#{rich:component('modalConfirmConsulta')}.show();"
+					rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="dvConfirmC">												
+				</a:commandButton>
+			</h:panelGrid>
+			<!--  -->	
 	
 			<rich:modalPanel id="selMedicm" width="700" moveable="true" autosized="true"  top="40"
 				onmaskclick="#{rich:component('selMedicm')}.hide();"

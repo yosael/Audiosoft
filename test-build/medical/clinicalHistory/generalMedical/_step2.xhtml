@@ -513,11 +513,12 @@
 								</h:inputTextarea>
 							</s:decorate>
 							
+							<!-- 
 							<h:outputLabel value="Adjuntar imagen:" />
 							
 							<h:column id="idImageCol" >
 								<h:outputLabel value="#{app.productomast_imgRestri}" />
-								<rich:fileUpload fileUploadListener="#{generalMedical.loadImage}"
+								<rich:fileUpload fileUploadListener="#{generalMedicalDAO.loadImage}"
 									listHeight="0" maxFilesQuantity="1" ajaxSingle="true"
 									immediate="true" acceptedTypes="jpg,png,jpeg,bmp"
 									addControlLabel="Cargar imagen" id="Cargar"
@@ -526,7 +527,7 @@
 									style="height:30px;" clearAllControlLabel="Quitar imagen"
 									cleanButtonClassDisabled="false"   >
 									<a:support event="onuploadcomplete" ajaxSingle="true"
-										eventsQueue="q1" reRender="formA" /><!-- formproducto -->
+										eventsQueue="q1" reRender="formA,idImageCol,graphPrd,errorIm" />
 										
 								</rich:fileUpload>
 								<br />
@@ -539,7 +540,7 @@
 									value="#{generalMedicalDAO.instance.imagenExaAudiologia}"
 									rendered="#{not empty generalMedicalDAO.instance.imagenExaAudiologia}" />
 									
-							</h:column>
+							</h:column> -->
 							
 							<h:outputLabel value="OTONEUROLOGIA: " style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
@@ -734,6 +735,24 @@
 					}
 				</script>
 			</s:div>
+			
+				<rich:spacer height="80" width="0" ></rich:spacer>
+				
+				<h:panelGrid style="margin:0 auto;" columns="2" >
+				
+					<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
+								ajaxSingle="true"
+								reRender="modHst1,frmHistorial"
+								onclick="#{rich:component('verHistorialMod')}.show();" >
+					</a:commandButton>
+						
+						
+					<a:commandButton styleClass="cancelBtn" value="Cancelar"
+								ajaxSingle="true"
+								onclick="#{rich:component('confirmCancel')}.show();">
+					</a:commandButton>
+					
+				</h:panelGrid>	
 					
 		</rich:panel>
 		

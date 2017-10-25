@@ -125,20 +125,25 @@
 					
 					
 					<!-- btnHistorial se movio -->
+					<!-- comentado el 25/10/2017 
 					<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
 								ajaxSingle="true"
 								reRender="modHst1,frmHistorial"
 								onclick="#{rich:component('verHistorialMod')}.show();" >
 					</a:commandButton>
+					 -->
 					
 					<!-- <s:button propagation="end" onclick="return confirm('Desea cancelar la consulta?')" value="#{app.diagnostic_cancel}"
 						styleClass="cancelBtn" rendered="#{not generalMedicalDAO.managed}"
 						view="/medical/medicalAppointment/scheduler.xhtml">
 					</s:button>-->
+					
+					
+					<!-- comentado el 25/10/2017
 					<a:commandButton styleClass="cancelBtn" value="Cancelar"
 								ajaxSingle="true"
 								onclick="#{rich:component('confirmCancel')}.show();">
-					</a:commandButton>
+					</a:commandButton> -->
 									
 					
 								
@@ -153,12 +158,12 @@
 							oncomplete="showReport('recetaMedica', '#{conversation.id}');" styleClass="pdfBtn" style="font-size:15px;"   >
 						</a:commandButton>
 								
-					 	
+					 	<!-- comentado el 25/10/2017
 						<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
 							value="Finalizar Consulta" styleClass="saveBtn"
 							onclick="#{rich:component('modalConfirmConsulta')}.show();"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="dvConfirmC">												
-						</a:commandButton>
+						</a:commandButton>-->
 						
 						
 					

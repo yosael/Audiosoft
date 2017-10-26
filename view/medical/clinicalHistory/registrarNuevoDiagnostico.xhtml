@@ -46,16 +46,29 @@
 						
 				</h:panelGrid> 
 				
+				
 				<s:decorate template="/layout/kActions.xhtml">
 					
-					<a:commandButton action="#{diagnosticoMedHome.save()}" reRender="formdiagnos,_tblDiagn"
+					<a:commandButton action="#{diagnosticoMedHome.registrarNuevoDiagnosticoModal()}" reRender="formdiagnos,_tblDiagn"
 						rendered="#{not diagnosticoMedHome.managed}" styleClass="saveBtn" ignoreDupResponses="true" eventsQueue="q1"
-						oncomplete="#{rich:component('modRegistrarDiagnostico')}.hide();"
+						oncomplete="validar();"
 						ajaxSingle="true"
 						value="#{msn.button_save}"/>
 				</s:decorate>
 				</fieldset>
+				
+				<script type="text/javascript" > 
+					function validar(){
+						//alert('#{clienteHome.valtel}');																
+						if(#{diagnosticoMedHome.cerrarMod}){
+							#{rich:component('modRegistrarDiagnostico')}.hide();					
+						}					
+					}
+				</script>
+				
+				
 			</h:form>
 		</rich:panel>
+		
 		
 </ui:composition>

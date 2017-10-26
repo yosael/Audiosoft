@@ -1741,6 +1741,11 @@ public class ReparacionClienteHome extends KubeDAO<ReparacionCliente>{
 			}
 		}
 		
+		if(instance.getAdelanto()!=null && instance.getAdelanto()>0 && totalAcobrar>0)
+		{
+			totalAcobrar-=instance.getAdelanto();
+		}
+		
 	}
 	
 	

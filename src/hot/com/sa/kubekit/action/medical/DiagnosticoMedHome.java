@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.sa.kubekit.action.util.KubeDAO;
 import com.sa.model.medical.DiagnosticoMed;
@@ -22,6 +23,7 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 	private Integer diagId;
 	private List<DiagnosticoMed> resultList = new ArrayList<DiagnosticoMed>();
 	private String nomCoinci="";
+	private boolean cerrarMod;
 	
 	@Override
 	public void create() {
@@ -54,9 +56,6 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 				.setParameter("nom", "%"+this.nomCoinci.toUpperCase() + "%")
 				.getResultList();
 		
-		
-		
-		
 	}
 	
 	public void iniciarNuevoDiagnostico()
@@ -71,17 +70,19 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 		
 		if(instance.getCodigo()==null)
 		{
-			FacesMessages.instance().add("Ingresar el codigo");
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el codigo");
 			return false;
 		}
 		
 		if(instance.getNombre()==null)
 		{
-			FacesMessages.instance().add("Ingresar el nombre");
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el nombre");
 			return false;
 		}
 		
-		instance.setNombre(instance.getNombre().replaceAll("  ", " ").toUpperCase());
+		instance.setNombre(instance.getNombre().replaceAll("  ", " "));
+		
+		instance.setNombre(instance.getNombre().toUpperCase());
 		
 	
 		
@@ -92,7 +93,7 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 				.setParameter("rec", instance.getNombre())
 				.getResultList();
 		
-		System.out.println("Ingreso al diagnostico");
+		//System.out.println("Ingreso al diagnostico");
 		
 		if(coinList != null && coinList.size() > 0) {
 			FacesMessages.instance().add(
@@ -104,7 +105,23 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 
 	@Override
 	public boolean preModify() {
+		
+		if(instance.getCodigo()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el codigo");
+			return false;
+		}
+		
+		if(instance.getNombre()==null)
+		{
+			FacesMessages.instance().add(Severity.WARN,"Ingresar el nombre");
+			return false;
+		}
+		
 		instance.setNombre(instance.getNombre().replaceAll("  ", " "));
+		
+		instance.setNombre(instance.getNombre());
+		
 		//Verificamos que no se repita
 		List<DiagnosticoMed> coinList = getEntityManager()
 				.createQuery("SELECT d FROM DiagnosticoMed d " +
@@ -119,6 +136,23 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 		}
 		return true;
 	}
+	
+	
+	public void registrarNuevoDiagnosticoModal()
+	{
+		cerrarMod = false;
+		
+		if(save())
+		{
+			cerrarMod = true;
+			System.out.println("Cerrar modal true");
+		}
+		else
+		{
+			return;
+		}
+	}
+	
 
 	@Override
 	public boolean preDelete() {
@@ -165,5 +199,16 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 	public void setNomCoinci(String nomCoinci) {
 		this.nomCoinci = nomCoinci;
 	}
+
+	public boolean isCerrarMod() {
+		return cerrarMod;
+	}
+
+	public void setCerrarMod(boolean cerrarMod) {
+		this.cerrarMod = cerrarMod;
+	}
+	
+	
+	
 
 }

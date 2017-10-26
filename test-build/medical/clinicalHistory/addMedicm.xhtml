@@ -89,15 +89,15 @@
 			</h:form>
 			
 			<rich:modalPanel id="modNuevoMedi" width="1000" moveable="true" autosized="true"  top="40"
-					onmaskclick="#{rich:component('modNuevoMedi')}.hide();"
-					onbeforeshow="activeModal.setActiveModalPanel('modNuevoMedi');"  >
-					<f:facet name="header">Medicamento sugerido</f:facet>
-					<f:facet name="controls">
-						<h:panelGroup>
-							<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('modNuevoMedi')}.hide();" />
-						</h:panelGroup>
-					</f:facet>
-					<s:div id="dNMedicamento"><ui:include src="/medical/clinicalHistory/nuevoMedicamento.xhtml" /></s:div>
-				</rich:modalPanel>
+				onmaskclick="#{rich:component('modNuevoMedi')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('modNuevoMedi');"  >
+				<f:facet name="header">Medicamento sugerido</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('modNuevoMedi')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="dNMedicamento"><ui:include src="/medical/clinicalHistory/nuevoMedicamento.xhtml" /></s:div>
+			</rich:modalPanel>
 	
 </ui:composition>

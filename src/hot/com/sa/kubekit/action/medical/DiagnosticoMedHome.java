@@ -59,18 +59,41 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 		
 	}
 	
+	public void iniciarNuevoDiagnostico()
+	{
+		setInstance(new DiagnosticoMed());
+	}
 
 	
 
 	@Override
 	public boolean preSave() {
-		instance.setNombre(instance.getNombre().replaceAll("  ", " "));
+		
+		if(instance.getCodigo()==null)
+		{
+			FacesMessages.instance().add("Ingresar el codigo");
+			return false;
+		}
+		
+		if(instance.getNombre()==null)
+		{
+			FacesMessages.instance().add("Ingresar el nombre");
+			return false;
+		}
+		
+		instance.setNombre(instance.getNombre().replaceAll("  ", " ").toUpperCase());
+		
+	
+		
 		//Verificamos que no se repita
 		List<DiagnosticoMed> coinList = getEntityManager()
 				.createQuery("SELECT d FROM DiagnosticoMed d " +
 						"	WHERE UPPER(d.nombre) = UPPER(:rec) ")
 				.setParameter("rec", instance.getNombre())
 				.getResultList();
+		
+		System.out.println("Ingreso al diagnostico");
+		
 		if(coinList != null && coinList.size() > 0) {
 			FacesMessages.instance().add(
 					sainv_messages.get("diagnos_name_dupl"));
@@ -105,6 +128,8 @@ public class DiagnosticoMedHome extends KubeDAO<DiagnosticoMed>{
 	@Override
 	public void posSave() {
 		// TODO Auto-generated method stub
+		
+		System.out.println("Posave Diagnostico");
 	}
 
 	@Override

@@ -468,11 +468,11 @@
 				</rich:simpleTogglePanel>
 				
 				
-			<rich:spacer height="80" width="0" ></rich:spacer>
+			<rich:spacer height="45" width="0" ></rich:spacer>
 				
 				
 			<!-- Se movieron de steap1 -->
-			<h:panelGrid style="margin:0 auto;" columns="2" >	
+			<h:panelGrid style="margin:0 auto;" columns="3" >	
 				<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
 							ajaxSingle="true"
 							reRender="modHst1,frmHistorial"
@@ -564,6 +564,7 @@
 				</f:facet>
 				<s:div id="e1"><ui:include src="/medical/clinicalHistory/addExam.xhtml" /></s:div>
 			</rich:modalPanel>
+			
 	
 		</rich:panel>
 </ui:composition>

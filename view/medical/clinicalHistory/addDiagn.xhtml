@@ -17,12 +17,18 @@
 				<center>
 						<s:span styleClass="busHead">#{app.diagmed_find_by_name}:</s:span>
 							<s:decorate></s:decorate> <rich:spacer width="2px;" height="10px;"/> 
+					<h:panelGrid columns="2" >							
 						<h:inputText style="width:250px;"  styleClass="busDiag" value="#{diagnosticoMedHome.nomCoinci}" id="_nomCoinci">
-							<a:support  event="onkeydown" reRender="#{rich:clientId('_tableReco')}"
-								ajaxSingle="true" action="#{diagnosticoMedHome.getDiagnostListByName()}" />
 							<a:support event="onkeyup" reRender="#{rich:clientId('_tableReco')}"
 								ajaxSingle="true" action="#{diagnosticoMedHome.getDiagnostListByName()}" />
 						</h:inputText>
+						
+						<a:commandButton onclick="#{rich:component('modRegistrarDiagnostico')}.show();" ajaxSingle="true" 
+								 action="#{diagnosticoMedHome.iniciarNuevoDiagnostico()}" reRender="formdiagnos"
+								styleClass="addBtn" value="" style="width:30px" >
+							</a:commandButton>
+						
+					</h:panelGrid>
 						<p:watermark for="_nomCoinci" value="#{app.diagmed_find_placeholder}" id="watermark" />
 				</center>
 				
@@ -58,4 +64,17 @@
 					</f:facet>
 				</rich:dataTable>
 			</h:form>
+			
+			<rich:modalPanel id="modRegistrarDiagnostico" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('modRegistrarDiagnostico')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('modRegistrarDiagnostico');">
+				<f:facet name="header">Diagnostico medico</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('modRegistrarDiagnostico')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="dvNuevoDiag"><ui:include src="/medical/clinicalHistory/registrarNuevoDiagnostico.xhtml" /></s:div>
+			</rich:modalPanel>
+			
 </ui:composition>

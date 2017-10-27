@@ -20,7 +20,12 @@ import com.sa.model.crm.Cliente;
 import com.sa.model.inventory.Movimiento;
 import com.sa.model.medical.DiagnosticoConsulta;
 import com.sa.model.medical.DiagnosticoMed;
+import com.sa.model.medical.ExamImagenoConsulta;
+import com.sa.model.medical.ExamenAudioConsulta;
+import com.sa.model.medical.ExamenAudiologia;
 import com.sa.model.medical.ExamenConsulta;
+import com.sa.model.medical.ExamenLabConsulta;
+import com.sa.model.medical.ExamenOtoConsulta;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.medical.Medicamento;
 import com.sa.model.medical.MedicamentoConsulta;
@@ -65,6 +70,12 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	private Float totalServicios;
 	private Float totalExamenes;
 	private Float totalCobroConsulta;
+	
+	
+	private List<ExamenAudioConsulta> lstExamenesAudioConsulta = new ArrayList<ExamenAudioConsulta>();
+	private List<ExamenOtoConsulta> lstExamenesOtoConsulta = new ArrayList<ExamenOtoConsulta>();
+	private List<ExamenLabConsulta> lstExamenesLabConsulta = new ArrayList<ExamenLabConsulta>();
+	private List<ExamImagenoConsulta> lstExamImagenoConsulta = new ArrayList<ExamImagenoConsulta>();
 	
 	
 	//nuevo

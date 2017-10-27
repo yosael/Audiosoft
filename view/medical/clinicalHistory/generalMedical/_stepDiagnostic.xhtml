@@ -345,7 +345,55 @@
 					
 					<rich:spacer height="50" ></rich:spacer>
 				
-				</rich:simpleTogglePanel>	
+				</rich:simpleTogglePanel>
+				
+				
+				
+				<rich:simpleTogglePanel styleClass="classHead"  switchType="ajax" label="EXAMENES COMPLEMENTARIOS"  opened="true">
+					<rich:spacer height="40" ></rich:spacer>
+					<table style="width:100%;" >
+						<tr >
+							<td style="width:10%">
+								
+									<a:commandButton onclick="#{rich:component('selExamenAudio')}.show();" id="btnAddDiag"  ajaxSingle="true" 
+									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+										 action="#{diagnosticoMedHome.getDiagnostListByName()}" reRender="d1"
+										styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;">
+									</a:commandButton>
+							</td>
+							<td style="width:90%" >
+								
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.diagnosticosAgregados}" id="_tblDiagn"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">DIAGNOSTICOS PRESUNTIVOS</span></f:facet>
+									<!-- #{app.diagmed_list_sel} -->
+									<rich:column>
+										<f:facet name="header">#{app.diagnos_name}</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.diagnostico.nombre}" />
+									</rich:column>	
+									<rich:column>
+										<f:facet name="header">#{app.diagn_prpal}</f:facet>
+										<h:selectBooleanCheckbox value="#{res.principal}" disabled="#{medicalAppointmentDAO.instance.clinicalHistory!=null}" >
+											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tblDiagn" 
+													action="#{prescriptionHome.setDiagnPrpal(res)}" />
+										</h:selectBooleanCheckbox>
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">Quitar</f:facet>
+										<a:commandLink reRender="_tblDiagn"
+											action="#{prescriptionHome.removerDiagnostico(res)}" ajaxSingle="true" eventsQueue="q1" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
+							</td>
+						</tr>
+					</table>
+				</rich:simpleTogglePanel>
+				
+					
 							
 				<!-- Pendiente: examenes complementarios 			
 				

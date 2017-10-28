@@ -26,7 +26,7 @@ public class ExamenOtoneurologia implements Serializable {
 	@Column(name="codigo",length=8,nullable=true)
 	private String codigo;
 	
-	@Column(name="categoria",length=8,nullable=true)
+	@Column(name="categoria",length=20,nullable=true)
 	private String categoria;
 	
 	
@@ -61,6 +61,28 @@ public class ExamenOtoneurologia implements Serializable {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idExamenOto;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamenOtoneurologia other = (ExamenOtoneurologia) obj;
+		if (idExamenOto != other.idExamenOto)
+			return false;
+		return true;
 	}
 	
 	

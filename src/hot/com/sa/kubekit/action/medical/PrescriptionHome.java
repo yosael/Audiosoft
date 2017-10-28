@@ -21,10 +21,12 @@ import com.sa.model.inventory.Movimiento;
 import com.sa.model.medical.DiagnosticoConsulta;
 import com.sa.model.medical.DiagnosticoMed;
 import com.sa.model.medical.ExamImagenoConsulta;
+import com.sa.model.medical.ExamImagenologia;
 import com.sa.model.medical.ExamenAudioConsulta;
 import com.sa.model.medical.ExamenAudiologia;
 import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.ExamenLabConsulta;
+import com.sa.model.medical.ExamenLaboratorio;
 import com.sa.model.medical.ExamenOtoConsulta;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.medical.Medicamento;
@@ -232,6 +234,63 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		diagn.setDiagnostico(dig);
 		diagnosticosAgregados.add(diagn);
 	}
+	
+	
+	public void agregarExamenAudiologia(ExamenAudiologia exam)
+	{
+		for(ExamenAudioConsulta examen:lstExamenesAudioConsulta)
+		{
+			if(examen.getExamen().equals(exam))
+			{
+				removerExamenAudio(examen);
+				exam.setAsociado(false);
+				return;
+			}
+		}
+		
+		ExamenAudioConsulta examenAudio = new ExamenAudioConsulta();
+		examenAudio.setExamen(exam);
+		
+		lstExamenesAudioConsulta.add(examenAudio);
+	}
+	
+	public void agregarExamenLaboratorio(ExamenLaboratorio exam)
+	{
+		for(ExamenLabConsulta examen:lstExamenesLabConsulta)
+		{
+			if(examen.getExamenLab().equals(exam))
+			{
+				removerExamenLab(examen);
+				exam.setAsociado(false);
+				return;
+			}
+		}
+		
+		ExamenLabConsulta examenLab = new ExamenLabConsulta();
+		examenLab.setExamenLab(exam);
+		
+		lstExamenesLabConsulta.add(examenLab);
+	}
+	
+	
+	public void agregarExamenImageno(ExamImagenologia exam)
+	{
+		for(ExamImagenoConsulta examen:lstExamImagenoConsulta)
+		{
+			if(examen.getExamen().equals(exam))
+			{
+				removerExamenImageno(examen);
+				exam.setAsociado(false);
+				return;
+			}
+		}
+		
+		ExamImagenoConsulta examenImageno = new ExamImagenoConsulta();
+		examenImageno.setExamen(exam);
+		
+		lstExamImagenoConsulta.add(examenImageno);
+	}
+	
 	
 	//List<HashMap<K, V>> examenes = new ArrayList<String,ExamenConsulta>();
 	
@@ -447,6 +506,24 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		serviciosAgregados.remove(srv);
 	}
 	
+	public void removerExamenAudio(ExamenAudioConsulta examenConsulta)
+	{
+		examenConsulta.getExamen().setAsociado(false);
+		lstExamenesAudioConsulta.remove(examenConsulta);
+	}
+	
+	public void removerExamenLab(ExamenLabConsulta examenConsulta)
+	{
+		examenConsulta.getExamenLab().setAsociado(false);
+		lstExamenesLabConsulta.remove(examenConsulta);
+	}
+	
+	public void removerExamenImageno(ExamImagenoConsulta examenConsulta)
+	{
+		examenConsulta.getExamen().setAsociado(false);
+		lstExamImagenoConsulta.remove(examenConsulta);
+	}
+	
 	public void setDiagnPrpal(DiagnosticoConsulta diagn) {
 		for(DiagnosticoConsulta tmpDign : diagnosticosAgregados) 
 			tmpDign.setPrincipal(false);
@@ -611,6 +688,42 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 
 	public void setTotalCobroConsulta(Float totalCobroConsulta) {
 		this.totalCobroConsulta = totalCobroConsulta;
+	}
+
+	public List<ExamenAudioConsulta> getLstExamenesAudioConsulta() {
+		return lstExamenesAudioConsulta;
+	}
+
+	public void setLstExamenesAudioConsulta(
+			List<ExamenAudioConsulta> lstExamenesAudioConsulta) {
+		this.lstExamenesAudioConsulta = lstExamenesAudioConsulta;
+	}
+
+	public List<ExamenOtoConsulta> getLstExamenesOtoConsulta() {
+		return lstExamenesOtoConsulta;
+	}
+
+	public void setLstExamenesOtoConsulta(
+			List<ExamenOtoConsulta> lstExamenesOtoConsulta) {
+		this.lstExamenesOtoConsulta = lstExamenesOtoConsulta;
+	}
+
+	public List<ExamenLabConsulta> getLstExamenesLabConsulta() {
+		return lstExamenesLabConsulta;
+	}
+
+	public void setLstExamenesLabConsulta(
+			List<ExamenLabConsulta> lstExamenesLabConsulta) {
+		this.lstExamenesLabConsulta = lstExamenesLabConsulta;
+	}
+
+	public List<ExamImagenoConsulta> getLstExamImagenoConsulta() {
+		return lstExamImagenoConsulta;
+	}
+
+	public void setLstExamImagenoConsulta(
+			List<ExamImagenoConsulta> lstExamImagenoConsulta) {
+		this.lstExamImagenoConsulta = lstExamImagenoConsulta;
 	}
 
 	

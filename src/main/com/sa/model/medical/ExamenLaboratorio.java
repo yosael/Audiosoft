@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="examen_laboratorio")
@@ -26,9 +27,11 @@ public class ExamenLaboratorio implements Serializable {
 	@Column(name="codigo",length=8,nullable=true)
 	private String codigo;
 	
-	@Column(name="categoria",length=8,nullable=true)
+	@Column(name="categoria",length=20,nullable=true)
 	private String categoria;
 
+	@Transient
+	private boolean asociado;
 	
 	
 	public int getIdExamenLab() {
@@ -61,6 +64,38 @@ public class ExamenLaboratorio implements Serializable {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	
+
+	public boolean isAsociado() {
+		return asociado;
+	}
+
+	public void setAsociado(boolean asociado) {
+		this.asociado = asociado;
+	}
+
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idExamenLab;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ExamenLaboratorio other = (ExamenLaboratorio) obj;
+		if (idExamenLab != other.idExamenLab)
+			return false;
+		return true;
 	}
 	
 	

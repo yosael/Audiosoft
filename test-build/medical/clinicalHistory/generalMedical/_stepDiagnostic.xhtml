@@ -345,7 +345,139 @@
 					
 					<rich:spacer height="50" ></rich:spacer>
 				
-				</rich:simpleTogglePanel>	
+				</rich:simpleTogglePanel>
+				
+				
+				
+				<rich:simpleTogglePanel styleClass="classHead"  switchType="ajax" label="EXAMENES COMPLEMENTARIOS"  opened="true">
+					<rich:spacer height="40" ></rich:spacer>
+					<table style="width:100%;" >
+						<tr >
+							<td style="width:10%">
+								
+									<a:commandButton onclick="#{rich:component('selExamAudio')}.show();" id="btnAddExamenAudio"  ajaxSingle="true" 
+									rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+										 action="#{examenAudiologiaHome.cargarExamenes()}" reRender="d1Audio"
+										styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;">
+									</a:commandButton>
+							</td>
+							<td style="width:90%" >
+								
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.lstExamenesAudioConsulta}" id="_tblExamAudio"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">EXAMENES COMPLEMENTARIOS AUDIOLOGIA</span></f:facet>
+									<!-- #{app.diagmed_list_sel} -->
+									<rich:column>
+										<f:facet name="header">Codigo</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.codigo}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.nombre}" />
+									</rich:column>	
+									<rich:column>
+										<f:facet name="header">Categoria</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.categoria}" />
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">Quitar</f:facet>
+										<a:commandLink reRender="_tblExamAudio"
+											action="#{prescriptionHome.removerExamenAudio(res)}" ajaxSingle="true" eventsQueue="q1" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" ><rich:spacer height="40" ></rich:spacer></td>
+						</tr>
+						<tr>	
+							<td style="width:10%">
+								<a:commandButton onclick="#{rich:component('selExamLab')}.show();" id="btnAddExamenLab"  ajaxSingle="true" 
+								rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+									 action="#{examenLaboratorioHome.cargarExamenes()}" reRender="d1ExamLab"
+									styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;">
+								</a:commandButton>
+							</td>
+							<td style="width:90%" >
+								
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.lstExamenesLabConsulta}" id="_tblExamLab"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">EXAMENES COMPLEMENTARIOS DE LABORATORIO</span></f:facet>
+									<!-- #{app.diagmed_list_sel} -->
+									<rich:column>
+										<f:facet name="header">Codigo</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examenLab.codigo}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examenLab.nombre}" />
+									</rich:column>	
+									<rich:column>
+										<f:facet name="header">Categoria</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examenLab.categoria}" />
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">Quitar</f:facet>
+										<a:commandLink reRender="_tblExamLab"
+											action="#{prescriptionHome.removerExamenLab(res)}" ajaxSingle="true" eventsQueue="q1" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" ><rich:spacer height="40" ></rich:spacer></td>
+						</tr>
+						<tr>	
+							<td style="width:10%">
+								<a:commandButton onclick="#{rich:component('selExamImageno')}.show();" id="btnAddExamenImage"  ajaxSingle="true" 
+								rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+									 action="#{examImagenologiaHome.cargarExamenes()}" reRender="d1ExamImage"
+									styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;">
+								</a:commandButton>
+							</td>
+							<td style="width:90%" >
+								
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.lstExamImagenoConsulta}" id="_tblExamImage"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">EXAMENES COMPLEMENTARIOS DE IMAGENOLOGIA/RADIOGRAFIA</span></f:facet>
+									<!-- #{app.diagmed_list_sel} -->
+									<rich:column>
+										<f:facet name="header">Codigo</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.codigo}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.nombre}" />
+									</rich:column>	
+									<rich:column>
+										<f:facet name="header">Categoria</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.categoria}" />
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">Quitar</f:facet>
+										<a:commandLink reRender="_tblExamImage"
+											action="#{prescriptionHome.removerExamenImageno(res)}" ajaxSingle="true" eventsQueue="q1" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
+							</td>
+						</tr>
+						
+					</table>
+				</rich:simpleTogglePanel>
+				
+					
 							
 				<!-- Pendiente: examenes complementarios 			
 				
@@ -563,6 +695,47 @@
 					</h:panelGroup>
 				</f:facet>
 				<s:div id="e1"><ui:include src="/medical/clinicalHistory/addExam.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
+			<!-- Nuevos  -->
+			
+			<rich:modalPanel id="selExamAudio" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('selExamAudio')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selExamAudio');"  >
+				<f:facet name="header">Examenes complementarios audiologia</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExamAudio')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="d1Audio"><ui:include src="/medical/clinicalHistory/addExamAudio.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
+			
+			<rich:modalPanel id="selExamLab" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('selExamLab')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selExamLab');"  >
+				<f:facet name="header">Examenes complementarios de laboratorio</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExamLab')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="d1ExamLab"><ui:include src="/medical/clinicalHistory/addExamLab.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			<rich:modalPanel id="selExamImageno" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('selExamImageno')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selExamImageno');"  >
+				<f:facet name="header">Examenes complementarios de laboratorio</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExamImageno')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="d1ExamImage"><ui:include src="/medical/clinicalHistory/addExamImage.xhtml" /></s:div>
 			</rich:modalPanel>
 			
 	

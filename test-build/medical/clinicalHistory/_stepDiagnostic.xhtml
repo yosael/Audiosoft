@@ -312,6 +312,18 @@
 				</f:facet>
 				<s:div id="e1"><ui:include src="/medical/clinicalHistory/addExam.xhtml" /></s:div>
 			</rich:modalPanel>
+			
+			<rich:modalPanel id="selExamAudio" width="800" moveable="true" autosized="true"  top="40"
+				onbeforeshow="activeModal.setActiveModalPanel('selExamAudio');">
+				<f:facet name="header">Examenes complementarios audiologia</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExamAudio')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="e1Audio"><ui:include src="/medical/clinicalHistory/addExamAudio.xhtml" /></s:div>
+			</rich:modalPanel>
+			
 	</rich:panel>
-	<ui:include src="/medical/clinicalHistory/addExam.xhtml" />
+	<!-- <ui:include src="/medical/clinicalHistory/addExam.xhtml" /> -->
 </ui:composition>

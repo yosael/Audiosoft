@@ -47,9 +47,8 @@
 										</td>		
 										
 										<td>
-												
-												<h:outputLabel value="Referido por: " style="font-weight:bold;" />
-												<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
+											<h:outputLabel value="Referido por: " style="font-weight:bold;" />
+											<h:outputText value="#{medicalAppointmentDAO.verificarReferenciaPaciente()}" />
 										</td>	
 									</tr>
 								</table>
@@ -473,6 +472,47 @@
 								<rich:spacer height="40" ></rich:spacer>
 							</td>
 						</tr>
+						<tr>
+							<td colspan="2" ><rich:spacer height="40" ></rich:spacer></td>
+						</tr>
+						<tr>	
+							<td style="width:10%">
+								<a:commandButton onclick="#{rich:component('selExamOto')}.show();" id="btnAddExamenOto"  ajaxSingle="true" 
+								rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}"
+									 action="#{examenOtoneurologiaHome.cargarExamenes()}" reRender="d1ExamOto"
+									styleClass="addBtn" value="AGREGAR" style="font-size:14px;width:130px;">
+								</a:commandButton>
+							</td>
+							<td style="width:90%" >
+								
+								<rich:dataTable var="res"   style="background-color:gray;background-image:none;" value="#{prescriptionHome.lstExamenesOtoConsulta}" id="_tblExamOto"
+									align="center"  rowClasses="tblEven,tblOdd" onRowMouseOver="this.style.backgroundColor='#A3CAF1'" onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowClassName}'" 
+									headerClass="tablaHeader" footerClass="tableScroll">
+									<f:facet name="header" style="background-color:gray;background-image:none;"><span style="font-size:16px;">EXAMENES COMPLEMENTARIOS DE OTONEUROLOGIA</span></f:facet>
+									<!-- #{app.diagmed_list_sel} -->
+									<rich:column>
+										<f:facet name="header">Codigo</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.codigo}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.nombre}" />
+									</rich:column>	
+									<rich:column>
+										<f:facet name="header">Categoria</f:facet>
+										<h:outputText style="font-size:14px;" value="#{res.examen.categoria}" />
+									</rich:column>
+									<rich:column rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}">
+										<f:facet name="header">Quitar</f:facet>
+										<a:commandLink reRender="_tblExamOto"
+											action="#{prescriptionHome.removerExamenOtoneuro(res)}" ajaxSingle="true" eventsQueue="q1" >
+											<h:graphicImage value="/kubeImg/table_delete16.png" />
+										</a:commandLink>
+									</rich:column>
+								</rich:dataTable>
+								<rich:spacer height="40" ></rich:spacer>
+							</td>
+						</tr>
 						
 					</table>
 				</rich:simpleTogglePanel>
@@ -736,6 +776,19 @@
 					</h:panelGroup>
 				</f:facet>
 				<s:div id="d1ExamImage"><ui:include src="/medical/clinicalHistory/addExamImage.xhtml" /></s:div>
+			</rich:modalPanel>
+			
+			
+			<rich:modalPanel id="selExamOto" width="800" moveable="true" autosized="true"  top="40"
+				onmaskclick="#{rich:component('selExamOto')}.hide();"
+				onbeforeshow="activeModal.setActiveModalPanel('selExamOto');"  >
+				<f:facet name="header">Examenes complementarios de otoneurologia</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn" onclick="#{rich:component('selExamOto')}.hide();" />
+					</h:panelGroup>
+				</f:facet>
+				<s:div id="d1ExamOto"><ui:include src="/medical/clinicalHistory/addExamOto.xhtml" /></s:div>
 			</rich:modalPanel>
 			
 	

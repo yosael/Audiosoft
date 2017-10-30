@@ -75,6 +75,9 @@ public class VentaProdServ implements Serializable {
 	//Nuevo agregado el 04/10/2017
 	private String estadoDescuento;
 	
+	//agregado el 30/10/2017
+	private Integer idConsulta;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -350,6 +353,14 @@ public class VentaProdServ implements Serializable {
 	}
 	public void setEstadoDescuento(String estadoDescuento) {
 		this.estadoDescuento = estadoDescuento;
+	}
+	
+	@Column(name="id_consulta",nullable=true)
+	public Integer getIdConsulta() {
+		return idConsulta;
+	}
+	public void setIdConsulta(Integer idConsulta) {
+		this.idConsulta = idConsulta;
 	}
 
 	

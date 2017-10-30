@@ -519,6 +519,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		{
 		
 				try {
+					
 					if (clienteHome.getInstance().getGeneralInformation().getId() == null) {
 						entityManager.persist(clienteHome.getInstance()
 								.getGeneralInformation());
@@ -529,7 +530,9 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 					if (clienteHome.modify()) {
 						//return "next";
 					}
+					
 				} catch (Exception e) {
+					
 					System.out.println("catch allsteps: " + e);
 					e.printStackTrace();
 				}

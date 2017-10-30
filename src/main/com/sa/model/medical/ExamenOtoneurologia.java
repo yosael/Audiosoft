@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -29,6 +30,9 @@ public class ExamenOtoneurologia implements Serializable {
 	@Column(name="categoria",length=20,nullable=true)
 	private String categoria;
 	
+	
+	@Transient
+	private boolean asociado;
 	
 
 	public int getIdExamenOto() {
@@ -62,6 +66,16 @@ public class ExamenOtoneurologia implements Serializable {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
+	
+	public boolean isAsociado() {
+		return asociado;
+	}
+
+	public void setAsociado(boolean asociado) {
+		this.asociado = asociado;
+	}
+	
+	
 
 	@Override
 	public int hashCode() {

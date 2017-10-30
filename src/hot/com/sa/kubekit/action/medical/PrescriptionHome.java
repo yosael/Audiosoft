@@ -28,6 +28,7 @@ import com.sa.model.medical.ExamenConsulta;
 import com.sa.model.medical.ExamenLabConsulta;
 import com.sa.model.medical.ExamenLaboratorio;
 import com.sa.model.medical.ExamenOtoConsulta;
+import com.sa.model.medical.ExamenOtoneurologia;
 import com.sa.model.medical.MedicalAppointmentService;
 import com.sa.model.medical.Medicamento;
 import com.sa.model.medical.MedicamentoConsulta;
@@ -292,6 +293,25 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	}
 	
 	
+	public void agregarExamenOtoneurologia(ExamenOtoneurologia exam)
+	{
+		for(ExamenOtoConsulta examen:lstExamenesOtoConsulta)
+		{
+			if(examen.getExamen().equals(exam))
+			{
+				removerExamenOtoneuro(examen);
+				exam.setAsociado(false);
+				return;
+			}
+		}
+		
+		ExamenOtoConsulta examenOtoneuro = new ExamenOtoConsulta();
+		examenOtoneuro.setExamen(exam);
+		
+		lstExamenesOtoConsulta.add(examenOtoneuro);
+	}
+	
+	
 	//List<HashMap<K, V>> examenes = new ArrayList<String,ExamenConsulta>();
 	
 	public void agregarExamen(Service exa) {
@@ -522,6 +542,12 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		examenConsulta.getExamen().setAsociado(false);
 		lstExamImagenoConsulta.remove(examenConsulta);
+	}
+	
+	public void removerExamenOtoneuro(ExamenOtoConsulta examenConsulta)
+	{
+		examenConsulta.getExamen().setAsociado(false);
+		lstExamenesOtoConsulta.remove(examenConsulta);
 	}
 	
 	public void setDiagnPrpal(DiagnosticoConsulta diagn) {

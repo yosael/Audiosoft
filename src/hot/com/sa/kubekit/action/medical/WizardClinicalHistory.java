@@ -79,12 +79,10 @@ public abstract class WizardClinicalHistory {
 		System.out.println("super lo demas: generalConteiner:  " + generalContainer.getMode());
 		loadMedicalAppointment();
 		// cargar los datos generales
-		generalContainer.setTreatment(obtainClinicalHistory()
-				.getTreatmentDescriptive());
-		generalContainer
-				.setExams(obtainClinicalHistory().getExamsDescriptive());
-		generalContainer.setDiagnostics(new ArrayList<ServiceClinicalHistory>(
-				obtainClinicalHistory().getServiceClinicalHistories()));
+		generalContainer.setTreatment(obtainClinicalHistory().getTreatmentDescriptive());
+		generalContainer.setExams(obtainClinicalHistory().getExamsDescriptive());
+		generalContainer.setDiagnostics(new ArrayList<ServiceClinicalHistory>(obtainClinicalHistory().getServiceClinicalHistories()));
+		
 		loadPastHistories();
 	}
 	
@@ -113,11 +111,14 @@ public abstract class WizardClinicalHistory {
 	}
 
 	private void loadMedicalAppointment() {
+		
 		prescriptionHome.setExamenesAgregados(new ArrayList<ExamenConsulta>());
 		prescriptionHome.setRecomendacionesAgregadas(new ArrayList<RecomendacionConsulta>());
 		prescriptionHome.setDiagnosticosAgregados(new ArrayList<DiagnosticoConsulta>());
 		prescriptionHome.setItemsAgregados(new ArrayList<MedicamentoConsulta>());
 		prescriptionHome.setServiciosAgregados(new ArrayList<MedicalAppointmentService>());
+		
+		//prescriptionHome.setLstExamenesAudioConsulta(new ArrayList<ExamenAudioConsulta>());
 
 		medicalAppointmentDAO.load();
 				
@@ -139,6 +140,16 @@ public abstract class WizardClinicalHistory {
 			prescriptionHome.setRecomendacionesAgregadas(medicalAppointmentDAO.getInstance().getClinicalHistory().getRecomendaciones());
 			prescriptionHome.setItemsAgregados(medicalAppointmentDAO.getInstance().getClinicalHistory().getMedicamentos());
 			prescriptionHome.setDiagnosticosAgregados(medicalAppointmentDAO.getInstance().getClinicalHistory().getDiagnosticos());*/
+			
+			
+			//nuevo el 30/10/2017
+			prescriptionHome.setLstExamenesAudioConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getClinicalHistory().getExamenesAudiologiaConsulta());
+			prescriptionHome.setLstExamenesOtoConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getClinicalHistory().getExamenesOtoneuroConsulta());
+			prescriptionHome.setLstExamenesLabConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getClinicalHistory().getExamenesLabConsulta());
+			prescriptionHome.setLstExamImagenoConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getClinicalHistory().getExamenesImagenoRadConsulta());
+			
+			
+			
 			System.out.println("ENTRO HA WizardClinicalHistory--->loadMedicalAppointment if != null ");
 		} 
 		
@@ -203,7 +214,8 @@ public abstract class WizardClinicalHistory {
 
 	// metodo para el registro de diagnosticos
 
-	public void createDiagnostics() {
+	public void createDiagnostics() 
+	{
 		
 		if (generalContainer.getDiagnostics() == null) 
 		{
@@ -215,27 +227,35 @@ public abstract class WizardClinicalHistory {
 				servClinicalHistory.setService(serv.getService());
 				servClinicalHistory.setMedicalAppointmentService(serv);
 				servClinicalHistory.setClinicalHistory(obtainClinicalHistory());
+				
 				generalContainer.getDiagnostics().add(servClinicalHistory);
 			}
 		}
 	}
 
 	public void saveDiagnostics() {
-		for (ServiceClinicalHistory diag : generalContainer.getDiagnostics()) {
+		for (ServiceClinicalHistory diag : generalContainer.getDiagnostics()) 
+		{
 			try{
+				
 				diag.getServiceClinicalHistoryId().getClinicalHistory();
 				//System.out.println("Fecha contenida "+  diag.getClinicalHistory().getCreationDate());
+				
 			}catch (Exception e) {
+				
 				System.out.println("Fecha contenida "+  diag.getClinicalHistory().getCreationDate());
 				System.out.println("EL ID DE DIAG ES NULO");
+				
 			}
 			if (!entityManager.contains(diag)) {
-				diag.setServiceClinicalHistoryId(new ServiceClinicalHistoryId(
-						diag.getService().getId(), obtainClinicalHistory()
-								.getConsecutive()));
-				entityManager.persist(diag);
+				
+				//Posiblemente poner condicion de idNulo
+				
+					diag.setServiceClinicalHistoryId(new ServiceClinicalHistoryId(diag.getService().getId(), obtainClinicalHistory().getConsecutive()));
+					entityManager.persist(diag);
 			}
 		}
+		
 		entityManager.flush();
 	}
 
@@ -249,6 +269,7 @@ public abstract class WizardClinicalHistory {
 	}
 
 	public String stepFinal() {
+		
 		if (medicalAppointmentDAO.getInstance().getStatus() != 1) {
 			medicalAppointmentDAO.getInstance().setStatus(1);
 			medicalAppointmentDAO.setEnableMessages(false);

@@ -54,6 +54,13 @@ public class ClinicalHistory {
 	private List<DiagnosticoConsulta> diagnosticos = new ArrayList<DiagnosticoConsulta>();
 	private List<ExamenConsulta> examenes = new ArrayList<ExamenConsulta>();
 	
+	//nuevo el 30/10/2017
+	
+	private List<ExamenAudioConsulta> examenesAudiologiaConsulta = new ArrayList<ExamenAudioConsulta>();
+	private List<ExamenOtoConsulta> examenesOtoneuroConsulta = new ArrayList<ExamenOtoConsulta>();
+	private List<ExamenLabConsulta> examenesLabConsulta = new ArrayList<ExamenLabConsulta>();
+	private List<ExamImagenoConsulta> examenesImagenoRadConsulta = new ArrayList<ExamImagenoConsulta>();
+	
 	private String proximaCita;
 	
 	
@@ -244,6 +251,48 @@ public class ClinicalHistory {
 
 	public void setProximaCita(String proximaCita) {
 		this.proximaCita = proximaCita;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consulta")
+	public List<ExamenAudioConsulta> getExamenesAudiologiaConsulta() {
+		return examenesAudiologiaConsulta;
+	}
+
+	public void setExamenesAudiologiaConsulta(
+			List<ExamenAudioConsulta> examenesAudiologiaConsulta) {
+		this.examenesAudiologiaConsulta = examenesAudiologiaConsulta;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consulta")
+	public List<ExamenOtoConsulta> getExamenesOtoneuroConsulta() {
+		return examenesOtoneuroConsulta;
+	}
+
+	public void setExamenesOtoneuroConsulta(
+			List<ExamenOtoConsulta> examenesOtoneuroConsulta) {
+		this.examenesOtoneuroConsulta = examenesOtoneuroConsulta;
+	}
+
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consulta")
+	public List<ExamenLabConsulta> getExamenesLabConsulta() {
+		return examenesLabConsulta;
+	}
+
+	
+	public void setExamenesLabConsulta(List<ExamenLabConsulta> examenesLabConsulta) {
+		this.examenesLabConsulta = examenesLabConsulta;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consulta")
+	public List<ExamImagenoConsulta> getExamenesImagenoRadConsulta() {
+		return examenesImagenoRadConsulta;
+	}
+
+	
+	public void setExamenesImagenoRadConsulta(
+			List<ExamImagenoConsulta> examenesImagenoRadConsulta) {
+		this.examenesImagenoRadConsulta = examenesImagenoRadConsulta;
 	}
 	
 	

@@ -140,7 +140,7 @@
 							view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
-							styleClass="detailBtn" value="#{app.sched_detail}"  style="font-size:15px;" >
+							styleClass="detailBtn" value="Historia clinica actual"  style="font-size:15px;" >
 							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}"  />
 							<f:param name="historyId"
 								value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />

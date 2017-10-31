@@ -139,13 +139,25 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 
 	@Override
 	public void posModify() {
-
+		
+		if(medicamentos != null) {
+			
+			for(MedicamentoConsulta item: medicamentos){
+				
+				if(item.getId()==null)
+				{
+					item.setConsulta(instance);
+					getEntityManager().persist(item);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void posSave() {
 		if(medicamentos != null) {
 			for(MedicamentoConsulta item: medicamentos){
+				
 				item.setConsulta(instance);
 				getEntityManager().persist(item);
 			}

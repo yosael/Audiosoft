@@ -63,7 +63,7 @@
 							<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
 								value="Aceptar" styleClass="saveBtn"
 								onclick="terminar();#{rich:component('modalLoading')}.show();"
-								rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+								rendered="true" reRender="formA">												
 							</a:commandButton>
 						</s:decorate>
 						

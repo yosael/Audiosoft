@@ -9,6 +9,20 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
 	template="/layout/templateKuPtll.xhtml">
+	<ui:define name="head">
+		<script type="text/javascript">
+		function terminar()
+		{
+			window.onbeforeunload = null;
+		}
+		
+		window.onbeforeunload = function exitAlert()
+		{
+			var texto = "Los datos que no se han guardado se perderan.";
+			return texto;
+		}
+		</script>
+	</ui:define>
 	<ui:define name="body">
 
 		<!-- necesita primefaces superior!
@@ -33,7 +47,7 @@
 		     -->
 
 		<rich:panel>
-			<f:facet name="header">#{app.general_step1_head}</f:facet>
+			<f:facet name="header"><span class="marginhead" >Historia Clinica</span></f:facet>
 			<h:form id="formA">
 				<!-- <s:div rendered="#{generalMedicalDAO.managed}">
 					<h:outputText
@@ -133,10 +147,21 @@
 							value="#{app.diagnostic_save}" styleClass="saveBtn"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
 						</a:commandButton> -->
+						
+						<!-- comentado el 30/10/2017
 						<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
 							value="Finalizar Consulta" styleClass="saveBtn"
 							rendered="#{medicalAppointmentDAO.instance.clinicalHistory==null}" reRender="formA">												
+						</a:commandButton>-->
+						<!-- 
+						<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
+							value="Finalizar Consulta" styleClass="saveBtn"
+							onclick="#{rich:component('modalConfirmConsulta')}.show();"
+							rendered="#{(medicalAppointmentDAO.instance.clinicalHistory==null) || (wizarGeneralMedical.editable==true)}" reRender="dvConfirmC">												
 						</a:commandButton>
+						
+						 -->
+						
 						<rich:spacer width="100px"></rich:spacer>
 					</h:panelGrid>
 					
@@ -366,6 +391,23 @@
 			-->			
 			
 			</h:form>
+			
+			<!-- Modal confirmacion -->
+				<rich:modalPanel id="modalConfirmConsulta" width="610" height="425" moveable="true"
+					 top="40"
+					 style="overflow-y:scroll;"
+					onbeforeshow="activeModal.setActiveModalPanel('modalConfirmConsulta');">
+					<f:facet name="header">
+						CONFIRMAR CONSULTA
+					</f:facet>
+					
+					<s:div id="dvConfirmC" >
+						<s:div id="dvConfirmC1" >
+							<ui:include src="../confirmarFinConsulta.xhtml" />
+						</s:div>
+					</s:div>
+					
+				</rich:modalPanel> 
 			
 			<rich:modalPanel id="confirmCancel" width="400" moveable="false"
 				autosized="true" top="50px"

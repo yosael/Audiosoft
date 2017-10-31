@@ -47,6 +47,9 @@ public class DetVentaProdServ implements Serializable{
 	// nuevo el 17/07/2017
 	private String tipoVenta; // TLL,CMB, ITM, CST
 	
+	//nuevo 30/10/2017
+	private Integer idConsulta;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "vtaprsv_id", nullable = false)
@@ -201,6 +204,14 @@ public class DetVentaProdServ implements Serializable{
 	}
 	public void setTipoVenta(String tipoVenta) {
 		this.tipoVenta = tipoVenta;
+	}
+	
+	@Column(name="id_consulta",nullable=true)
+	public Integer getIdConsulta() {
+		return idConsulta;
+	}
+	public void setIdConsulta(Integer idConsulta) {
+		this.idConsulta = idConsulta;
 	}
 	
 	

@@ -241,8 +241,9 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		for(ExamenAudioConsulta examen:lstExamenesAudioConsulta)
 		{
-			if(examen.getExamen().equals(exam))
+			if(examen.getExamen().getIdExamen()==exam.getIdExamen())
 			{
+				System.out.println("Es igual");
 				removerExamenAudio(examen);
 				exam.setAsociado(false);
 				return;
@@ -259,7 +260,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		for(ExamenLabConsulta examen:lstExamenesLabConsulta)
 		{
-			if(examen.getExamenLab().equals(exam))
+			if(examen.getExamenLab().getIdExamenLab()==exam.getIdExamenLab())
 			{
 				removerExamenLab(examen);
 				exam.setAsociado(false);
@@ -278,7 +279,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		for(ExamImagenoConsulta examen:lstExamImagenoConsulta)
 		{
-			if(examen.getExamen().equals(exam))
+			if(examen.getExamen().getIdExamImageno()==exam.getIdExamImageno())
 			{
 				removerExamenImageno(examen);
 				exam.setAsociado(false);
@@ -297,7 +298,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		for(ExamenOtoConsulta examen:lstExamenesOtoConsulta)
 		{
-			if(examen.getExamen().equals(exam))
+			if(examen.getExamen().getIdExamenOto()==exam.getIdExamenOto())
 			{
 				removerExamenOtoneuro(examen);
 				exam.setAsociado(false);
@@ -330,8 +331,9 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 				//examenesAgregados.re
 				
 				//removerServicioExam(exa);
-				examenesAgregados.remove(indice);
+				//examenesAgregados.remove(indice); // comentado el 31/10/2017
 				exa.setAsociado(false);
+				removerExamenN(tmpExa);//nuevo agregado el 31/10/2017
 				/*FacesMessages.instance().add(Severity.WARN,
 					sainv_messages.get("prescriptionHome_error_addexa"));*/
 				
@@ -375,10 +377,20 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 			if(tmpMed.getMedicamento().equals(medicm))
 				itemsAgregados.remove(medicm);*/
 		
-		if(itemsAgregados.contains(medicm))
-			itemsAgregados.remove(medicm);
+		//if(itemsAgregados.contains(medicm)) comentado el 31/10/2017
 		
-		System.out.println("Remover medicamento");
+		itemsAgregados.remove(medicm);
+		
+		if(medicm.getMedicamento()!=null)
+			medicm.getMedicamento().setAsociado(false);
+		
+		
+		if(medicm.getId()!=null)
+		{
+			getEntityManager().remove(medicm);
+		}
+		
+		//System.out.println("Remover medicamento");
 	}
 	
 	public void removerExamen(ExamenConsulta exc) {
@@ -386,6 +398,8 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		
 		List<MedicalAppointmentService> mService = new ArrayList<MedicalAppointmentService>();
 		mService = getEntityManager().createQuery("SELECT s FROM MedicalAppointmentService s where s.medicalAppointmentServiceId.medicalAppointmentId="+medicalAppointmentDAO.getInstance().getId()+" and s.medicalAppointmentServiceId.serviceId="+exc.getExamen().getId()+" ").getResultList();
+		
+		exc.getExamen().setAsociado(false);
 		
 		//if(exc.getExamen().getId()!=null)
 		if(mService.size()>0)
@@ -428,6 +442,39 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		
 	}
 	
+	
+	public void removerExamenN(ExamenConsulta exc)//Agregado el 31/10/2017
+	{
+		examenesAgregados.remove(exc);
+		
+		exc.setAsociado(false);
+		
+		if(exc.getId()!=null)
+		{
+			
+			System.out.println("Elimino solo el examen de la db");
+			getEntityManager().remove(exc);
+			
+		}
+		
+		List<MedicalAppointmentService> mService = new ArrayList<MedicalAppointmentService>();
+		mService = getEntityManager().createQuery("SELECT s FROM MedicalAppointmentService s where s.medicalAppointmentServiceId.medicalAppointmentId="+medicalAppointmentDAO.getInstance().getId()+" and s.medicalAppointmentServiceId.serviceId="+exc.getExamen().getId()+" ").getResultList();
+		
+		if(mService.size()>0)
+		{
+			System.out.println("ENTRO AL IF DENTRO DEL FOR PARA REMOVER DESDE LA DB MEdicalAppontmentService");
+			
+			medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(mService.get(0));
+
+			serviciosAgregados.remove(mService.get(0));
+			getEntityManager().remove(mService.get(0));
+			
+			getEntityManager().flush();
+			
+		}
+		
+	}
+	
 	public void verificarServiciosExamenesEliminados()
 	{
 		
@@ -445,23 +492,34 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	public void removerServicioS(MedicalAppointmentService srv)//Nuevo, agregado el 07/06/2017
 	{
-		if(srv.getMedicalAppointmentServiceId()!=null)
-		{
-			//getEntityManager().getTransaction().begin();
+		
+		try {
 			
-			medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
-			//serviciosYexamenesEliminados.add(srv);
-			getEntityManager().remove(srv);
-			serviciosAgregados.remove(srv);
-			getEntityManager().flush();
-			//getEntityManager().getTransaction().commit();
-			//getEntityManager().close();
+			if(srv.getMedicalAppointmentServiceId()!=null)
+			{
+				//getEntityManager().getTransaction().begin();
+				
+				//int ind=medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().indexOf(srv);
+				
+				medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
+				//medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(ind);
+				//serviciosYexamenesEliminados.add(srv);
+				getEntityManager().remove(srv); //comentado el 31/10/2017
+				serviciosAgregados.remove(srv);
+				getEntityManager().flush();
+				//getEntityManager().getTransaction().commit();
+				//getEntityManager().close();
+				
+			}
+			else
+			{
+				serviciosAgregados.remove(srv);
+			}
 			
-		}
-		else
-		{
-			serviciosAgregados.remove(srv);
-		}
+		} catch (Exception e) {
+			System.out.println("Entro al catch ");
+			FacesMessages.instance().add(Severity.WARN,"No se pudo remover el examen. Intente haciendo un descuento para que sea invalido el cobro");
+		}	
 	}
 	
 	
@@ -515,10 +573,20 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	public void removerDiagnostico(DiagnosticoConsulta diagn) {
 		diagn.getDiagnostico().setAsociado(false);
 		diagnosticosAgregados.remove(diagn);
+		
+		if(diagn.getId()!=null)
+		{
+			getEntityManager().remove(diagn);
+		}
 	}
 	
 	public void removerRecomendacion(RecomendacionConsulta recm) {
 		recomendacionesAgregadas.remove(recm);
+		
+		if(recm.getId()!=null)
+		{
+			getEntityManager().remove(recm);
+		}
 	}
 	
 	public void removerServicio(MedicalAppointmentService srv) {
@@ -530,24 +598,44 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	{
 		examenConsulta.getExamen().setAsociado(false);
 		lstExamenesAudioConsulta.remove(examenConsulta);
+		
+		if(examenConsulta.getId()!=null)
+		{
+			getEntityManager().remove(examenConsulta);
+		}
 	}
 	
 	public void removerExamenLab(ExamenLabConsulta examenConsulta)
 	{
 		examenConsulta.getExamenLab().setAsociado(false);
 		lstExamenesLabConsulta.remove(examenConsulta);
+		
+		if(examenConsulta.getId()!=null)
+		{
+			getEntityManager().remove(examenConsulta);
+		}
 	}
 	
 	public void removerExamenImageno(ExamImagenoConsulta examenConsulta)
 	{
 		examenConsulta.getExamen().setAsociado(false);
 		lstExamImagenoConsulta.remove(examenConsulta);
+		
+		if(examenConsulta.getId()!=null)
+		{
+			getEntityManager().remove(examenConsulta);
+		}
 	}
 	
 	public void removerExamenOtoneuro(ExamenOtoConsulta examenConsulta)
 	{
 		examenConsulta.getExamen().setAsociado(false);
 		lstExamenesOtoConsulta.remove(examenConsulta);
+		
+		if(examenConsulta.getId()!=null)
+		{
+			getEntityManager().remove(examenConsulta);
+		}
 	}
 	
 	public void setDiagnPrpal(DiagnosticoConsulta diagn) {

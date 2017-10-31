@@ -21,7 +21,7 @@ public class ExamImagenoConsulta implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
-	private int id;
+	private Integer id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_examen_imageno", nullable = true)
@@ -35,11 +35,11 @@ public class ExamImagenoConsulta implements Serializable {
 	
 	
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

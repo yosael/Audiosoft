@@ -1,6 +1,9 @@
 package com.sa.kubekit.action.medical;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +18,11 @@ import com.sa.kubekit.action.i18n.KubeBundle;
 import com.sa.kubekit.action.sales.VentaProdServHome;
 import com.sa.model.medical.ClinicalHistory;
 import com.sa.model.medical.DiagnosticoConsulta;
+import com.sa.model.medical.ExamImagenoConsulta;
+import com.sa.model.medical.ExamenAudioConsulta;
 import com.sa.model.medical.ExamenConsulta;
+import com.sa.model.medical.ExamenLabConsulta;
+import com.sa.model.medical.ExamenOtoConsulta;
 import com.sa.model.medical.GeneralInformation;
 import com.sa.model.medical.GeneralMedical;
 import com.sa.model.medical.MedicalAppointmentService;
@@ -59,6 +66,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 	private boolean subsecuente=false;
 	private String motivoConsultaAnterior="";
 	private String resumenPaciente="";
+	
+	private boolean editable = true;
 
 	public WizardGeneralMedical() {
 		// cofiguramos las vistas de navegacion generales
@@ -123,6 +132,18 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 				
 				motivoConsultaAnterior();
 			}
+			
+			//nuevo 
+			
+			try {
+				verificarFechaHistoriaClinica();
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			
+			System.out.println("EDITABLE "+editable);
+			
 			
 			antecedenteHome.cargarAntecedentesPaciente(clienteHome.getInstance());//Para cargar antecedente de pacientes
 			
@@ -421,6 +442,39 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		System.out.println("Id ConversationLoad2 "+ Conversation.instance().getId());
 	}
 	
+	
+	//agregado el 30/10/2017
+	public void verificarFechaHistoriaClinica() throws ParseException
+	{
+		
+		String pattern = "dd/MM/yyyy";
+		
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		
+		String fechaActualSt;
+		String fechaConsSt;
+		
+		Date fechaActual = new Date();
+		Date fechaConsulta = (Date)generalMedicalDAO.getInstance().getMedicalAppointment().getDateTime();
+		
+		fechaActualSt = format.format(fechaActual);
+		fechaConsSt = format.format(fechaConsulta);
+		
+		
+		System.out.println("Fecha actual ST"+ fechaActualSt);
+		System.out.println("Fecha consulta ST"+ fechaConsSt);
+		
+		
+		if(fechaActualSt.equals(fechaConsSt))
+		{
+			editable = true;
+		}
+		else
+		{
+			editable = false;
+		}
+	}
+	
 	public void cerrarConver(Conversation conver)
 	{
 		conver.end();
@@ -524,8 +578,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 						entityManager.persist(clienteHome.getInstance()
 								.getGeneralInformation());
 					} else {
-						entityManager.merge(clienteHome.getInstance()
-								.getGeneralInformation());
+						entityManager.merge(clienteHome.getInstance().getGeneralInformation());
 					}
 					if (clienteHome.modify()) {
 						//return "next";
@@ -536,33 +589,70 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 					System.out.println("catch allsteps: " + e);
 					e.printStackTrace();
 				}
+				
 				createDiagnostics();
+				
 				//Verificamos si se diagnostico sordera
 						if(prescriptionHome.isDiagnSordera())
 							clienteHome.getInstance().setDiagnosSordera(new Date());
 						
-						super.stepFinal();
+						//super.stepFinal(); se movio
 						
 						generalMedicalDAO.setMedicamentos(prescriptionHome.getItemsAgregados());
 						
-						if (!generalMedicalDAO.isManaged()) {
-							if (generalMedicalDAO.save()){
+						/*if (!generalMedicalDAO.isManaged()) {*/ //comentado el 30/10/2017
+							
+							
+							///// agregado el 30/10/2017
+							if(!generalMedicalDAO.isManaged())
+							{
+								if(!generalMedicalDAO.save())
+									return "";
+								
+								saveDiagnostics();
+								//prescriptionHome.modify();
+								prescriptionHome.getInstance().setMedicalAppointment(generalMedicalDAO.getInstance().getMedicalAppointment());
+								prescriptionHome.save();
+								
+								super.stepFinal();
+							}
+							else
+							{
+								if(!generalMedicalDAO.modify())
+									return "";
+								
+								saveDiagnostics();
+								prescriptionHome.modify();
+							}
+							//////////////////////////////
+							
+							
+							//if (generalMedicalDAO.save()){ //comentado el 30/10/2017
 								
 								//Guardamos los diagnosticos, recomendaciones, examenes, servicios adicionales
-								for(RecomendacionConsulta recCon : prescriptionHome.getRecomendacionesAgregadas()) {
-									recCon.setConsulta(generalMedicalDAO.getInstance());
-									recCon.setNomRecomendacion(recCon.getRecomendacion().getNombre());
+								for(RecomendacionConsulta recCon : prescriptionHome.getRecomendacionesAgregadas()) 
+								{
 									
-									System.out.println("** consulta "+generalMedicalDAO.getInstance().getMedicalAppointment().getId());
-									System.out.println("** historial "+generalMedicalDAO.getInstance().getObservation());
-									
-									entityManager.persist(recCon);
+									if(recCon.getId()==null)
+									{
+										recCon.setConsulta(generalMedicalDAO.getInstance());
+										recCon.setNomRecomendacion(recCon.getRecomendacion().getNombre());
+										
+										System.out.println("** consulta "+generalMedicalDAO.getInstance().getMedicalAppointment().getId());
+										System.out.println("** historial "+generalMedicalDAO.getInstance().getObservation());
+										
+										entityManager.persist(recCon);
+									}
 								}
 								
 								for(DiagnosticoConsulta digCon : prescriptionHome.getDiagnosticosAgregados()) {
-									digCon.setConsulta(generalMedicalDAO.getInstance());
-									digCon.setNomDiagnostico(digCon.getDiagnostico().getNombre());
-									entityManager.persist(digCon);
+									
+									if(digCon.getId()==null)
+									{
+										digCon.setConsulta(generalMedicalDAO.getInstance());
+										digCon.setNomDiagnostico(digCon.getDiagnostico().getNombre());
+										entityManager.persist(digCon);
+									}
 								}
 								
 								/*for(MedicamentoLaboratorios medLabs : prescriptionHome.getM) {
@@ -572,31 +662,81 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								}*/
 								
 								System.out.println("TAMANIO EXAMENES AGREGADOS: "+prescriptionHome.getExamenesAgregados().size());
+								
 								//Examenes
 								for(ExamenConsulta exaCon : prescriptionHome.getExamenesAgregados()) {
 									
-									exaCon.setConsulta(generalMedicalDAO.getInstance());
-									exaCon.setNomExamen(exaCon.getExamen().getName());
-									entityManager.persist(exaCon);
-									System.out.println("PERSISTIO NUEVO EXAMEN ******");
+									if(exaCon.getId()==null)// 30/10/2017
+									{
+										exaCon.setConsulta(generalMedicalDAO.getInstance());
+										exaCon.setNomExamen(exaCon.getExamen().getName());
+										entityManager.persist(exaCon);
+										
+										System.out.println("PERSISTIO NUEVO EXAMEN ******");
+									}
+									
 								}
 								
 								System.out.println("TAMANIO SERVICIOS AGREGADOS: "+prescriptionHome.getServiciosAgregados().size());
+								
 								for(MedicalAppointmentService srv : prescriptionHome.getServiciosAgregados()) {
 									if(medicalAppointmentDAO.getAppointmentItems().contains(srv)) 
 										medicalAppointmentDAO.getAppointmentItems().remove(srv);
 									else {
 										//srv.setServiceClinicalHistory();
-										MedicalAppointmentServiceId id = new MedicalAppointmentServiceId(
-												medicalAppointmentDAO.getInstance().getId(), srv.getService().getId());
-										MedicalAppointmentService med = new MedicalAppointmentService();
-										med.setMedicalAppointmentServiceId(id);
-										med.setService(srv.getService());
-										med.setMedicalAppointment(medicalAppointmentDAO.getInstance());
-										entityManager.persist(med);
+										
+										if(srv.getMedicalAppointmentServiceId()==null)//agregado el 30/10/2017
+										{
+											MedicalAppointmentServiceId id = new MedicalAppointmentServiceId(medicalAppointmentDAO.getInstance().getId(), srv.getService().getId());
+											MedicalAppointmentService med = new MedicalAppointmentService();
+											med.setMedicalAppointmentServiceId(id);
+											med.setService(srv.getService());
+											med.setMedicalAppointment(medicalAppointmentDAO.getInstance());
+											entityManager.persist(med);
+										}
 									}
 								}
 								
+								
+								///nuevo 30/10/2017 para agregar examenes complementarios
+								
+								for(ExamenAudioConsulta exam: prescriptionHome.getLstExamenesAudioConsulta())
+								{
+									if(exam.getId()==null)
+									{
+										exam.setConsulta(generalMedicalDAO.getInstance());
+										entityManager.persist(exam);
+									}
+								}
+								
+								for(ExamenOtoConsulta exam:prescriptionHome.getLstExamenesOtoConsulta())
+								{
+									if(exam.getId()==null)
+									{
+										exam.setConsulta(generalMedicalDAO.getInstance());
+										entityManager.persist(exam);
+									}
+								}
+								
+								for(ExamenLabConsulta exam:prescriptionHome.getLstExamenesLabConsulta())
+								{
+									if(exam.getId()==null)
+									{
+										exam.setConsulta(generalMedicalDAO.getInstance());
+										entityManager.persist(exam);
+									}
+								}
+								
+								for(ExamImagenoConsulta exam:prescriptionHome.getLstExamImagenoConsulta())
+								{
+									if(exam.getId()==null)
+									{
+										exam.setConsulta(generalMedicalDAO.getInstance());
+										entityManager.persist(exam);
+									}
+								}
+								
+								//---------------------------///
 								
 								//Nuevo agregado el 09/06/2017
 								//prescriptionHome.verificarServiciosExamenesEliminados();
@@ -618,11 +758,13 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								
 								//Guardar aqui los nuevos motivos de consulta
 								
-								saveDiagnostics();
+								//saveDiagnostics(); comentado el 30/10/2017
+								/*if(prescriptionHome.getInstance().getId()==null)
+								{
+									prescriptionHome.getInstance().setMedicalAppointment(generalMedicalDAO.getInstance().getMedicalAppointment());
+									prescriptionHome.save();
+								}*/
 								
-								
-								prescriptionHome.getInstance().setMedicalAppointment(generalMedicalDAO.getInstance().getMedicalAppointment());
-								prescriptionHome.save();
 								FacesMessages.instance().add(sainv_messages
 										.get("history_created"));
 								//Generamos un detalle de la venta
@@ -651,7 +793,9 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									vta.setMonto(0.0f);
 									//vta.setSucursal(medicalAppointmentDAO.getLoginUser().getUser().getSucursal()); //Cambiar para que al gaurdar reparacion guarde la sucursal
 									vta.setSucursal(medicalAppointmentDAO.getInstance().getSucursal());//Se cambio a que la venta sera tomada en cuenta segun la sucursal especificada en la cita, esta sera espeficiada por la persona que la prog
+									
 									System.out.println("*******************1111 sucursal "+ medicalAppointmentDAO.getInstance().getSucursal());
+									
 									vta.setTipoVenta("CST");
 									vta.setUsrEfectua(medicalAppointmentDAO.getLoginUser().getUser());
 									
@@ -667,7 +811,29 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								entityManager.refresh(generalMedicalDAO.getInstance());
 								List<Service> serviciosCobrados = new ArrayList<Service>();
 								
-								for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) {
+								//Verificando los detalles de la venta actual para no duplicar 30/10/2017
+								if(vta.getDetVenta()!=null && vta.getDetVenta().size()>0)
+								{
+									Float restarAventa = 0f;
+									for(DetVentaProdServ det : vta.getDetVenta())
+									{
+										if(det.getIdConsulta()!=null && det.getIdConsulta().equals(generalMedicalDAO.getInstance().getMedicalAppointment().getId()))
+										{
+											restarAventa+=(det.getMonto()*det.getCantidad());
+											entityManager.remove(det);
+										}
+									}
+									
+									System.out.println("Total restar VEnta = "+restarAventa);
+									
+									vta.setMonto(vta.getMonto()-restarAventa);
+									
+									entityManager.merge(vta);
+									entityManager.flush();
+								}
+								
+								for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) 
+								{
 									
 									System.out.println("Nombre Servicio: "+tmpSrv.getService().getName());
 									
@@ -684,6 +850,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									dtVta.setMonto(tmpSrv.getService().getCosto().floatValue());
 									dtVta.setVenta(vta);
 									dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
+									dtVta.setIdConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getId()); // nuevo el 30/10/2017
+									
 									totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 									entityManager.persist(dtVta);
 								}
@@ -703,6 +871,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 										dtVta.setMonto(tmpSrv.getExamen().getCosto().floatValue());
 										dtVta.setVenta(vta);
 										dtVta.setTipoVenta("CST"); // nuevo el 17/07/2017
+										dtVta.setIdConsulta(generalMedicalDAO.getInstance().getMedicalAppointment().getId()); // nuevo el 30/10/2017
 										
 										totalReparacion += dtVta.getMonto()*dtVta.getCantidad();
 										entityManager.persist(dtVta);
@@ -717,13 +886,14 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								motivoConsultaHome.persistirMotivosLista();
 								antecedenteHome.persistirAntecedentesLista();
 								
-							}
+							/*}
+							
 						} else if (generalMedicalDAO.modify()){
 							saveDiagnostics();
 							prescriptionHome.modify();
 							FacesMessages.instance().add(sainv_messages
 									.get("history_modified"));
-						}
+						}*/
 						
 		
 				return "exito";
@@ -912,6 +1082,14 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 
 	public void setResumenPaciente(String resumenPaciente) {
 		this.resumenPaciente = resumenPaciente;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 
 	

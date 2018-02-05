@@ -7,7 +7,8 @@
 	xmlns:a="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:p="http://primefaces.prime.com.tr/ui"
-	xmlns:s="http://jboss.com/products/seam/taglib" contentType="text/html">
+	xmlns:s="http://jboss.com/products/seam/taglib" contentType="text/html"
+        xmlns:a4j="http://richfaces.org/a4j">
 	<html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -34,6 +35,41 @@
 		    alert("Could not open the report window. Please disable popup blocking for this website and try again.");
 		  }
 		  }
+
+		  
+		//javascript agregado el 30/01/2018
+		  var waitDialogShown = false;
+		  var useTimerBeforeShowWaitDialog = true;
+		  var waitDialogTimeout = 50;
+		  var waitDialogTimer;
+		   
+		  function showWaitDialog() {
+		      //avoid attempt to show it if it is already shown
+		      if (!waitDialogShown) {
+		          Richfaces.showModalPanel('wait-dialog');
+		          waitDialogShown = true;
+		      }
+		  }
+		   
+		  function onRequestStart() {
+		      if (useTimerBeforeShowWaitDialog) {
+		          waitDialogTimer = setTimeout("showWaitDialog();", waitDialogTimeout);
+		      } else {
+		          showWaitDialog();
+		      }
+		  }
+		  <![CDATA[
+			  
+		  function onRequestEnd() {
+		      if (waitDialogShown) {
+		          Richfaces.hideModalPanel('wait-dialog');
+		          waitDialogShown = false;
+		      } else if (useTimerBeforeShowWaitDialog && waitDialogTimer) {
+		          clearTimeout(waitDialogTimer);
+		      }
+		  }
+		  ]]>
+		  
 		</script>
 	<p:resources />
 	<ui:insert name="head" />
@@ -105,7 +141,17 @@
 				<ui:include src="/layout/menuPtll.xhtml" />
 			</h:form>
 		</div>
-	<ui:insert name="body" /></div>
+		<!-- Agregado el 30/01/2018 -->
+		
+		<a4j:status onstart="onRequestStart()" onstop="onRequestEnd()"/>
+		
+		<rich:modalPanel id="wait-dialog" resizeable="false" autosized="false" width="200" height="65" moveable="false" shadowOpacity="0">
+		  <f:facet name="header">One moment please..</f:facet>
+		  <h:outputText value="Your request is being processed."/>
+		</rich:modalPanel>
+		
+		<ui:insert name="body" />
+	</div>
 	<div class="clear" />
 	</div>
 	

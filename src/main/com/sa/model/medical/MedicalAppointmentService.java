@@ -72,5 +72,33 @@ public class MedicalAppointmentService {
 			ServiceClinicalHistory serviceClinicalHistory) {
 		this.serviceClinicalHistory = serviceClinicalHistory;
 	}
+	//agregado el 03/02/2018
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((medicalAppointmentServiceId == null) ? 0 : medicalAppointmentServiceId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MedicalAppointmentService other = (MedicalAppointmentService) obj;
+		if (medicalAppointmentServiceId == null) {
+			if (other.medicalAppointmentServiceId != null)
+				return false;
+		} else if (!medicalAppointmentServiceId.equals(other.medicalAppointmentServiceId))
+			return false;
+		return true;
+	}
+	
+	
+	
 
 }

@@ -65,9 +65,8 @@ public abstract class WizardClinicalHistory {
 	protected void load() {
 		// logica de permisos
 		System.out.println("entro a superload");
-		if (doctorDAO.doctorInSession() != null
-				&& doctorDAO.doctorInSession().getId().equals(
-						obtainClinicalHistory().getDoctor().getId())) {
+		
+		if (doctorDAO.doctorInSession() != null && doctorDAO.doctorInSession().getId().equals(obtainClinicalHistory().getDoctor().getId())) {
 			System.out.println("super if");
 			setMode("w");
 			generalContainer.setMode("w");
@@ -122,8 +121,9 @@ public abstract class WizardClinicalHistory {
 
 		medicalAppointmentDAO.load();
 				
-		clienteHome.setNumId(medicalAppointmentDAO.getInstance()
-				.getCliente().getId().toString());
+		if(medicalAppointmentDAO.getInstance().getCliente()!=null)
+			clienteHome.setNumId(medicalAppointmentDAO.getInstance().getCliente().getId().toString());
+		
 		clienteHome.load(false);
 		ClinicalHistory hist = medicalAppointmentDAO.getInstance().getClinicalHistory();
 		
@@ -156,7 +156,7 @@ public abstract class WizardClinicalHistory {
 		//Cargamos los servicios y separamos los que son examenes de los que no son examenes
 		for(MedicalAppointmentService srvCns : medicalAppointmentDAO.getAppointmentItems()) {
 			if(!srvCns.getService().getTipoServicio().equals("EXA")) 
-				prescriptionHome.getServiciosAgregados().add(srvCns);
+				prescriptionHome.getServiciosAgregados().add(srvCns);//Aqui van las consultas, etc
 			else if(medicalAppointmentDAO.getInstance().getClinicalHistory() == null) {				
 				ExamenConsulta examen = new ExamenConsulta();
 				examen.setExamen(srvCns.getService());

@@ -158,6 +158,7 @@
 							<f:param name="back" value="#{conversation.viewId}" />
 						</s:button> -->
 						
+						<!-- Btn Atender Cita -->
 						<s:button propagation="begin"
 							id="btnAtender"
 							view="/medical/clinicalHistory/generalMedical/step1.xhtml"
@@ -166,6 +167,7 @@
 							(medicalAppointmentDAO.instance.doctor == doctorDAO.doctorInSession())}"
 							styleClass="detailBtn" value="#{app.sched_attend}" style="font-size:15px;"   ><!-- #{app.sched_attend} -->
 							<f:param name="id" value="#{medicalAppointmentDAO.instance.id}" />
+							<f:param name="back" value="#{conversation.viewId}" />
 						</s:button>
 						
 						<!--  cambiar estados-->
@@ -177,6 +179,7 @@
 							
 							oncomplete="#{rich:component('modalState')}.show();" id="btnCambiarEstado" style="font-size:15px;" />
 							<!-- document.getElementById(#{rich:clientId('btnActualizarEstado')}).focus(); -->
+							
 						<!--  crear nueva cita-->
 							
 							<a:commandButton
@@ -250,6 +253,7 @@
 									<f:param name="historyId"
 										value="#{medicalAppointmentDAO.instance.clinicalHistory.consecutive}" />
 								</s:button>
+								
 								<!--  atender la cita solo debe ser visto por el doctor que va a atender la cita-->
 								<s:button propagation="join"
 									view="/medical/scheddoc/attend.xhtml"

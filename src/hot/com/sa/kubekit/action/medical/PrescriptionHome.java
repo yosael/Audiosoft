@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.In;
@@ -36,6 +39,8 @@ import com.sa.model.medical.MedicamentoLaboratorios;
 import com.sa.model.medical.Prescription;
 import com.sa.model.medical.RecomendacionConsulta;
 import com.sa.model.medical.RecomendacionMed;
+import com.sa.model.medical.ServiceClinicalHistory;
+import com.sa.model.medical.id.MedicalAppointmentServiceId;
 import com.sa.model.sales.Service;
 import com.sa.model.workshop.ServicioReparacion;
 
@@ -155,161 +160,273 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	public void agregarMedicamento(Medicamento medicm) {
 		
-		for(MedicamentoConsulta tmpMed : itemsAgregados)
-			if(tmpMed.getMedicamento().equals(medicm)){
-				
-				/*FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("prescriptionHome_error_additem"));*/
-				itemsAgregados.remove(tmpMed);
-				medicm.setAsociado(false);
-				
+		try{
+			
+			for(MedicamentoConsulta tmpMed : itemsAgregados)
+				if(tmpMed.getMedicamento().equals(medicm)){
+					
+					/*FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("prescriptionHome_error_additem"));*/
+					itemsAgregados.remove(tmpMed);
+					medicm.setAsociado(false);
+					
+					if(tmpMed.getId()!=null){
+						getEntityManager().remove(tmpMed);
+					}
+					
+					return;
+				}
+			
+			//Revisar porque toman el indice cero, siempre estaria agarrando solo el primero de la lista????? 04/04/2017: Solo es para mostrarlo en el select, luego se selecciona
+			MedicamentoConsulta item = new MedicamentoConsulta();
+			item.setCantidad((short) 1);
+			item.setMedicamento(medicm);
+			
+			if(medicm.getDosificaciones()!=null && medicm.getDosificaciones().size()>0)
+				item.setSelDosif(medicm.getDosificaciones().get(0));
+			else
+			{
+				FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene dosificacion");
 				return;
 			}
-		
-		//Revisar porque toman el indice cero, siempre estaria agarrando solo el primero de la lista????? 04/04/2017: Solo es para mostrarlo en el select, luego se selecciona
-		MedicamentoConsulta item = new MedicamentoConsulta();
-		item.setCantidad((short) 1);
-		item.setMedicamento(medicm);
-		
-		if(medicm.getDosificaciones()!=null && medicm.getDosificaciones().size()>0)
-			item.setSelDosif(medicm.getDosificaciones().get(0));
-		else
-		{
-			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene dosificacion");
-			return;
+			
+			if(medicm.getPresentaciones()!=null && medicm.getPresentaciones().size()>0)
+				item.setSelPresen(medicm.getPresentaciones().get(0));
+			else
+			{
+				FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene presentacion");
+				return;
+			}
+			
+			if(medicm.getMedicamentosLab()!=null && medicm.getMedicamentosLab().size()>0)
+				item.setSelLab(medicm.getMedicamentosLab().get(0));
+			else
+			{
+				FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene laboratorio");
+				return;
+			}
+			
+			item.setObservacion("");
+			
+			itemsAgregados.add(item);
 		}
-		
-		if(medicm.getPresentaciones()!=null && medicm.getPresentaciones().size()>0)
-			item.setSelPresen(medicm.getPresentaciones().get(0));
-		else
-		{
-			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene presentacion");
-			return;
+		catch(NullPointerException e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un inconveniente al agregar el medicamento");
+			e.printStackTrace();
 		}
-		
-		if(medicm.getMedicamentosLab()!=null && medicm.getMedicamentosLab().size()>0)
-			item.setSelLab(medicm.getMedicamentosLab().get(0));
-		else
-		{
-			FacesMessages.instance().add(Severity.WARN,"El medicamento no tiene laboratorio");
-			return;
+		catch(Exception e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un inconveniente al agregar el medicamento");
+			e.printStackTrace();
 		}
-		
-		item.setObservacion("");
-		
-		itemsAgregados.add(item);
 	}
 	
 	public void agregarRecomendacion(RecomendacionMed rec) {
 		
-		for(RecomendacionConsulta tmpRec : recomendacionesAgregadas)
-		{
-			if(tmpRec.getRecomendacion().equals(rec)){
+		try{
+			for(RecomendacionConsulta tmpRec : recomendacionesAgregadas)
+			{
+				if(tmpRec.getRecomendacion().equals(rec)){
+					
+					recomendacionesAgregadas.remove(tmpRec);
+					rec.setAsociado(false);
+					
+					if(tmpRec.getId()!=null){
+						try{
+							getEntityManager().remove(tmpRec);
+						}
+						catch(PersistenceException e){
+							e.printStackTrace();
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+					/*FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("prescriptionHome_error_addrec"));*/
+					
+					
+					return;
+				}
 				
-				recomendacionesAgregadas.remove(tmpRec);
-				rec.setAsociado(false);
-				/*FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("prescriptionHome_error_addrec"));*/
-				
-				
-				return;
 			}
 			
+			RecomendacionConsulta recons = new RecomendacionConsulta();
+			recons.setRecomendacion(rec);
+			recons.setNomRecomendacion(rec.getNombre());
+			recons.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			getEntityManager().persist(recons);
+			recomendacionesAgregadas.add(recons);
+			
+			System.out.println("Agrego la recomendacion");
 		}
-		
-		RecomendacionConsulta recons = new RecomendacionConsulta();
-		recons.setRecomendacion(rec);
-		recomendacionesAgregadas.add(recons);
+		catch(PersistenceException e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un inconveniente al agregar la recomendacion. Intente con otra");
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un inconveniente al agregar la recomendacion. Intente con otra");
+			e.printStackTrace();
+		}
 	}
 	
 	public void agregarDiagnostico(DiagnosticoMed dig) {
 		
-		for(DiagnosticoConsulta tmpDig : diagnosticosAgregados)
-			if(tmpDig.getDiagnostico().equals(dig)){
-				removerDiagnostico(tmpDig);
-				dig.setAsociado(false);
-				return;
-			}
-		
-		DiagnosticoConsulta diagn = new DiagnosticoConsulta();
-		diagn.setDiagnostico(dig);
-		diagnosticosAgregados.add(diagn);
+		try{
+			for(DiagnosticoConsulta tmpDig : diagnosticosAgregados)
+				if(tmpDig.getDiagnostico().equals(dig)){
+					//diagnosticosAgregados.remove(dig);//agregado el 27/01/2018 
+					
+						try{
+							removerDiagnostico(tmpDig);
+						}
+						catch(PersistenceException e){
+							e.printStackTrace();
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+						
+					dig.setAsociado(false);
+					return;
+				}
+			
+			DiagnosticoConsulta diagn = new DiagnosticoConsulta();
+			diagn.setDiagnostico(dig);
+			diagn.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			diagn.setPrincipal(false);
+			diagn.setNomDiagnostico(dig.getNombre());
+			getEntityManager().persist(diagn);
+			diagnosticosAgregados.add(diagn);
+		}
+		catch(PersistenceException e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el diagnostico");
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el diagnostico");
+			e.printStackTrace();
+		}
 	}
 	
 	
 	public void agregarExamenAudiologia(ExamenAudiologia exam)
 	{
-		for(ExamenAudioConsulta examen:lstExamenesAudioConsulta)
-		{
-			if(examen.getExamen().getIdExamen()==exam.getIdExamen())
+		try{
+			for(ExamenAudioConsulta examen:lstExamenesAudioConsulta)
 			{
-				System.out.println("Es igual");
-				removerExamenAudio(examen);
-				exam.setAsociado(false);
-				return;
+				if(examen.getExamen().getIdExamen()==exam.getIdExamen())
+				{
+					System.out.println("Es igual");
+					removerExamenAudio(examen);
+					exam.setAsociado(false);
+					return;
+				}
 			}
+			
+			ExamenAudioConsulta examenAudio = new ExamenAudioConsulta();
+			examenAudio.setExamen(exam);
+			examenAudio.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			getEntityManager().persist(examenAudio);
+			lstExamenesAudioConsulta.add(examenAudio);
 		}
-		
-		ExamenAudioConsulta examenAudio = new ExamenAudioConsulta();
-		examenAudio.setExamen(exam);
-		
-		lstExamenesAudioConsulta.add(examenAudio);
+		catch(PersistenceException e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el examen. Intenta con otro");
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el examen. Intenta con otro");
+			e.printStackTrace();
+		}
 	}
 	
 	public void agregarExamenLaboratorio(ExamenLaboratorio exam)
 	{
-		for(ExamenLabConsulta examen:lstExamenesLabConsulta)
-		{
-			if(examen.getExamenLab().getIdExamenLab()==exam.getIdExamenLab())
+		try{
+			for(ExamenLabConsulta examen:lstExamenesLabConsulta)
 			{
-				removerExamenLab(examen);
-				exam.setAsociado(false);
-				return;
+				if(examen.getExamenLab().getIdExamenLab()==exam.getIdExamenLab())
+				{
+					removerExamenLab(examen);
+					exam.setAsociado(false);
+					
+					if(examen.getId()!=null){
+						getEntityManager().remove(examen);
+					}
+						
+					return;
+				}
 			}
+			
+			ExamenLabConsulta examenLab = new ExamenLabConsulta();
+			examenLab.setExamenLab(exam);
+			examenLab.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			getEntityManager().persist(examenLab);
+			lstExamenesLabConsulta.add(examenLab);
 		}
-		
-		ExamenLabConsulta examenLab = new ExamenLabConsulta();
-		examenLab.setExamenLab(exam);
-		
-		lstExamenesLabConsulta.add(examenLab);
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
 	public void agregarExamenImageno(ExamImagenologia exam)
 	{
-		for(ExamImagenoConsulta examen:lstExamImagenoConsulta)
-		{
-			if(examen.getExamen().getIdExamImageno()==exam.getIdExamImageno())
+		try{
+			for(ExamImagenoConsulta examen:lstExamImagenoConsulta)
 			{
-				removerExamenImageno(examen);
-				exam.setAsociado(false);
-				return;
+				if(examen.getExamen().getIdExamImageno()==exam.getIdExamImageno())
+				{
+					removerExamenImageno(examen);
+					exam.setAsociado(false);
+					
+					return;
+				}
 			}
+			
+			ExamImagenoConsulta examenImageno = new ExamImagenoConsulta();
+			examenImageno.setExamen(exam);
+			examenImageno.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			getEntityManager().persist(examenImageno);
+			lstExamImagenoConsulta.add(examenImageno);
 		}
-		
-		ExamImagenoConsulta examenImageno = new ExamImagenoConsulta();
-		examenImageno.setExamen(exam);
-		
-		lstExamImagenoConsulta.add(examenImageno);
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
 	public void agregarExamenOtoneurologia(ExamenOtoneurologia exam)
 	{
-		for(ExamenOtoConsulta examen:lstExamenesOtoConsulta)
-		{
-			if(examen.getExamen().getIdExamenOto()==exam.getIdExamenOto())
+		try{
+			for(ExamenOtoConsulta examen:lstExamenesOtoConsulta)
 			{
-				removerExamenOtoneuro(examen);
-				exam.setAsociado(false);
-				return;
+				if(examen.getExamen().getIdExamenOto()==exam.getIdExamenOto())
+				{
+					removerExamenOtoneuro(examen);
+					exam.setAsociado(false);
+					return;
+				}
 			}
+			
+			ExamenOtoConsulta examenOtoneuro = new ExamenOtoConsulta();
+			examenOtoneuro.setExamen(exam);
+			examenOtoneuro.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			
+			getEntityManager().persist(examenOtoneuro);
+			lstExamenesOtoConsulta.add(examenOtoneuro);
 		}
-		
-		ExamenOtoConsulta examenOtoneuro = new ExamenOtoConsulta();
-		examenOtoneuro.setExamen(exam);
-		
-		lstExamenesOtoConsulta.add(examenOtoneuro);
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -317,59 +434,104 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	public void agregarExamen(Service exa) {
 		
-		
-		int indice=0;
-		for(ExamenConsulta tmpExa : examenesAgregados)
-		{
-			System.out.println("Ïndicen examenes "+ examenesAgregados.get(indice));
-			if(tmpExa.getExamen().equals(exa)){
-				
-				System.out.println("Entro a eliminar examen");
-				
-				//ExamenConsulta exam = new ExamenConsulta();
-				//exam.setExamen(exa);
-				//examenesAgregados.re
-				
-				//removerServicioExam(exa);
-				//examenesAgregados.remove(indice); // comentado el 31/10/2017
-				exa.setAsociado(false);
-				removerExamenN(tmpExa);//nuevo agregado el 31/10/2017
-				/*FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("prescriptionHome_error_addexa"));*/
-				
-				return;
-						
-				
+		try{
+			int indice=0;
+			for(ExamenConsulta tmpExa : examenesAgregados)
+			{
+				System.out.println("ï¿½ndicen examenes "+ examenesAgregados.get(indice));
+				if(tmpExa.getExamen().equals(exa)){
+					
+					System.out.println("Entro a eliminar examen");
+					
+					//ExamenConsulta exam = new ExamenConsulta();
+					//exam.setExamen(exa);
+					//examenesAgregados.re
+					
+					//removerServicioExam(exa);
+					//examenesAgregados.remove(indice); // comentado el 31/10/2017
+					exa.setAsociado(false);
+					removerExamenN(tmpExa);//nuevo agregado el 31/10/2017
+					/*FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("prescriptionHome_error_addexa"));*/
+					
+					return;
+							
+					
+				}
+				indice++;
 			}
-			indice++;
+			
+			ExamenConsulta exacon = new ExamenConsulta();
+			exacon.setExamen(exa);
+			exacon.setComentario("");
+			exacon.setAsociado(true);
+			exacon.setConsulta(medicalAppointmentDAO.getInstance().getClinicalHistory());
+			exacon.setNomExamen(exa.getName());
+			
+			//Agregado el 04/02/2018
+			MedicalAppointmentServiceId medicap = new MedicalAppointmentServiceId(medicalAppointmentDAO.getInstance().getId(), exa.getId());
+			MedicalAppointmentService med = new MedicalAppointmentService();
+			med.setMedicalAppointmentServiceId(medicap);
+			med.setService(exa);
+			med.setMedicalAppointment(medicalAppointmentDAO.getInstance());
+			getEntityManager().persist(med);
+			/////////////////
+			
+			
+			getEntityManager().persist(exacon);
+			
+			examenesAgregados.add(exacon);
 		}
-		
-		ExamenConsulta exacon = new ExamenConsulta();
-		exacon.setExamen(exa);
-		examenesAgregados.add(exacon);
+		catch(PersistenceException e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el examen. Intenta con otro");
+			e.printStackTrace();
+			
+		}
+		catch(Exception e){
+			FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al agregar el examen. Intenta con otro");
+			e.printStackTrace();
+		}
 		
 	}
 	
 	public void agregarServicio(Service srv) {
 		
-		int indice=0;
-		for(MedicalAppointmentService tmpSrv : serviciosAgregados)
-		{
-			if(tmpSrv.getService().equals(srv)){
+		try{
+			int indice=0;
+			for(MedicalAppointmentService tmpSrv : serviciosAgregados)
+			{
+				if(tmpSrv.getService().equals(srv)){
+					
+					serviciosAgregados.remove(indice);
+					srv.setAsociado(false);
+					removerServicioS(tmpSrv);
+					
+					/*FacesMessages.instance().add(Severity.WARN,
+						sainv_messages.get("prescriptionHome_error_addsrv"));*/
+					
+					return;
+				}
 				
-				serviciosAgregados.remove(indice);
-				srv.setAsociado(false);
-				/*FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("prescriptionHome_error_addsrv"));*/
-				
-				return;
+				indice++;
 			}
+			//MedicalAppointmentService medicap = new MedicalAppointmentService();
+			//medicap.setService(srv);
 			
-			indice++;
+			MedicalAppointmentServiceId medicap = new MedicalAppointmentServiceId(medicalAppointmentDAO.getInstance().getId(), srv.getId());
+			MedicalAppointmentService med = new MedicalAppointmentService();
+			med.setMedicalAppointmentServiceId(medicap);
+			med.setService(srv);
+			med.setMedicalAppointment(medicalAppointmentDAO.getInstance());
+			getEntityManager().persist(med);
+			
+			serviciosAgregados.add(med);
 		}
-		MedicalAppointmentService medicap = new MedicalAppointmentService();
-		medicap.setService(srv);
-		serviciosAgregados.add(medicap);
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void removerItem(MedicamentoConsulta medicm){
@@ -393,7 +555,7 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		//System.out.println("Remover medicamento");
 	}
 	
-	public void removerExamen(ExamenConsulta exc) {
+	public void removerExamen(ExamenConsulta exc) throws PersistenceException, Exception {
 		
 		
 		List<MedicalAppointmentService> mService = new ArrayList<MedicalAppointmentService>();
@@ -423,11 +585,24 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 				{*/
 					//getEntityManager().remove(mService.getServiceClinicalHistory());
 					System.out.println("ENTRO AL IF DENTRO DEL FOR PARA REMOVER DESDE LA DB");
+				try{	
+					
+					System.out.println("Servicio a eliminar: "+ mService.get(0).getService().getName());
+					
 					medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(mService.get(0));
 					//serviciosYexamenesEliminados.add(mService);
 					serviciosAgregados.remove(mService.get(0));
 					getEntityManager().remove(mService.get(0));
 					getEntityManager().flush();
+				}
+				catch(PersistenceException e){
+					FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+					e.printStackTrace();
+				}
+				catch(Exception e){
+					FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+					e.printStackTrace();
+				}
 					
 			/*	}
 			}*/
@@ -442,10 +617,12 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		
 	}
 	
-	
-	public void removerExamenN(ExamenConsulta exc)//Agregado el 31/10/2017
+	//Este metodo elimina los examenes del listado. Timpanometria,Audiometria, etc
+	public void removerExamenN(ExamenConsulta exc) throws EntityNotFoundException,PersistenceException,Exception //Agregado el 31/10/2017
 	{
+		System.out.println("Lista examenesAgregados antes: "+examenesAgregados.size());
 		examenesAgregados.remove(exc);
+		System.out.println("Lista examenesAgregados dps: "+examenesAgregados.size());
 		
 		exc.setAsociado(false);
 		
@@ -453,7 +630,13 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		{
 			
 			System.out.println("Elimino solo el examen de la db");
-			getEntityManager().remove(exc);
+			try {
+				getEntityManager().remove(exc);
+			} catch (Exception e) {
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+				e.printStackTrace();
+				
+			}
 			
 		}
 		
@@ -464,12 +647,56 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		{
 			System.out.println("ENTRO AL IF DENTRO DEL FOR PARA REMOVER DESDE LA DB MEdicalAppontmentService");
 			
-			medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(mService.get(0));
-
-			serviciosAgregados.remove(mService.get(0));
-			getEntityManager().remove(mService.get(0));
+			try{
+				//if(serviciosAgregados.contains(mService.get(0)))
+					//System.out.println("La lista serviciosAgregados contiene a "+mService.get(0));
+				
+				//serviciosAgregados.remove(mService.get(0));
+				//System.out.println("Servicios agregados size antes: "+serviciosAgregados.size());
+				
+				//System.out.println("Tamaninio Servicio antes: "+medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().size());
+				medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(mService.get(0));//agregado el 03/02/2018
+				medicalAppointmentDAO.getAppointmentItems().remove(exc.getExamen());//agregado el 03/02/2017
+				try{
+					ServiceClinicalHistory schElim = null;
+					for(ServiceClinicalHistory sch:medicalAppointmentDAO.getInstance().getClinicalHistory().getServiceClinicalHistories()){
+						if(sch.getService().getId()==exc.getExamen().getId()){
+							schElim = sch;
+						}
+					}
+					getEntityManager().remove(schElim);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				getEntityManager().remove(mService.get(0)); //comentado el 27/01/2017
+				getEntityManager().refresh(medicalAppointmentDAO.getInstance());// agregado el 04/02/2018
+				
+			}
+			catch(Exception e){
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+				e.printStackTrace();
+			}
 			
-			getEntityManager().flush();
+			try{
+				getEntityManager().flush();
+			}
+			catch(EntityNotFoundException e){
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+				e.printStackTrace();
+			}
+			catch(PersistenceException e){
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+				e.printStackTrace();
+			}
+			catch(Exception e){
+				FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el examen");
+				e.printStackTrace();
+			}
+			
+			System.out.println("Tamaninio Servicio dps: "+medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().size());
+			System.out.println("Servicios agregados size dps: "+serviciosAgregados.size());
 			
 		}
 		
@@ -501,14 +728,52 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 				
 				//int ind=medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().indexOf(srv);
 				
+				System.out.println("Entro a removerServicioExam: entro al if");
 				medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
+				medicalAppointmentDAO.getAppointmentItems().remove(srv);//agregado el 03/02/2017
 				//medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(ind);
 				//serviciosYexamenesEliminados.add(srv);
-				getEntityManager().remove(srv); //comentado el 31/10/2017
+				//medicalAppointmentDAO.getInstance().getClinicalHistory().getServiceClinicalHistories();
+				medicalAppointmentDAO.getInstance().getMedicalAppointmentServices().remove(srv);
+				
+				//agregado el 03/02/2018
+				try{
+					ServiceClinicalHistory schElim = null;
+					for(ServiceClinicalHistory sch:medicalAppointmentDAO.getInstance().getClinicalHistory().getServiceClinicalHistories()){
+						if(sch.getService().getId()==srv.getService().getId()){
+							schElim = sch;
+						}
+					}
+					getEntityManager().remove(schElim);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				System.out.println("lista serviciosAgrgados antes: "+serviciosAgregados.size());
 				serviciosAgregados.remove(srv);
-				getEntityManager().flush();
+				getEntityManager().remove(srv); //comentado el 31/10/2017
+				
+				getEntityManager().refresh(medicalAppointmentDAO.getInstance());// agregado el 04/02/2018
+				
+				try{
+					getEntityManager().flush();
+				}
+				catch(EntityNotFoundException e){
+					FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el servicio");
+					e.printStackTrace();
+				}
+				catch(PersistenceException e){
+					FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el servicio");
+					e.printStackTrace();
+				}
+				catch(Exception e){
+					FacesMessages.instance().add(Severity.WARN,"Ocurrio un problema al remover el servicio");
+					e.printStackTrace();
+				}
 				//getEntityManager().getTransaction().commit();
 				//getEntityManager().close();
+				System.out.println("lista serviciosAgrgados dps: "+serviciosAgregados.size());
 				
 			}
 			else
@@ -570,13 +835,22 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		
 	}
 	
-	public void removerDiagnostico(DiagnosticoConsulta diagn) {
-		diagn.getDiagnostico().setAsociado(false);
-		diagnosticosAgregados.remove(diagn);
+	public void removerDiagnostico(DiagnosticoConsulta diagn) throws PersistenceException,Exception {
 		
-		if(diagn.getId()!=null)
-		{
-			getEntityManager().remove(diagn);
+		try{
+			diagn.getDiagnostico().setAsociado(false);
+			diagnosticosAgregados.remove(diagn);
+			if(diagn.getId()!=null)
+			{
+				getEntityManager().remove(diagn);
+				//getEntityManager().flush();
+			}
+		}
+		catch(PersistenceException e){
+			throw new PersistenceException(e);
+		}
+		catch(Exception e){
+			throw new Exception(e);
 		}
 	}
 	
@@ -616,14 +890,22 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		}
 	}
 	
-	public void removerExamenImageno(ExamImagenoConsulta examenConsulta)
+	public void removerExamenImageno(ExamImagenoConsulta examenConsulta) throws PersistenceException,Exception
 	{
-		examenConsulta.getExamen().setAsociado(false);
-		lstExamImagenoConsulta.remove(examenConsulta);
-		
-		if(examenConsulta.getId()!=null)
-		{
-			getEntityManager().remove(examenConsulta);
+		try{
+			examenConsulta.getExamen().setAsociado(false);
+			lstExamImagenoConsulta.remove(examenConsulta);
+			
+			if(examenConsulta.getId()!=null)
+			{
+				getEntityManager().remove(examenConsulta);
+			}
+		}
+		catch(PersistenceException e){
+			e.printStackTrace();
+		}
+		catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

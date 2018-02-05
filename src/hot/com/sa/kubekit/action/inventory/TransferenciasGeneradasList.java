@@ -13,7 +13,7 @@ import org.jboss.seam.annotations.Scope;
 import com.sa.kubekit.action.security.LoginUser;
 import com.sa.kubekit.action.util.KubeQuery;
 import com.sa.model.inventory.Transferencia;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+//import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 //Lista de transferencias de un solo usuario
 @Name("transferenciasGeneradasList")
 @Scope(ScopeType.CONVERSATION)//Antes era conversation

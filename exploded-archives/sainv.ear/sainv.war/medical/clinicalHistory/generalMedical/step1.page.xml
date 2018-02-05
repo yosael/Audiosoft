@@ -8,7 +8,8 @@
 	
 	<!-- <begin-conversation join="true" /> -->
 
-	<action execute="#{wizardGeneralMedical.load()}"  on-postback="false" />
+	<!--  <action execute="#{wizardGeneralMedical.load()}"  on-postback="false" /> comentado el 26/01/2018 -->
+	<action execute="#{wizardGeneralMedical.cargarYGuardarConsulta()}"  on-postback="false" />
 	
 	<!--<action execute="#{diagnosticoMedHome.getDiagnostListByName()}"  on-postback="false" />   nuevo: no funciono. 
 	<action execute="#{serviceDAO.loadServiciosExa()}"  on-postback="false" />

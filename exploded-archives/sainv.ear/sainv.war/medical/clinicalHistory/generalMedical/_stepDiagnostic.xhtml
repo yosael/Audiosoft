@@ -172,7 +172,7 @@
 									</rich:column>	
 									<rich:column>
 										<f:facet name="header">#{app.diagn_prpal}</f:facet>
-										<h:selectBooleanCheckbox value="#{res.principal}" disabled="#{medicalAppointmentDAO.instance.clinicalHistory!=null}" >
+										<h:selectBooleanCheckbox value="#{res.principal}"  >
 											<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tblDiagn" 
 													action="#{prescriptionHome.setDiagnPrpal(res)}" />
 										</h:selectBooleanCheckbox>

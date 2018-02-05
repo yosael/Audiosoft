@@ -4,5 +4,5 @@
 	<action execute="#{appointmentGrid.setDoctorSesion()}" on-postback="false" />
 	
 	<param name="back" value="#{urlBack.back}" required="false" />	
-	<begin-conversation join="true"/>	
+	<!--  <begin-conversation join="true"/>-->	
 </page>

@@ -23,7 +23,7 @@ import org.hibernate.annotations.ForeignKey;
 
 import com.sa.model.inventory.ItemPrescription;
 import com.sa.model.inventory.Movimiento;
-import com.sun.istack.internal.NotNull;
+//import com.sun.istack.internal.NotNull;
 
 @Entity
 @Table(name = "prescription")
@@ -66,7 +66,6 @@ public class Prescription implements Serializable{
 
 	@Column(name = "fecha_generacion", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
 	public Date getFechaGeneracion() {
 		return fechaGeneracion;
 	}

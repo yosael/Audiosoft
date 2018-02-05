@@ -111,10 +111,10 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 			
 			
 			if (getConsecutive() != null) {
+				
 				if (!generalMedicalDAO.isManaged()) {
 					
-					GeneralMedical instance = entityManager.find(
-							GeneralMedical.class, getConsecutive());
+					GeneralMedical instance = entityManager.find(GeneralMedical.class, getConsecutive());
 					if (instance != null) {
 						generalMedicalDAO.select(instance);
 						super.load();
@@ -154,6 +154,15 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		System.out.println("Id ConversationLoad "+ Conversation.instance().getId());
 		
 		}
+	
+	
+	public void cargarYGuardarConsulta()
+	{
+		this.load();
+		this.allSteps();
+		//this.load();
+	}
+	
 	
 	
 	//Para boton atender cita
@@ -227,7 +236,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 		{
 			bl.append("DE ");
 			bl.append(clienteHome.calcularEdad());
-			bl.append(" AÑOS. ");
+			bl.append(" Aï¿½OS. ");
 			
 		}
 		
@@ -575,8 +584,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 				try {
 					
 					if (clienteHome.getInstance().getGeneralInformation().getId() == null) {
-						entityManager.persist(clienteHome.getInstance()
-								.getGeneralInformation());
+						entityManager.persist(clienteHome.getInstance().getGeneralInformation());
+						
 					} else {
 						entityManager.merge(clienteHome.getInstance().getGeneralInformation());
 					}
@@ -590,7 +599,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 					e.printStackTrace();
 				}
 				
-				createDiagnostics();
+				//createDiagnostics(); comentado el 04/03/2018
 				
 				//Verificamos si se diagnostico sordera
 						if(prescriptionHome.isDiagnSordera())
@@ -609,7 +618,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								if(!generalMedicalDAO.save())
 									return "";
 								
-								saveDiagnostics();
+								//saveDiagnostics(); comentado el 04/03/2018
 								//prescriptionHome.modify();
 								prescriptionHome.getInstance().setMedicalAppointment(generalMedicalDAO.getInstance().getMedicalAppointment());
 								prescriptionHome.save();
@@ -621,7 +630,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 								if(!generalMedicalDAO.modify())
 									return "";
 								
-								saveDiagnostics();
+								//saveDiagnostics(); comentado el 04/03/2018 pendiente de prueba
 								prescriptionHome.modify();
 							}
 							//////////////////////////////
@@ -832,7 +841,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									entityManager.flush();
 								}
 								
-								for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) 
+								//for(MedicalAppointmentService tmpSrv: medicalAppointmentDAO.getInstance().getMedicalAppointmentServices()) comentado el 03/02/2018
+								for(MedicalAppointmentService tmpSrv: prescriptionHome.getServiciosAgregados()) //agregado 03/02/2018
 								{
 									
 									System.out.println("Nombre Servicio: "+tmpSrv.getService().getName());
@@ -856,7 +866,8 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									entityManager.persist(dtVta);
 								}
 								//Y los examenes tambien se adjuntan al cobro
-								for(ExamenConsulta tmpSrv: generalMedicalDAO.getInstance().getExamenes()) {
+								//for(ExamenConsulta tmpSrv: generalMedicalDAO.getInstance().getExamenes()) { comentado 03/02/2018
+								for(ExamenConsulta tmpSrv: prescriptionHome.getExamenesAgregados()) { //agregado el 03/02/2018
 									System.out.println("Nombre examen "+tmpSrv.getExamen().getName());
 									if(!serviciosCobrados.contains(tmpSrv.getExamen())) {
 										DetVentaProdServ dtVta = new DetVentaProdServ();

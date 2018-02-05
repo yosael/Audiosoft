@@ -224,7 +224,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			return true;
 		}
 		catch (Exception e) {
-			System.out.println("No encontré la sucursal");
+			System.out.println("No encontrï¿½ la sucursal");
 			return false;
 		}
 	}
@@ -350,7 +350,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		return validateDate();
 	}
 	
-	//Método que verifica si el paciente ya ha pasado consulta anteriormente.
+	//Mï¿½todo que verifica si el paciente ya ha pasado consulta anteriormente.
 	public String verificarSubsecuente() {
 		String subsecuencia="";
 		try{
@@ -376,7 +376,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		}
 	}
 	
-	//Método que verifica si el paciente ya ha pasado consulta anteriormente, recibe como parametro la cita medica.
+	//Mï¿½todo que verifica si el paciente ya ha pasado consulta anteriormente, recibe como parametro la cita medica.
 	public String verificarSubsecuentes(MedicalAppointment med) {
 		String subsecuencia="";
 		try{
@@ -500,7 +500,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 					.setParameter("date1", med.getDateTime())
 					.setParameter("doctor", getInstance().getDoctor())
 					.getResultList().isEmpty()) {
-				System.out.println("Entré a existen citas en las horas sel");
+				System.out.println("Entrï¿½ a existen citas en las horas sel");
 				FacesMessages.instance().add("No se puede crear bloque, existen citas en las horas seleccionadas");
 				return;
 			}
@@ -530,8 +530,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			
 			System.out.println("Tam servicios al guardar "+getInstance().getServiciosMedicos().size());
 			
-			MedicalAppointmentServiceId id = new MedicalAppointmentServiceId(
-					getInstance().getId(), serv.getId());
+			MedicalAppointmentServiceId id = new MedicalAppointmentServiceId(getInstance().getId(), serv.getId());
 			MedicalAppointmentService med = new MedicalAppointmentService();
 			med.setMedicalAppointmentServiceId(id);
 			med.setMedicalAppointment(getInstance());
@@ -549,7 +548,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 		servicios.clear(); //21/02/2017
 		
 	} catch (Exception e){
-		System.out.println("Entré al catch de saveServices()");
+		System.out.println("Entrï¿½ al catch de saveServices()");
 		e.printStackTrace();
 	}
 	}
@@ -638,7 +637,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 			setServicios(new ArrayList<Service>()); //nuevo el 23/02/2017
 			
 		} catch (Exception e){
-			System.out.println("Entré al catch de saveModifyServices()");
+			System.out.println("Entrï¿½ al catch de saveModifyServices()");
 			e.printStackTrace();
 			return false;
 		}
@@ -681,7 +680,7 @@ public class MedicalAppointmentDAO extends KubeDAO<MedicalAppointment> {
 	public void cleanForNew() {
 		
 		
-		System.out.println("Pasé por cleanForNew() de MedicalAppointmentDAO");
+		System.out.println("Pasï¿½ por cleanForNew() de MedicalAppointmentDAO");
 		selMedAps.clear();
 		this.servicios.clear();
 		getInstance().setCliente(null);

@@ -25,7 +25,6 @@ import org.hibernate.validator.Length;
 
 import com.sa.model.crm.Cliente;
 import com.sa.model.security.Sucursal;
-import com.sun.istack.internal.NotNull;
 
 /**
  * @author kubekaspa
@@ -80,7 +79,6 @@ public class MedicalAppointment implements Cloneable {
 
 	@Column(name = "date_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@NotNull
 	public Date getDateTime() {
 		return dateTime;
 	}
@@ -158,7 +156,8 @@ public class MedicalAppointment implements Cloneable {
 		this.clinicalHistory = clinicalHistory;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "medicalAppointment", cascade = CascadeType.REMOVE)
+	//@OneToMany(fetch = FetchType.EAGER, mappedBy = "medicalAppointment", cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medicalAppointment", cascade = CascadeType.REMOVE)
 	public List<MedicalAppointmentService> getMedicalAppointmentServices() {
 		return medicalAppointmentServices;
 	}

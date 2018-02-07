@@ -137,6 +137,7 @@
 						
 						<!-- Se cambio pagina de step1 a stepHistorialApp -->
 						<s:button propagation="begin"
+							onclick="#{rich:component('modalLoading')}.show();"
 							view="/medical/clinicalHistory/generalMedical/stepHistorialApp.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(not empty medicalAppointmentDAO.instance.clinicalHistory) and (medicalAppointmentDAO.instance.status == 1)}"
@@ -161,6 +162,7 @@
 						<!-- Btn Atender Cita -->
 						<s:button propagation="begin"
 							id="btnAtender"
+							onclick="#{rich:component('modalLoading')}.show();"
 							view="/medical/clinicalHistory/generalMedical/step1.xhtml"
 							rendered="#{(medicalAppointmentDAO.managed) and (appointmentGrid.selection.size() == 1) and 
 							(medicalAppointmentDAO.instance.status == 4) and (empty medicalAppointmentDAO.instance.clinicalHistory) and 
@@ -322,6 +324,17 @@
 					<s:div id="nApp">
 						<ui:include src="_modalNewAppoint.xhtml" />
 					</s:div>
+				</rich:modalPanel>
+				
+				
+				<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+						onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
+						<h:form id="formModalLoading" style="margin:0;padding:0;" >
+							<h:panelGrid columns="1" style="margin:0">
+								<h:graphicImage value="/kubeImg/imCargando.gif" style="margin:0;" />
+								<!-- <h:outputLabel value="" style="font-weight:bold;font-size:14px;text-align:center;margin:0 auto" /> -->
+							</h:panelGrid>	
+						</h:form>			
 				</rich:modalPanel>
 				
 			</h:panelGrid>

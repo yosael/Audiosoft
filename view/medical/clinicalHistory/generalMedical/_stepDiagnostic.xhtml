@@ -647,7 +647,10 @@
 				
 				
 			<!-- Se movieron de steap1 -->
-			<h:panelGrid style="margin:0 auto;" columns="3" >	
+			
+			<!-- Comentado el 06/02/2018 -->
+			<h:panelGrid style="margin:0 auto;" columns="3" >
+			<!-- 	
 				<a:commandButton action="#{clienteHome2.loadHistory(true,clienteHome.instance.id)}"  styleClass="historyBtn" value="Historial Medico"
 							ajaxSingle="true"
 							reRender="modHst1,frmHistorial"
@@ -658,14 +661,14 @@
 				<a:commandButton styleClass="cancelBtn" value="Cancelar"
 							ajaxSingle="true"
 							onclick="#{rich:component('confirmCancel')}.show();">
-				</a:commandButton>
+				</a:commandButton> -->
 					
 				<a:commandButton action="#{prescriptionHome.calcularTotalCobroC()}"
 					value="Finalizar Consulta" styleClass="saveBtn"
 					onclick="#{rich:component('modalConfirmConsulta')}.show();"
 					rendered="true" reRender="dvConfirmC">												
 				</a:commandButton><!-- #{(medicalAppointmentDAO.instance.clinicalHistory==null) || (wizarGeneralMedical.editable eq true)} -->
-			</h:panelGrid>
+			</h:panelGrid> -->
 			<!--  -->	
 	
 			<rich:modalPanel id="selMedicm" width="700" moveable="true" autosized="true"  top="40"

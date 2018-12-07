@@ -63,7 +63,7 @@ public class DiagnosticoConsulta implements Serializable {
 		this.nomDiagnostico = nomDiagnostico;
 	}
 	
-	@Column(name = "principal", nullable = false)
+	@Column(name = "principal", nullable = true)
 	public boolean isPrincipal() {
 		return principal;
 	}

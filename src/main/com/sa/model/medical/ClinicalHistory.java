@@ -128,7 +128,7 @@ public class ClinicalHistory {
 		this.lastModificationDate = lastModificationDate;
 	}
 
-	@Column(name = "consultation_reason", nullable = true)
+	@Column(name = "consultation_reason", nullable = true,length = 700)
 	public String getConsultationReason() {
 		return consultationReason;
 	}

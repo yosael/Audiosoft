@@ -223,7 +223,7 @@ public class GeneralMedical extends ClinicalHistory {
 	}
 	
 	//nuevo
-
+	@Column(nullable = true, length = 700)
 	public String getEnfermedadActual() {
 		return enfermedadActual;
 	}
@@ -248,6 +248,7 @@ public class GeneralMedical extends ClinicalHistory {
 		this.antecedentesNoPatologicos = antecedentesNoPatologicos;
 	}
 
+	@Column(nullable = true, length = 700)
 	public String getAntecedentesPatologicos() {
 		return antecedentesPatologicos;
 	}
@@ -263,7 +264,8 @@ public class GeneralMedical extends ClinicalHistory {
 	public void setSistemaNervioso(String sistemaNervioso) {
 		this.sistemaNervioso = sistemaNervioso;
 	}
-
+		
+	@Column(nullable = true, length = 700)
 	public String getInspeccionGeneral() {
 		return inspeccionGeneral;
 	}

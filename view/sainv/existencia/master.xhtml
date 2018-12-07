@@ -58,7 +58,8 @@
 										<a:commandLink title="#{msn.button_addcod}" reRender="m2" eventsQueue="q1" 
 											rendered="#{res.cantidadActual>0 and (res.producto.categoria.tieneNumSerie==true or 
 														res.producto.categoria.tieneNumLote==true)}"
-											action="#{productoHome.cargarListaCodigos(res)}" ajaxSingle="true"
+											action="#{productoHome.cargarListaCodigos(res)}" 
+											ajaxSingle="true"
 											onclick="#{rich:component('lstCodigos')}.show();">
 											<h:graphicImage value="/kubeImg/table_detail2.png" />
 										</a:commandLink>
@@ -106,7 +107,9 @@
 					</s:button>
 				</s:decorate>
 				</fieldset>
-				<rich:modalPanel id="lstCodigos" width="800" moveable="true" autosized="true"  top="40"
+			</h:form>
+			
+			<rich:modalPanel id="lstCodigos" width="800" moveable="true" autosized="true"  top="40"
 					onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
 					
 					<f:facet name="header">
@@ -123,7 +126,7 @@
 						<ui:include src="codsProducts.xhtml" />
 					</s:div>
 				</rich:modalPanel>
-			</h:form>
+				
 		</rich:panel>
 	</ui:define>
 </ui:composition>

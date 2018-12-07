@@ -1,0 +1,134 @@
+<p:document xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://jboss.com/products/seam/pdf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	title="Comprobante" creator="Soluciones Aplicativas"
+	pageSize="LETTER" type="pdf" margins="70 30 30 30">
+	<p:font size="14" >
+		<p:paragraph alignment="center">COMPROBANTE DE ENVIO POR TRANSFERENCIAS</p:paragraph>
+	</p:font>
+	<p:html><br /></p:html>
+	<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="2 2 2 2" >			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle" paddingTop="6" paddingBottom="6" >
+				<p:font color="white" style="bold" >
+					<p:paragraph >ID</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle" paddingLeft="6" >
+					<p:paragraph >#{transferenciaHome.instance.id}</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" >
+					<p:paragraph >Fecha</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" paddingLeft="6" >	
+				<p:paragraph><p:text value="#{transferenciaHome.instance.fecha}" >
+					<f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+				</p:text></p:paragraph>
+			</p:cell>
+			
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle"  paddingTop="6" paddingBottom="6" >
+				<p:font color="white" style="bold" >
+					<p:paragraph >Bodega salida</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  verticalAlignment="middle" paddingLeft="6" >
+				<p:paragraph>
+					<p:paragraph>#{transferenciaHome.instance.sucursal.nombre}</p:paragraph>
+				</p:paragraph>
+			</p:cell>
+			<p:cell backgroundColor="#405F62" horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" ><p:paragraph>Bodega Entrada</p:paragraph></p:font>
+			</p:cell>
+			<p:cell verticalAlignment="middle" paddingLeft="6" >
+				<p:paragraph>#{transferenciaHome.instance.sucursalDestino.nombre}</p:paragraph>
+			</p:cell>
+			
+		</p:table>
+		
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100" headerRows="2"  widths="1.5 2 0.7 1" >
+			<p:cell colspan="4" backgroundColor="#405F62" borderWidth="0" paddingBottom="14"
+				horizontalAlignment="center" verticalAlignment="middle">
+				<p:font color="white" style="bold" size="12" >
+					<p:paragraph alignment="center">DETALLE DEL MOVIMIENTO</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4" paddingLeft="7">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Referencia</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell  horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4" paddingLeft="7">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Nombre</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62" paddingBottom="4">
+				<p:font color="white" style="bold" paddingRight="6">
+					<p:paragraph alignment="right">Cantidad</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell horizontalAlignment="center" verticalAlignment="middle" backgroundColor="#405F62"  paddingBottom="4">
+				<p:font color="white" style="bold">
+					<p:paragraph alignment="center">Costo Unitario</p:paragraph>
+				</p:font>
+			</p:cell>
+			
+			<ui:repeat var="res" value="#{transferenciaHome.itemsAgregados}">
+				<p:cell verticalAlignment="middle" paddingLeft="5" paddingTop="4" paddingBottom="3" >
+					<p:paragraph>#{res.inventario.producto.referencia}</p:paragraph>
+				</p:cell>		
+				<p:cell verticalAlignment="middle"  paddingLeft="5" paddingTop="4" paddingBottom="3">
+					<p:paragraph>#{res.inventario.producto.nombre}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle"  paddingLeft="5" paddingTop="4" paddingBottom="3" >
+					<p:paragraph>#{res.cantidad}</p:paragraph>
+				</p:cell>
+				<p:cell verticalAlignment="middle"  paddingLeft="5" paddingTop="4" paddingBottom="3" >
+					<p:paragraph><p:text value="#{res.costoUnitario}">
+						<f:convertNumber currencySymbol="$" type="currency" locale="en-US"
+                            	groupingUsed="true" integerOnly="true" maxFractionDigits="2" />
+                    </p:text></p:paragraph>
+				</p:cell>
+			</ui:repeat>
+		</p:table>
+		<p:html><br /></p:html>
+		<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="1.4 2.6 1.4 2.6" >			
+			<p:cell  borderWidth="0" horizontalAlignment="center" verticalAlignment="middle" paddingTop="10" paddingBottom="6" >
+				<p:font  style="bold"  >
+					<p:paragraph >Enviado por:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell borderWidth="0" verticalAlignment="middle" paddingBottom="3" paddingRight="2">
+					<p:paragraph >______________________</p:paragraph>
+			</p:cell>
+			<p:cell borderWidth="0" horizontalAlignment="center" verticalAlignment="middle" paddingTop="10" paddingBottom="6">
+				<p:font  style="bold" >
+					<p:paragraph >Recibido por:</p:paragraph>
+				</p:font>
+			</p:cell>
+			<p:cell borderWidth="0" verticalAlignment="middle" paddingBottom="3" paddingRight="2">
+					<p:paragraph >______________________</p:paragraph>
+			</p:cell>
+		</p:table>
+		<p:table columns="4" widthPercentage="100"  headerRows="0" borderVisible="false" widths="1.4 2.6 1.4 2.6" >			
+			<p:cell borderWidth="0" horizontalAlignment="center" verticalAlignment="middle" paddingTop="10" paddingBottom="6">
+					<p:paragraph >Firma</p:paragraph>
+			</p:cell>
+			<p:cell borderWidth="0" verticalAlignment="middle" paddingBottom="3" paddingRight="2">
+					<p:paragraph ></p:paragraph>
+			</p:cell>
+			<p:cell borderWidth="0" horizontalAlignment="center" verticalAlignment="middle" paddingTop="10" paddingBottom="6">
+					<p:paragraph >Firma</p:paragraph>
+			</p:cell>
+			<p:cell borderWidth="0"  verticalAlignment="middle" paddingBottom="3" paddingRight="2">
+					<p:paragraph ></p:paragraph>
+			</p:cell>
+		</p:table>
+</p:document>

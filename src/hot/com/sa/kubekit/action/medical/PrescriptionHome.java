@@ -88,6 +88,8 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 	
 	//nuevo
 	
+	private MedicamentoConsulta medicamentoSeleccionado =  new MedicamentoConsulta();
+	
 	@Override
 	@Begin(join=true)
 	public void create() {
@@ -981,6 +983,10 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		getEntityManager().refresh(instance);
 		FacesMessages.instance().clear();
 	}
+	
+	public void seleccionarInfoMedicamento(MedicamentoConsulta md){
+		this.medicamentoSeleccionado = md;
+	}
 
 	@Override
 	public void posDelete() {
@@ -1122,6 +1128,15 @@ public class PrescriptionHome extends KubeDAO<Prescription>{
 		this.lstExamImagenoConsulta = lstExamImagenoConsulta;
 	}
 
+	public MedicamentoConsulta getMedicamentoSeleccionado() {
+		return medicamentoSeleccionado;
+	}
+
+	public void setMedicamentoSeleccionado(MedicamentoConsulta medicamentoSeleccionado) {
+		this.medicamentoSeleccionado = medicamentoSeleccionado;
+	}
+
+	
 	
 	
 	

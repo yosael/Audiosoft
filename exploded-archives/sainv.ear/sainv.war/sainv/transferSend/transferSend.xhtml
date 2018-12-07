@@ -93,9 +93,14 @@
 				<rich:spacer height="20"/> 
 				
 				<s:decorate template="/layout/kActions.xhtml">
+				
+					<a:commandButton value="Comprobante" action="#{transferenciaHome.generarReportePDFPorEnviar()}"
+						oncomplete="showReport('repTransferenciasPorEnviar', '#{conversation.id}');" styleClass="pdfBtn"  />
+						
 					<s:button view="/sainv/transferSend/transferPendingSend.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>
+					
 					<a:commandButton onclick="#{rich:component('approveConfirmation')}.show();"
 						reRender="formtransfer" rendered="#{transferenciaHome.instance.estado=='P'}" styleClass="apprBtn" value="#{msn.button_approve}"/>
 						
@@ -157,7 +162,7 @@
 				</h:form>
 			</rich:modalPanel>
 			
-						<rich:modalPanel id="lstCodigos" width="700" moveable="true" autosized="true"  top="40"
+			<rich:modalPanel id="lstCodigos" width="700" moveable="true" autosized="true"  top="40"
 				onbeforeshow="activeModal.setActiveModalPanel('confirmation');">
 				<f:facet name="header">
 					#{app.compralist_add_products_modal}

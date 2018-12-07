@@ -33,7 +33,6 @@ public class ExamImagenoConsulta implements Serializable {
 	@ForeignKey(name = "fk_examen_imageno_consulta")
 	private ClinicalHistory consulta;
 	
-	
 
 	public Integer getId() {
 		return id;
@@ -58,7 +57,6 @@ public class ExamImagenoConsulta implements Serializable {
 	public void setConsulta(ClinicalHistory consulta) {
 		this.consulta = consulta;
 	}
-	
-	
+
 
 }

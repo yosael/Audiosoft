@@ -679,6 +679,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 									{
 										exaCon.setConsulta(generalMedicalDAO.getInstance());
 										exaCon.setNomExamen(exaCon.getExamen().getName());
+										exaCon.setComentario(exaCon.getComentario()==null?" ":exaCon.getComentario());
 										entityManager.persist(exaCon);
 										
 										System.out.println("PERSISTIO NUEVO EXAMEN ******");
@@ -943,6 +944,7 @@ public class WizardGeneralMedical extends WizardClinicalHistory {
 				for(ExamenConsulta exaCon : prescriptionHome.getExamenesAgregados()) {
 					exaCon.setConsulta(generalMedicalDAO.getInstance());
 					exaCon.setNomExamen(exaCon.getExamen().getName());
+					exaCon.setComentario(exaCon.getComentario()==null?" ":exaCon.getComentario());
 					entityManager.persist(exaCon);
 				}
 				

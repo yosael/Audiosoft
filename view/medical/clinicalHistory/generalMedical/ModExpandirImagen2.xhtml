@@ -1,0 +1,26 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:form id="frmExpandirIm">
+		
+				<h:panelGrid columns="1" style="width:950px;margin:0 auto;" >
+				
+					<h:outputLabel value="IMAGENOLOGIA" />
+					
+					<s:graphicImage id="graphPrd" width="950px" height="650px"
+						value="#{generalMedicalDAO2.instance.imagenExaAudiologia}"
+						rendered="#{not empty generalMedicalDAO2.instance.imagenExaAudiologia}" 
+					/>
+				</h:panelGrid>					
+	</h:form>
+			
+			
+</ui:composition>

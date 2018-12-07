@@ -35,7 +35,6 @@ public class ExamenAudioConsulta implements Serializable {
 	@ForeignKey(name = "fk_examen_audio_consulta")
 	private ClinicalHistory consulta;
 	
-	
 
 	public Integer getId() {
 		return id;
@@ -60,9 +59,6 @@ public class ExamenAudioConsulta implements Serializable {
 	public void setConsulta(ClinicalHistory consulta) {
 		this.consulta = consulta;
 	}
-	
-	
-	
-	
+
 
 }

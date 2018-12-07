@@ -214,6 +214,9 @@
 				
 				<s:decorate template="/layout/kActions.xhtml">
 				
+					<a:commandButton value="Comprobante" action="#{transferenciaHome.generarReportePDFPorEnviar()}"
+						oncomplete="showReport('repTransferenciasPorEnviar', '#{conversation.id}');" styleClass="pdfBtn"  />
+						
 					<s:button view="/rep/transf/reporteTransferencias.xhtml" propagation="begin"
 						styleClass="listBtn" value="#{msn.button_list}">
 					</s:button>

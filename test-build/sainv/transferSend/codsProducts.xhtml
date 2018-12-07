@@ -66,10 +66,11 @@
 					
 					<rich:column style="width:50px;" >
 						<f:facet name="header">#{app.producto_codser}</f:facet>
-						<h:selectBooleanCheckbox value="#{res.transferido}" >
+						<h:selectBooleanCheckbox value="#{res.transferido}" rendered="#{res.enTransferencia eq null || res.enTransferencia == false}" >
 							<a:support event="onchange" ajaxSingle="true" eventsQueue="q1" reRender="_tableCod, _codsRestantes" 
 									action="#{transferenciaHome.limitSelectedCodes(res)}" />
 						</h:selectBooleanCheckbox>
+						<h:outputText value="- En transferencia -" rendered="#{res.enTransferencia == true}" />
 					</rich:column>
 					
 					<f:facet name="footer">

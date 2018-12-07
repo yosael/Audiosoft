@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="head">
 		<script type="text/javascript">
-		function terminar()
+		/*function terminar()
 		{
 			window.onbeforeunload = null;
 		}
@@ -20,7 +20,7 @@
 		{
 			var texto = "Los datos se guardan automaticamente.";
 			return texto;
-		}
+		}*/
 		</script>
 	</ui:define>
 	<ui:define name="body">
@@ -101,12 +101,13 @@
 							
 						</rich:tab>
 						
+						<!--  comentado el 08/02/2017
 						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15"   >
 							<s:div>
-								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml"    /><!-- ajaxSingle="true" -->
+								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml"    />
 							</s:div>
 						</rich:tab>
-						
+						 -->
 						
 					</rich:tabPanel>
 					
@@ -480,7 +481,7 @@
 					
 				</rich:modalPanel> 
 				
-				<rich:modalPanel id="modalLoading" width="110" height="120" left="700"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
+				<rich:modalPanel id="modalLoading" width="110" height="120"  style="overflow-y:hidden !important;overflow-x:hidden !important;"  top="200"
 						onbeforeshow="activeModal.setActiveModalPanel('modalLoading');" autosized="false" resizeable="false"  >
 						<h:form id="formModalLoading" style="margin:0;padding:0;" >
 							<h:panelGrid columns="1" style="margin:0">

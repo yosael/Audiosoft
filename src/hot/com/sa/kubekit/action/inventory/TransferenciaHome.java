@@ -148,6 +148,8 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		if(instance.getSucursalDestino()!=null){
 			sucursales.remove(getEntityManager().merge(instance.getSucursalDestino()));
 		}
+		
+		
 	}
 	
 	
@@ -448,7 +450,7 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 			
 			//Pasamos el codigo a la sucursal que solicita
 			cargarListaCodigos(item);
-			System.out.println("\n Tamaño del mapa:" + lstCodsProductos.size());
+			System.out.println("\n Tamaï¿½o del mapa:" + lstCodsProductos.size());
 			for (String s: lstCodsProductos.keySet()){
 				System.out.println("     Key: " + s);
 			}
@@ -514,7 +516,9 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		
 		lstCodsProductos.put(prdItm.getInventario().getProducto().getReferencia(), codsProds);
 		currCodigos = codsProds;
+		
 	}
+
 	
 	//Para limitar los items que seleccionan
 	public void limitSelectedCodes(CodProducto chkCod) {
@@ -1038,6 +1042,12 @@ public class TransferenciaHome extends KubeDAO<Transferencia>{
 		transferenciaId = idTransferencia;
 		
 		return "/sainv/transferSend/transferSend.xhtml";
+	}
+	
+	
+	public void generarReportePDFPorEnviar(){
+		//this.transferenciaId = id;
+		this.load();
 	}
 
 	public Integer getTransferenciaId() {

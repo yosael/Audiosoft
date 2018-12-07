@@ -144,6 +144,11 @@
 				            <h:panelGrid columns="2">
 				            	
 				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
+									<ui:define name="label">Referencia:</ui:define>
+										<h:outputLabel value="#{repMovimiento.infoCompra[9]}"  />
+								</s:decorate>
+								
+				            	<s:decorate template="/layout/kEditSpace.xhtml" rendered="#{not empty repMovimiento.infoCompra}">
 									<ui:define name="label">Tipo de movimiento:</ui:define>
 										<h:outputLabel value="Entrada" rendered="#{repMovimiento.infoCompra[1]=='E'}" />
 										<h:outputLabel value="Salida" rendered="#{repMovimiento.infoCompra[1]=='S'}" />

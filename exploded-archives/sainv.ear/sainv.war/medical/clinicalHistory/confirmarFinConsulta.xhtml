@@ -62,9 +62,9 @@
 							</a:commandButton>
 							<a:commandButton action="#{wizardGeneralMedical.allSteps()}"
 								value="Aceptar" styleClass="saveBtn"
-								onclick="terminar();#{rich:component('modalLoading')}.show();"
+								onclick="#{rich:component('modalLoading')}.show();"
 								rendered="true" reRender="formA">												
-							</a:commandButton>
+							</a:commandButton><!-- terminar(); -->
 						</s:decorate>
 						
 						<rich:spacer height="10" width="0" ></rich:spacer>

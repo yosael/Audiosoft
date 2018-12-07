@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -200,35 +201,43 @@ public class GeneralMedicalDAO extends KubeDAO<GeneralMedical> {
 		return true;
 	}
 	
-	public void loadImage(UploadEvent e) 
+	//@Destroy
+	public void loadImage(UploadEvent e)  
 	{
-		String path = e.getUploadItem().getFileName();
-		//System.out.println("Path var: "+path);
-		
-		File file = new File(e.getUploadItem().getFile().getPath());
-		int length = e.getUploadItem().getFileName().length();
-		// validamos que la imagen no exceda los 100 KB
-		if (file.length() > 100000) {
-			FacesMessages.instance().add(Severity.WARN,
-					sainv_messages.get("productoHome_error_image"));
-			setImgSize(false);
-		}  
-		else 
-		{
-			setImgSize(true);
-			byte[] bFile = new byte[(int) file.length()];
-			try 
+		try{
+			String path = e.getUploadItem().getFileName();
+			//System.out.println("Path var: "+path);
+			
+			System.out.println("Entroa load image");
+			System.out.println("Objeto UploadEvent: "+e.getUploadItem().getFileName());
+			
+			File file = new File(e.getUploadItem().getFile().getPath());
+			int length = e.getUploadItem().getFileName().length();
+			// validamos que la imagen no exceda los 300 KB
+			if (file.length() > 300000) {
+				FacesMessages.instance().add(Severity.WARN,"El tamanio de la imagen no puede exceder los 300KB");
+				setImgSize(false);
+			}  
+			else 
 			{
-				FileInputStream fileInputStream = new FileInputStream(file);
-				// convert file into array of bytes
-				fileInputStream.read(bFile);
-				fileInputStream.close();
-				instance.setImagenExaAudiologia(bFile);
-				
-				//System.out.println(instance.getImagenExaAudiologia().length);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+				setImgSize(true);
+				byte[] bFile = new byte[(int) file.length()];
+				try 
+				{
+					FileInputStream fileInputStream = new FileInputStream(file);
+					// convert file into array of bytes
+					fileInputStream.read(bFile);
+					fileInputStream.close();
+					instance.setImagenExaAudiologia(bFile);
+					
+					//System.out.println(instance.getImagenExaAudiologia().length);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
 		}
 	}
 

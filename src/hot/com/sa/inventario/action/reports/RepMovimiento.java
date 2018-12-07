@@ -139,7 +139,7 @@ public class RepMovimiento extends MasterRep implements Serializable {
 		try
 		{
 			//NumSerie,producto,fechaIngreso,SucursalIngreso,Usuario
-			infoCompra = (Object[]) entityManager.createQuery("SELECT c.numSerie,c.movimiento.tipoMovimiento,c.movimiento.fecha,c.movimiento.usuario.nombreUsuario,c.movimiento.sucursal.nombre,c.movimiento.razon,c.inventario.sucursal.nombre,c.movimiento.desde,c.movimiento.hacia FROM CodProducto c where c.numSerie='"+busquedaNumSerie+"' ").getSingleResult();//Consultar desde codProducto y movimiento la fecha de entrada y la sucursal
+			infoCompra = (Object[]) entityManager.createQuery("SELECT c.numSerie,c.movimiento.tipoMovimiento,c.movimiento.fecha,c.movimiento.usuario.nombreUsuario,c.movimiento.sucursal.nombre,c.movimiento.razon,c.inventario.sucursal.nombre,c.movimiento.desde,c.movimiento.hacia,c.inventario.producto.referencia FROM CodProducto c where c.numSerie='"+busquedaNumSerie+"' ").getSingleResult();//Consultar desde codProducto y movimiento la fecha de entrada y la sucursal
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());

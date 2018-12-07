@@ -11,7 +11,7 @@
 	template="/layout/templateKuPtll.xhtml">
 	<ui:define name="head">
 		<script type="text/javascript">
-		function terminar()
+		/*function terminar()
 		{
 			window.onbeforeunload = null;
 		}
@@ -20,7 +20,7 @@
 		{
 			var texto = "Los datos que no se han guardado se perderan.";
 			return texto;
-		}
+		}*/
 		</script>
 	</ui:define>
 	<ui:define name="body">
@@ -105,11 +105,12 @@
 								<ui:include src="/medical/clinicalHistory/generalMedical/_step2.xhtml" />
 							</s:div>
 						</rich:tab>
+						<!-- comentado el 08/02/2018
 						<rich:tab name="tabHi_3" label="#{app.diagnostic_head_diag}" styleClass="letra15" >
 							<s:div>
 								<ui:include src="/medical/clinicalHistory/generalMedical/_stepDiagnostic.xhtml" />
 							</s:div>
-						</rich:tab>
+						</rich:tab> -->
 					</rich:tabPanel>
 					
 					<!-- <s:button propagation="join" view="#{urlBack.back}"

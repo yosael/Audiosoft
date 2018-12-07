@@ -412,10 +412,22 @@
 						<h:panelGrid columns="2" style="padding-left:50px;font-size:14px">
 						
 							<h:outputLabel value="Audiologia:" style="font-weight:bold" />
-							<s:decorate template="/layout/kEditSpace.xhtml">
-								<h:inputTextarea value="#{generalMedicalDAO2.instance.exaAudiologia}"
-									disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
-							</s:decorate>
+							<h:panelGroup>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<h:inputTextarea value="#{generalMedicalDAO2.instance.exaAudiologia}"
+										disabled="#{wizardGeneralMedical2.mode == 'r'}" style="width:625px;height:85px;font-size:14px" readonly="true" />
+								</s:decorate>
+								<s:decorate template="/layout/kEditSpace.xhtml">
+									<h:column id="ModExpandirBtn" >
+											<a:commandButton  value="EXPANDIR IMAGEN ADJUNTA" 
+												onclick="#{rich:component('ModExpandirImagen')}.show();"
+											 	ajaxSingle="true"
+											 	reRender="ModExpandirImagenDv"
+											 	rendered="#{not empty generalMedicalDAO2.instance.imagenExaAudiologia}"
+											/>
+										</h:column>
+								</s:decorate>
+							</h:panelGroup>
 							
 							<h:outputLabel value="Otoneurologia: " style="font-weight:bold" />
 							<s:decorate template="/layout/kEditSpace.xhtml">
@@ -605,6 +617,19 @@
 				</h:panelGroup>
 			</f:facet>
 			<s:div id="dMotivoConsulta"><ui:include src="addMotivoConsulta.xhtml" /></s:div>			
+		</rich:modalPanel>
+		
+		<rich:modalPanel id="ModExpandirImagen" width="950" height="650" moveable="true" autosized="true"  top="40"
+			onmaskclick="#{rich:component('ModExpandirImagen')}.hide();"
+			onbeforeshow="activeModal.setActiveModalPanel('ModExpandirImagen');">
+			<f:facet name="header">Imagen</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/kubeImg/close.png" styleClass="closeBtn"
+						onclick="#{rich:component('ModExpandirImagen')}.hide();" />
+				</h:panelGroup>
+			</f:facet>
+			<s:div id="ModExpandirImagenDv"><ui:include src="ModExpandirImagen2.xhtml" /></s:div>			
 		</rich:modalPanel>
 		
 		<rich:modalPanel id="selAnt-2" width="400" moveable="true" autosized="true"  top="40"
